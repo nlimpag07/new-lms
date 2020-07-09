@@ -38,9 +38,6 @@ const Dashboard = (props) => {
   );
 };
 Dashboard.getInitialProps = async () => {
-  console.log("Im inside dashboard");
-  //const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-  //setPosts(res.data);
 
   const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
   const { data } = res;

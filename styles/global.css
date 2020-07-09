@@ -86,3 +86,106 @@
   padding: 0;
   height: 42px;
 }
+
+.login .logo-container {
+  text-align: center;
+  background: #333333;
+}
+.login .logo-container::before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url(/images/left_bg2x.png);
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: center;
+}
+.login .logo-container .logo-holder {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 18vh 1vw 0;
+  font-size: 18px;
+  font-weight: 300;
+}
+.login .logo-container .logo-holder img {
+  width: 40%;
+  fill: #f9ad48;
+}
+/* .login .logo-container .logo-holder .logo-img .cls-2 {
+  color: #ffffff;
+} */
+
+.login .loginform-container {
+  text-align: center;
+}
+.login .loginform-container .loginform-banner {
+  text-align: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 18vh 1vw 8vh;
+  font-size: 18px;
+  font-weight: 300;
+  color: #000;
+  z-index: 1;
+}
+.login .loginform-container .loginform-banner img {
+  width: 30%;
+  /*inverting svg color in an image tag */
+  filter: invert(1000%) sepia(0%) saturate(7445%) hue-rotate(216deg)
+    brightness(96%) contrast(101%);
+}
+.login .loginform-container .loginform-banner::after {
+  z-index: -1;
+  position: absolute;
+  content: "";
+  top: 103%;
+  right: 5px;
+  width: 80%;
+  bottom: 0;
+  max-width: 100%;
+  background: #777;
+  box-shadow: 0 -15px 10px #ccc;
+  transform: rotate(-1deg);
+  min-height: 100px;
+}
+.login .loginform-container .loginform-holder {
+  text-align: left;
+  padding: 30px 40px;
+  color: #999;
+  width: 100%;
+  position: relative;
+  background: #fff;
+  height: 400px;
+  z-index: 1;
+}
+
+.login .loginform-container .loginform-holder .loginform-form {
+  width: 75%;
+  margin: 0 auto;
+}
+.login .loginform-container .loginform-holder .loginform-form h1 {
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  padding: 1rem 0 0 0;
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.login .loginform-container .loginform-holder .loginform-form .login-label {
+  padding: 3px 7px;
+  background-color: #fff;
+  position: relative;
+  top: 10px;
+  z-index: 1;
+  font-weight: 500;
+  margin-left: 10px;
+}
