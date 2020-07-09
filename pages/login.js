@@ -76,6 +76,7 @@ export default withoutAuth(function Login() {
                 <Form.Item
                   label=""
                   name="username"
+                  noStyle
                   rules={[
                     {
                       required: true,
@@ -89,6 +90,7 @@ export default withoutAuth(function Login() {
 
                 <Form.Item
                   label=""
+                  noStyle
                   name="password"
                   rules={[
                     {
