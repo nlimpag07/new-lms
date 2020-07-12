@@ -1,7 +1,9 @@
 import { Layout, Row, Col, Form, Input, Button, Checkbox } from "antd";
+import { useEffect, useState } from 'react';
 
 import withoutAuth from "../hocs/withoutAuth";
 import { useAuth } from "../providers/Auth";
+import Loader from "../components/theme-layout/loader/loader";
 
 const layout = {
   labelCol: {
@@ -22,6 +24,8 @@ export default withoutAuth(function Login() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { setAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
+
   const submitHandler = async () => {
     //event.preventDefault();
     const response = await fetch("/api/login", {
@@ -46,7 +50,11 @@ export default withoutAuth(function Login() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  useEffect(() => {
+        setLoading(false);
+  }, []);
   return (
+    <Loader loading={loading} >
     <Layout className="login" style={{ minHeight: "100vh" }}>
       <Row style={{ minHeight: "100vh" }}>
         <Col className="logo-container" xs={24} sm={12} md={12}>
@@ -120,33 +128,12 @@ export default withoutAuth(function Login() {
                 </Form.Item>
               </Form>
             </div>
-            {/* <form onSubmit={submitHandler} >
-              <div>
-                <label>
-                  Username{" "}
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  Password{" "}
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </label>
-              </div>
-              <button type="submit">Login</button>
-            </form> */}
+            
           </div>
         </Col>
       </Row>
       <style jsx global>{``}</style>
     </Layout>
+    </Loader>
   );
 });

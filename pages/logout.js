@@ -15,5 +15,5 @@ export default withAuth(function Logout() {
     }
     doLogout();
   }, [setAuthenticated]);
-  return <p>Logging out...</p>;
+  return <></>;
 }, '/');

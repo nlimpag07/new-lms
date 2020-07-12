@@ -1,11 +1,11 @@
-import React from 'react';
-
+import React from "react";
+import MainThemeLayout from "../components/theme-layout/MainThemeLayout";
 
 const Hello = () => {
   return (
-    <div>
-      HELLO
-    </div>
+    <MainThemeLayout>
+      <div>HELLO</div>
+    </MainThemeLayout>
   );
 };
 

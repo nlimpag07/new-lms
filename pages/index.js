@@ -2,7 +2,7 @@ import { Carousel, Layout, Row, Col, Button, Modal, Divider } from "antd";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainThemeLayout from "../components/MainThemeLayout";
+import MainThemeLayout from "../components/theme-layout/MainThemeLayout";
 import withAuth from "../hocs/withAuth";
 import Link from "next/link";
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import { Layout } from "antd";
 
-import MainThemeLayout from "../../components/MainThemeLayout";
+import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../hocs/withAuth";
 
 const Dashboard = (props) => {
@@ -38,7 +38,6 @@ const Dashboard = (props) => {
   );
 };
 Dashboard.getInitialProps = async () => {
-
   const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
   const { data } = res;
   return { posts: data };
