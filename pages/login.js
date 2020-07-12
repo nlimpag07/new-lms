@@ -22,8 +22,8 @@ export default withoutAuth(function Login() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { setAuthenticated } = useAuth();
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async () => {
+    //event.preventDefault();
     const response = await fetch("/api/login", {
       method: "POST",
       credentials: "same-origin",
@@ -39,6 +39,7 @@ export default withoutAuth(function Login() {
     }
   };
   const onFinish = (values) => {
+    submitHandler(values);
     console.log("Success:", values);
   };
 
@@ -73,34 +74,35 @@ export default withoutAuth(function Login() {
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
               >
-                <Form.Item
-                  label=""
-                  name="username"
-                  noStyle
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your username!",
-                    },
-                  ]}
-                >
+                <Form.Item>
                   <label className="login-label">Username</label>
-                  <Input />
+                  <Form.Item
+                    name="username"
+                    noStyle
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your username!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
                 </Form.Item>
-
-                <Form.Item
-                  label=""
-                  noStyle
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your password!",
-                    },
-                  ]}
-                >
+                <Form.Item>
                   <label className="login-label">Password</label>
-                  <Input.Password />
+                  <Form.Item
+                    noStyle
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your password!",
+                      },
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
                 </Form.Item>
 
                 <Form.Item
