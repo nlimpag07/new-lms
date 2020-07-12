@@ -2,9 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Breadcrumb } from "antd";
+import { useRouter } from "next/router";
 
-const BreadCrumbs = (props) => {
-  var pathname = props.pathname.split("/");
+const BreadCrumbs = () => {
+  const router = useRouter();
+  var pathname = router.asPath.split("/");
+
   //console.log(pathname);
   //pathname = pathname.slice(1);
   pathname[0] == pathname[1] ? (pathname = pathname.slice(1)) : "";
@@ -15,14 +18,13 @@ const BreadCrumbs = (props) => {
       </Breadcrumb.Item>
     ) : (
       <Breadcrumb.Item key={index}>
-        <Link href={`/courses?id=${path}&cat=page`} as={`/p/${path}`}>
+        <Link href={`/courses/[CourseId]`} as={`/courses/${path}`}>
           <a>{path}</a>
         </Link>
       </Breadcrumb.Item>
     )
   );
   return (
-    
     <Breadcrumb style={{ margin: "16px 0" }} separator=">">
       {pathname}
       {/* <div className="breadcrumbs">

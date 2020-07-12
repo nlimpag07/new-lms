@@ -25,9 +25,8 @@ const Dashboard = (props) => {
         <ul>
           {posts.map((post) => (
             <li key={post.id}>
-              <Link
-                href={`/courses/course?id=${post.id}`} /* as={`/courses`} */
-              >
+              <Link href={`/courses/[courseId]`} as={`/courses/${post.id}`}>
+                
                 <a>{post.title}</a>
               </Link>
             </li>
@@ -40,6 +39,7 @@ const Dashboard = (props) => {
 Dashboard.getInitialProps = async () => {
   const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
   const { data } = res;
+  //console.log("Loading in server for Dashboard");
   return { posts: data };
 };
 export default withAuth(Dashboard);

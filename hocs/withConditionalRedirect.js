@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Loader from "../components/theme-layout/loader/loader";
 
 function isBrowser() {
   return typeof window !== "undefined";
@@ -31,13 +30,12 @@ export default function withConditionalRedirect({
   serverCondition,
   location,
 }) {
-  const loading = true;
   const WithConditionalRedirectWrapper = (props) => {
     const router = useRouter();
     const redirectCondition = clientCondition();
     if (isBrowser() && redirectCondition) {
       router.push(location);
-      return <Loader loading={loading} />;
+      return <></>;
     }
     return <WrappedComponent {...props} />;
   };
