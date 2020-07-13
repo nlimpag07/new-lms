@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import {
   Form,
   Select,
@@ -16,6 +15,7 @@ import { useRouter } from "next/router";
 //importing menu
 import MainMenu from "./main-menu/MainMenu";
 import UserMenu from "./main-menu/UserMenu";
+import InstructorMenu from "./main-menu/InstructorMenu";
 //importing navbar
 import MainNavbar from "./navbar/MainNavbar";
 //importing breadcrumbs
@@ -33,6 +33,11 @@ export default function MainThemeLayout({ children }) {
   let NavigationMenu, MainNav, BreadCrumb, footer;
   if (router.route.startsWith("/user/")) {
     NavigationMenu = <UserMenu defaultSelectedKey={router.pathname} />;
+    MainNav = <MainNavbar />;
+    BreadCrumb = <BreadCrumbs pathname={router.route} />;
+    footer = <TemplateFooter />;
+  } else if (router.route.startsWith("/instructor/")) {
+    NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
     MainNav = <MainNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
@@ -65,7 +70,7 @@ export default function MainThemeLayout({ children }) {
           >
             {MainNav}
           </Header>
-          <Content style={{ margin: "0 16px" }}>
+          <Content /* style={{ margin: "0 16px" }} */>
             {BreadCrumb}
             <div className="site-layout-background" style={{ minHeight: 360 }}>
               {children}
