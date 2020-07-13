@@ -22,7 +22,7 @@ class UserMenu extends Component {
           key="/"
           icon={<FontAwesomeIcon icon={["fas", "home"]} size="lg" />}
         >
-          <Link href="/courses/course" as="/courses">
+          <Link href="/courses/courselist" as="/courses/courselist">
             <a>Course Catalogue</a>
           </Link>
         </Menu.Item>

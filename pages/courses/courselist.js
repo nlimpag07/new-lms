@@ -19,7 +19,7 @@ const CourseList = (props) => {
   return (
     <MainThemeLayout>
       <Layout>
-        <h1>Welcome to the dashboard!!! </h1>
+        <h1>Welcome to the Course List!!! </h1>
         <ul>
           {posts.map((post) => (
             <li key={post.id}>
