@@ -2,35 +2,29 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { Layout } from "antd";
-import withAuth from "../../hocs/withAuth";
+
 import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
+import withAuth from "../../hocs/withAuth";
 
-const Course = (props) => {
-  const [comments, setComments] = useState([]);
+const CourseList = (props) => {
+  const [posts, setPosts] = useState(props.posts);
 
-  async function getComments() {
-    const res = await axios.get(
-      `https://jsonplaceholder.typicode.com/comments?postId=${props.id}`
-    );
-    setComments(res.data);
+  async function getPosts() {
+    const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
+    setPosts(res.data);
   }
-
   useEffect(() => {
-    getComments();
+    getPosts();
   }, []);
-
-  //const { nposts } = pageProps;
   return (
     <MainThemeLayout>
       <Layout>
-        <h1>Welcome to Courses!!! {props.id} </h1>
+        <h1>Welcome to the dashboard!!! </h1>
         <ul>
-          {comments.map((comment) => (
-            <li key={comment.id}>
-              <Link
-                href={`/courses/course?id=${comment.id}`} /* as={`/courses`} */
-              >
-                <a>{comment.body}</a>
+          {posts.map((post) => (
+            <li key={post.id}>
+              <Link href={`/courses/[courseId]`} as={`/courses/${post.id}`}>
+                <a>{post.title}</a>
               </Link>
             </li>
           ))}
@@ -39,10 +33,10 @@ const Course = (props) => {
     </MainThemeLayout>
   );
 };
-Course.getInitialProps = async ({ query }) => {
-  //console.log({query});
-  /* const res = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${query.id}` );
-  const json = await res.json() */
-  return query;
+CourseList.getInitialProps = async () => {
+  const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
+  const { data } = res;
+  //console.log("Loading in server for Courses");
+  return { posts: data };
 };
-export default withAuth(Course);
+export default withAuth(CourseList);
