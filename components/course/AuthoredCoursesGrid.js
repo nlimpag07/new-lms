@@ -32,6 +32,7 @@ const list = {
 
 const AuthoredCourses = () => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
+  var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
   /*const [grid,setGrid] = useState(gridList);
    useEffect(() => {
@@ -65,17 +66,34 @@ const AuthoredCourses = () => {
           </button>
         </Col>
       </Row>
-      <Row className="AuthoredCourses-ListItems" gutter={[16, 16]} style={{ padding: "10px 0" }}>
-        {GridType(curGridStyle)}
+      <Row
+        className="AuthoredCourses-ListItems"
+        gutter={[16, 16]}
+        style={{ padding: "10px 0" }}
+      >
+        {GridType(curGridStyle, setModal2Visible)}
       </Row>
+      <Modal
+        title="Publish Properties"
+        centered
+        visible={modal2Visible}
+        onOk={() => setModal2Visible(false)}
+        onCancel={() => setModal2Visible(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
       <style jsx global>{`
         .AuthoredCourses-ListItems .ant-card-actions > li {
-            padding: 12px 0;
-            margin:0;
+          padding: 12px 0;
+          margin: 0;
         }
         .AuthoredCourses-ListItems .ant-card-actions > li:hover {
-            background-color:#f0f0f0;
-            margin:0;
+          background-color: #f0f0f0;
+          margin: 0;
         }
         .widget-holder-col:nth-child(even) {
           padding-right: 0px !important;
@@ -89,7 +107,7 @@ const AuthoredCourses = () => {
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
-          text-transform:uppercase;
+          text-transform: uppercase;
         }
         .widget-holder-col .widget-header-row {
           background-color: #eeeeee;
@@ -126,7 +144,7 @@ const AuthoredCourses = () => {
           padding: 7px 10px;
           font-size: 12px;
           min-height: 0;
-          border-bottom:none;
+          border-bottom: none;
         }
         .widget-holder-col .ant-card-head .ant-card-extra {
           color: #ffffff;
@@ -143,18 +161,18 @@ const AuthoredCourses = () => {
           clear: both;
           position: relative;
         }
-        .widget-holder-col .published-course .ant-card-head{
-            background-color:#62ab35bf;
+        .widget-holder-col .published-course .ant-card-head {
+          background-color: #62ab35bf;
         }
-        .widget-holder-col .unpublished-course .ant-card-head{
-            background-color:#ff572294;
+        .widget-holder-col .unpublished-course .ant-card-head {
+          background-color: #ff572294;
         }
       `}</style>
     </Col>
   );
 };
 
-const GridType = (gridType) => {
+const GridType = (gridType, setModal2Visible) => {
   switch (gridType) {
     default:
       return (
@@ -162,7 +180,7 @@ const GridType = (gridType) => {
           <Col className="gutter-row" xs={24} sm={24} md={8} lg={8}>
             <motion.div initial="hidden" animate="visible" variants={list}>
               <Card
-              className="published-course"
+                className="published-course"
                 extra="Published"
                 hoverable
                 style={{ width: "auto" }}
@@ -173,7 +191,10 @@ const GridType = (gridType) => {
                   />
                 }
                 actions={[
-                  <CloudDownloadOutlined key="Unpublish" />,
+                  <CloudDownloadOutlined
+                    key="Unpublish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
                   <EditOutlined key="edit" />,
                   <EyeOutlined key="View" />,
                 ]}
@@ -193,7 +214,7 @@ const GridType = (gridType) => {
           <Col className="gutter-row" xs={24} sm={24} md={8} lg={8}>
             <motion.div initial="hidden" animate="visible" variants={list}>
               <Card
-              className="unpublished-course"
+                className="unpublished-course"
                 extra="Unpublished"
                 hoverable
                 style={{ width: "auto" }}
@@ -204,7 +225,10 @@ const GridType = (gridType) => {
                   />
                 }
                 actions={[
-                  <CloudUploadOutlined key="Publish" />,
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
                   <EditOutlined key="edit" />,
                   <EyeOutlined key="View" />,
                 ]}
@@ -234,7 +258,10 @@ const GridType = (gridType) => {
                   />
                 }
                 actions={[
-                  <CloudUploadOutlined key="Publish" />,
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
                   <EditOutlined key="edit" />,
                   <EyeOutlined key="View" />,
                 ]}
