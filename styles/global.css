@@ -247,3 +247,89 @@
   padding-right: 16px;
   padding-left: 0;
 }
+
+
+body.radial-open svg.radial-menu-svg {
+  transform: scale(1);
+  transition: transform 0.12s ease 0.2s;
+  opacity: 1;
+}
+body.radial-open .ellipsis.radial-bottom-right-aligned {
+  bottom: 23%;
+  right: 11%;
+  opacity: 0;
+}
+body.radial-open .ellipsis.radial-bottom-left-aligned {
+  bottom: 23%;
+  left: 11%;
+  opacity: 0;
+}
+body:not(.radial-open) .ellipsis {
+  transition-delay: 0.2s;
+}
+body:not(.radial-open) svg.radial-menu-svg {
+  transform: scale(0);
+  transition: transform 0.3s ease;
+}
+svg.radial-menu-svg {
+  z-index: 2;
+  position: absolute;
+}
+svg.radial-menu-svg.radial-bottom-right-aligned {
+  bottom: 10%;
+  right: 5%;
+  position: fixed;
+}
+svg.radial-menu-svg.radial-bottom-left-aligned {
+  bottom: 10%;
+  left: 5%;
+}
+svg.radial-menu-svg text, svg.radial-menu-svg text tspan {
+  font-family: "ams-icons" !important;
+}
+svg.radial-menu-svg path.slicepath {
+  transition: fill 2s ease-out;
+}
+svg.radial-menu-svg > g > g:hover path.slicepath {
+  fill: #a7d1f5 !important;
+  transition: fill 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+svg.radial-menu-svg g.pie__slice__group:hover, svg.radial-menu-svg g.inner__center__group:hover {
+  cursor: pointer;
+}
+svg.radial-menu-svg > g > g.pie__slice__group:hover text {
+  fill: #333;
+}
+a.ellipsis {
+  position: absolute;
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: #fff;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.44);
+  opacity: 1;
+}
+a.ellipsis:active, a.ellipsis:hover {
+  box-shadow: 0px 4px 7px 0px rgba(0, 0, 0, 0.44);
+}
+a.ellipsis.radial-bottom-right-aligned {
+  bottom: 5vmin;
+  right: 5vmin;
+  -webkit-transition: right 0.3s ease-in-out, bottom 0.3s ease-in-out, opacity 0.35s ease-in-out;
+  transition: right 0.3s ease-in-out, bottom 0.3s ease-in-out, opacity 0.35s ease-in-out;
+  position: fixed;
+}
+a.ellipsis.radial-bottom-left-aligned {
+  bottom: 5vmin;
+  left: 5vmin;
+  -webkit-transition: left 0.3s ease-in-out, bottom 0.3s ease-in-out, opacity 0.35s ease-in-out;
+  transition: left 0.3s ease-in-out, bottom 0.3s ease-in-out, opacity 0.35s ease-in-out;
+}
+a.ellipsis i {
+  color: #333;
+  font-size: 24px;
+  padding: 14px 5px;
+  display: block;
+  text-align: center;
+}

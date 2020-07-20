@@ -1,0 +1,132 @@
+@font-face {
+  font-family: "ams-icons";
+  src: url("ams-icons.eot?1eztd");
+  src: url("ams-icons.eot?1eztd#iefix") format("embedded-opentype"),
+    url("ams-icons.ttf?1eztd") format("truetype"),
+    url("ams-icons.woff?1eztd") format("woff"),
+    url("ams-icons.svg?1eztd#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="ams-"],
+[class*=" ams-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "ams-icons" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ams-download:before {
+  content: "\f019";
+}
+.ams-print:before {
+  content: "\f02f";
+}
+.ams-edit:before {
+  content: "\f044";
+}
+.ams-pencil-square-o:before {
+  content: "\f044";
+}
+.ams-plus-circle:before {
+  content: "\f055";
+}
+.ams-minus-circle:before {
+  content: "\f056";
+}
+.ams-copy:before {
+  content: "\f0c5";
+}
+.ams-files-o:before {
+  content: "\f0c5";
+}
+.ams-cloud-upload1:before {
+  content: "\f0ee";
+}
+.ams-file-excel-o:before {
+  content: "\f1c3";
+}
+.ams-sign-out:before {
+  content: "\e913";
+}
+.ams-chart:before {
+  content: "\e900";
+}
+.ams-check:before {
+  content: "\e901";
+}
+.ams-cog1:before {
+  content: "\e902";
+}
+.ams-cross:before {
+  content: "\e903";
+}
+.ams-dashboard:before {
+  content: "\e904";
+}
+.ams-excel:before {
+  content: "\e905";
+}
+.ams-horizontal-ellipse:before {
+  content: "\e906";
+}
+.ams-notification:before {
+  content: "\e907";
+}
+.ams-pdf:before {
+  content: "\e908";
+}
+.ams-radial-menu:before {
+  content: "\e909";
+}
+.ams-report:before {
+  content: "\e90a";
+}
+.ams-search1:before {
+  content: "\e90b";
+}
+.ams-signin:before {
+  content: "\e90c";
+}
+.ams-signout:before {
+  content: "\e90d";
+}
+.ams-stocks:before {
+  content: "\e90e";
+}
+.ams-toggle-list:before {
+  content: "\e90f";
+}
+.ams-truck:before {
+  content: "\e910";
+}
+.ams-vertical-ellipse:before {
+  content: "\e911";
+}
+.ams-word:before {
+  content: "\e912";
+}
+.ams-floppy-disk:before {
+  content: "\e962";
+}
+.ams-search:before {
+  content: "\e986";
+}
+.ams-cog:before {
+  content: "\e994";
+}
+.ams-cloud-upload:before {
+  content: "\e9c3";
+}
+.ams-eye:before {
+  content: "\e9ce";
+}

@@ -4,11 +4,12 @@ import cookie from "cookie";
 import "antd/dist/antd.css";
 import "../styles/vars.css";
 import "../styles/global.css";
-
+import '@progress/kendo-theme-material/dist/all.css';
 import { library, config } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import "../styles/ams-icons/style.css"
 config.autoAddCss = false;
 library.add(fab, fas);
 

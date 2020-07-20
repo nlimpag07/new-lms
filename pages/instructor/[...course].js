@@ -6,9 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../hocs/withAuth";
 
-import StatusBar from "../../components/status_bar/StatusBar";
-
-import AuthoredCourses from "../../components/course/AuthoredCourses";
+import CourseList from "../../components/course/CourseList";
 import ToDos from "../../components/todos/ToDos";
 
 import Graph from "../../components/graph/Graph";
@@ -26,7 +24,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Dashboard = () => {
+const Course = () => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
 
   useEffect(() => {
@@ -35,42 +33,19 @@ const Dashboard = () => {
 
   return (
     <MainThemeLayout>
-      <Layout className="main-content-holder">
-        <StatusBar />
-        <Row
-          className="widget-container"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
-        >
-          <AuthoredCourses />
-          <ToDos />
-        </Row>
-        {/*2nd Level*/}
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
-        >
-          <Graph />
-          <LeaderBoard />
-        </Row>
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
-        >
-          <RecentActivities />
-          <SocialMedia />
-        </Row>
+      <Layout className="main-content-holder courses-class" id="courses-class">
+        <CourseList />
       </Layout>
 
       <style jsx global>{`
-        .status-col {
+        /* .status-col {
           background: #eeeeee;
           padding: 8px 0;
           min-height: 150px;
-        }
+        } */
       `}</style>
     </MainThemeLayout>
   );
 };
 
-export default withAuth(Dashboard);
+export default withAuth(Course);

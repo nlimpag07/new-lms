@@ -18,6 +18,7 @@ import UserMenu from "./main-menu/UserMenu";
 import InstructorMenu from "./main-menu/InstructorMenu";
 //importing navbar
 import MainNavbar from "./navbar/MainNavbar";
+import InstructorNavbar from "./navbar/InstructorNavbar";
 //importing breadcrumbs
 import BreadCrumbs from "./breadcrumbs/BreadCrumbs";
 //importing footer
@@ -38,7 +39,7 @@ export default function MainThemeLayout({ children }) {
     footer = <TemplateFooter />;
   } else if (router.route.startsWith("/instructor/")) {
     NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
-    MainNav = <MainNavbar />;
+    MainNav = <InstructorNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
   } else {
