@@ -249,25 +249,25 @@
 }
 
 
-body.radial-open svg.radial-menu-svg {
+.radial-ui.radial-open svg.radial-menu-svg {
   transform: scale(1);
   transition: transform 0.12s ease 0.2s;
   opacity: 1;
 }
-body.radial-open .ellipsis.radial-bottom-right-aligned {
+.radial-ui.radial-open .ellipsis.radial-bottom-right-aligned {
   bottom: 23%;
   right: 11%;
   opacity: 0;
 }
-body.radial-open .ellipsis.radial-bottom-left-aligned {
+.radial-ui.radial-open .ellipsis.radial-bottom-left-aligned {
   bottom: 23%;
   left: 11%;
   opacity: 0;
 }
-body:not(.radial-open) .ellipsis {
+.radial-ui:not(.radial-open) .ellipsis {
   transition-delay: 0.2s;
 }
-body:not(.radial-open) svg.radial-menu-svg {
+.radial-ui:not(.radial-open) svg.radial-menu-svg {
   transform: scale(0);
   transition: transform 0.3s ease;
 }

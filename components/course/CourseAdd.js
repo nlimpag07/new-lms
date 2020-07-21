@@ -1,0 +1,674 @@
+import React, { Component, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
+import axios from "axios";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  Layout,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Divider,
+  Card,
+  Avatar,
+  Menu,
+  Dropdown,
+  Select,
+  Input,
+} from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
+import {
+  EditOutlined,
+  EllipsisOutlined,
+  EyeOutlined,
+  CloudUploadOutlined,
+  CloudDownloadOutlined,
+} from "@ant-design/icons";
+const { Meta } = Card;
+
+const { Search } = Input;
+const list = {
+  visible: {
+    opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.5,
+    },
+  },
+  hidden: {
+    opacity: 0,
+    transition: {
+      when: "afterChildren",
+    },
+  },
+};
+
+const menulists = [
+  {
+    title: "Save",
+    icon: "&#xf055;",
+    active: true,
+    url: "/instructor/dashboard",
+  },
+  
+];
+
+const CourseAdd = () => {
+  const [curGridStyle, setCurGridStyle] = useState("grid");
+  var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+
+  /*const [grid,setGrid] = useState(gridList);
+   useEffect(() => {
+    setGrid(gridList);
+  }, []); */
+  return (
+    //GridType(gridList)
+    <Row
+      className="widget-container"
+      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      style={{ margin: "1rem 0" }}
+    >
+      <Col
+        className="gutter-row widget-holder-col"
+        xs={24}
+        sm={24}
+        md={24}
+        lg={24}
+      >
+        <Row className="widget-header-row" justify="start">
+          <Col xs={20}>
+            <h3 className="widget-title">WELCOME TO COURSE ADD PAGE</h3>
+          </Col>
+          <Col xs={4} className="widget-switchgrid-holder">
+            <span>Showing 4 of 4 Results</span>{" "}
+            <button
+              className="switch-grid"
+              key="Switch"
+              onClick={() =>
+                setCurGridStyle(curGridStyle == "grid" ? "list" : "grid")
+              }
+            >
+              <FontAwesomeIcon
+                icon={[
+                  "fas",
+                  `th-${curGridStyle == "grid" ? "list" : "large"}`,
+                ]}
+                size="lg"
+              />
+            </button>
+          </Col>
+        </Row>
+        <Row
+          className="widget-search-row"
+          justify="start"
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+        >
+          <Col xs={8}>
+            <div className="choices-container category-holder">
+              <Select
+                showSearch
+                style={{ width: "100%" }}
+                placeholder="Select View"
+                optionFilterProp="children"
+                onChange={onChange}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                <Option value="Authored Courses">Authored Courses</Option>
+                <Option value="Categories">Categories</Option>
+                <Option value="All Courses">All Courses</Option>
+              </Select>
+            </div>
+          </Col>
+          <Col xs={16} className="widget-switchgrid-holder">
+            <div className="choices-container searchbox-holder">
+              <Search
+                placeholder="Search Course"
+                onSearch={(value) => console.log(value)}
+              />
+            </div>
+          </Col>
+        </Row>
+        <Row
+          className="AuthoredCourses-ListItems"
+          gutter={[16, 16]}
+          style={{ padding: "10px 0" }}
+        >
+          {GridType(curGridStyle, setModal2Visible)}
+        </Row>
+      </Col>
+      <Modal
+        title="Publish Properties"
+        centered
+        visible={modal2Visible}
+        onOk={() => setModal2Visible(false)}
+        onCancel={() => setModal2Visible(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+        width={1000}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
+      
+      <RadialUI
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+      />
+      <style jsx global>{`
+        .AuthoredCourses-ListItems .ant-card-actions > li {
+          padding: 12px 0;
+          margin: 0;
+        }
+        .AuthoredCourses-ListItems .ant-card-actions > li:hover {
+          background-color: #f0f0f0;
+          margin: 0;
+        }
+        .widget-holder-col:nth-child(even) {
+          padding-right: 0px !important;
+          padding-left: 10px !important;
+        }
+
+        .widget-holder-col:nth-child(odd) {
+          padding-left: 0px !important;
+          padding-right: 10px !important;
+        }
+        .widget-holder-col .widget-title {
+          color: #e69138;
+          margin-bottom: 0;
+          text-transform: uppercase;
+        }
+        .widget-holder-col .widget-header-row {
+          padding: 5px 0;
+          color: #e69138;
+        }
+        .widget-holder-col .widget-header-row .widget-switchgrid-holder {
+          text-align: right;
+        }
+        .widget-holder-col .widget-header-row .switch-grid {
+          vertical-align: middle;
+          font-weight: 900;
+          border: none;
+          outline: none;
+          background: none;
+        }
+        .widget-holder-col .widget-header-row .switch-grid:hover,
+        .widget-holder-col .widget-header-row .switch-grid:focus {
+          cursor: pointer;
+          outline: none;
+        }
+        .widget-holder-col .ant-card-body {
+          padding: 10px;
+        }
+        .widget-holder-col .ant-card-head {
+          float: right;
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          background-color: #62ab35bf;
+          border-radius: 15px;
+          padding: 0 10px;
+          font-size: 12px;
+          color: #ffffff;
+          padding: 7px 10px;
+          font-size: 12px;
+          min-height: 0;
+          border-bottom: none;
+        }
+        .widget-holder-col .ant-card-head .ant-card-extra {
+          color: #ffffff;
+          padding: 0 0;
+          font-size: 12px;
+        }
+        .grid-list .ant-card-cover,
+        .grid-list .ant-card-body {
+          float: left;
+          position: relative;
+        }
+        .grid-list .ant-card-actions {
+          float: none;
+          clear: both;
+          position: relative;
+        }
+        .widget-holder-col .published-course .ant-card-head {
+          background-color: #62ab35bf;
+        }
+        .widget-holder-col .unpublished-course .ant-card-head {
+          background-color: #ff572294;
+        }
+        .widget-holder-col .widget-search-row {
+          padding: 5px 10px;
+          color: #e69138;
+        }
+        .widget-holder-col .widget-search-row {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .widget-holder-col .widget-search-row .choices-container {
+          border-radius: 0.5rem;
+          border: 1px solid #888787;
+          /* padding: 0 10px; */
+        }
+        .widget-holder-col .widget-search-row .category-holder {
+          position: relative;
+        }
+        .widget-holder-col
+          .widget-search-row
+          .category-holder
+          .ant-select-single:not(.ant-select-customize-input)
+          .ant-select-selector {
+          background: none;
+          border: none;
+        }
+        .widget-holder-col .widget-search-row .category-holder .ant-select,
+        .widget-holder-col
+          .widget-search-row
+          .category-holder
+          .ant-select-arrow {
+          color: #e69138;
+          font-size: 1rem;
+        }
+        .widget-holder-col
+          .widget-search-row
+          .category-holder
+          .ant-select-arrow {
+          top: 50%;
+        }
+
+        .searchbox-holder .ant-input-affix-wrapper {
+          background: none;
+          border: none;
+          font-size: 1rem;
+          color: #e69138;
+        }
+        .searchbox-holder .ant-input,
+        .searchbox-holder .ant-input-search-icon {
+          font-size: 1rem;
+          color: #e69138;
+        }
+        .searchbox-holder .ant-input-affix-wrapper .ant-input-prefix,
+        .searchbox-holder .ant-input-affix-wrapper .ant-input-suffix {
+          color: #e69138;
+        }
+        .category-holder .ant-select-selection-placeholder,
+        .searchbox-holder .ant-input::placeholder {
+          color: #e69138;
+          opacity: 0.5;
+        }
+      `}</style>
+    </Row>
+  );
+};
+
+const GridType = (gridType, setModal2Visible) => {
+  switch (gridType) {
+    default:
+      return (
+        <>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                className="published-course"
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudDownloadOutlined
+                    key="Unpublish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined
+                    key="View"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                className="unpublished-course"
+                extra="Unpublished"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8} xl={6}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  />
+                }
+                actions={[
+                  <CloudUploadOutlined
+                    key="Publish"
+                    onClick={() => setModal2Visible(true)}
+                  />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title Grid"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+        </>
+      );
+    case "list":
+      return (
+        <>
+          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  </Col>
+                }
+                actions={[
+                  <CloudUploadOutlined key="Publish" />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title List"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  </Col>
+                }
+                actions={[
+                  <CloudUploadOutlined key="Publish" />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title List"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Card
+                extra="Published"
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  </Col>
+                }
+                actions={[
+                  <CloudUploadOutlined key="Publish" />,
+                  <EditOutlined key="edit" />,
+                  <EyeOutlined key="View" />,
+                ]}
+              >
+                <Meta
+                  title="Card title List"
+                  description={
+                    <div>
+                      <div>Instructor-led Training</div>
+                      <div>Public</div>
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+        </>
+      );
+  }
+};
+
+const { Option } = Select;
+function onChange(value) {
+  console.log(`selected ${value}`);
+}
+function onBlur() {
+  console.log("blur");
+}
+function onFocus() {
+  console.log("focus");
+}
+function onSearch(val) {
+  console.log("search:", val);
+}
+
+export default CourseAdd;

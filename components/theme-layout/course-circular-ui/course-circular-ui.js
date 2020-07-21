@@ -5,22 +5,55 @@ import { Row, Col, Affix, Button } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RadialUI from "./radial-ui";
 const menulists = [
-  { title: "Add", icon: "&#xf055;", active: true },
-  { title: "Edit", icon: "&#xf044;" },
-  { title: "Delete", icon: "&#xf056;" },
-  { title: "Print", icon: "&#xf02f;" },
-  { title: "Copy From", icon: "&#xf0c5;" },
-  { title: "Import", icon: "&#xf1c3;" },
-  { title: "Export", icon: "&#xf019;" },
+  {
+    title: "Add",
+    icon: "&#xf055;",
+    active: true,
+    url: "/instructor/course/add",
+  },
+  {
+    title: "Edit",
+    icon: "&#xf044;",
+    url: "/user/dashboard",
+  },
+  {
+    title: "Delete",
+    icon: "&#xf056;",
+    url: "/instructor/course",
+  },
+  {
+    title: "Print",
+    icon: "&#xf02f;",
+    url: "/instructor/dashboard",
+  },
+  {
+    title: "Copy From",
+    icon: "&#xf0c5;",
+    url: "/instructor/course",
+  },
+  {
+    title: "Import",
+    icon: "&#xf1c3;",
+    url: "/instructor/dashboard",
+  },
+  {
+    title: "Export",
+    icon: "&#xf019;",
+    url: "/instructor/course",
+  },
 ];
 const CourseCircularUi = () => {
-
   return (
-    //GridType(gridList)
     <div className="circular-ui" id="circular-ui-holder">
-      <RadialUI listMenu= {menulists} position="bottom-right" iconColor="#8998BA" />
+      <RadialUI
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+      />
       <style jsx global>{`
-      .circular-ui{background-color: #000000;}
+        .circular-ui {
+          background-color: #000000;
+        }
       `}</style>
     </div>
   );
