@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Form,
   Select,
@@ -13,12 +14,18 @@ import {
 import { useRouter } from "next/router";
 
 //importing menu
-import MainMenu from "./main-menu/MainMenu";
-import UserMenu from "./main-menu/UserMenu";
-import InstructorMenu from "./main-menu/InstructorMenu";
+//import MainMenu from "./main-menu/MainMenu";
+const MainMenu = dynamic(() => import("./main-menu/MainMenu"));
+//import UserMenu from "./main-menu/UserMenu";
+const UserMenu = dynamic(() => import("./main-menu/UserMenu"));
+//import InstructorMenu from "./main-menu/InstructorMenu";
+const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
+const CourseAddMenu = dynamic(() => import("./main-menu/CourseAddMenu"));
 //importing navbar
-import MainNavbar from "./navbar/MainNavbar";
-import InstructorNavbar from "./navbar/InstructorNavbar";
+//import MainNavbar from "./navbar/MainNavbar";
+const MainNavbar = dynamic(() => import("./navbar/MainNavbar"));
+//import InstructorNavbar from "./navbar/InstructorNavbar";
+const InstructorNavbar = dynamic(() => import("./navbar/InstructorNavbar"));
 //importing breadcrumbs
 import BreadCrumbs from "./breadcrumbs/BreadCrumbs";
 //importing footer
@@ -30,7 +37,7 @@ import Loader from "./loader/loader";
 export default function MainThemeLayout({ children }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
+  console.log(router.route);
   let NavigationMenu, MainNav, BreadCrumb, footer;
   if (router.route.startsWith("/user/")) {
     NavigationMenu = <UserMenu defaultSelectedKey={router.pathname} />;
@@ -38,10 +45,15 @@ export default function MainThemeLayout({ children }) {
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
   } else if (router.route.startsWith("/instructor/")) {
-    NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
-    MainNav = <InstructorNavbar />;
-    BreadCrumb = <BreadCrumbs pathname={router.route} />;
-    footer = <TemplateFooter />;
+    
+      NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
+      MainNav = <InstructorNavbar />;
+      BreadCrumb = <BreadCrumbs pathname={router.route} />;
+      footer = <TemplateFooter />;
+      if (router.route.startsWith("/instructor/[course]/")) {
+        NavigationMenu = <CourseAddMenu defaultSelectedKey={router.pathname} />;
+      }
+    
   } else {
     NavigationMenu = <MainMenu defaultSelectedKey={router.pathname} />;
     MainNav = <MainNavbar />;

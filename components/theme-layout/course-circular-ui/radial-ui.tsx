@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import * as d3 from "d3";
 
@@ -8,6 +8,8 @@ interface IRadialListProps {
   icon: String;
   active: Boolean;
   url: String;
+  urlAs: String;
+  callback: String;
 }
 
 interface IRadialProps {
@@ -15,12 +17,13 @@ interface IRadialProps {
   position?: "bottom-left" | "bottom-right";
   iconColor?: string;
   onClick?: (e: any) => void;
+  toggleModal?: (e: any) => void;
 }
 
 const RadialMenuStyled = styled.div<IRadialProps>``;
 
 export const RadialUI: React.FC<IRadialProps> = (props) => {
-  const router = useRouter()
+  const router = useRouter();
   const [isRadial, setIsRadial] = useState({ isRadial: "close" });
   //console.log("Radial Elems Const:" + targetElem.classList);
   useEffect(() => {
@@ -143,7 +146,11 @@ export const RadialUI: React.FC<IRadialProps> = (props) => {
       .enter()
       .append("g")
       .attr("class", "pie__slice__group")
-      .on("click", (d: any) => router.push(d.data.url)/* console.log(d.data.url) */)
+      .on("click", (d: any) =>
+        d.data.callback
+          ? props.toggleModal(d.data.callback)
+          : router.push(d.data.url, d.data.urlAs)
+      )
       .on("mouseover", (d: any, i: any) => {
         setCenterData(d);
       });

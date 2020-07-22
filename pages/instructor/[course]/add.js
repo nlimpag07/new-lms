@@ -3,8 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import CourseList from "../../components/course/CourseList";
-import CourseAdd from "../../components/course/CourseAdd";
+import CourseAdd from "../../../components/course/CourseAdd";
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
@@ -12,8 +11,8 @@ import axios from "axios";
 import Link from "next/link";
 import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
-import withAuth from "../../hocs/withAuth";
+import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
+import withAuth from "../../../hocs/withAuth";
 
 
 import { useRouter } from "next/router";
@@ -27,8 +26,8 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Course = () => {
-  const router = useRouter();
+const AddCourse = () => {
+  /* const router = useRouter();
   var urlPath = router.query.course;
   var theContent;
   if (urlPath) {
@@ -37,7 +36,7 @@ const Course = () => {
     thePage == "edit" && (theContent = "HELLO Edit");
     thePage == "publish" && (theContent = "HELLO Publish");
     thePage == "course" && (theContent = <CourseList />);
-  }
+  } */
 
   useEffect(() => {
   }, []);
@@ -45,8 +44,7 @@ const Course = () => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        {/* <CourseList /> */}
-        {theContent}
+        <CourseAdd />
       </Layout>
 
       <style jsx global>{`
@@ -60,4 +58,4 @@ const Course = () => {
   );
 };
 
-export default withAuth(Course);
+export default withAuth(AddCourse);

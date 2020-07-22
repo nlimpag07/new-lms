@@ -33,7 +33,7 @@ class InstructorMenu extends Component {
           key="/instructor/course"
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
         >
-          <Link href="/instructor/[...course]" as={`/instructor/course`} >
+          <Link href="/instructor/[course]" as={`/instructor/course`} >
             <a>Courses</a>
           </Link>
         </Menu.Item>
