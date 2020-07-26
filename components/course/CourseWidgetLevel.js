@@ -123,7 +123,7 @@ const ModalForm = ({ title, visible, onCancel, okText }) => {
   );
 };
 
-const CourseAdd = () => {
+const CourseWidgetLevel = () => {
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
@@ -170,66 +170,7 @@ const CourseAdd = () => {
   };
 
   return (
-    <Form.Provider onFormFinish={onFormFinishProcess}>
-      <Form {...formItemLayout} style={{ width: "100%" }} name="basicForm">
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Add Course</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              style={{ padding: "10px 0" }}
-            >
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <Form.Item>
-                  <Input placeholder="Course title" id="error" allowClear />
-                </Form.Item>
-
-                <Form.Item>
-                  <TextArea
-                    rows={10}
-                    placeholder="Course Description"
-                    allowClear
-                    onChange={onChange}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="">Draft Status here</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "10px 0" }}
-            >
-              <Col xs={24}>
-                <Collapse accordion expandIconPosition={"right"}>
-                  <Panel header="LEVEL" key="1" className="greyBackground">
+          <>
                     <Form.Item
                       label="User List"
                       noStyle
@@ -322,127 +263,13 @@ const CourseAdd = () => {
                     <span>
                       <PlusOutlined onClick={() => showModal("PickList")} />
                     </span>
-                  </Panel>
-                  <Panel header="CATEGORY" key="2" className="greyBackground">
-                    <p>Known for its loyalty and faithfulness</p>
-                  </Panel>
-                  <Panel header="TYPE" key="3" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel
-                    header="RELATED COURSES"
-                    key="4"
-                    className="greyBackground"
-                  >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel header="DURATION" key="5" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel header="LANGUAGE" key="6" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel header="TAGS" key="7" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel
-                    header="FEATURED MEDIA"
-                    key="8"
-                    className="greyBackground"
-                  >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel
-                    header="PASSING GRADE"
-                    key="9"
-                    className="greyBackground"
-                  >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                  <Panel header="CAPACITY" key="10" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
-                  </Panel>
-                </Collapse>
-              </Col>
-            </Row>
-          </Col>
-
-          <ModalForm
-            title={courseActionModal.modalTitle}
-            visible={courseActionModal.StateModal}
-            onCancel={hideUserModal}
-            okText={`${courseActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
-          />
-
-          <RadialUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
+                  
           <style jsx global>{`
-            .greyBackground {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 5px 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            .course-management .ant-form-item textarea.ant-input {
-              background-color: #eeeeee;
-            }
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
+            
           `}</style>
-        </Row>
-      </Form>
-    </Form.Provider>
+        </>
   );
 };
 
-const { Option } = Select;
-function onChange(value) {
-  console.log(`selected ${value}`);
-}
 
-export default CourseAdd;
+export default CourseWidgetLevel;

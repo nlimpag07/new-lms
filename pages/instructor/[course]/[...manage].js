@@ -1,9 +1,12 @@
 /** NLI
- * Use NextJs Conditional Importing 
+ * Use NextJs Conditional Importing
  * To Load Import Only the needed component
  **/
-/* Imported Courses Components **/
-import CourseAdd from "../../../components/course/CourseAdd";
+
+/* Imported Courses Components Dynamically **/
+import dynamic from "next/dynamic";
+const CourseList = dynamic(() => import("../../../components/course/CourseList"));
+const CourseAdd = dynamic(() => import("../../../components/course/CourseAdd"));
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
@@ -13,7 +16,6 @@ import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
-
 
 import { useRouter } from "next/router";
 
@@ -26,25 +28,25 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const AddCourse = () => {
-  /* const router = useRouter();
-  var urlPath = router.query.course;
+const CourseManagement = (props) => {
+  //console.log(props);
+  const router = useRouter();
+  var urlPath = router.asPath;
   var theContent;
   if (urlPath) {
-    var thePage = urlPath[urlPath.length - 1];
-    thePage == "add" && (theContent = <CourseAdd />);
-    thePage == "edit" && (theContent = "HELLO Edit");
-    thePage == "publish" && (theContent = "HELLO Publish");
-    thePage == "course" && (theContent = <CourseList />);
-  } */
+    urlPath.endsWith("list") && (theContent = <CourseList />);
+    urlPath.endsWith("add") && (theContent = <CourseAdd />);
+    urlPath.endsWith("edit") && (theContent = "HELLO Edit");
+    urlPath.endsWith("publish") && (theContent = "HELLO Publish");
+    //console.log(urlPath);
+  }
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <CourseAdd />
+        {theContent}
       </Layout>
 
       <style jsx global>{`
@@ -58,4 +60,5 @@ const AddCourse = () => {
   );
 };
 
-export default withAuth(AddCourse);
+
+export default withAuth(CourseManagement);

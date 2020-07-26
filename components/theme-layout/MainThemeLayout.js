@@ -20,7 +20,7 @@ const MainMenu = dynamic(() => import("./main-menu/MainMenu"));
 const UserMenu = dynamic(() => import("./main-menu/UserMenu"));
 //import InstructorMenu from "./main-menu/InstructorMenu";
 const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
-const CourseAddMenu = dynamic(() => import("./main-menu/CourseAddMenu"));
+const CourseManagementMenu = dynamic(() => import("./main-menu/CourseManagementMenu"));
 //importing navbar
 //import MainNavbar from "./navbar/MainNavbar";
 const MainNavbar = dynamic(() => import("./navbar/MainNavbar"));
@@ -37,7 +37,7 @@ import Loader from "./loader/loader";
 export default function MainThemeLayout({ children }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  console.log(router.route);
+  //console.log(router.route);
   let NavigationMenu, MainNav, BreadCrumb, footer;
   if (router.route.startsWith("/user/")) {
     NavigationMenu = <UserMenu defaultSelectedKey={router.pathname} />;
@@ -51,7 +51,7 @@ export default function MainThemeLayout({ children }) {
       BreadCrumb = <BreadCrumbs pathname={router.route} />;
       footer = <TemplateFooter />;
       if (router.route.startsWith("/instructor/[course]/")) {
-        NavigationMenu = <CourseAddMenu defaultSelectedKey={router.pathname} />;
+        NavigationMenu = <CourseManagementMenu defaultSelectedKey={router.pathname} />;
       }
     
   } else {
@@ -89,7 +89,7 @@ export default function MainThemeLayout({ children }) {
               {children}
             </div>
           </Content>
-          <Divider dashed className="features-divider" />
+          {/* <Divider dashed className="features-divider" /> */}
           {footer}
         </Layout>
         <style jsx global>{`

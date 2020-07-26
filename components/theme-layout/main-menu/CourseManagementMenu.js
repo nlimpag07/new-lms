@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //importing ant
 import { Menu } from "antd";
 
-const CourseAddMenu = (props) => {
+const CourseManagementMenu = (props) => {
  
     const { pathname } = props.defaultSelectedKey;
     return (
@@ -12,60 +12,60 @@ const CourseAddMenu = (props) => {
         
 
         <Menu.Item
-          key="/instructor/dashboard"
+          key="/instructor/[course]/add"
           icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
         >
-          <Link href="/instructor/dashboard" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add`}>
             <a>General</a>
           </Link>
         </Menu.Item>
 
         <Menu.Item
-          key="/instructor/course"
+          key="/instructor/[course]/[...manage]/course-outline"
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
         >
-          <Link href="/instructor/[...course]" as={`/instructor/course`} >
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/course-outline`} >
             <a>Course Outline</a>
           </Link>
         </Menu.Item>
 
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="/instructor/classes"
+          ikey="/instructor/[course]/[...manage]/learning-outcomes"
         >
-          <Link href="/instructor/classes" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/learning-outcomes`}>
             <a>Learning Outcomes</a>
           </Link>
         </Menu.Item>
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="/instructor/classes"
+          ikey="/instructor/[course]/[...manage]/assessements"
         >
-          <Link href="/instructor/classes" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/assessments`}>
             <a>Assessments</a>
           </Link>
         </Menu.Item>
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="/instructor/classes"
+          ikey="/instructor/[course]/[...manage]/instructor"
         >
-          <Link href="/instructor/classes" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/instructor`}>
             <a>Instructor</a>
           </Link>
         </Menu.Item>
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="/instructor/classes"
+          ikey="/instructor/[course]/[...manage]/competencies"
         >
-          <Link href="/instructor/classes" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/competencies`}>
             <a>Competencies</a>
           </Link>
         </Menu.Item>
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="/instructor/classes"
+          ikey="/instructor/[course]/[...manage]/evaluation"
         >
-          <Link href="/instructor/classes" passHref>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/evaluation`}>
             <a>Post Evaluation</a>
           </Link>
         </Menu.Item>
@@ -80,4 +80,4 @@ const CourseAddMenu = (props) => {
   
 }
 
-export default CourseAddMenu;
+export default CourseManagementMenu;

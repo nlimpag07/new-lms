@@ -18,7 +18,7 @@ const menulists = [
     title: "Add",
     icon: "&#xf055;",
     active: true,    
-    url: "/instructor/[course]/add",
+    url: "/instructor/[course]/[...manage]",
     urlAs: "/instructor/course/add",
   },
   {

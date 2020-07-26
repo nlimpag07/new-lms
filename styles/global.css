@@ -1,6 +1,7 @@
 /* *:focus{
   border:3px dotted #f9ad48;
 } */
+body{overflow:hidden;}
 .logo {
   display: block;
   padding: 2rem 0;
@@ -255,8 +256,8 @@
   opacity: 1;
 }
 .radial-ui.radial-open .ellipsis.radial-bottom-right-aligned {
-  bottom: 23%;
-  right: 11%;
+  bottom: 19%;
+  right: 8.5%;
   opacity: 0;
 }
 .radial-ui.radial-open .ellipsis.radial-bottom-left-aligned {
@@ -276,13 +277,13 @@ svg.radial-menu-svg {
   position: absolute;
 }
 svg.radial-menu-svg.radial-bottom-right-aligned {
-  bottom: 10%;
-  right: 5%;
+  bottom: 5%;
+  right: 2%;
   position: fixed;
 }
 svg.radial-menu-svg.radial-bottom-left-aligned {
-  bottom: 10%;
-  left: 5%;
+  bottom: 5%;
+  left: 2%;
 }
 svg.radial-menu-svg text, svg.radial-menu-svg text tspan {
   font-family: "ams-icons" !important;

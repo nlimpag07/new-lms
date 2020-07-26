@@ -27,10 +27,11 @@ import {
 const { Meta } = Card;
 
 const Course = () => {
-  /* const router = useRouter();
-  var urlPath = router.query.course;
+  /*const router = useRouter();
+  var urlPath = router.asPath;
+  console.log(urlPath)
   var theContent;
-  if (urlPath) {
+   if (urlPath) {
     var thePage = urlPath[urlPath.length - 1];
     thePage == "add" && (theContent = <CourseAdd />);
     thePage == "edit" && (theContent = "HELLO Edit");
