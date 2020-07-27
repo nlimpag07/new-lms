@@ -10,6 +10,14 @@ const CourseManagementMenu = (props) => {
     return (
       <Menu theme="light" defaultselectedkey={pathname} mode="inline">
         
+        <Menu.Item
+          key="/instructor/[course]"
+          icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
+        >
+          <Link href="/instructor/[course]" as={`/instructor/course`}>
+            <a>Back To Course</a>
+          </Link>
+        </Menu.Item>
 
         <Menu.Item
           key="/instructor/[course]/add"

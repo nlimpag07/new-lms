@@ -61,6 +61,28 @@ const menulists = [
 /**Panel used by collapsible accordion */
 const { Panel } = Collapse;
 
+const framerEffect = {
+  visible: {
+    opacity: 1,
+    transition: {
+      delay: 0.1,
+      ease: "easeIn", duration: 0.5,
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+    },
+  },
+  hidden: {
+    
+    opacity: 0,
+    transition: {
+      delay: 0.1,
+      ease: "easeIn", duration: 0.5,
+      when: "afterChildren",
+      staggerChildren: 0.1,
+    },
+  },
+};
+
 // reset form fields when modal is form, closed
 const useResetFormOnCloseModal = ({ form, visible }) => {
   const prevVisibleRef = useRef();
@@ -226,6 +248,17 @@ const CourseAdd = () => {
     });
   };
 
+  const validateMessages = {
+    required: '${label} is required!',
+    types: {
+      email: '${label} is not validate email!',
+      number: '${label} is not a validate number!',
+    },
+    number: {
+      range: '${label} must be between ${min} and ${max}',
+    },
+  };
+
   const formItemLayout = {
     scrollToFirstError: true,
     wrapperCol: {
@@ -240,12 +273,14 @@ const CourseAdd = () => {
 
   return (
     <Form.Provider onFormFinish={onFormFinishProcess}>
+      <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form
         {...formItemLayout}
         style={{ width: "100%" }}
         name="basicForm"
         hideRequiredMark={true}
         onFinish={onFinish}
+        validateMessages={validateMessages}
       >
         <Row
           className="widget-container course-management"
@@ -271,7 +306,9 @@ const CourseAdd = () => {
             >
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
                 <Form.Item
-                  name="Course Title"
+                  name="coursetitle"
+                  label="Course Title"
+                  
                   rules={[
                     {
                       required: true,
@@ -282,7 +319,9 @@ const CourseAdd = () => {
                 </Form.Item>
 
                 <Form.Item
-                  name="Course Description"
+                  label="Course Description"
+                  name="coursedescription"
+                  
                   rules={[
                     {
                       required: true,
@@ -469,9 +508,11 @@ const CourseAdd = () => {
             .course-management .cm-main-right .widget-header-row {
               text-align: end;
             }
+            .course-management .ant-form-item-label{display:none;}
           `}</style>
         </Row>
       </Form>
+      </motion.div>
     </Form.Provider>
   );
 };

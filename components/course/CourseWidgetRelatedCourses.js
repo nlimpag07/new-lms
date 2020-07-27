@@ -43,7 +43,15 @@ const CourseWidgetRelatedCourses = (props) => {
                             key={field.key}
                             gutter={[16, 16]}
                           >
-                            <Form.Item noStyle key={field.key}>
+                            <Form.Item
+                              noStyle
+                              key={field.key}
+                              rules={[
+                                {
+                                  required: true,
+                                },
+                              ]}
+                            >
                               <Input
                                 placeholder={widgetFieldLabels.catname}
                                 style={{ width: "85%" }}
