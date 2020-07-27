@@ -18,14 +18,19 @@ const list = {
   visible: {
     opacity: 1,
     transition: {
+      delay: 0.1,
+      ease: "easeIn", duration: 0.5,
       when: "beforeChildren",
-      staggerChildren: 0.5,
+      staggerChildren: 0.1,
     },
   },
   hidden: {
     opacity: 0,
     transition: {
+      delay: 0.1,
+      ease: "easeIn", duration: 0.5,
       when: "afterChildren",
+      staggerChildren: 0.1,
     },
   },
 };

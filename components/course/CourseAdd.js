@@ -34,6 +34,16 @@ import {
   PlusOutlined,
   MinusCircleOutlined,
 } from "@ant-design/icons";
+import CourseWidgetLevel from "./CourseWidgetLevel";
+import CourseWidgetCategory from "./CourseWidgetCategory";
+import CourseWidgetType from "./CourseWidgetType";
+import CourseWidgetRelatedCourses from "./CourseWidgetRelatedCourses";
+import CourseWidgetDuration from "./CourseWidgetDuration";
+import CourseWidgetLanguage from "./CourseWidgetLanguage";
+import CourseWidgetTags from "./CourseWidgetTags";
+import CourseWidgetFeaturedImage from "./CourseWidgetFeaturedImage";
+import CourseWidgetPassingGrade from "./CourseWidgetPassingGrade";
+import CourseWidgetCapacity from "./CourseWidgetCapacity";
 const { Meta } = Card;
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -65,59 +75,57 @@ const useResetFormOnCloseModal = ({ form, visible }) => {
   }, [visible]);
 };
 
-const ModalForm = ({ title, visible, onCancel, okText }) => {
+const ModalForm = ({
+  title,
+  modalFormName,
+  modalBodyContent,
+  visible,
+  onCancel,
+  okText,
+  onFinish,
+}) => {
   const [form] = Form.useForm();
   useResetFormOnCloseModal({
     form,
     visible,
   });
-
-  const onOk = () => {
-    form.submit();
-  };
+  /*NLI - submit filtration
+   *This area is for filtration on the behavior of the submit button
+   * If the modal title is "Save" - it means we are going to save the add course form
+   * Else, we are adding to picklists
+   * Uncomment the console log to see the difference
+   */
+  var adProps, width;
+  if (title == "Save") {
+    adProps = { okButtonProps: onFinish };
+    modalBodyContent = <p>Are you sure you are going to save?</p>;
+    width = 450;
+  } else {
+    adProps = {
+      onOk: () => {
+        form.submit();
+      },
+    };
+    width = 750;
+  }
+  //console.log(adProps);
+  /*End of submit filtration */
 
   return (
     <Modal
       title={title}
       centered
       visible={visible}
-      /* onOk={() =>
-            setCourseActionModal({
-              StateModal: false,
-              modalTitle: "",
-            })
-          } */
-      onOk={onOk}
+      {...adProps}
       onCancel={onCancel}
       maskClosable={false}
       destroyOnClose={true}
-      width={1000}
+      width={width}
       okText={okText}
       closable={false}
     >
-      <Form form={form} layout="vertical" name="userForm">
-        <Form.Item
-          name="name"
-          label="User Name"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="age"
-          label="User Age"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <InputNumber />
-        </Form.Item>
+      <Form form={form} layout="vertical" name={modalFormName}>
+        {modalBodyContent}
       </Form>
     </Modal>
   );
@@ -127,34 +135,95 @@ const CourseAdd = () => {
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
+    modalFormName: "",
+    modalBodyContent: "",
   });
-  const showModal = (modaltitle) => {
+  const showModal = (modaltitle, modalformname, modalbodycontent) => {
     setCourseActionModal({
       StateModal: true,
       modalTitle: modaltitle,
+      modalFormName: modalformname,
+      modalBodyContent: modalbodycontent,
     });
   };
 
-  const hideUserModal = () => {
+  const hideModal = () => {
     setCourseActionModal({
       StateModal: false,
       modalTitle: "",
+      modalFormName: "",
+      modalBodyContent: "",
     });
   };
 
- 
   const onFormFinishProcess = (name, { values, forms }) => {
-    if (name === "userForm") {
-      const { basicForm } = forms;
-      const users = basicForm.getFieldValue("users") || [];
+    const { basicForm } = forms;
+    const picklistFields = basicForm.getFieldValue(name) || [];
+    if (name === "picklistlevel") {
       basicForm.setFieldsValue({
-        users: [...users, values],
-      });
-      setCourseActionModal({
-        StateModal: false,
-        modalTitle: "",
+        picklistlevel: [...picklistFields, values],
       });
     }
+    if (name === "picklistcategory") {
+      basicForm.setFieldsValue({
+        picklistcategory: [...picklistFields, values],
+      });
+    }
+    if (name === "picklisttype") {
+      basicForm.setFieldsValue({
+        picklisttype: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistrelatedcourses") {
+      basicForm.setFieldsValue({
+        picklistrelatedcourses: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistduration") {
+      basicForm.setFieldsValue({
+        picklistduration: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistlanguage") {
+      basicForm.setFieldsValue({
+        picklistlanguage: [...picklistFields, values],
+      });
+    }
+    if (name === "picklisttags") {
+      basicForm.setFieldsValue({
+        picklisttags: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistfeaturedimage") {
+      basicForm.setFieldsValue({
+        picklistfeaturedimage: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistpassinggrade") {
+      basicForm.setFieldsValue({
+        picklistpassinggrade: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistcapacity") {
+      basicForm.setFieldsValue({
+        picklistcapacity: [...picklistFields, values],
+      });
+    }
+    setCourseActionModal({
+      StateModal: false,
+      modalTitle: "",
+      modalFormName: "",
+      modalBodyContent: "",
+    });
+  };
+  const onFinish = (values) => {
+    console.log("Finish:", values);
+    setCourseActionModal({
+      StateModal: false,
+      modalTitle: "",
+      modalFormName: "",
+      modalBodyContent: "",
+    });
   };
 
   const formItemLayout = {
@@ -171,7 +240,13 @@ const CourseAdd = () => {
 
   return (
     <Form.Provider onFormFinish={onFormFinishProcess}>
-      <Form {...formItemLayout} style={{ width: "100%" }} name="basicForm">
+      <Form
+        {...formItemLayout}
+        style={{ width: "100%" }}
+        name="basicForm"
+        hideRequiredMark={true}
+        onFinish={onFinish}
+      >
         <Row
           className="widget-container course-management"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -195,16 +270,30 @@ const CourseAdd = () => {
               style={{ padding: "10px 0" }}
             >
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <Form.Item>
-                  <Input placeholder="Course title" id="error" allowClear />
+                <Form.Item
+                  name="Course Title"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <Input placeholder="Course title" allowClear />
                 </Form.Item>
 
-                <Form.Item>
+                <Form.Item
+                  name="Course Description"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
                   <TextArea
                     rows={10}
                     placeholder="Course Description"
                     allowClear
-                    onChange={onChange}
+                    /* onChange={onChange} */
                   />
                 </Form.Item>
               </Col>
@@ -230,161 +319,105 @@ const CourseAdd = () => {
               <Col xs={24}>
                 <Collapse accordion expandIconPosition={"right"}>
                   <Panel header="LEVEL" key="1" className="greyBackground">
-                    <Form.Item
-                      label="User List"
-                      noStyle
-                      allowClear
+                    <CourseWidgetLevel
                       shouldUpdate={(prevValues, curValues) =>
-                        prevValues.users !== curValues.users
+                        prevValues.picklistlevel !== curValues.picklistlevel
                       }
-                    >
-                      {({ getFieldValue }) => {
-                        var users = getFieldValue("users") || [];
-                        //console.log(users);
-                        if (users.length) {
-                          return (
-                            <Form.List name="users" >
-                              {
-                                
-                              (fields, { add, remove }) => {
-                                
-                                return (
-                                  <Row className="Noel" gutter={[4, 8]}  >
-                                     {
-                                      fields.map((field, index) => {
-                                        
-                                        //console.log(users[index].name);
-                                        field = {...field, value:users[index].name + " - " + users[index].age}
-                                        //console.log({...field});
-                                        return(                                     
-                                      <Form.Item
-                                        required={false}
-                                        key={field.key}  
-                                        gutter={[16, 16]}                                
-                                      >
-                                        <Form.Item   
-                                          noStyle
-                                          key={field.key}
-                                        >
-                                          <Input
-                                            placeholder="passenger name"
-                                            style={{ width: "85%" }}
-                                            key={field.key}
-                                            value ={field.value}
-                                            readOnly
-                                          />
-                                        </Form.Item>
-                                        {fields.length >= 1 ? (
-                                          <MinusCircleOutlined
-                                            className="dynamic-delete-button"
-                                            style={{ margin: "0 8px" }}
-                                            key={`del-${field.key}`}
-                                            onClick={() => {
-                                              remove(field.name);
-                                            }}
-                                          />
-                                        ) : null}
-                                      </Form.Item>
-                                      )
-                                          })
-                                  }
-                                  </Row>
-                                );
-                              }}
-                            </Form.List>
-                          );
-                        }else{
-                          return(
-                            <></>
-                          )
-                        }
-                        /* return users.length ? (
-                          <Input.Group size="large">
-                            
-                              {users.map((user, index) => (
-                                
-                                  <Input
-                                    size="small"
-                                    maxLength={30}
-                                    key={index}
-                                    id={index}
-                                    className="user"
-                                    value={`${user.name} - ${user.age}`}
-                                    disabled
-                                  />
-                              ))}
-                          </Input.Group>
-                        ) : (
-                          ""
-                        ); */
-                      }}
-                    </Form.Item>
-                    <span>
-                      <PlusOutlined onClick={() => showModal("PickList")} />
-                    </span>
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="CATEGORY" key="2" className="greyBackground">
-                    <p>Known for its loyalty and faithfulness</p>
+                    <CourseWidgetCategory
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistcategory !==
+                        curValues.picklistcategory
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="TYPE" key="3" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                  <CourseWidgetType
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklisttype !==
+                        curValues.picklisttype
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel
                     header="RELATED COURSES"
                     key="4"
                     className="greyBackground"
                   >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                    <CourseWidgetRelatedCourses
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistrelatedcourses !==
+                        curValues.picklistrelatedcourses
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="DURATION" key="5" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                  <CourseWidgetDuration
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistduration !==
+                        curValues.picklistduration
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="LANGUAGE" key="6" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                  <CourseWidgetLanguage
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistlanguage !==
+                        curValues.picklistlanguage
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="TAGS" key="7" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                  <CourseWidgetTags
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklisttags !==
+                        curValues.picklisttags
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel
-                    header="FEATURED MEDIA"
+                    header="FEATURED IMAGE"
                     key="8"
                     className="greyBackground"
                   >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                    <CourseWidgetFeaturedImage
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistfeaturedimage !==
+                        curValues.picklistfeaturedimage
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel
                     header="PASSING GRADE"
                     key="9"
                     className="greyBackground"
                   >
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                     <CourseWidgetPassingGrade
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistpassinggrade !==
+                        curValues.picklistpassinggrade
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                   <Panel header="CAPACITY" key="10" className="greyBackground">
-                    <p>
-                      it can be found as a welcome guest in many households
-                      across the world
-                    </p>
+                  <CourseWidgetCapacity
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.picklistcapacity !==
+                        curValues.picklistcapacity
+                      }
+                      showModal={showModal}
+                    />
                   </Panel>
                 </Collapse>
               </Col>
@@ -393,9 +426,12 @@ const CourseAdd = () => {
 
           <ModalForm
             title={courseActionModal.modalTitle}
+            modalFormName={courseActionModal.modalFormName}
+            modalBodyContent={courseActionModal.modalBodyContent}
             visible={courseActionModal.StateModal}
-            onCancel={hideUserModal}
+            onCancel={hideModal}
             okText={`${courseActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
+            onFinish={{ form: "basicForm", key: "submit", htmlType: "submit" }}
           />
 
           <RadialUI

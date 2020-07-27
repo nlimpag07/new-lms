@@ -4,16 +4,15 @@ import ReactDOM from "react-dom";
 import { Row, Modal, Card, Input, InputNumber, Form, Collapse } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-const { Meta } = Card;
 /**TextArea declaration */
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Picklist - Level",
-  catValueLabel: "picklistlevel",
+  catname: "Picklist - Category",
+  catValueLabel: "picklistcategory",
 };
 
-const CourseWidgetLevel = (props) => {
+const CourseWidgetCategory = (props) => {
   const { shouldUpdate, showModal } = props;
 
   return (
@@ -25,21 +24,19 @@ const CourseWidgetLevel = (props) => {
         shouldUpdate={shouldUpdate}
       >
         {({ getFieldValue }) => {
-          var users = getFieldValue(widgetFieldLabels.catValueLabel) || [];
-          //console.log(users);
-          if (users.length) {
+          var thisPicklist =
+            getFieldValue(widgetFieldLabels.catValueLabel) || [];
+          if (thisPicklist.length) {
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
                       {fields.map((field, index) => {
-                        //console.log(users[index].name);
                         field = {
                           ...field,
-                          value: users[index].name + " - " + users[index].age,
+                          value: thisPicklist[index].name,
                         };
-                        //console.log({...field});
                         return (
                           <Form.Item
                             required={false}
@@ -48,7 +45,7 @@ const CourseWidgetLevel = (props) => {
                           >
                             <Form.Item noStyle key={field.key}>
                               <Input
-                                placeholder="passenger name"
+                                placeholder={widgetFieldLabels.catname}
                                 style={{ width: "85%" }}
                                 key={field.key}
                                 value={field.value}
@@ -76,25 +73,6 @@ const CourseWidgetLevel = (props) => {
           } else {
             return <></>;
           }
-          /* return users.length ? (
-                          <Input.Group size="large">
-                            
-                              {users.map((user, index) => (
-                                
-                                  <Input
-                                    size="small"
-                                    maxLength={30}
-                                    key={index}
-                                    id={index}
-                                    className="user"
-                                    value={`${user.name} - ${user.age}`}
-                                    disabled
-                                  />
-                              ))}
-                          </Input.Group>
-                        ) : (
-                          ""
-                        ); */
         }}
       </Form.Item>
       <span>
@@ -118,7 +96,7 @@ const modalFormBody = () => {
     <>
       <Form.Item
         name="name"
-        label="User Name"
+        label="Category"
         rules={[
           {
             required: true,
@@ -127,18 +105,7 @@ const modalFormBody = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="age"
-        label="User Age"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <InputNumber />
-      </Form.Item>
     </>
   );
 };
-export default CourseWidgetLevel;
+export default CourseWidgetCategory;
