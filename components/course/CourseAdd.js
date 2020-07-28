@@ -42,6 +42,8 @@ import CourseWidgetDuration from "./CourseWidgetDuration";
 import CourseWidgetLanguage from "./CourseWidgetLanguage";
 import CourseWidgetTags from "./CourseWidgetTags";
 import CourseWidgetFeaturedImage from "./CourseWidgetFeaturedImage";
+import CourseWidgetFeaturedVideo from "./CourseWidgetFeaturedVideo";
+
 import CourseWidgetPassingGrade from "./CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./CourseWidgetCapacity";
 const { Meta } = Card;
@@ -66,17 +68,18 @@ const framerEffect = {
     opacity: 1,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
-      when: "beforeChildren",
+      ease: "easeIn",
+      duration: 0.3,
+      when: "afterChildren",
       staggerChildren: 0.1,
     },
   },
   hidden: {
-    
     opacity: 0,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
+      ease: "easeIn",
+      duration: 0.3,
       when: "afterChildren",
       staggerChildren: 0.1,
     },
@@ -181,6 +184,7 @@ const CourseAdd = () => {
   const onFormFinishProcess = (name, { values, forms }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
+   
     if (name === "picklistlevel") {
       basicForm.setFieldsValue({
         picklistlevel: [...picklistFields, values],
@@ -218,8 +222,15 @@ const CourseAdd = () => {
     }
     if (name === "picklistfeaturedimage") {
       basicForm.setFieldsValue({
-        picklistfeaturedimage: [...picklistFields, values],
+        picklistfeaturedimage: [values],
       });
+      //console.log(values);
+    }
+    if (name === "picklistfeaturedvideo") {
+      basicForm.setFieldsValue({
+        picklistfeaturedvideo: [values],
+      });
+      //console.log(values);
     }
     if (name === "picklistpassinggrade") {
       basicForm.setFieldsValue({
@@ -249,13 +260,13 @@ const CourseAdd = () => {
   };
 
   const validateMessages = {
-    required: '${label} is required!',
+    required: "${label} is required!",
     types: {
-      email: '${label} is not validate email!',
-      number: '${label} is not a validate number!',
+      email: "${label} is not validate email!",
+      number: "${label} is not a validate number!",
     },
     number: {
-      range: '${label} must be between ${min} and ${max}',
+      range: "${label} must be between ${min} and ${max}",
     },
   };
 
@@ -274,244 +285,260 @@ const CourseAdd = () => {
   return (
     <Form.Provider onFormFinish={onFormFinishProcess}>
       <motion.div initial="hidden" animate="visible" variants={framerEffect}>
-      <Form
-        {...formItemLayout}
-        style={{ width: "100%" }}
-        name="basicForm"
-        hideRequiredMark={true}
-        onFinish={onFinish}
-        validateMessages={validateMessages}
-      >
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
+        <Form
+          {...formItemLayout}
+          style={{ width: "100%" }}
+          name="basicForm"
+          hideRequiredMark={true}
+          onFinish={onFinish}
+          validateMessages={validateMessages}
         >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
+          <Row
+            className="widget-container course-management"
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            style={{ margin: "0" }}
           >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Add Course</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              style={{ padding: "10px 0" }}
+            <Col
+              className="gutter-row widget-holder-col cm-main-left"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
             >
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <Form.Item
-                  name="coursetitle"
-                  label="Course Title"
-                  
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <Input placeholder="Course title" allowClear />
-                </Form.Item>
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <h3 className="widget-title">Add Course</h3>
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-content"
+                gutter={[16, 16]}
+                style={{ padding: "10px 0" }}
+              >
+                <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                  <Form.Item
+                    name="coursetitle"
+                    label="Course Title"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Course title" allowClear />
+                  </Form.Item>
 
-                <Form.Item
-                  label="Course Description"
-                  name="coursedescription"
-                  
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <TextArea
-                    rows={10}
-                    placeholder="Course Description"
-                    allowClear
-                    /* onChange={onChange} */
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="">Draft Status here</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "10px 0" }}
+                  <Form.Item
+                    label="Course Description"
+                    name="coursedescription"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <TextArea
+                      rows={10}
+                      placeholder="Course Description"
+                      allowClear
+                      /* onChange={onChange} */
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              className="gutter-row widget-holder-col cm-main-right"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
             >
-              <Col xs={24}>
-                <Collapse accordion expandIconPosition={"right"}>
-                  <Panel header="LEVEL" key="1" className="greyBackground">
-                    <CourseWidgetLevel
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistlevel !== curValues.picklistlevel
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="CATEGORY" key="2" className="greyBackground">
-                    <CourseWidgetCategory
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistcategory !==
-                        curValues.picklistcategory
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="TYPE" key="3" className="greyBackground">
-                  <CourseWidgetType
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklisttype !==
-                        curValues.picklisttype
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel
-                    header="RELATED COURSES"
-                    key="4"
-                    className="greyBackground"
-                  >
-                    <CourseWidgetRelatedCourses
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistrelatedcourses !==
-                        curValues.picklistrelatedcourses
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="DURATION" key="5" className="greyBackground">
-                  <CourseWidgetDuration
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistduration !==
-                        curValues.picklistduration
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="LANGUAGE" key="6" className="greyBackground">
-                  <CourseWidgetLanguage
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistlanguage !==
-                        curValues.picklistlanguage
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="TAGS" key="7" className="greyBackground">
-                  <CourseWidgetTags
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklisttags !==
-                        curValues.picklisttags
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel
-                    header="FEATURED IMAGE"
-                    key="8"
-                    className="greyBackground"
-                  >
-                    <CourseWidgetFeaturedImage
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistfeaturedimage !==
-                        curValues.picklistfeaturedimage
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel
-                    header="PASSING GRADE"
-                    key="9"
-                    className="greyBackground"
-                  >
-                     <CourseWidgetPassingGrade
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistpassinggrade !==
-                        curValues.picklistpassinggrade
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                  <Panel header="CAPACITY" key="10" className="greyBackground">
-                  <CourseWidgetCapacity
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.picklistcapacity !==
-                        curValues.picklistcapacity
-                      }
-                      showModal={showModal}
-                    />
-                  </Panel>
-                </Collapse>
-              </Col>
-            </Row>
-          </Col>
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <h3 className="">Draft Status here</h3>
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-right-content"
+                gutter={[16, 16]}
+                style={{ padding: "10px 0" }}
+              >
+                <Col xs={24}>
+                  <Collapse accordion expandIconPosition={"right"}>
+                    <Panel header="LEVEL" key="1" className="greyBackground">
+                      <CourseWidgetLevel
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistlevel !== curValues.picklistlevel
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel header="CATEGORY" key="2" className="greyBackground">
+                      <CourseWidgetCategory
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistcategory !==
+                          curValues.picklistcategory
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel header="TYPE" key="3" className="greyBackground">
+                      <CourseWidgetType
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklisttype !== curValues.picklisttype
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel
+                      header="RELATED COURSES"
+                      key="4"
+                      className="greyBackground"
+                    >
+                      <CourseWidgetRelatedCourses
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistrelatedcourses !==
+                          curValues.picklistrelatedcourses
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel header="DURATION" key="5" className="greyBackground">
+                      <CourseWidgetDuration
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistduration !==
+                          curValues.picklistduration
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel header="LANGUAGE" key="6" className="greyBackground">
+                      <CourseWidgetLanguage
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistlanguage !==
+                          curValues.picklistlanguage
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel header="TAGS" key="7" className="greyBackground">
+                      <CourseWidgetTags
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklisttags !== curValues.picklisttags
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel
+                      header="FEATURED MEDIA"
+                      key="8"
+                      className="greyBackground"
+                    >
+                      <CourseWidgetFeaturedImage
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistfeaturedimage !==
+                          curValues.picklistfeaturedimage
+                        }
+                        showModal={showModal}
+                      />
+                      <CourseWidgetFeaturedVideo
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistfeaturedvideo !==
+                          curValues.picklistfeaturedvideo
+                        }
+                        showModal={showModal}
+                      />
+                      
+                    </Panel>
+                    <Panel
+                      header="PASSING GRADE"
+                      key="9"
+                      className="greyBackground"
+                    >
+                      <CourseWidgetPassingGrade
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistpassinggrade !==
+                          curValues.picklistpassinggrade
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                    <Panel
+                      header="CAPACITY"
+                      key="10"
+                      className="greyBackground"
+                    >
+                      <CourseWidgetCapacity
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.picklistcapacity !==
+                          curValues.picklistcapacity
+                        }
+                        showModal={showModal}
+                      />
+                    </Panel>
+                  </Collapse>
+                </Col>
+              </Row>
+            </Col>
 
-          <ModalForm
-            title={courseActionModal.modalTitle}
-            modalFormName={courseActionModal.modalFormName}
-            modalBodyContent={courseActionModal.modalBodyContent}
-            visible={courseActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${courseActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
-            onFinish={{ form: "basicForm", key: "submit", htmlType: "submit" }}
-          />
+            <ModalForm
+              title={courseActionModal.modalTitle}
+              modalFormName={courseActionModal.modalFormName}
+              modalBodyContent={courseActionModal.modalBodyContent}
+              visible={courseActionModal.StateModal}
+              onCancel={hideModal}
+              okText={`${
+                courseActionModal.modalTitle != "Save" ? "Add" : "Ok"
+              }`}
+              onFinish={{
+                form: "basicForm",
+                key: "submit",
+                htmlType: "submit",
+              }}
+            />
 
-          <RadialUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-          <style jsx global>{`
-            .greyBackground {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 5px 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            .course-management .ant-form-item textarea.ant-input {
-              background-color: #eeeeee;
-            }
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label{display:none;}
-          `}</style>
-        </Row>
-      </Form>
+            <RadialUI
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
+            <style jsx global>{`
+              .greyBackground {
+                background-color: #eeeeee;
+                text-transform: uppercase;
+                font-weight: bold;
+              }
+              .greyBackground p {
+                font-weight: normal;
+                text-transform: initial;
+              }
+              .widget-holder-col .widget-title {
+                color: #e69138;
+                margin-bottom: 0;
+                text-transform: uppercase;
+              }
+              .widget-holder-col .widget-header-row {
+                padding: 5px 0;
+                color: #e69138;
+              }
+              .course-management .ant-input-affix-wrapper {
+                border-radius: 0.5rem;
+                border: 1px solid #888787;
+              }
+              .course-management .ant-form-item textarea.ant-input {
+                background-color: #eeeeee;
+              }
+              .course-management .cm-main-right .widget-header-row {
+                text-align: end;
+              }
+              .course-management .ant-form-item-label {
+                display: none;
+              }
+            `}</style>
+          </Row>
+        </Form>
       </motion.div>
     </Form.Provider>
   );

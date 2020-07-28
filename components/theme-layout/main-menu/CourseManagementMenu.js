@@ -1,17 +1,21 @@
 import React from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 //importing ant
 import { Menu } from "antd";
 
 const CourseManagementMenu = (props) => {
- 
-    const { pathname } = props.defaultSelectedKey;
+  const router = useRouter();
+    const aspath = router.asPath;
+    const q = router.query;
+    //console.log(aspath)
+    //console.log(q)
     return (
-      <Menu theme="light" defaultselectedkey={pathname} mode="inline">
+      <Menu theme="light" defaultselectedkey={aspath} mode="inline">
         
         <Menu.Item
-          key="/instructor/[course]"
+          key={`/instructor/${q.course}`}
           icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
         >
           <Link href="/instructor/[course]" as={`/instructor/course`}>
@@ -20,19 +24,19 @@ const CourseManagementMenu = (props) => {
         </Menu.Item>
 
         <Menu.Item
-          key="/instructor/[course]/add"
+          key={`/instructor/${q.course}/${q.manage[0]}`}
           icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
         >
-          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add`}>
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/${q.course}/${q.manage[0]}`}>
             <a>General</a>
           </Link>
         </Menu.Item>
 
         <Menu.Item
-          key="/instructor/[course]/[...manage]/course-outline"
+          key={`/instructor/${q.course}/${q.manage[0]}/course-outline`}
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
         >
-          <Link href="/instructor/[course]/[...manage]" as={`/instructor/course/add/course-outline`} >
+          <Link href="/instructor/[course]/[...manage]" as={`/instructor/${q.course}/${q.manage[0]}/course-outline`} >
             <a>Course Outline</a>
           </Link>
         </Menu.Item>

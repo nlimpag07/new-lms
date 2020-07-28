@@ -22,11 +22,11 @@ const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
   catname: "Picklist - Featured Media",
-  catValueLabel: "Featured Image",
-  catFormName: "picklistfeaturedimage",
+  catValueLabel: "Featured Video",
+  catFormName: "picklistfeaturedvideo",
 };
 
-const CourseWidgetFeaturedImage = (props) => {
+const CourseWidgetFeaturedVideo = (props) => {
   const { shouldUpdate, showModal } = props;
 
   return (
@@ -42,11 +42,11 @@ const CourseWidgetFeaturedImage = (props) => {
 
           if (thisPicklist.length) {
             return (
-              
+              <>
                 <Form.List name={widgetFieldLabels.catFormName}>
                   {(fields, { add, remove }) => {
                     return (
-                      <Input.Group compact style={{ textAlign: "center",marginBottom: "15px", }}>
+                      <Input.Group compact style={{ textAlign: "center", }}>
                         {fields.map((field, index) => {
                           field = {
                             ...field,
@@ -58,7 +58,7 @@ const CourseWidgetFeaturedImage = (props) => {
                               key={`${widgetFieldLabels.catFormName}-${field.key}`}
                               style={{
                                 width: "calc(70% - 8px)",
-                                margin:"0"
+                                margin: "0",
                               }}
                             >
                               <Form.Item noStyle key={field.key}>
@@ -92,14 +92,15 @@ const CourseWidgetFeaturedImage = (props) => {
                     );
                   }}
                 </Form.List>
+              </>
             );
           } else {
             return (
-              
+              <>
                 <Form.List name={widgetFieldLabels.catFormName}>
                   {(fields, { add, remove }) => {
                     return (
-                      <Input.Group compact style={{ textAlign: "center",marginBottom: "15px", }}>
+                      <Input.Group compact style={{ textAlign: "center", }}>
                         
                             <Form.Item
                               required={false}
@@ -139,7 +140,7 @@ const CourseWidgetFeaturedImage = (props) => {
                     );
                   }}
                 </Form.List>
-              
+              </>
             );
           }
         }}
@@ -152,7 +153,7 @@ const modalFormBody = () => {
   return (
     <Form.Item
       name="name"
-      label="Featured Image"
+      label="Featured Video"
       rules={[
         {
           required: true,
@@ -163,4 +164,4 @@ const modalFormBody = () => {
     </Form.Item>
   );
 };
-export default CourseWidgetFeaturedImage;
+export default CourseWidgetFeaturedVideo;
