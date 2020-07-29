@@ -53,8 +53,11 @@ export default function withConditionalRedirect({
     const componentProps =
       WrappedComponent.getInitialProps &&
       (await WrappedComponent.getInitialProps(ctx));
-
-    return { ...componentProps };
+    if(componentProps){
+      return { ...componentProps };
+    }
+    
+    return { defaultReturn: "noValue" };
   };
 
   return WithConditionalRedirectWrapper;

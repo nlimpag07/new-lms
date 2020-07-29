@@ -156,7 +156,8 @@ const ModalForm = ({
   );
 };
 
-const CourseAdd = () => {
+const CourseEdit = (props) => {
+  //console.log(props.courseId)
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
@@ -307,7 +308,7 @@ const CourseAdd = () => {
             >
               <Row className="widget-header-row" justify="start">
                 <Col xs={24}>
-                  <h3 className="widget-title">Add Course</h3>
+                  <h3 className="widget-title">Edit Course</h3>
                 </Col>
               </Row>
               <Row
@@ -549,4 +550,4 @@ function onChange(value) {
   console.log(`selected ${value}`);
 }
 
-export default CourseAdd;
+export default CourseEdit;

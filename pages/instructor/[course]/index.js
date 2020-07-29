@@ -13,6 +13,7 @@ import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
+import Error from 'next/error'
 
 
 import { useRouter } from "next/router";
@@ -27,10 +28,12 @@ import {
 const { Meta } = Card;
 
 const Course = () => {
-  /*const router = useRouter();
+  const router = useRouter();
   var urlPath = router.asPath;
-  console.log(urlPath)
-  var theContent;
+  var urlquery = router.query.course;
+  //console.log(urlquery)
+  if(urlquery != "course"){ return <Error statusCode={404} />;}
+  /*var theContent;
    if (urlPath) {
     var thePage = urlPath[urlPath.length - 1];
     thePage == "add" && (theContent = <CourseAdd />);

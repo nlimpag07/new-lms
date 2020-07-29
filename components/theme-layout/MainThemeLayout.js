@@ -67,7 +67,7 @@ export default function MainThemeLayout({ children }) {
   return (
     <Loader loading={loading}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider>
+        <Sider theme="light">
           <div className="logo">
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
