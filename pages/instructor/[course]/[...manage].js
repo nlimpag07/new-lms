@@ -100,8 +100,8 @@ const CourseManagement = (props) => {
   }
 
 
-  console.log(router.query.manage.length);
-  console.log(thePage);
+  //console.log(router.query.manage.length);
+  //console.log(thePage);
 
   //
 

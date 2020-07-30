@@ -30,12 +30,28 @@ export default function withConditionalRedirect({
   clientCondition,
   serverCondition,
   location,
+  source,
+  userTypeClientCondition,
+  userTypeServerCondition
 }) {
   const loading = true;
   const WithConditionalRedirectWrapper = (props) => {
+    const theclientcond = clientCondition();
+    const usertypecond = userTypeClientCondition();
+    /* console.log("Client WIthoutAuth Redirection: ", theclientcond);
+    console.log("UserType: ", usertypecond);
+    console.log("Source: ", source);
+    console.log("Location: ", location);
+    console.log("===========================================");*/    
     const router = useRouter();
     const redirectCondition = clientCondition();
     if (isBrowser() && redirectCondition) {
+      if(usertypecond =="user" && source =="withoutAuth"){
+        location= "/"
+      }
+      if(usertypecond =="admin" && source =="withoutAuth"){
+        location= "/instructor/dashboard"
+      }
       router.push(location);
       return <Loader loading={loading} />;
     }
@@ -43,8 +59,15 @@ export default function withConditionalRedirect({
   };
 
   WithConditionalRedirectWrapper.getInitialProps = async (ctx) => {
+    const usertypecond = userTypeServerCondition(ctx);
     if (!isBrowser() && ctx.res) {
       if (serverCondition(ctx)) {
+        if(usertypecond =="user" && source =="withoutAuth"){
+          location= "/"
+        }
+        if(usertypecond =="admin" && source =="withoutAuth"){
+          location= "/instructor/dashboard"
+        }
         ctx.res.writeHead(302, { Location: location });
         ctx.res.end();
       }
@@ -53,10 +76,10 @@ export default function withConditionalRedirect({
     const componentProps =
       WrappedComponent.getInitialProps &&
       (await WrappedComponent.getInitialProps(ctx));
-    if(componentProps){
+    if (componentProps) {
       return { ...componentProps };
     }
-    
+
     return { defaultReturn: "noValue" };
   };
 

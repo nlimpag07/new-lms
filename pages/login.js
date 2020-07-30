@@ -23,21 +23,26 @@ const tailLayout = {
 export default withoutAuth(function Login() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { setAuthenticated } = useAuth();
+  const { setAuthenticated, setUsertype } = useAuth();
   const [loading, setLoading] = useState(true);
 
-  const submitHandler = async () => {
+  const submitHandler = async (values) => {
     //event.preventDefault();
+    
+    const userType= values.username == 'Admin'?"admin":"user";
+    console.log("Before Posting:", values);
     const response = await fetch("/api/login", {
       method: "POST",
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ ...values, userType }),
     });
     if (response.status === 200) {
       setAuthenticated(true);
+      setUsertype(userType);
+
     } else {
       console.error("Login error", response);
     }

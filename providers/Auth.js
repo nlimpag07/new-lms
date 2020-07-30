@@ -1,8 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const AuthContext = React.createContext({
   isAuthenticated: false,
-  setAuthenticated: () => {}
+  setAuthenticated: () => {},
+  isUsertype: null,
+  setUsertype: () => {},
 });
 
 /**
@@ -11,13 +13,17 @@ const AuthContext = React.createContext({
  * the prop from then on. The value can be changed by calling the
  * `setAuthenticated()` method in the context.
  */
-export const AuthProvider = ({ children, authenticated }) => {
+export const AuthProvider = ({ children, authenticated, usertype }) => {
   const [isAuthenticated, setAuthenticated] = React.useState(authenticated);
+  const [isUsertype, setUsertype] = React.useState(usertype);
+
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        setAuthenticated
+        setAuthenticated,
+        isUsertype,
+        setUsertype,
       }}
     >
       {children}
@@ -28,7 +34,7 @@ export const AuthProvider = ({ children, authenticated }) => {
 export function useAuth() {
   const context = React.useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
@@ -36,4 +42,8 @@ export function useAuth() {
 export function useIsAuthenticated() {
   const context = useAuth();
   return context.isAuthenticated;
+}
+export function useIsUserType() {
+  const context = useAuth();
+  return context.isUsertype;
 }
