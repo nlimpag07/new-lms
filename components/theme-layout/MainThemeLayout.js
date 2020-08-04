@@ -12,7 +12,6 @@ import {
   Layout,
 } from "antd";
 import { useRouter } from "next/router";
-
 //importing menu
 //import MainMenu from "./main-menu/MainMenu";
 const MainMenu = dynamic(() => import("./main-menu/MainMenu"));
@@ -40,18 +39,19 @@ import Loader from "./loader/loader";
 
 export default function MainThemeLayout({ children }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);  
   //console.log(router.route);
   let NavigationMenu, MainNav, BreadCrumb, footer;
-  if (router.route.startsWith("/user/")) {
+  MainNav = <MainNavbar />
+  if (router.route.startsWith("/learner")) {
     NavigationMenu = <UserMenu defaultSelectedKey={router.pathname} />;
-    MainNav = <MainNavbar />;
+    //MainNav = <MainNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
-  } else if (router.route.startsWith("/instructor/")) {
+  } else if (router.route.startsWith("/instructor")) {
     
       NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
-      MainNav = <InstructorNavbar />;
+     // MainNav = <InstructorNavbar />;
       BreadCrumb = <BreadCrumbs pathname={router.route} />;
       footer = <TemplateFooter />;
       if (router.route.startsWith("/instructor/[course]/")) {
@@ -61,13 +61,13 @@ export default function MainThemeLayout({ children }) {
   } else if (router.route.startsWith("/admin")) {
     
     NavigationMenu = <AdministratorMenu defaultSelectedKey={router.pathname} />;
-    MainNav = <InstructorNavbar />;//<AdministratorNavbar />;
+    //MainNav = <AdministratorNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
   
 } else {
     NavigationMenu = <MainMenu defaultSelectedKey={router.pathname} />;
-    MainNav = <MainNavbar />;
+    //MainNav = <MainNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     footer = <TemplateFooter />;
   }

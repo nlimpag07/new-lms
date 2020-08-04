@@ -3,7 +3,7 @@ import withConditionalRedirect from "./withConditionalRedirect";
 
 /**
  * Require the user to be authenticated in order to render the component.
- * If the user isn't authenticated, forward to the given URL.
+ * Then redirect to the specified
  */
 export default function withAuth(
   WrappedComponent,
@@ -18,8 +18,19 @@ export default function withAuth(
       return !useIsAuthenticated();
     },
     serverCondition: function withAuthServerCondition(ctx) {
-      //console.log("ServerAuth Status Logged: ", !!ctx.req?.cookies.session);
-      return !ctx.req?.cookies.session;
+      //used only to activate redirection
+      const req_url = ctx.req.url;
+      const cur_usertype = "/"+ctx.req?.cookies.usertype
+      const isAuthentic = ctx.req?.cookies.session;
+      let isRedirect;
+      if(isAuthentic && req_url.startsWith(cur_usertype)){
+        isRedirect= false;
+      }else{
+        isRedirect= true;
+      }
+      
+      //return !ctx.req?.cookies.session;
+      return isRedirect;
     },
     source,
     userTypeClientCondition: function withoutUserTypeClientCondition() {

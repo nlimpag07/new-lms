@@ -8,7 +8,7 @@ import withConditionalRedirect from "./withConditionalRedirect";
 
 export default function withoutAuth(
   WrappedComponent,
-  location = "",
+  location = "/",
   source = "withoutAuth"
 ) {
   return withConditionalRedirect({

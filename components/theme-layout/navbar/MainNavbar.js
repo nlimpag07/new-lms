@@ -1,12 +1,23 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Layout, Row, Col } from "antd";
+import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
 import { useIsAuthenticated } from "../../../providers/Auth";
+import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
+//import UserRoleSwitcher from "../../user/UserRoleSwitcher";
 
 const MainNavbar = () => {
   const isAuthenticated = useIsAuthenticated();
+  var [switchViewModal, setSwitchViewModal] = useState(
+    (switchViewModal = false)
+  );
 
+  useEffect(() => {
+    
+        const userData = JSON.parse(localStorage.getItem("userDetails"));
+        console.log(userData);
+    
+  }, []);
   return (
     <Layout>
       <Row className="header-nav-top">
@@ -18,19 +29,28 @@ const MainNavbar = () => {
             <li className="notif">
               <Link href="/" passHref>
                 <a>
-                  <FontAwesomeIcon icon={["fas", "bell"]} size="lg" />{" "}
+                  <Badge dot status="error">
+                    <FontAwesomeIcon icon={["fas", "bell"]} size="lg" />
+                  </Badge>
                 </a>
               </Link>
             </li>
             {isAuthenticated ? (
               <>
                 <li className="logout">
-                  <Link href="/logout" passHref>
-                    <a>
-                      <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" />{" "}
-                      Logout
+                  <Dropdown overlay={profileMenu(setSwitchViewModal)}>
+                    <a
+                      className="ant-dropdown-link"
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      {/*  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> */}
+                      <FontAwesomeIcon
+                        icon={["fas", "user-circle"]}
+                        size="lg"
+                      />{" "}
+                      Name <DownOutlined />
                     </a>
-                  </Link>
+                  </Dropdown>
                 </li>
               </>
             ) : (
@@ -62,7 +82,7 @@ const MainNavbar = () => {
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>
-
+        {/* <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} /> */}
       <style jsx global>{`
         .ant-layout-header {
           color: #ffffff;
@@ -97,9 +117,44 @@ const MainNavbar = () => {
           color: #000000;
           padding: 0 15px;
         }
+        .notif .ant-badge {
+          display: inline;
+        }
+        .notif .ant-badge-dot {
+          box-shadow: none;
+        }
       `}</style>
     </Layout>
   );
 };
+
+const profileMenu = (setSwitchViewModal) => (
+  <Menu>
+    <Menu.Item key="0">
+      <Link href="/lang" passHref>
+        <a>
+          <ProfileFilled /> Profile
+        </a>
+      </Link>
+    </Menu.Item>
+    {/* <Menu.Item key="1">
+      
+      <a href="#switchview-modal" onClick={() => setSwitchViewModal(true)}>
+        <EyeFilled /> Switch View
+      </a>
+    </Menu.Item> */}
+    <Menu.Item key="2">
+      <Link href="/logout" passHref>
+        <a>
+          <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" /> Logout
+        </a>
+      </Link>
+    </Menu.Item>
+    {/* <Menu.Divider />
+    <Menu.Item key="3" disabled>
+      3rd menu item（disabled）
+    </Menu.Item> */}
+  </Menu>
+);
 
 export default MainNavbar;

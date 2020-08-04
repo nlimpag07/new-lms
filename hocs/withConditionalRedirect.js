@@ -36,23 +36,19 @@ export default function withConditionalRedirect({
 }) {
   const loading = true;
   const WithConditionalRedirectWrapper = (props) => {
-    const theclientcond = clientCondition();
-    const usertypecond = userTypeClientCondition();
-    /* console.log("Client WIthoutAuth Redirection: ", theclientcond);
-    console.log("UserType: ", usertypecond);
-    console.log("Source: ", source);
-    console.log("Location: ", location);
-    console.log("===========================================");*/    
     const router = useRouter();
+    //const theclientcond = clientCondition();
+    //let usertypeloc;
+    //userTypeClientCondition()? location="/"+userTypeClientCondition():'';
+    let usertypecond = userTypeClientCondition();  
+    //location=usertypecond;
     const redirectCondition = clientCondition();
     if (isBrowser() && redirectCondition) {
-      if(usertypecond =="learner" && source =="withoutAuth"){
-        location= "/"
-      }
-      if(usertypecond =="instructor" && source =="withoutAuth"){
-        location= "/instructor/dashboard"
-      }
-      if(usertypecond =="admin" && source =="withoutAuth"){
+      if(usertypecond =="learner"){
+        location= "/learner"
+      }else if(usertypecond =="instructor"){
+        location= "/instructor"
+      }else if(usertypecond =="admin"){
         location= "/admin"
       }
       router.push(location);
@@ -63,22 +59,22 @@ export default function withConditionalRedirect({
 
   WithConditionalRedirectWrapper.getInitialProps = async (ctx) => {
     const usertypecond = userTypeServerCondition(ctx);
+    //userTypeServerCondition(ctx)?location= "/"+userTypeServerCondition(ctx):'';
     if (!isBrowser() && ctx.res) {
       if (serverCondition(ctx)) {
-        if(usertypecond =="learner" && source =="withoutAuth"){
-          location= "/"
-        }
-        if(usertypecond =="instructor" && source =="withoutAuth"){
-          location= "/instructor/dashboard"
-        }
-        if(usertypecond =="admin" && source =="withoutAuth"){
+        if(usertypecond =="learner"){
+          location= "/learner"
+        }else if(usertypecond =="instructor"){
+          location= "/instructor"
+        }else if(usertypecond =="admin"){
           location= "/admin"
         }
         ctx.res.writeHead(302, { Location: location });
         ctx.res.end();
-      }
+      }      
+    
     }
-
+    
     const componentProps =
       WrappedComponent.getInitialProps &&
       (await WrappedComponent.getInitialProps(ctx));

@@ -27,7 +27,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const AdminDashboard = () => {
+const InstructorIndex = () => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <div className="adminDashboard">HELLO THIS IS ADMIN Index</div>
+        <div className="adminDashboard">HELLO THIS IS Instructors Index</div>
       </Layout>
 
       <style jsx global>{`
@@ -62,4 +62,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default withAuth(AdminDashboard);
+export default withAuth(InstructorIndex);
