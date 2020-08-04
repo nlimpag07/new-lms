@@ -1,7 +1,8 @@
 export default (req, res) => {
   res.setHeader(
     "Set-Cookie",
-    ["session=; Max-Age=0; SameSite=Strict; HttpOnly; Path=/","usertype=; Max-Age=0; SameSite=Strict; HttpOnly; Path=/"]
+    ["session=; Max-Age=0; SameSite=Strict; HttpOnly; Path=/","usertype=; Max-Age=0; SameSite=Strict; HttpOnly; Path=/",
+    "token=; Max-Age=0; SameSite=Strict; HttpOnly; Path=/",]
   );
   res.status(200).end();
 };

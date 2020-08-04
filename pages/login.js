@@ -1,5 +1,6 @@
 import { Layout, Row, Col, Form, Input, Button, Checkbox } from "antd";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
 import withoutAuth from "../hocs/withoutAuth";
 import { useAuth } from "../providers/Auth";
@@ -20,18 +21,57 @@ const tailLayout = {
   },
 };
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default withoutAuth(function Login() {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const { setAuthenticated, setUsertype } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { setAuthenticated, setUsertype, setUserDetails } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [form] = Form.useForm();
 
   const submitHandler = async (values) => {
     //event.preventDefault();
     
-    const userType= values.username == 'Admin'?"admin":"user";
-    console.log("Before Posting:", values);
-    const response = await fetch("/api/login", {
+    const userType= values.username == 'admin'?"admin":values.username== 'instructor'?"instructor":"learner";
+    
+    axios.post(apiBaseUrl+'/auth/authenticate', values).then(result => {
+      var _result = result.data;      
+      //console.log(_result)
+       if (_result) {
+        //setAuthenticated(true);
+        //setUsertype(userType);
+        var cur_uType="learner";
+        _result.isAdministrator == 1 ? cur_uType="admin":'';
+        _result.isInstructor == 1 && _result.isAdministrator == 0 ? cur_uType="instructor":'';
+
+        var params = {
+          userType: cur_uType,
+          token: _result.token,
+        }
+        //console.log(params)
+        axios.post('/api/login', params).then(res=> {
+        var _res = res.data;      
+        //console.log(_res)
+        if (_res.status === 200) {
+          setAuthenticated(true);
+          setUsertype(userType);
+          setUserDetails(_result);    
+        }
+      });
+        
+      }else {
+        onFinishFailed(values);
+        setError("Login Failed: Please make sure to input the correct login details.")
+      }
+    })
+    .catch(function (error) {
+      // handle error
+      onFinishFailed(error);
+      setError("Login Failed: Please make sure to input the correct login details.")
+      //form.resetFields();
+    });
+    /* const response = await fetch("/api/login", {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -39,17 +79,18 @@ export default withoutAuth(function Login() {
       },
       body: JSON.stringify({ ...values, userType }),
     });
+    
     if (response.status === 200) {
       setAuthenticated(true);
       setUsertype(userType);
 
     } else {
       console.error("Login error", response);
-    }
+    } */
   };
   const onFinish = (values) => {
     submitHandler(values);
-    console.log("Success:", values);
+    //console.log("Success:", values);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -80,7 +121,8 @@ export default withoutAuth(function Login() {
               <h1>Login</h1>
               <Form
                 {...layout}
-                name="basic"
+                form={form}
+                name="basicLogin"
                 initialValues={{
                   remember: true,
                 }}
@@ -129,7 +171,13 @@ export default withoutAuth(function Login() {
                 <Form.Item {...tailLayout}>
                   <Button type="primary" htmlType="submit">
                     Submit
-                  </Button>
+                  </Button>                  
+                </Form.Item>
+                <Form.Item {...tailLayout}>
+                  <div className="ant-form-item-has-error">
+                    <div className="ant-form-item-explain" style={{textAlign:"center"}}>{error}</div>
+                    
+                  </div>
                 </Form.Item>
               </Form>
             </div>

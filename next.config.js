@@ -2,6 +2,9 @@
 
   module.exports = (phase, { defaultConfig }) => {
     return {
-        trailingSlash: false
+        trailingSlash: false,
+        env: {
+          apiBaseUrl: 'https://localhost:5001/api',
+        }
     }
   }

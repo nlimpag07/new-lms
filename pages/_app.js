@@ -1,6 +1,7 @@
 import App from "next/app";
 import { AuthProvider } from "../providers/Auth";
 import cookie from "cookie";
+import axios from "axios";
 import "antd/dist/antd.css";
 import "../styles/vars.css";
 import "../styles/global.css";
@@ -36,10 +37,10 @@ MyApp.getInitialProps = async (appContext) => {
     authenticated = !!request.cookies.session;
     usertype = request.cookies.usertype ? request.cookies.usertype : usertype;
   }
-
+  //console.log(appContext);
   // Call the page's `getInitialProps` and fill `appProps.pageProps`
   const appProps = await App.getInitialProps(appContext);
-
+  
   return { ...appProps, authenticated, usertype };
 };
 

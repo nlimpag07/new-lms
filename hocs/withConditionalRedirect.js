@@ -46,11 +46,14 @@ export default function withConditionalRedirect({
     const router = useRouter();
     const redirectCondition = clientCondition();
     if (isBrowser() && redirectCondition) {
-      if(usertypecond =="user" && source =="withoutAuth"){
+      if(usertypecond =="learner" && source =="withoutAuth"){
         location= "/"
       }
-      if(usertypecond =="admin" && source =="withoutAuth"){
+      if(usertypecond =="instructor" && source =="withoutAuth"){
         location= "/instructor/dashboard"
+      }
+      if(usertypecond =="admin" && source =="withoutAuth"){
+        location= "/admin"
       }
       router.push(location);
       return <Loader loading={loading} />;
@@ -62,11 +65,14 @@ export default function withConditionalRedirect({
     const usertypecond = userTypeServerCondition(ctx);
     if (!isBrowser() && ctx.res) {
       if (serverCondition(ctx)) {
-        if(usertypecond =="user" && source =="withoutAuth"){
+        if(usertypecond =="learner" && source =="withoutAuth"){
           location= "/"
         }
-        if(usertypecond =="admin" && source =="withoutAuth"){
+        if(usertypecond =="instructor" && source =="withoutAuth"){
           location= "/instructor/dashboard"
+        }
+        if(usertypecond =="admin" && source =="withoutAuth"){
+          location= "/admin"
         }
         ctx.res.writeHead(302, { Location: location });
         ctx.res.end();

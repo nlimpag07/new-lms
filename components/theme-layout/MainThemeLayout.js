@@ -21,11 +21,15 @@ const UserMenu = dynamic(() => import("./main-menu/UserMenu"));
 //import InstructorMenu from "./main-menu/InstructorMenu";
 const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
 const CourseManagementMenu = dynamic(() => import("./main-menu/CourseManagementMenu"));
+//import AdministratorMenu from "./main-menu/InstructorMenu";
+const AdministratorMenu = dynamic(() => import("./main-menu/AdministratorMenu"));
 //importing navbar
 //import MainNavbar from "./navbar/MainNavbar";
 const MainNavbar = dynamic(() => import("./navbar/MainNavbar"));
 //import InstructorNavbar from "./navbar/InstructorNavbar";
 const InstructorNavbar = dynamic(() => import("./navbar/InstructorNavbar"));
+//import AdministratorNavbar from "./navbar/InstructorNavbar";
+const AdministratorNavbar = dynamic(() => import("./navbar/AdministratorNavbar"));
 //importing breadcrumbs
 import BreadCrumbs from "./breadcrumbs/BreadCrumbs";
 //importing footer
@@ -54,7 +58,14 @@ export default function MainThemeLayout({ children }) {
         NavigationMenu = <CourseManagementMenu defaultSelectedKey={router.pathname} />;
       }
     
-  } else {
+  } else if (router.route.startsWith("/admin")) {
+    
+    NavigationMenu = <AdministratorMenu defaultSelectedKey={router.pathname} />;
+    MainNav = <InstructorNavbar />;//<AdministratorNavbar />;
+    BreadCrumb = <BreadCrumbs pathname={router.route} />;
+    footer = <TemplateFooter />;
+  
+} else {
     NavigationMenu = <MainMenu defaultSelectedKey={router.pathname} />;
     MainNav = <MainNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;

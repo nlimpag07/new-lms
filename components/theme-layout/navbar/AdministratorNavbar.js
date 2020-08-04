@@ -4,18 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
 import { useIsAuthenticated } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
-import UserRoleSwitcher from "../../user/UserRoleSwitcher";
 
-const InstructorNavbar = () => {
+const AdministratorNavbar = () => {
   const isAuthenticated = useIsAuthenticated();
-  var [switchViewModal, setSwitchViewModal] = useState(
-    (switchViewModal = false)
-  );
+  var [switchViewModal, setSwitchViewModal] = useState((switchViewModal = false));
 
-  /* const onCreate = values => {
-    console.log('Received values of form: ', values);
-    setSwitchViewModal(false);
-  } */
   return (
     <Layout>
       <Row className="header-nav-top">
@@ -80,7 +73,21 @@ const InstructorNavbar = () => {
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>
-        <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} />
+      <Modal
+        id="switchview-modal"
+        title="Switch View"
+        centered
+        visible={switchViewModal}
+        onOk={() => setSwitchViewModal(false)}
+        onCancel={() => setSwitchViewModal(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+        width={450}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
       <style jsx global>{`
         .ant-layout-header {
           color: #ffffff;
@@ -155,4 +162,4 @@ const profileMenu = (setSwitchViewModal) => (
   </Menu>
 );
 
-export default InstructorNavbar;
+export default AdministratorNavbar;
