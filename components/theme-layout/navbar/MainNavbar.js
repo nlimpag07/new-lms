@@ -1,27 +1,27 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
-import { useIsAuthenticated } from "../../../providers/Auth";
+import { useIsAuthenticated, useAuth } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
 //import UserRoleSwitcher from "../../user/UserRoleSwitcher";
 
 const MainNavbar = () => {
+  const { isUsertype, setUsertype, userDetails } = useAuth();
+  //console.log(userDetails);
   const isAuthenticated = useIsAuthenticated();
   var [switchViewModal, setSwitchViewModal] = useState(
     (switchViewModal = false)
   );
 
-  useEffect(() => {
-    
-        const userData = JSON.parse(localStorage.getItem("userDetails"));
-        console.log(userData);
-    
-  }, []);
+  /* useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
+    console.log(userData);
+  }, []); */
   return (
     <Layout>
       <Row className="header-nav-top">
-        <Col className="nav-top-left" flex="1 1 200px">
+        <Col className="nav-top-left" flex="1 1">
           AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
         </Col>
         <Col className="nav-top-right" flex="0 1 300px">
@@ -38,7 +38,7 @@ const MainNavbar = () => {
             {isAuthenticated ? (
               <>
                 <li className="logout">
-                  <Dropdown overlay={profileMenu(setSwitchViewModal)}>
+                  <Dropdown overlay={profileMenu(setSwitchViewModal)} trigger={['click']}>
                     <a
                       className="ant-dropdown-link"
                       onClick={(e) => e.preventDefault()}
@@ -47,8 +47,7 @@ const MainNavbar = () => {
                       <FontAwesomeIcon
                         icon={["fas", "user-circle"]}
                         size="lg"
-                      />{" "}
-                      Name <DownOutlined />
+                      />{" "}{userDetails.firstName}{" "}<DownOutlined />
                     </a>
                   </Dropdown>
                 </li>
@@ -82,7 +81,7 @@ const MainNavbar = () => {
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>
-        {/* <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} /> */}
+      {/* <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} /> */}
       <style jsx global>{`
         .ant-layout-header {
           color: #ffffff;
@@ -97,7 +96,7 @@ const MainNavbar = () => {
         }
         .header-nav-top .nav-top-right ul li {
           display: inline-block;
-          width: 27%;
+          padding:0 1rem;
           text-align: center;
         }
         .header-nav-top .nav-top-right ul li a,

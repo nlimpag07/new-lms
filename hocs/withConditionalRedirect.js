@@ -82,7 +82,7 @@ export default function withConditionalRedirect({
       return { ...componentProps };
     }
 
-    return { defaultReturn: "noValue" };
+    return { ...componentProps, defaultReturn: "noValue" };
   };
 
   return WithConditionalRedirectWrapper;

@@ -21,7 +21,7 @@ const tailLayout = {
   },
 };
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+const apiBaseUrl = process.env.apiBaseUrl;
 
 export default withoutAuth(function Login() {
   const [username, setUsername] = useState("");

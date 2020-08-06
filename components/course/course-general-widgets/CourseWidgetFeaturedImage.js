@@ -64,7 +64,7 @@ const CourseWidgetFeaturedImage = (props) => {
                               <Form.Item noStyle key={field.key}>
                                 <Input
                                   placeholder={widgetFieldLabels.catValueLabel}
-                                  size="large"
+                                  size="medium"
                                   key={field.key}
                                   value={field.value}
                                   readOnly
@@ -76,7 +76,7 @@ const CourseWidgetFeaturedImage = (props) => {
                         })}
                         <Form.Item style={{ marginBottom: "0" }}>
                           <Button
-                            size="large"
+                            size="medium"
                             onClick={() =>
                               showModal(
                                 widgetFieldLabels.catname,
@@ -112,7 +112,7 @@ const CourseWidgetFeaturedImage = (props) => {
                               <Form.Item noStyle key={`${widgetFieldLabels.catFormName}-01`}>
                                 <Input
                                   placeholder={widgetFieldLabels.catValueLabel}
-                                  size="large"
+                                  size="medium"
                                   key={`${widgetFieldLabels.catFormName}-02`}
                                   value=""
                                   readOnly
@@ -123,7 +123,7 @@ const CourseWidgetFeaturedImage = (props) => {
                          
                         <Form.Item style={{ marginBottom: "0" }}>
                           <Button
-                            size="large"
+                            size="medium"
                             onClick={() =>
                               showModal(
                                 widgetFieldLabels.catname,
