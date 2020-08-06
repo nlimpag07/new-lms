@@ -5,7 +5,9 @@ import React, {
   useEffect,
   useContext,
 } from "react";
-
+import axios from "axios";
+import cookie from "cookie";
+import Cookies from "js-cookie";
 export const CourseListContext = createContext({
   courseAllList: null,
   setCourseAllList: () => {},
@@ -17,21 +19,43 @@ export const CourseListContext = createContext({
  * the prop from then on. The value can be changed by calling the
  * `setAuthenticated()` method in the context.
  */
-export const CourseListProvider = ({
-  children,
-  course_all_list,
-}) => {
-  const [courseAllList, setCourseAllList] = useState(course_all_list);
+export const CourseListProvider = ({ children }) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = Cookies.get("token");
+  const [courseAllList, setCourseAllList] = useState("");
+  //Cookies.set('test', 'example')
+
   useEffect(() => {
+    var data = JSON.stringify({});
+
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+
+        setCourseAllList(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     if (courseAllList) {
       localStorage.setItem("courseAllList", JSON.stringify(courseAllList));
+      setCourseAllList(courseAllList);
     } else {
-      
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(userData);
-      
+      const userData = JSON.parse(localStorage.getItem("courseAllList"));
+      setCourseAllList(userData);
     }
-  }, [courseAllList]);
+  }, []);
 
   return (
     <CourseListContext.Provider

@@ -1,8 +1,10 @@
 import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCourseList } from "../../providers/CourseProvider";
 
 import {
   EditOutlined,
@@ -19,7 +21,8 @@ const list = {
     opacity: 1,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
+      ease: "easeIn",
+      duration: 0.5,
       when: "beforeChildren",
       staggerChildren: 0.1,
     },
@@ -28,21 +31,31 @@ const list = {
     opacity: 0,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
+      ease: "easeIn",
+      duration: 0.5,
       when: "afterChildren",
       staggerChildren: 0.1,
     },
   },
 };
 
+
 const AuthoredCourses = () => {
+  const apiBaseUrl = process.env.apiBaseUrl;
+  const router = useRouter();
+  const { courseAllList, setCourseAllList } = useCourseList();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
-  /*const [grid,setGrid] = useState(gridList);
-   useEffect(() => {
-    setGrid(gridList);
-  }, []); */
+  useEffect(() => {
+    if (!courseAllList) {
+      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
+      //console.log(userData);
+      setCourseAllList(courselist);
+    } else {
+      //put additional Filtration here
+    }
+  }, [courseAllList]);
   return (
     //GridType(gridList)
     <Col
@@ -76,7 +89,7 @@ const AuthoredCourses = () => {
         gutter={[16, 16]}
         style={{ padding: "10px 0" }}
       >
-        {GridType(curGridStyle, setModal2Visible)}
+        {GridType(courseAllList, curGridStyle, setModal2Visible, router)}
       </Row>
       <Modal
         title="Publish Properties"
@@ -173,221 +186,98 @@ const AuthoredCourses = () => {
         .widget-holder-col .unpublished-course .ant-card-head {
           background-color: #ff572294;
         }
+        .widget-holder-col .ant-card-hoverable {
+          cursor: default;
+        }
+        .widget-holder-col .ant-card-meta-title a {
+          color: #000000;
+        }
+        .widget-holder-col .ant-card-meta-title a:hover {
+          color: #e69138;
+        }
       `}</style>
     </Col>
   );
 };
 
-const GridType = (gridType, setModal2Visible) => {
-  switch (gridType) {
-    default:
-      return (
-        <>
-          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                className="published-course"
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <img
-                    alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  />
-                }
-                actions={[
-                  <CloudDownloadOutlined
-                    key="Unpublish"
-                    onClick={() => setModal2Visible(true)}
-                  />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" onClick={() => setModal2Visible(true)} />,
-                ]}
-              >
-                <Meta
-                  title="Card title Grid"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                className="unpublished-course"
-                extra="Unpublished"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <img
-                    alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  />
-                }
-                actions={[
-                  <CloudUploadOutlined
-                    key="Publish"
-                    onClick={() => setModal2Visible(true)}
-                  />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title Grid"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={8} lg={8}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <img
-                    alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                  />
-                }
-                actions={[
-                  <CloudUploadOutlined
-                    key="Publish"
-                    onClick={() => setModal2Visible(true)}
-                  />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title Grid"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-        </>
-      );
-    case "list":
-      return (
-        <>
-          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  </Col>
-                }
-                actions={[
-                  <CloudUploadOutlined key="Publish" />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title List"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  </Col>
-                }
-                actions={[
-                  <CloudUploadOutlined key="Publish" />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title List"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  </Col>
-                }
-                actions={[
-                  <CloudUploadOutlined key="Publish" />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title List"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-        </>
-      );
+const GridType = (courses, gridType, setModal2Visible, router) => {
+  let gridClass = "";
+  let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 };
+  if (gridType == "list") {
+    gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
+    gridClass = "grid-list";
   }
+
+  return courses ? (
+    <>
+      {courses.map((course) => (
+        <Col
+          key={course.id}
+          className={`gutter-row ${gridClass}`}
+          {...gridProps}
+        >
+          <motion.div initial="hidden" animate="visible" variants={list}>
+            <Card
+              className={
+                course.isPublished ? "published-course" : "unpublished-course"
+              }
+              extra={course.isPublished ? "Published" : "Unpublished"}
+              hoverable
+              style={{ width: "auto" }}
+              cover={<img alt="example" src={course.featureImage} />}
+              actions={[
+                <CloudDownloadOutlined
+                  key="Unpublish"
+                  onClick={() => setModal2Visible(true)}
+                />,
+                <EditOutlined
+                  key="edit"
+                  onClick={() =>
+                    router.push(
+                      `/instructor/[course]/[...manage]`,
+                      `/instructor/course/edit/${course.id}`
+                    )
+                  }
+                />,
+                <EyeOutlined
+                  key="View"
+                  //onClick={() => setModal2Visible(true)}
+                  onClick={() =>
+                    router.push(
+                      `/instructor/[course]/[...manage]`,
+                      `/instructor/course/view/${course.id}`
+                    )
+                  }
+                />,
+              ]}
+            >
+              <Meta
+                title={
+                  <Link
+                    href={`/instructor/[course]/[...manage]`}
+                    as={`/instructor/course/view/${course.id}`}
+                  >
+                    <a>{course.title}</a>
+                  </Link>
+                }
+                description={
+                  <div>
+                    <div>{course.description}</div>
+                    <div>Public</div>
+                  </div>
+                }
+              />
+            </Card>
+          </motion.div>
+        </Col>
+      ))}
+      
+    </>
+  ) : (
+    <>
+      <p className="loading">...Loading</p>
+    </>
+  );
 };
 
 export default AuthoredCourses;

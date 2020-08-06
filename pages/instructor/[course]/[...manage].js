@@ -12,6 +12,9 @@ const CourseAdd = dynamic(() => import("../../../components/course/CourseAdd"));
 const CourseEdit = dynamic(() =>
   import("../../../components/course/CourseEdit")
 );
+const CourseView = dynamic(() =>
+  import("../../../components/course/CourseView")
+);
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
@@ -75,7 +78,10 @@ const CourseManagement = (props) => {
     manageQueryLength == 2 &&
     (thePage[0] == "view" || thePage[0] == "edit")
   ) {
-    thePage[0] == "view" && (theContent = "HELLO View Course General"); // url /view/courseId - viewing the course General
+    let course_id = thePage[1];
+    const parsed = parseInt(course_id);
+    if(!isNaN(parsed)){course_id = parsed;}else{ return <Error statusCode={404} />; }  
+    thePage[0] == "view" && (theContent = <CourseView courseId={thePage[1]} />); // url /view/courseId - viewing the course General
     thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 && isSubPanelsIncluded &&

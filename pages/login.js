@@ -1,7 +1,7 @@
 import { Layout, Row, Col, Form, Input, Button, Checkbox, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import Cookies from "js-cookie";
 import withoutAuth from "../hocs/withoutAuth";
 import { useAuth } from "../providers/Auth";
 import Loader from "../components/theme-layout/loader/loader";
@@ -49,21 +49,38 @@ export default withoutAuth(function Login() {
         //console.log(_result)
         if (_result) {
           var userType;
-          if(_result.isAdministrator == 1){
-            userType = "admin"
-          }else if(_result.isInstructor == 1){
-            userType = "instructor"
-          } else{
-            userType = "learner"
+          if (_result.isAdministrator == 1) {
+            userType = "admin";
+          } else if (_result.isInstructor == 1) {
+            userType = "instructor";
+          } else {
+            userType = "learner";
           }
-          
 
           var params = {
             userType: userType,
             token: _result.token,
           };
+          Cookies.set("session", "1", {
+            expires: 7,
+            path: "/",
+            SameSite: "lax",
+          });
+          Cookies.set("usertype", userType, {
+            expires: 7,
+            path: "/",
+            SameSite: "lax",
+          });
+          Cookies.set("token", _result.token, {
+            expires: 7,
+            path: "/",
+            SameSite: "lax",
+          });
+          setAuthenticated(true);
+          setUsertype(userType);
+          setUserDetails(_result);
           //console.log(params)
-          axios.post("/api/login", params).then((res) => {
+          /* axios.post("/api/login", params).then((res) => {
             var _res = res.data;
             //console.log(_res)
             if (_res.status === 200) {
@@ -71,7 +88,7 @@ export default withoutAuth(function Login() {
               setUsertype(userType);
               setUserDetails(_result);
             }
-          });
+          }); */
         } else {
           onFinishFailed(values);
           setError(
@@ -82,9 +99,7 @@ export default withoutAuth(function Login() {
       .catch(function (error) {
         // handle error
         console.log(error.response.data);
-        setError(
-          "Login Failed: " + error.response.data.message
-        );
+        setError("Login Failed: " + error.response.data.message);
         //form.resetFields();
       });
     /* const response = await fetch("/api/login", {
@@ -159,7 +174,6 @@ export default withoutAuth(function Login() {
                           message: "Please input your username!",
                         },
                       ]}
-                      
                     >
                       <Input onChange={onFocus} />
                     </Form.Item>
@@ -179,7 +193,6 @@ export default withoutAuth(function Login() {
                       <Input.Password onChange={onFocus} />
                     </Form.Item>
                   </Form.Item>
-                  
 
                   <Form.Item
                     {...tailLayout}
@@ -198,7 +211,10 @@ export default withoutAuth(function Login() {
                     <div className="ant-form-item-has-error">
                       <div
                         className="ant-form-item-explain"
-                        style={{ textAlign: "center", textTransform:"capitalize" }}
+                        style={{
+                          textAlign: "center",
+                          textTransform: "capitalize",
+                        }}
                       >
                         {error}
                       </div>

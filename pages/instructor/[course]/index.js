@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
 import { useAuth } from "../../../providers/Auth";
-import { CourseListProvider } from "../../../providers/CourseProvider";
+//import { CourseListProvider } from "../../../providers/CourseProvider";
 
 
 import Error from "next/error";
@@ -79,11 +79,9 @@ const Course = ({courselist,token,apiBaseUrl}) => {
 
   return (
     <MainThemeLayout>
-      <CourseListProvider course_all_list={allCourses}>
       <Layout className="main-content-holder courses-class" id="courses-class">
         <CourseList />
       </Layout>
-      </CourseListProvider>
       <style jsx global>{`
         /* .status-col {
           background: #eeeeee;
@@ -121,9 +119,7 @@ Course.getInitialProps = async (ctx) => {
   
      const result = await axios(config);
     res=result.data
-  }
-
-  
+  }  
    
   const data=res;
   //console.log(apiBaseUrl);

@@ -36,17 +36,18 @@ const list = {
     opacity: 1,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
+      ease: "easeIn",
+      duration: 0.5,
       when: "beforeChildren",
       staggerChildren: 0.1,
     },
   },
   hidden: {
-    
     opacity: 0,
     transition: {
       delay: 0.1,
-      ease: "easeIn", duration: 0.5,
+      ease: "easeIn",
+      duration: 0.5,
       when: "afterChildren",
       staggerChildren: 0.1,
     },
@@ -56,7 +57,7 @@ const apiBaseUrl = process.env.apiBaseUrl;
 
 const CourseList = (props) => {
   const router = useRouter();
-  const { courseAllList, setCourseAllList } = useCourseList()
+  const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
@@ -64,12 +65,10 @@ const CourseList = (props) => {
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
     if (!courseAllList) {
-      
-        const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-        //console.log(userData);
-        setCourseAllList(courselist);
-      
-    }else{
+      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
+      //console.log(userData);
+      setCourseAllList(courselist);
+    } else {
       //put additional Filtration here
     }
   }, [courseAllList]);
@@ -168,7 +167,7 @@ const CourseList = (props) => {
         <p>some contents...</p>
         <p>some contents...</p>
       </Modal>
-      
+
       <CourseCircularUi />
       <style jsx global>{`
         .AuthoredCourses-ListItems .ant-card-actions > li {
@@ -212,8 +211,8 @@ const CourseList = (props) => {
           cursor: pointer;
           outline: none;
         }
-        .widget-holder-col .ant-card-hoverable{
-          cursor:default;
+        .widget-holder-col .ant-card-hoverable {
+          cursor: default;
         }
         .widget-holder-col .ant-card-body {
           padding: 10px;
@@ -313,74 +312,94 @@ const CourseList = (props) => {
           color: #e69138;
           opacity: 0.5;
         }
-        .widget-holder-col .ant-card-meta-title a{color:#000000}
-        .widget-holder-col .ant-card-meta-title a:hover{color:#e69138}
+        .widget-holder-col .ant-card-meta-title a {
+          color: #000000;
+        }
+        .widget-holder-col .ant-card-meta-title a:hover {
+          color: #e69138;
+        }
       `}</style>
     </Row>
   );
 };
 
 const GridType = (courses, gridType, setModal2Visible, router) => {
-  let gridClass='';
-  let gridProps ={xs:24,sm:24, md:8, lg:8, xl:6}
-  if(gridType=="list"){ 
-    gridProps={xs:24,sm:24, md:24, lg:24, xl:24}; 
-    gridClass="grid-list";
+  let gridClass = "";
+  let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
+  if (gridType == "list") {
+    gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
+    gridClass = "grid-list";
   }
-  
-      return courses ? (
-        <>
-        { courses.map((course) => (
-            <Col key={course.id} className={`gutter-row ${gridClass}`} {...gridProps} >
-            <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                className={course.isPublished ? "published-course":"unpublished-course"}
-                extra={course.isPublished ?"Published":"Unpublished"}
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <img
-                      alt="example"
-                      src={course.featureImage}
-                    />
-                  
-                }
-                actions={[
-                  <CloudDownloadOutlined
-                    key="Unpublish"
-                    onClick={() => setModal2Visible(true)}
-                  />,
-                  <EditOutlined key="edit" onClick={()=> router.push(`/instructor/[course]/[...manage]`, `/instructor/course/edit/${course.id}`)} />,
-                  <EyeOutlined
-                    key="View"
-                    //onClick={() => setModal2Visible(true)}
-                    onClick={()=> router.push(`/instructor/[course]/[...manage]`, `/instructor/course/view/${course.id}`)}
-                  />,
-                ]}
-              >
-                <Meta
-                  title={<Link href={`/instructor/[course]/[...manage]`} as={`/instructor/course/view/${course.id}`}>
-                  <a>{course.title}</a>
-                </Link>}
-                  description={
-                    <div>
-                      <div>{course.description}</div>
-                      <div>Public</div>
-                    </div>
+
+  return courses ? (
+    <>
+      {courses.map((course) => (
+        <Col
+          key={course.id}
+          className={`gutter-row ${gridClass}`}
+          {...gridProps}
+        >
+          <motion.div initial="hidden" animate="visible" variants={list}>
+            <Card
+              className={
+                course.isPublished ? "published-course" : "unpublished-course"
+              }
+              extra={course.isPublished ? "Published" : "Unpublished"}
+              hoverable
+              style={{ width: "auto" }}
+              cover={<img alt="example" src={course.featureImage} />}
+              actions={[
+                <CloudDownloadOutlined
+                  key="Unpublish"
+                  onClick={() => setModal2Visible(true)}
+                />,
+                <EditOutlined
+                  key="edit"
+                  onClick={() =>
+                    router.push(
+                      `/instructor/[course]/[...manage]`,
+                      `/instructor/course/edit/${course.id}`
+                    )
                   }
-                />
-              </Card>
-            </motion.div>
-          </Col>
-            
-          ))}
-          
-                
-         
-        </>
-      ):(<><p className="loading">...Loading</p></>);
-    
-  
+                />,
+                <EyeOutlined
+                  key="View"
+                  //onClick={() => setModal2Visible(true)}
+                  onClick={() =>
+                    router.push(
+                      `/instructor/[course]/[...manage]`,
+                      `/instructor/course/view/${course.id}`
+                    )
+                  }
+                />,
+              ]}
+            >
+              <Meta
+                title={
+                  <Link
+                    href={`/instructor/[course]/[...manage]`}
+                    as={`/instructor/course/view/${course.id}`}
+                  >
+                    <a>{course.title}</a>
+                  </Link>
+                }
+                description={
+                  <div>
+                    <div>{course.description}</div>
+                    <div>Public</div>
+                  </div>
+                }
+              />
+            </Card>
+          </motion.div>
+        </Col>
+      ))}
+    </>
+  ) : (
+    <>
+      <p className="loading">..Loading</p>
+    </>
+  );
 };
 
 const { Option } = Select;
@@ -396,7 +415,5 @@ function onFocus() {
 function onSearch(val) {
   console.log("search:", val);
 }
-
-
 
 export default CourseList;

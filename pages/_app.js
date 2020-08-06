@@ -9,10 +9,11 @@ import "@progress/kendo-theme-material/dist/all.css";
 import { library, config } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
+import { far } from "@fortawesome/free-regular-svg-icons";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../styles/ams-icons/style.css";
 config.autoAddCss = false;
-library.add(fab, fas);
+library.add(fab, fas, far);
 
 function MyApp({ Component, pageProps, authenticated, usertype }) {
   return (
