@@ -81,7 +81,8 @@ const CourseManagement = (props) => {
     let course_id = thePage[1];
     const parsed = parseInt(course_id);
     if(!isNaN(parsed)){course_id = parsed;}else{ return <Error statusCode={404} />; }  
-    thePage[0] == "view" && (theContent = <CourseView courseId={thePage[1]} />); // url /view/courseId - viewing the course General
+    thePage[0] == "view" && (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
+    //console.log(thePage[1]);
     thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 && isSubPanelsIncluded &&
@@ -107,7 +108,7 @@ const CourseManagement = (props) => {
 
 
   //console.log(router.query.manage.length);
-  //console.log(thePage);
+ 
 
   //
 

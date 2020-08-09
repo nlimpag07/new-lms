@@ -23,7 +23,6 @@ export const CourseListProvider = ({ children }) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = Cookies.get("token");
   const [courseAllList, setCourseAllList] = useState("");
-  //Cookies.set('test', 'example')
 
   useEffect(() => {
     var data = JSON.stringify({});
@@ -43,12 +42,14 @@ export const CourseListProvider = ({ children }) => {
         // console.log(JSON.stringify(response.data));
 
         setCourseAllList(response.data);
+        localStorage.setItem("courseAllList", JSON.stringify(response.data));
       })
       .catch(function (error) {
         console.log(error);
       });
 
     if (courseAllList) {
+
       localStorage.setItem("courseAllList", JSON.stringify(courseAllList));
       setCourseAllList(courseAllList);
     } else {

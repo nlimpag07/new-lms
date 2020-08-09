@@ -23,6 +23,7 @@ import {
   Collapse,
   Typography,
   List,
+  Tabs,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -39,10 +40,12 @@ import {
 } from "@ant-design/icons";
 import { useCourseList } from "../../providers/CourseProvider";
 import Error from "next/error";
+import ReactPlayer from "react-player/lazy";
+import { useRouter } from "next/router";
 
 const { Meta } = Card;
-/**TextArea declaration */
-const { TextArea } = Input;
+/**TabPane declaration */
+const { TabPane } = Tabs;
 /*menulists used by radial menu */
 const menulists = [
   {
@@ -80,19 +83,24 @@ const framerEffect = {
   },
 };
 
-const CourseView = ({ courseId }) => {
+const CourseView = ({course_id}) => {
+  //const router = useRouter();
+  //var courseId = router.query.manage[1];
+  
+  const[courseId, setCourseId] = useState(course_id);
+  const homeUrl = process.env.homeUrl;
   const { courseAllList } = useCourseList();
   const [course, setCourse] = useState("");
+  const [modal2Visible, setModal2Visible] = useState("");
   var courseData = "";
   if (courseAllList) {
-    courseData = courseAllList.filter((getCourse) => getCourse.id == courseId);
+    courseData = courseAllList.filter((getCourse) => getCourse.id == course_id);    
   }
-  console.log("Default getting CourseData ", courseData);
-  useEffect(() => {
-    if (!courseData) {
+  useEffect((course_id) => {    
+    
+     if (!courseAllList) {
       let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-      //console.log(userData);
-      setCourse(allCourse.filter((getCourse) => getCourse.id == courseId));
+      setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
     } else {
       //put additional Filtration here
       setCourse(courseData);
@@ -100,25 +108,37 @@ const CourseView = ({ courseId }) => {
   }, []);
 
   let courseDetails = course[0] || "";
-  console.log("CourseDetails ", courseDetails);
-  let { courseLanguage } = courseDetails;
-  let courselanguage = [];
-  if (courseLanguage) {
+  //console.log("CourseDetails ", courseDetails);
+  let {
+    id,
+    featureImage,
+    featureVideo,
+    courseLanguage,
+    courseCategory,
+    title,
+    description,
+    courseInstructor,
+    courseOutline,
+    courseType,
+    courseLevel,
+    courseTag,
+    relatedCourse,
+  } = courseDetails;
 
-    courseLanguage.map((lang, index) => {      
-      //console.log(lang.language)
-      return {...courselanguage, lang}
-      });
-      console.log(courselanguage)
-  }
-  
+  let lessons = courseOutline ? courseOutline.length : 0;
+
   const listData = [
     {
-      title: "Ant Design Title 1",
+      title: `${
+        courseType &&
+        courseType.map((type, index) => {
+          return type.courseType.name + " ";
+        })
+      }`,
       avatar: <FontAwesomeIcon icon={["fas", "video"]} size="3x" />,
     },
     {
-      title: "Ant Design Title 2",
+      title: `${lessons} Lessons`,
       avatar: <FontAwesomeIcon icon={["far", "list-alt"]} size="3x" />,
     },
     {
@@ -126,11 +146,21 @@ const CourseView = ({ courseId }) => {
       avatar: <FontAwesomeIcon icon={["far", "clock"]} size="3x" />,
     },
     {
-      title: "Ant Design Title 4",
+      title: `${
+        courseCategory &&
+        courseCategory.map((ctgry, index) => {
+          return ctgry.category.name + " ";
+        })
+      }`,
       avatar: <FontAwesomeIcon icon={["far", "keyboard"]} size="3x" />,
     },
     {
-      title: `${courseLanguage}`,
+      title: `${
+        courseLanguage &&
+        courseLanguage.map((lang, index) => {
+          return lang.language.name + " ";
+        })
+      }`,
       avatar: <FontAwesomeIcon icon={["fas", "globe-americas"]} size="3x" />,
     },
     {
@@ -138,7 +168,12 @@ const CourseView = ({ courseId }) => {
       avatar: <FontAwesomeIcon icon={["fas", "chart-line"]} size="3x" />,
     },
     {
-      title: "Ant Design Title 4",
+      title: `${
+        courseLevel &&
+        courseLevel.map((clevel, index) => {
+          return clevel.level.name + " ";
+        })
+      }`,
       avatar: <FontAwesomeIcon icon={["fas", "star"]} size="3x" />,
     },
   ];
@@ -147,7 +182,7 @@ const CourseView = ({ courseId }) => {
     <Row
       className="widget-container Course-View"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      style={{ margin: "1rem 0" }}
+      style={{ margin: "1rem 0px 4rem 0" }}
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -158,7 +193,7 @@ const CourseView = ({ courseId }) => {
       >
         <Row className="widget-header-row" justify="start">
           <Col xs={24}>
-            <h1 className="widget-title">{courseDetails.title}</h1>
+            <h1 className="widget-title">{title}</h1>
           </Col>
         </Row>
         <Row
@@ -171,12 +206,13 @@ const CourseView = ({ courseId }) => {
             <Row className="ImageWrapper">
               <Col>
                 <img
-                  alt={`${courseDetails.title} Featured Image`}
-                  src={courseDetails.featureImage}
+                  alt={`${title} Featured Image`}
+                  src={featureImage}
+                  onClick={() => setModal2Visible(true)}
                 />
               </Col>
             </Row>
-            <Row className="">
+            <Row className="Icon-Listed-Data">
               <Col xs={24}>
                 <List
                   itemLayout="horizontal"
@@ -192,28 +228,146 @@ const CourseView = ({ courseId }) => {
                 />
               </Col>
             </Row>
+            <Row className="Course-Tags">
+              <Col xs={24}>
+                <h3>TAGS</h3>
+                {courseTag &&
+                  courseTag.map((tags, index) => (
+                    <button key={index} className="tag-button">
+                      {tags.tag.name}
+                    </button>
+                  ))}
+              </Col>
+            </Row>
+            <Row className="Course-Tags">
+              <Col xs={24}>
+                <h3>SHARE</h3>
+                {
+                  <button className="tag-button">{`${homeUrl}/course/view/${id}`}</button>
+                }
+              </Col>
+            </Row>
+            <Row className="Course-Tags">
+              <Col xs={24}>
+                <h3>DEMOS</h3>
+                <Col xs={12} className="ImageWrapper demo-thumb">
+                  <img
+                    alt={`${title} Featured Image`}
+                    src={featureImage}
+                    onClick={() => setModal2Visible(true)}
+                  />
+                </Col>
+              </Col>
+            </Row>
           </Col>
           {/* Right Side */}
-          <Col xs={18}>
-            <h1 className="widget-title">{courseDetails.title}</h1>
+          <Col xs={18} className="Course-Tabs">
+            <Tabs defaultActiveKey="1">
+              <TabPane tab="OVERVIEW" key="1">
+                <div className="tab-content">
+                  <Row className="Course-Tags">
+                    <Col xs={24}>
+                      <p>{description}</p>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua. Ut enim ad minim veniam, quis
+                        nostrud exercitation ullamco laboris nisi ut aliquip ex
+                        ea commodo consequat.
+                      </p>
+                      <p>
+                        Duis aute irure dolor in reprehenderit in voluptate
+                        velit esse cillum dolore eu fugiat nulla pariatur.
+                        Excepteur sint occaecat cupidatat non proident, sunt in
+                        culpa qui officia deserunt mollit anim id est laborum.
+                      </p>
+                      <p>
+                        Ett dolore magna aliqua. Ut enim ad minim veniam, quis
+                        nostrud exercitation ullamco laboris nisi ut aliquip ex
+                        ea commodo consequat. Duis aute irure dolor in
+                        reprehenderit in voluptate velit esse cillum dolore eu
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+                        non proident, sunt in culpa qui officia deserunt mollit
+                        anim id est laborum. Lorem ipsum dolor sit amet,
+                        consectetur adipisicing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua.
+                      </p>
+                      <p>
+                        Ut enim ad minim veniam, quis nostrud exercitation
+                        ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        Duis aute irure dolor in reprehenderit in voluptate
+                        velit esse cillum dolore eu fugiat nulla pariatur.
+                        Excepteur sint occaecat cupidatat non proident, sunt in
+                        culpa qui officia deserunt mollit anim id est laborum.
+                      </p>
+                    </Col>
+                  </Row>
+                  <Row className="Course-Tags related-courses">
+                    <Col xs={24}>
+                      <h3>RELATED COURSES</h3>
+                      {relatedCourse.length ?
+                        relatedCourse.map((rltdCourse, index) => (
+                          
+                          
+                          <Link
+                            key={index}
+                            href={`/instructor/[course]/[...manage]`}
+                            as={`/instructor/course/view/${rltdCourse.courseRelated.course.id}`}
+                          >{/* <button onClick={()=>relCourse(rltdCourse.courseRelated.course.id)}>{rltdCourse.courseRelated.course.title}</button> */}
+                            <a>{rltdCourse.courseRelated.course.title}</a>
+                          </Link>
+                        )):"None"
+                        }
+                    </Col>
+                  </Row>
+                </div>
+              </TabPane>
+              <TabPane tab="COURSE OUTLINE" key="2">
+                Content of Tab Pane COURSE OUTLINE
+              </TabPane>
+              <TabPane tab="LEARNING OUTCOMES" key="3">
+                Content of Tab Pane LEARNING OUTCOMES
+              </TabPane>
+              <TabPane tab="COMPETENCIES" key="4">
+                Content of Tab Pane COMPETENCIES
+              </TabPane>
+              <TabPane tab="ENROLLMENTS" key="5">
+                Content of Tab Pane ENROLLMENTS
+              </TabPane>
+              <TabPane tab="REVIEWS" key="6">
+                Content of Tab Pane REVIEWS
+              </TabPane>
+            </Tabs>
           </Col>
           {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
         </Row>
       </Col>
-      {/* <Modal
-        title="Publish Properties"
+      <Modal
+        title={title}
         centered
         visible={modal2Visible}
         onOk={() => setModal2Visible(false)}
         onCancel={() => setModal2Visible(false)}
         maskClosable={false}
         destroyOnClose={true}
-        width={1000}
+        width="70%"
+        className="videoModal"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal> */}
+        <div className="demoModalBoday">
+          <ReactPlayer
+            playing={true}
+            url={featureVideo}
+            controls={true}
+            width="100%"
+            height="635px"
+            config={{
+              youtube: {
+                playerVars: { showinfo: 0 },
+              },
+            }}
+          />
+        </div>
+      </Modal>
 
       <CourseCircularUi />
       <style jsx global>{`
@@ -322,6 +476,73 @@ const CourseView = ({ courseId }) => {
         }
         .widget-holder-col .widget-search-row .category-holder {
           position: relative;
+        }
+        .Course-View h2,
+        .Course-View h3,
+        .Course-View h4,
+        .Course-View h5 {
+          color: #e69138;
+        }
+        .Course-View .ant-list-items {
+          margin: 1rem 0 0 0;
+        }
+        .Course-View .ant-list-item-meta {
+          align-items: center;
+        }
+        .Course-View .ant-list-item {
+          border-bottom: none;
+          padding: 1rem 0;
+        }
+        .Course-Tags h3 {
+          margin: 2rem 0 0.5rem 0;
+        }
+        .Course-Tags .tag-button {
+          border-radius: 5px;
+          border: 1px solid #333333;
+          padding: 5px;
+          margin-right: 15px;
+          background-color: #ffffff;
+        }
+        .videoModal .ant-modal-header,
+        .videoModal .ant-modal-footer {
+          display: none;
+        }
+        .videoModal .ant-modal-body {
+          padding: 0;
+        }
+        .videoModal .ant-modal-close {
+          top: -3.5rem;
+          right: -3.5rem;
+        }
+        .Course-View img:hover {
+          cursor: pointer;
+        }
+        .Course-Tabs .ant-tabs-nav-wrap {
+          background-color: #eeeeee;
+        }
+        .Course-Tabs .ant-tabs-tab:hover {
+          color: #e69138;
+        }
+        .Course-Tabs .ant-tabs-ink-bar {
+          background: #e69138;
+        }
+        .Course-Tabs .ant-tabs-tab {
+          padding: 12px 5%;
+        }
+        .Course-Tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+          color: #e69138;
+        }
+        .Course-Tabs .ant-tabs-tab-btn {
+          font-weight: 500;
+        }
+        .Course-Tabs .ant-tabs-tab-btn:focus,
+        .Course-Tabs .ant-tabs-tab-remove:focus,
+        .Course-Tabs .ant-tabs-tab-btn:active,
+        .Course-Tabs .ant-tabs-tab-remove:active {
+          color: #e69138;
+        }
+        .tab-content .related-courses a{
+          margin-right:1rem;
         }
       `}</style>
     </Row>
