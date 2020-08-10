@@ -318,6 +318,9 @@ const CourseList = (props) => {
         .widget-holder-col .ant-card-meta-title a:hover {
           color: #e69138;
         }
+        .widget-holder-col .ant-card-cover a img {
+          width: 100%;
+        }
       `}</style>
     </Row>
   );
@@ -347,7 +350,16 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
               extra={course.isPublished ? "Published" : "Unpublished"}
               hoverable
               style={{ width: "auto" }}
-              cover={<img alt="example" src={course.featureImage} />}
+              cover={
+                <Link
+                  href={`/instructor/[course]/[...manage]`}
+                  as={`/instructor/course/view/${course.id}`}
+                >
+                  <a>
+                    <img alt="example" src={course.featureImage} />
+                  </a>
+                </Link>
+              }
               actions={[
                 <CloudDownloadOutlined
                   key="Unpublish"

@@ -23,6 +23,7 @@
     "@progress/kendo-theme-material": "^3.16.0",
     "@types/cookie": "^0.4.0",
     "@types/d3": "^5.7.2",
+    "@types/js-cookie": "^2.2.6",
     "@types/react-dom": "^16.9.8",
     "@types/react-native": "^0.62.16",
     "antd": "^4.4.0",

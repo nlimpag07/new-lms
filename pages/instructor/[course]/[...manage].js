@@ -46,9 +46,15 @@ const CourseManagement = (props) => {
   const managePages = ["add", "edit", "view", "publish"];
   //check if the value of router.query.manage[0] is in managePages
   const isPageIncluded = managePages.includes(router.query.manage[0]);
-  const courseSubPanels = ["course-outline", "learning-outcomes", "assessments", "instructors", "competencies", "post-evaluation"];
+  const courseSubPanels = [
+    "course-outline",
+    "learning-outcomes",
+    "assessments",
+    "instructors",
+    "competencies",
+    "post-evaluation",
+  ];
   const isSubPanelsIncluded = courseSubPanels.includes(router.query.manage[2]);
-
 
   //if isPageIncluded is false. url course/[...manage] not in isPageIncluded return to 404
   if (!isPageIncluded) {
@@ -68,7 +74,7 @@ const CourseManagement = (props) => {
   const manageQueryLength = router.query.manage.length;
 
   if (manageQueryLength == 1) {
-    if (urlPath.endsWith("edit") || urlPath.endsWith("view") ) {
+    if (urlPath.endsWith("edit") || urlPath.endsWith("view")) {
       return <Error statusCode={404} />;
     }
     //allow Manage[0] pages
@@ -80,35 +86,62 @@ const CourseManagement = (props) => {
   ) {
     let course_id = thePage[1];
     const parsed = parseInt(course_id);
-    if(!isNaN(parsed)){course_id = parsed;}else{ return <Error statusCode={404} />; }  
-    thePage[0] == "view" && (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    thePage[0] == "view" &&
+      (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
     thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
   } else if (
-    manageQueryLength == 3 && isSubPanelsIncluded &&
+    manageQueryLength == 3 &&
+    isSubPanelsIncluded &&
     (thePage[0] == "view" || thePage[0] == "edit")
   ) {
-    thePage[0] == "view" && thePage[2] == "course-outline" && (theContent = "HELLO View Course Outline"); // viewing the course
-    thePage[0] == "view" && thePage[2] == "learning-outcomes" && (theContent = "HELLO View Course learning-outcomes"); // viewing the course
-    thePage[0] == "view" && thePage[2] == "assessments" && (theContent = "HELLO View Course assessments"); // viewing the course
-    thePage[0] == "view" && thePage[2] == "instructors" && (theContent = "HELLO View Course instructors"); // viewing the course
-    thePage[0] == "view" && thePage[2] == "competencies" && (theContent = "HELLO View Course competencies"); // viewing the course
-    thePage[0] == "view" && thePage[2] == "post-evaluation" && (theContent = "HELLO View Course post-evaluation"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "course-outline" &&
+      (theContent = "HELLO View Course Outline"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "learning-outcomes" &&
+      (theContent = "HELLO View Course learning-outcomes"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "assessments" &&
+      (theContent = "HELLO View Course assessments"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "instructors" &&
+      (theContent = "HELLO View Course instructors"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "competencies" &&
+      (theContent = "HELLO View Course competencies"); // viewing the course
+    thePage[0] == "view" &&
+      thePage[2] == "post-evaluation" &&
+      (theContent = "HELLO View Course post-evaluation"); // viewing the course
 
-    thePage[0] == "edit" && thePage[2] == "course-outline" && (theContent = "HELLO Edit Course Outline"); // Editing the course
-    thePage[0] == "edit" && thePage[2] == "learning-outcomes" && (theContent = "HELLO Edit Course learning-outcomes"); // Editing the course
-    thePage[0] == "edit" && thePage[2] == "assessments" && (theContent = "HELLO View Edit assessments"); // Editing the course
-    thePage[0] == "edit" && thePage[2] == "instructors" && (theContent = "HELLO View Edit instructors"); // Editing the course
-    thePage[0] == "edit" && thePage[2] == "competencies" && (theContent = "HELLO View Edit competencies"); // Editing the course
-    thePage[0] == "edit" && thePage[2] == "post-evaluation" && (theContent = "HELLO View Edit post-evaluation"); // Editing the course
-
+    thePage[0] == "edit" &&
+      thePage[2] == "course-outline" &&
+      (theContent = "HELLO Edit Course Outline"); // Editing the course
+    thePage[0] == "edit" &&
+      thePage[2] == "learning-outcomes" &&
+      (theContent = "HELLO Edit Course learning-outcomes"); // Editing the course
+    thePage[0] == "edit" &&
+      thePage[2] == "assessments" &&
+      (theContent = "HELLO View Edit assessments"); // Editing the course
+    thePage[0] == "edit" &&
+      thePage[2] == "instructors" &&
+      (theContent = "HELLO View Edit instructors"); // Editing the course
+    thePage[0] == "edit" &&
+      thePage[2] == "competencies" &&
+      (theContent = "HELLO View Edit competencies"); // Editing the course
+    thePage[0] == "edit" &&
+      thePage[2] == "post-evaluation" &&
+      (theContent = "HELLO View Edit post-evaluation"); // Editing the course
   } else {
     return <Error statusCode={404} />;
   }
 
-
   //console.log(router.query.manage.length);
- 
 
   //
 
