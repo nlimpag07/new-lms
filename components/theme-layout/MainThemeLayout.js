@@ -61,6 +61,7 @@ export default function MainThemeLayout({ children }) {
       if (router.route.startsWith("/instructor/[course]/")) {
         NavigationMenu = <CourseManagementMenu defaultSelectedKey={router.pathname} />;
       }
+      
     
   } else if (router.route.startsWith("/admin")) {
     

@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import CourseList from "../../../components/course/CourseList";
+import ClassesCourseList from "../../../components/course/ClassesCourseList";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -16,7 +16,6 @@ import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
 import { useAuth } from "../../../providers/Auth";
 //import { CourseListProvider } from "../../../providers/CourseProvider";
-
 
 import Error from "next/error";
 
@@ -31,56 +30,56 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Course = ({courselist,token,apiBaseUrl}) => {  
+const Classes = ({ courselist, token, apiBaseUrl }) => {
   //console.log(courselist)
-  const[allCourses, setAllCourses] = useState(courselist);
+  const [myPublishedCourses, setMyPublishedCourses] = useState(courselist);
+  const [userData, setUserData] = useState("");
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-  
-  /* if (urlquery != "course") {
-    return <Error statusCode={404} />;
-  } */
-
-
-  /*var theContent;
-   if (urlPath) {
-    var thePage = urlPath[urlPath.length - 1];
-    thePage == "add" && (theContent = <CourseAdd />);
-    thePage == "edit" && (theContent = "HELLO Edit");
-    thePage == "publish" && (theContent = "HELLO Publish");
-    thePage == "course" && (theContent = <CourseList />);
-  } */
 
   useEffect(() => {
-  var data = JSON.stringify({});
-
-  var config = {
-    method: "get",
-    url: apiBaseUrl+"/courses",
-    headers: { 
-      'Authorization': 'Bearer '+ token, 
-      'Content-Type': 'application/json'
-    },
-    data: data,
-  };
-
-  axios(config)
-    .then(function (response) {
-      //console.log(JSON.stringify(response.data));
-      
-      setAllCourses(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    //USE userData for the conditionals
+    /* let myData = JSON.parse(localStorage.getItem("userDetails"));
+    setUserData(myData); */
+    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+    setMyPublishedCourses(
+      allCourses.filter((getCourse) => getCourse.isPublished == 1)
+    );
+    
+    //setLoading(false);
 
   }, []);
 
+  /* useEffect(() => {
+    var data = JSON.stringify({});
+
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        //console.log(JSON.stringify(response.data));
+
+        setMyPublishedCourses(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [myPublishedCourses]); */
+  //console.log(myPublishedCourses);
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <CourseList />
+        asdasdasd
+        <ClassesCourseList myPublishedCourses={myPublishedCourses} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -93,7 +92,7 @@ const Course = ({courselist,token,apiBaseUrl}) => {
   );
 };
 
-Course.getInitialProps = async (ctx) => {
+Classes.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -102,7 +101,7 @@ Course.getInitialProps = async (ctx) => {
   if (request) {
     request.cookies = cookie.parse(request.headers.cookie || "");
     token = request.cookies.token;
-    res=null;
+    res = null;
   } else {
     userData = JSON.parse(localStorage.getItem("userDetails"));
     token = userData.token;
@@ -113,17 +112,16 @@ Course.getInitialProps = async (ctx) => {
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
-        
       },
     };
-  
-     const result = await axios(config);
-    res=result.data
-  }  
-   
-  const data=res;
+
+    const result = await axios(config);
+    res = result.data;
+  }
+
+  const data = res;
   //console.log(apiBaseUrl);
-  return {courselist: data, token:token, apiBaseUrl:apiBaseUrl}
+  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
 };
 
-export default withAuth(Course);
+export default withAuth(Classes);

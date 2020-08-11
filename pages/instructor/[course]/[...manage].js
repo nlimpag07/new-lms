@@ -52,7 +52,7 @@ const CourseManagement = (props) => {
     "assessments",
     "instructors",
     "competencies",
-    "post-evaluation",
+    "evaluations",
   ];
   const isSubPanelsIncluded = courseSubPanels.includes(router.query.manage[2]);
 
@@ -116,9 +116,9 @@ const CourseManagement = (props) => {
       thePage[2] == "competencies" &&
       (theContent = "HELLO View Course competencies"); // viewing the course
     thePage[0] == "view" &&
-      thePage[2] == "post-evaluation" &&
+      thePage[2] == "evaluations" &&
       (theContent = "HELLO View Course post-evaluation"); // viewing the course
-
+    
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
       (theContent = "HELLO Edit Course Outline"); // Editing the course
@@ -135,7 +135,7 @@ const CourseManagement = (props) => {
       thePage[2] == "competencies" &&
       (theContent = "HELLO View Edit competencies"); // Editing the course
     thePage[0] == "edit" &&
-      thePage[2] == "post-evaluation" &&
+      thePage[2] == "evaluations" &&
       (theContent = "HELLO View Edit post-evaluation"); // Editing the course
   } else {
     return <Error statusCode={404} />;

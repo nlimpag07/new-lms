@@ -55,8 +55,9 @@ const list = {
 };
 const apiBaseUrl = process.env.apiBaseUrl;
 
-const CourseList = (props) => {
+const ClassesCourseList = ({myPublishedCourses}) => {
   const router = useRouter();
+  console.log(myPublishedCourses.length);
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -64,13 +65,9 @@ const CourseList = (props) => {
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
-    if (!courseAllList) {
-      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-      //console.log(userData);
-      setCourseAllList(courselist);
-    } else {
-      //put additional Filtration here
-    }
+    
+      setCourseAllList(myPublishedCourses);
+    
   }, [courseAllList]);
   //console.log(courseAllList.length)
   return (
@@ -431,4 +428,4 @@ function onSearch(val) {
   console.log("search:", val);
 }
 
-export default CourseList;
+export default ClassesCourseList;

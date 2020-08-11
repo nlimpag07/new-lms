@@ -17,17 +17,16 @@ class InstructorMenu extends Component {
   render() {
     const { pathname } = this.props.defaultSelectedKey;
     return (
-      <Menu theme="light" defaultselectedkey={pathname} mode="inline">
+      <Menu theme="light" defaultselectedkey={pathname} mode="inline">     
         
-
         <Menu.Item
-          key="/instructor/dashboard"
+          key="/instructor"
           icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
         >
-          <Link href="/instructor/dashboard" passHref>
+          <Link href="/instructor" passHref>
             <a>Dashboard</a>
           </Link>
-        </Menu.Item>
+        </Menu.Item>       
 
         <Menu.Item
           key="/instructor/course"

@@ -15,7 +15,18 @@ const CourseManagementMenu = (props) => {
 };
 
 const CmMenuView = (q, aspath) => {
-  return q.course == "course" && q.manage[0] == "add" ? (
+  return q.course == "course" && q.manage[0] == "view" ? (
+    <Menu theme="light" defaultselectedkey={aspath} mode="inline">
+      <Menu.Item
+        key={`/instructor/${q.course}`}
+        icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
+      >
+        <Link href="/instructor/[course]" as={`/instructor/course`}>
+          <a>Back To Course</a>
+        </Link>
+      </Menu.Item>
+    </Menu>
+  ) : q.course == "course" && q.manage[0] == "add" ? (
     <Menu theme="light" defaultselectedkey={aspath} mode="inline">
       <Menu.Item
         key={`/instructor/${q.course}`}
@@ -62,7 +73,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
       <Menu.Item
         key={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/course-outline`}
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
+        icon={<FontAwesomeIcon icon={["far", "list-alt"]} size="lg" />}
       >
         <Link
           href="/instructor/[course]/[...manage]"
@@ -73,56 +84,56 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
 
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-        ikey="/instructor/[course]/[...manage]/learning-outcomes"
+        icon={<FontAwesomeIcon icon={["fas", "star"]} size="lg" />}
+        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/learning-outcomes`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
-          as={`/instructor/course/add/learning-outcomes`}
+          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/learning-outcomes`}
         >
           <a>Learning Outcomes</a>
         </Link>
       </Menu.Item>
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-        ikey="/instructor/[course]/[...manage]/assessements"
+        icon={<FontAwesomeIcon icon={["fas", "hourglass-half"]} size="lg" />}
+        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/assessements`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
-          as={`/instructor/course/add/assessments`}
+          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/assessments`}
         >
           <a>Assessments</a>
         </Link>
       </Menu.Item>
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-        ikey="/instructor/[course]/[...manage]/instructor"
+        icon={<FontAwesomeIcon icon={["fas", "user"]} size="lg" />}
+        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/instructors`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
-          as={`/instructor/course/add/instructor`}
+          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/instructors`}
         >
           <a>Instructor</a>
         </Link>
       </Menu.Item>
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-        ikey="/instructor/[course]/[...manage]/competencies"
+        icon={<FontAwesomeIcon icon={["fas", "shield-alt"]} size="lg" />}
+        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/competencies`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
-          as={`/instructor/course/add/competencies`}
+          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/competencies`}
         >
           <a>Competencies</a>
         </Link>
       </Menu.Item>
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-        ikey="/instructor/[course]/[...manage]/evaluation"
+        icon={<FontAwesomeIcon icon={["fas", "comments"]} size="lg" />}
+        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/evaluations`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
-          as={`/instructor/course/add/evaluation`}
+          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/evaluations`}
         >
           <a>Post Evaluation</a>
         </Link>

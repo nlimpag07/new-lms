@@ -46,6 +46,9 @@ import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeat
 
 import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
+
+import { useRouter } from "next/router";
+
 const { Meta } = Card;
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -157,6 +160,8 @@ const ModalForm = ({
 };
 
 const CourseAdd = () => {
+  const router = useRouter();
+
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
@@ -257,6 +262,7 @@ const CourseAdd = () => {
       modalFormName: "",
       modalBodyContent: "",
     });
+    router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
   };
 
   const validateMessages = {

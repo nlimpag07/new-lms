@@ -83,7 +83,7 @@ const res = {
     },
   ],
 };
-
+const theslice = res.results.slice(0, count);
 const CourseReviewViewWidget = ({ course_details }) => {
   /*  const {
     relatedCourse,
@@ -95,12 +95,12 @@ const CourseReviewViewWidget = ({ course_details }) => {
   useEffect(() => {}, []); */
 
   //To be Removed in real data
-  const theslice = res.results.slice(0, count);
+  //const theslice = res.results.slice(0, count);
   //console.log(theslice)
   //END REMOVE
   const [initLoading, setInitLoading] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([""]);
+  const [data, setData] = useState(theslice);
   const [list, setList] = useState(theslice);
 
   const loadMore =
@@ -118,6 +118,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
     ) : null;
 
   useEffect(() => {
+   
     console.log(theslice);
     setInitLoading(false);
     setData(theslice);
@@ -128,7 +129,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
       setData(theslice);
       setList(theslice);
     }); */
-  }, [list]);
+  }, []);
   //https://codesandbox.io/s/3z8tf?file=/index.js
   const GetData = (callback) => {
     return res;
@@ -144,7 +145,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
   };
 
   const OnLoadMore = () => {
-    setLoading(true);
+    /* setLoading(true);
     setList(
       data.concat(
         [...new Array(count)].map(() => ({ loading: true, name: {} }))
@@ -161,7 +162,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
         // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
         window.dispatchEvent(new Event("resize"));
       });
-    });
+    }); */
   };
   return (
     <div className="tab-content">
@@ -187,7 +188,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
                         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                       />
                     }
-                    title={<a href="https://ant.design">{item.name.last}</a>}
+                    title={<span>{item.name.last}</span>}
                     description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                   />
                   <div>
