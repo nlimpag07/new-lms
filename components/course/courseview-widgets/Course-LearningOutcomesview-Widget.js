@@ -5,7 +5,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Link from "next/link";
 const { Step } = Steps;
 const { Panel } = Collapse;
-const CourseOutlineviewWidget = ({ course_details }) => {
+const CourseLearninOutcomesviewWidget = ({ course_details }) => {
   /* var [courseId, setCourseId] = useState(course_id);
   const homeUrl = process.env.homeUrl;
   const { courseAllList } = useCourseList();
@@ -15,21 +15,18 @@ const CourseOutlineviewWidget = ({ course_details }) => {
   const { relatedCourse, description, courseInstructor } = course_details;
   //console.log(course_details);
   const [current, setCurrent] = useState(0);
+  const [fullDetails, setFullDetails] = useState("off");
 
   /* useEffect(() => {
     setFullDetails("shown");
   }, [current]); */
 
-  const onChange = (current) => {
-    //console.log("onChange:", current);
-    setCurrent(current);
-  };
 
 
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
-        <Col xs={24}>
+      <Col xs={24}>
           <Timeline>
             <Timeline.Item color="orange">
               <Collapse
@@ -132,4 +129,4 @@ const Description = () => {
   );
 };
 
-export default CourseOutlineviewWidget;
+export default CourseLearninOutcomesviewWidget;

@@ -26,6 +26,7 @@ import {
   Typography,
   List,
   Tabs,
+  Empty
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -41,10 +42,14 @@ import {
   ProfileOutlined,
 } from "@ant-design/icons";
 import { useCourseList } from "../../providers/CourseProvider";
-import Error from "next/error";
 import ReactPlayer from "react-player/lazy";
 import CourseOverviewWidget from "./courseview-widgets/Course-Overview-Widget";
 import CourseOutlineviewWidget from "./courseview-widgets/Course-Outlineview-Widget";
+import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-LearningOutcomesview-Widget";
+import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
+import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
+
+
 
 const { Meta } = Card;
 /**TabPane declaration */
@@ -211,7 +216,7 @@ const CourseView = ({ course_id }) => {
             style={{ padding: "10px 0" }}
           >
             {/* Left Side */}
-            <Col xs={6}>
+            <Col xs={24} sm={24} md={6}>
               <Row className="ImageWrapper">
                 <Col>
                   <img
@@ -230,7 +235,7 @@ const CourseView = ({ course_id }) => {
                       <List.Item>
                         <List.Item.Meta
                           avatar={item.avatar}
-                          title={<a href="https://ant.design">{item.title}</a>}
+                          title={item.title}
                         />
                       </List.Item>
                     )}
@@ -270,7 +275,7 @@ const CourseView = ({ course_id }) => {
               </Row>
             </Col>
             {/* Right Side */}
-            <Col xs={18} className="Course-Tabs">
+            <Col xs={24} sm={24} md={18} className="Course-Tabs">
               <Tabs defaultActiveKey="1">
                 <TabPane tab="OVERVIEW" key="1">
                   <CourseOverviewWidget course_details={courseDetails} />
@@ -279,13 +284,21 @@ const CourseView = ({ course_id }) => {
                   <CourseOutlineviewWidget course_details={courseDetails} />
                 </TabPane>
                 <TabPane tab="LEARNING OUTCOMES" key="3">
-                  Content of Tab Pane LEARNING OUTCOMES
+                  <CourseLearninOutcomesviewWidget
+                    course_details={courseDetails}
+                  />
                 </TabPane>
                 <TabPane tab="COMPETENCIES" key="4">
-                  Content of Tab Pane COMPETENCIES
+                <CourseCompetenciesviewWidget
+                    course_details={courseDetails}
+                  />
+                  
                 </TabPane>
                 <TabPane tab="ENROLLMENTS" key="5">
-                  Content of Tab Pane ENROLLMENTS
+                <CourseEnrollmentsviewWidget
+                    course_details={courseDetails}
+                  />
+                  
                 </TabPane>
                 <TabPane tab="REVIEWS" key="6">
                   Content of Tab Pane REVIEWS
@@ -432,8 +445,7 @@ const CourseView = ({ course_id }) => {
           position: relative;
         }
         .Course-View h2,
-        .Course-View h3,
-        .Course-View h4,
+        .Course-View h3,        
         .Course-View h5 {
           color: #e69138;
         }
@@ -502,7 +514,7 @@ const CourseView = ({ course_id }) => {
     </Row>
   ) : (
     <Loader loading={loading}>
-      <Error statusCode={404} />
+      <Empty />
     </Loader>
   );
 };

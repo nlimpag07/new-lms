@@ -76,6 +76,11 @@ export default function MainThemeLayout({ children }) {
     footer = <TemplateFooter />;
   }
 
+  const [collapsed, setCollapsed] = useState(false);  
+  const onCollapse = collapsed => {
+    //console.log(collapsed);
+    setCollapsed(true);
+  };
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -83,7 +88,7 @@ export default function MainThemeLayout({ children }) {
     <Loader loading={loading}>
       <CourseListProvider>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider theme="light">
+        <Sider theme="light" collapsed={collapsed} onCollapse={onCollapse}>
           <div className="logo">
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
@@ -121,6 +126,7 @@ export default function MainThemeLayout({ children }) {
           * {
             box-sizing: border-box;
           }
+          .ant-menu-inline-collapsed span{display:none;}
         `}</style>
       </Layout>
       </CourseListProvider>
