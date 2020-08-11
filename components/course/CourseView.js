@@ -48,6 +48,7 @@ import CourseOutlineviewWidget from "./courseview-widgets/Course-Outlineview-Wid
 import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-LearningOutcomesview-Widget";
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
+import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
 
 
 
@@ -301,7 +302,10 @@ const CourseView = ({ course_id }) => {
                   
                 </TabPane>
                 <TabPane tab="REVIEWS" key="6">
-                  Content of Tab Pane REVIEWS
+                <CourseReviewViewWidget
+                    course_details={courseDetails}
+                  />
+                  
                 </TabPane>
               </Tabs>
             </Col>
@@ -335,7 +339,7 @@ const CourseView = ({ course_id }) => {
           </div>
         </Modal>
 
-        <CourseCircularUi />
+        {/* <CourseCircularUi /> */}
       </motion.div>
       <style jsx global>{`
         .Course-View .ImageWrapper img {
