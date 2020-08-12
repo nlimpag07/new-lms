@@ -9,14 +9,66 @@ const CourseManagementMenu = (props) => {
   const router = useRouter();
   const aspath = router.asPath;
   const q = router.query;
-  //console.log(aspath)
+  var selectedKey = "";
+
+
+  if (q.manage[0] == "view") {
+    selectedKey = "view";
+  }
+  if (q.manage[0] == "add") {
+    selectedKey = "add";
+  }
+  if (q.manage[0] == "edit" && q.manage.length === 2) {
+    selectedKey = "general";
+  }
+  if (q.manage[0] == "edit" && q.manage.length === 3) {
+    
+    /* aspath.endsWith("course-outline")
+      ? (selectedKey = "course-outline")
+      : aspath.endsWith("learning-outcomes")
+      ? (selectedKey = "learning-outcomes")
+      : aspath.endsWith("assessments")
+      ? (selectedKey = "assessments")
+      : aspath.endsWith("instructors")
+      ? (selectedKey = "instructors")
+      : aspath.endsWith("competencies")
+      ? (selectedKey = "competencies")
+      : aspath.endsWith("evaluations")
+      ? (selectedKey = "evaluations")
+      :''; */
+  }
+  if(aspath.endsWith("course-outline")){
+    console.log("course-outline");
+    selectedKey = "course-outline";
+  }
+  if(aspath.endsWith("learning-outcomes")){
+    console.log("learning-outcomes");
+    selectedKey = "learning-outcomes";
+  } else if(aspath.endsWith("assessments")){
+    selectedKey = "assessments";
+  } else if(aspath.endsWith("instructors")){
+    selectedKey = "instructors";
+  } else if(aspath.endsWith("competencies")){
+    selectedKey = "competencies";
+  } else if(aspath.endsWith("evaluations")){
+    selectedKey = "evaluations";
+  } else{
+    selectedKey = "general";
+  }
+  /* if(aspath.endsWith("/course")){
+    selectedKey = "course";
+  }
+  if(aspath.endsWith("/classes")){
+    selectedKey = "classes";
+  } */
+  console.log(aspath);
   //console.log(q)
-  return CmMenuView(q, aspath);
+  return CmMenuView(q, selectedKey);
 };
 
-const CmMenuView = (q, aspath) => {
+const CmMenuView = (q, selectedKey) => {
   return q.course == "course" && q.manage[0] == "view" ? (
-    <Menu theme="light" defaultselectedkey={aspath} mode="inline">
+    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
@@ -27,7 +79,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
     </Menu>
   ) : q.course == "course" && q.manage[0] == "add" ? (
-    <Menu theme="light" defaultselectedkey={aspath} mode="inline">
+    <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
       <Menu.Item
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
@@ -38,7 +90,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
 
       <Menu.Item
-        key={`/instructor/${q.course}/${q.manage[0]}`}
+        key={`add`}
         icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
       >
         <Link
@@ -50,7 +102,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
     </Menu>
   ) : (
-    <Menu theme="light" defaultselectedkey={aspath} mode="inline">
+    <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
       <Menu.Item
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
@@ -61,7 +113,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
 
       <Menu.Item
-        key={`/instructor/${q.course}/${q.manage[0]}`}
+        key={`general`}
         icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
       >
         <Link
@@ -72,7 +124,7 @@ const CmMenuView = (q, aspath) => {
         </Link>
       </Menu.Item>
       <Menu.Item
-        key={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/course-outline`}
+        key={`course-outline`}
         icon={<FontAwesomeIcon icon={["far", "list-alt"]} size="lg" />}
       >
         <Link
@@ -85,7 +137,7 @@ const CmMenuView = (q, aspath) => {
 
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "star"]} size="lg" />}
-        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/learning-outcomes`}
+        key={`learning-outcomes`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
@@ -96,7 +148,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "hourglass-half"]} size="lg" />}
-        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/assessements`}
+        key={`assessments`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
@@ -107,7 +159,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "user"]} size="lg" />}
-        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/instructors`}
+        key={`instructors`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
@@ -118,7 +170,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "shield-alt"]} size="lg" />}
-        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/competencies`}
+        key={`competencies`}
       >
         <Link
           href="/instructor/[course]/[...manage]"
@@ -129,7 +181,7 @@ const CmMenuView = (q, aspath) => {
       </Menu.Item>
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "comments"]} size="lg" />}
-        ikey={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/evaluations`}
+        key={`evaluations`}
       >
         <Link
           href="/instructor/[course]/[...manage]"

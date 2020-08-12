@@ -2,9 +2,10 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar } from "antd";
+import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar, Empty } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
+import Loader from "../../components/theme-layout/loader/loader";
 
 import {
   EditOutlined,
@@ -46,6 +47,8 @@ const AuthoredCourses = () => {
   const { courseAllList, setCourseAllList } = useCourseList();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     if (!courseAllList) {
@@ -55,6 +58,7 @@ const AuthoredCourses = () => {
     } else {
       //put additional Filtration here
     }
+    setLoading(false);
   }, [courseAllList]);
   return (
     //GridType(gridList)
@@ -89,7 +93,7 @@ const AuthoredCourses = () => {
         gutter={[16, 16]}
         style={{ padding: "10px 0" }}
       >
-        {GridType(courseAllList, curGridStyle, setModal2Visible, router)}
+        {GridType(courseAllList, curGridStyle, setModal2Visible, router, loading)}
       </Row>
       <Modal
         title="Publish Properties"
@@ -200,7 +204,7 @@ const AuthoredCourses = () => {
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router) => {
+const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 };
   if (gridType == "list") {
@@ -274,9 +278,9 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
       
     </>
   ) : (
-    <>
-      <p className="loading">...Loading</p>
-    </>
+    <Loader loading={loading}>
+      <Empty />
+    </Loader>
   );
 };
 

@@ -12,7 +12,7 @@ class MainMenu extends Component {
     this.state = {};
   }
   render() {
-    const { pathname } = this.props.defaultSelectedKey;
+    const pathname = this.props.selectedKey;
     return (
       <Menu theme="light" defaultselectedkey={pathname} mode="inline">
         <Menu.Item

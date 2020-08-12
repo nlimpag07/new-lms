@@ -46,39 +46,13 @@ const Classes = ({ courselist, token, apiBaseUrl }) => {
     setMyPublishedCourses(
       allCourses.filter((getCourse) => getCourse.isPublished == 1)
     );
-    
-    //setLoading(false);
 
+    //setLoading(false);
   }, []);
 
-  /* useEffect(() => {
-    var data = JSON.stringify({});
-
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        //console.log(JSON.stringify(response.data));
-
-        setMyPublishedCourses(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [myPublishedCourses]); */
-  //console.log(myPublishedCourses);
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        asdasdasd
         <ClassesCourseList myPublishedCourses={myPublishedCourses} />
       </Layout>
       <style jsx global>{`

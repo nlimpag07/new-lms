@@ -47,49 +47,54 @@ export default function MainThemeLayout({ children }) {
   //console.log(router.route);
   let NavigationMenu, MainNav, BreadCrumb, footer;
   MainNav = <MainNavbar />
+  BreadCrumb = <BreadCrumbs pathname={router.route} />;
+  footer = <TemplateFooter />;
+  //console.log(router.pathname)
   if (router.route.startsWith("/learner")) {
-    NavigationMenu = <UserMenu defaultSelectedKey={router.pathname} />;
-    //MainNav = <MainNavbar />;
-    BreadCrumb = <BreadCrumbs pathname={router.route} />;
-    footer = <TemplateFooter />;
+    NavigationMenu = <UserMenu />;
+    
   } else if (router.route.startsWith("/instructor")) {
     
-      NavigationMenu = <InstructorMenu defaultSelectedKey={router.pathname} />;
+      NavigationMenu = <InstructorMenu />;
      // MainNav = <InstructorNavbar />;
       BreadCrumb = <BreadCrumbs pathname={router.route} />;
-      footer = <TemplateFooter />;
       if (router.route.startsWith("/instructor/[course]/")) {
-        NavigationMenu = <CourseManagementMenu defaultSelectedKey={router.pathname} />;
+        NavigationMenu = <CourseManagementMenu />;
       }
       
     
   } else if (router.route.startsWith("/admin")) {
     
-    NavigationMenu = <AdministratorMenu defaultSelectedKey={router.pathname} />;
+    NavigationMenu = <AdministratorMenu />;
     //MainNav = <AdministratorNavbar />;
-    BreadCrumb = <BreadCrumbs pathname={router.route} />;
-    footer = <TemplateFooter />;
   
 } else {
-    NavigationMenu = <MainMenu defaultSelectedKey={router.pathname} />;
+    NavigationMenu = <MainMenu />;
     //MainNav = <MainNavbar />;
-    BreadCrumb = <BreadCrumbs pathname={router.route} />;
-    footer = <TemplateFooter />;
+    
   }
 
   const [collapsed, setCollapsed] = useState(false);  
   const onCollapse = collapsed => {
     //console.log(collapsed);
-    setCollapsed(true);
+    setCollapsed(collapsed);
   };
   useEffect(() => {
     setLoading(false);
-  }, []);
+  }, []); 
   return (
     <Loader loading={loading}>
       <CourseListProvider>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider theme="light" collapsed={collapsed} onCollapse={onCollapse}>
+        <Sider theme="light" /* collapsible collapsed={collapsed} onCollapse={onCollapse} */ breakpoint="lg"
+      collapsedWidth="0"
+      /* onBreakpoint={broken => {
+        console.log(broken);
+      }}
+      onCollapse={(collapsed, type) => {
+        console.log(collapsed, type);
+      }} */
+      >
           <div className="logo">
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
@@ -128,6 +133,7 @@ export default function MainThemeLayout({ children }) {
             box-sizing: border-box;
           }
           .ant-menu-inline-collapsed span{display:none;}
+          .logo img{width:100%;}
         `}</style>
       </Layout>
       </CourseListProvider>
