@@ -1,10 +1,40 @@
-import React, { Component, useEffect, useState, useRef } from "react";
+import React, { Component, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { useCourseList } from "../../providers/CourseProvider";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { motion } from "framer-motion";
+import { Row, Col, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
-import ReactDOM from "react-dom";
-import { Row, Col, List } from "antd";
-import Link from "next/link";
+
+const apiBaseUrl = process.env.apiBaseUrl;
+
+const list = {
+  visible: {
+    opacity: 1,
+    transition: {
+      delay: 0.1,
+      ease: "easeIn",
+      duration: 0.5,
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+    },
+  },
+  hidden: {
+    opacity: 0,
+    transition: {
+      delay: 0.1,
+      ease: "easeIn",
+      duration: 0.5,
+      when: "afterChildren",
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 const products = [
   {
@@ -196,7 +226,11 @@ const products = [
   },
 ];
 
-const CourseEnrollmentsviewWidget = ({ course_details }) => {
+const ClassesClass = ({ course_id }) => {
+  const router = useRouter();
+  var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  const [courseDetails, setCourseDetails] = useState("");
+
   var lastSelectedIndex = 0;
   const ddata = products.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)
@@ -247,56 +281,97 @@ const CourseEnrollmentsviewWidget = ({ course_details }) => {
     setData(theData);
   };
 
-  /*  const {
-    relatedCourse,
-    courseCompetencies,
-    courseInstructor,
-  } = course_details;
-  console.log(course_details);
-
-  useEffect(() => {}, []); */
+  useEffect(() => {
+    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+    let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
+    setCourseDetails(theCourse[0]);
+  }, []);
 
   return (
-    <div className="tab-content">
-      <Row className="Course-Enrollments">
-        <Col xs={24}>
-          <Grid
-            data={orderBy(Data, theSort.sort)}
-            style={{ height: "400px" }}
-            selectedField="selected"
-            onSelectionChange={selectionChange}
-            onHeaderSelectionChange={headerSelectionChange}
-            onRowClick={rowClick}
-            sortable
-            sort={theSort.sort}
-            onSortChange={(e) => {
-              setTheSort({
-                sort: e.sort,
-              });
-            }}
-          >
-            <Column
-              field="selected"
-              width="65px"
-              headerSelectionValue={Data.findIndex((dataItem) => dataItem.selected === false) === -1
-              }
-            />
-            <Column field="ProductName" title="Name" width="300px" />
-            <Column field="UnitsInStock" title="Enrollment Type" />
-            <Column field="UnitsOnOrder" title="User Group" />
-            <Column field="ReorderLevel" title="Enrollment Date" />
-            <Column field="Discontinued" title="Status" />
-            <Column sortable={false} cell={ActionRender} field="SupplierID" title="Action" />
-          </Grid>
+    //GridType(gridList)
+    <Row
+      className="widget-container"
+      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      style={{ margin: "1rem 0" }}
+    >
+      <motion.div initial="hidden" animate="visible" variants={list}>
+        <Col
+          className="gutter-row widget-holder-col ClassesClass"
+          xs={24}
+          sm={24}
+          md={24}
+          lg={24}
+        >
+          <h1>{courseDetails.title}: Class</h1>
+          <Row className="Course-Enrollments">
+            <Col xs={24}>
+              <Grid
+                data={orderBy(Data, theSort.sort)}
+                style={{ height: "550px" }}
+                selectedField="selected"
+                onSelectionChange={selectionChange}
+                onHeaderSelectionChange={headerSelectionChange}
+                onRowClick={rowClick}
+                sortable
+                sort={theSort.sort}
+                onSortChange={(e) => {
+                  setTheSort({
+                    sort: e.sort,
+                  });
+                }}
+              >
+                <Column
+                  field="selected"
+                  width="65px"
+                  headerSelectionValue={
+                    Data.findIndex(
+                      (dataItem) => dataItem.selected === false
+                    ) === -1
+                  }
+                />
+                <Column field="ProductName" title="Name" width="300px" />
+                <Column field="UnitsInStock" title="Email Address" />
+                <Column field="UnitsOnOrder" title="User Group" />
+                <Column field="ReorderLevel" title="Certificates" />
+                <Column field="Discontinued" title="Lessons" />
+                <Column field="ReorderLevel" title="Courses" />
+                <Column field="Discontinued" title="Milestones" />
+                <Column
+                  sortable={false}
+                  cell={ActionRender}
+                  field="SupplierID"
+                  title="Action"
+                />
+              </Grid>
+            </Col>
+          </Row>
         </Col>
-      </Row>
+      </motion.div>
+      <Modal
+        title="Publish Properties"
+        centered
+        visible={modal2Visible}
+        onOk={() => setModal2Visible(false)}
+        onCancel={() => setModal2Visible(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+        width={1000}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
 
       <style jsx global>{`
-        .Course-Enrollments .k-grid-header {
+        .ClassesClass h1 {
+          font-size: 2rem;
+          font-weight: 700;
+        }
+        .ClassesClass .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
       `}</style>
-    </div>
+    </Row>
   );
 };
 
@@ -309,19 +384,10 @@ const ActionRender = () => {
           edit(this.props.dataItem);
         }} */
       >
-        ✔
-      </button>
-      &nbsp;
-      <button
-        className="k-button k-grid-remove-command"
-        /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
-      >
-        ✖
+        <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
       </button>
     </td>
   );
 };
-export default CourseEnrollmentsviewWidget;
+
+export default ClassesClass;

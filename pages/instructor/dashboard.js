@@ -16,6 +16,7 @@ import LeaderBoard from "../../components/leaderboard/LeaderBoard";
 
 import RecentActivities from "../../components/recent-activities/RecentActivities";
 import SocialMedia from "../../components/social-media/SocialMedia";
+import { useCourseList } from "../providers/CourseProvider";
 
 import {
   EditOutlined,
@@ -28,11 +29,19 @@ const { Meta } = Card;
 
 const Dashboard = () => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState("");
 
   useEffect(() => {
     //setCurGridStyle();
-  }, []);
-
+    //USE userData for the conditionals
+    /* let myData = JSON.parse(localStorage.getItem("userDetails"));
+    setUserData(myData); */
+    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+    setMyAuthoredCourses(
+      allCourses.filter((getCourse) => getCourse.isPublished == 1)
+    );
+  }, [myAuthoredCourses]);
+  console.log(myAuthoredCourses)
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder">
@@ -42,7 +51,7 @@ const Dashboard = () => {
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ margin: "1rem 0" }}
         >
-          <AuthoredCourses />
+          <AuthoredCourses authoredCoursesList={myAuthoredCourses} />
           <ToDos />
         </Row>
         {/*2nd Level*/}

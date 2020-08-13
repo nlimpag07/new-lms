@@ -28,9 +28,19 @@ const { Meta } = Card;
 
 const InstructorIndex = () => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState("");
 
   useEffect(() => {
     //setCurGridStyle();
+    //USE userData for the conditionals
+    /* let myData = JSON.parse(localStorage.getItem("userDetails"));
+    setUserData(myData); */
+    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+    let theallCourses = allCourses.slice(0,4);
+    setMyAuthoredCourses(theallCourses);
+    /* setMyAuthoredCourses(
+      allCourses.filter((getCourse) => getCourse.isPublished == 1)
+    ); */
   }, []);
 
   return (
@@ -42,7 +52,7 @@ const InstructorIndex = () => {
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ margin: "1rem 0" }}
         >
-          <AuthoredCourses />
+          <AuthoredCourses authoredCoursesList={myAuthoredCourses} />
           <ToDos />
         </Row>
         {/*2nd Level*/}
@@ -74,4 +84,3 @@ const InstructorIndex = () => {
 };
 
 export default withAuth(InstructorIndex);
-

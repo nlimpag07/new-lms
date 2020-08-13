@@ -20,6 +20,7 @@ const UserMenu = dynamic(() => import("./main-menu/UserMenu"));
 //import InstructorMenu from "./main-menu/InstructorMenu";
 const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
 const CourseManagementMenu = dynamic(() => import("./main-menu/CourseManagementMenu"));
+const ClassesManagementMenu = dynamic(() => import("./main-menu/ClassesManagementMenu"));
 //import AdministratorMenu from "./main-menu/InstructorMenu";
 const AdministratorMenu = dynamic(() => import("./main-menu/AdministratorMenu"));
 //importing navbar
@@ -60,6 +61,9 @@ export default function MainThemeLayout({ children }) {
       BreadCrumb = <BreadCrumbs pathname={router.route} />;
       if (router.route.startsWith("/instructor/[course]/")) {
         NavigationMenu = <CourseManagementMenu />;
+      }
+      if (router.route.startsWith("/instructor/classes/")) {
+        NavigationMenu = <ClassesManagementMenu />;
       }
       
     

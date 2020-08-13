@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
@@ -11,7 +11,6 @@ const CourseManagementMenu = (props) => {
   const q = router.query;
   var selectedKey = "";
 
-
   if (q.manage[0] == "view") {
     selectedKey = "view";
   }
@@ -22,7 +21,6 @@ const CourseManagementMenu = (props) => {
     selectedKey = "general";
   }
   if (q.manage[0] == "edit" && q.manage.length === 3) {
-    
     /* aspath.endsWith("course-outline")
       ? (selectedKey = "course-outline")
       : aspath.endsWith("learning-outcomes")
@@ -37,45 +35,43 @@ const CourseManagementMenu = (props) => {
       ? (selectedKey = "evaluations")
       :''; */
   }
-  if(aspath.endsWith("course-outline")){
+  if (aspath.endsWith("course-outline")) {
     console.log("course-outline");
     selectedKey = "course-outline";
   }
-  if(aspath.endsWith("learning-outcomes")){
+  if (aspath.endsWith("learning-outcomes")) {
     console.log("learning-outcomes");
     selectedKey = "learning-outcomes";
-  } else if(aspath.endsWith("assessments")){
+  } else if (aspath.endsWith("assessments")) {
     selectedKey = "assessments";
-  } else if(aspath.endsWith("instructors")){
+  } else if (aspath.endsWith("instructors")) {
     selectedKey = "instructors";
-  } else if(aspath.endsWith("competencies")){
+  } else if (aspath.endsWith("competencies")) {
     selectedKey = "competencies";
-  } else if(aspath.endsWith("evaluations")){
+  } else if (aspath.endsWith("evaluations")) {
     selectedKey = "evaluations";
-  } else{
+  } else {
     selectedKey = "general";
   }
-  /* if(aspath.endsWith("/course")){
-    selectedKey = "course";
-  }
-  if(aspath.endsWith("/classes")){
-    selectedKey = "classes";
-  } */
-  console.log(aspath);
+  const [goback, setGoback] = useState(false);
+  useEffect(() => {
+    if (goback) {
+      router.back();
+    }
+  }, [goback]);
+  //console.log(aspath);
   //console.log(q)
-  return CmMenuView(q, selectedKey);
+  return CmMenuView(q, selectedKey, setGoback);
 };
 
-const CmMenuView = (q, selectedKey) => {
+const CmMenuView = (q, selectedKey, setGoback) => {
   return q.course == "course" && q.manage[0] == "view" ? (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <Link href="/instructor/[course]" as={`/instructor/course`}>
-          <a>Back To Course</a>
-        </Link>
+        <span onClick={() => setGoback(true)}>Back</span>
       </Menu.Item>
     </Menu>
   ) : q.course == "course" && q.manage[0] == "add" ? (
@@ -84,9 +80,7 @@ const CmMenuView = (q, selectedKey) => {
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <Link href="/instructor/[course]" as={`/instructor/course`}>
-          <a>Back To Course</a>
-        </Link>
+        <span onClick={() => setGoback(true)}>Back</span>
       </Menu.Item>
 
       <Menu.Item
@@ -107,9 +101,7 @@ const CmMenuView = (q, selectedKey) => {
         key={`/instructor/${q.course}`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <Link href="/instructor/[course]" as={`/instructor/course`}>
-          <a>Back To Course</a>
-        </Link>
+        <span onClick={() => setGoback(true)}>Back</span>
       </Menu.Item>
 
       <Menu.Item

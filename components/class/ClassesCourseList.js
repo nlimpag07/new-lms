@@ -18,9 +18,9 @@ import {
   Dropdown,
   Select,
   Input,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -54,10 +54,11 @@ const list = {
   },
 };
 const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
 
-const ClassesCourseList = ({myPublishedCourses}) => {
+const ClassesCourseList = ({ myPublishedCourses }) => {
   const router = useRouter();
-  console.log(myPublishedCourses.length);
+
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -65,9 +66,7 @@ const ClassesCourseList = ({myPublishedCourses}) => {
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
-    
-      setCourseAllList(myPublishedCourses);
-    
+    setCourseAllList(myPublishedCourses);
   }, [courseAllList]);
   //console.log(courseAllList.length)
   return (
@@ -89,7 +88,9 @@ const ClassesCourseList = ({myPublishedCourses}) => {
             <h3 className="widget-title">Latest First</h3>
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
-            <span>{courseAllList.length ? courseAllList.length: 0} Results</span>{" "}
+            <span>
+              {courseAllList.length ? courseAllList.length : 0} Results
+            </span>{" "}
             <button
               className="switch-grid"
               key="Switch"
@@ -143,11 +144,11 @@ const ClassesCourseList = ({myPublishedCourses}) => {
           </Col>
         </Row>
         <Row
-          className="AuthoredCourses-ListItems"
+          className="ClassesCourses-ListItems"
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(courseAllList, curGridStyle, setModal2Visible, router)}
+          {GridType(courseAllList, curGridStyle, setModal2Visible, router,apidirectoryUrl)}
         </Row>
       </Col>
       <Modal
@@ -164,14 +165,12 @@ const ClassesCourseList = ({myPublishedCourses}) => {
         <p>some contents...</p>
         <p>some contents...</p>
       </Modal>
-
-      <CourseCircularUi />
       <style jsx global>{`
-        .AuthoredCourses-ListItems .ant-card-actions > li {
-          padding: 12px 0;
+        .ant-card-actions > li {
+          padding: 0;
           margin: 0;
         }
-        .AuthoredCourses-ListItems .ant-card-actions > li:hover {
+        .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
         }
@@ -318,12 +317,18 @@ const ClassesCourseList = ({myPublishedCourses}) => {
         .widget-holder-col .ant-card-cover a img {
           width: 100%;
         }
+        .class-icon-holder {
+          padding: 12px 0;
+        }
+        .ant-card-actions > li > span:hover {
+          color: #e69138;
+        }
       `}</style>
     </Row>
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router) => {
+const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
   if (gridType == "list") {
@@ -353,37 +358,84 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                   as={`/instructor/course/view/${course.id}`}
                 >
                   <a>
-                    <img alt="example" src={course.featureImage} />
+                    <img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />
                   </a>
                 </Link>
               }
               actions={[
-                course.isPublished ? <CloudDownloadOutlined
-                  key="Unpublish"
-                  onClick={() => setModal2Visible(true)}
-                />:<CloudUploadOutlined
-                key="publish"
-                onClick={() => setModal2Visible(true)}
-              />,
-                <EditOutlined
-                  key="edit"
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/edit/${course.id}`
-                    )
-                  }
-                />,
-                <EyeOutlined
-                  key="View"
-                  //onClick={() => setModal2Visible(true)}
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/view/${course.id}`
-                    )
-                  }
-                />,
+                <Tooltip title="Sessions">
+                  <div
+                    className="class-icon-holder"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(
+                        `/instructor/classes/[...manageclasses]`,
+                        `/instructor/classes/sessions/${course.id}`
+                      );
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={["far", "clock"]}
+                      size="lg"
+                      key="sessions"
+                    />
+                  </div>
+                </Tooltip>,
+                <Tooltip title="Enrollments">
+                  <div
+                    className="class-icon-holder"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(
+                        `/instructor/classes/[...manageclasses]`,
+                        `/instructor/classes/enrollments/${course.id}`
+                      );
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={["fas", "users"]}
+                      size="lg"
+                      key="enrollments"
+                    />
+                  </div>
+                </Tooltip>,
+                <Tooltip title="Class">
+                  <div
+                    className="class-icon-holder"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.push(
+                        `/instructor/classes/[...manageclasses]`,
+                        `/instructor/classes/class/${course.id}`
+                      );
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={["far", "list-alt"]}
+                      size="lg"
+                      key="class"
+                    />
+                  </div>
+                </Tooltip>,
+                <Tooltip title="Attendance">
+                  <div
+                    className="class-icon-holder"
+                    onClick={(e) =>{
+                      e.preventDefault();
+                      router.push(
+                        `/instructor/classes/[...manageclasses]`,
+                        `/instructor/classes/attendance/${course.id}`
+                      )
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={["far", "calendar-check"]}
+                      size="lg"
+                      key="attendance"
+                      //onClick={() => setModal2Visible(true)}
+                    />
+                  </div>
+                </Tooltip>,
               ]}
             >
               <Meta

@@ -26,7 +26,6 @@ const InstructorMenu = () => {
   /* useEffect(() => {
     setDefaultKey(`'${selectedKey}'`);
   }, []); */
-  console.log(selectedKey)
   return (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item

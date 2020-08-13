@@ -5,85 +5,11 @@ import { orderBy } from "@progress/kendo-data-query";
 import ReactDOM from "react-dom";
 import { Row, Col, List, Avatar, Button, Skeleton, Rate } from "antd";
 import Link from "next/link";
+import axios from "axios";
 
-const count = 3;
-const res = {
-  results: [
-    {
-      gender: "female",
-      name: { title: "Mrs", first: "Latife", last: "Beşok" },
-      email: "latife.besok@example.com",
-      nat: 2.5,
-    },
-    {
-      gender: "female",
-      name: { title: "Mrs", first: "Isabel", last: "Brown" },
-      email: "isabel.brown@example.com",
-      nat: 5,
-    },
-    {
-      gender: "male",
-      name: { title: "Monsieur", first: "Cyrill", last: "Muller" },
-      email: "cyrill.muller@example.com",
-      nat: 1,
-    },
-    {
-      gender: "female",
-      name: { title: "Mrs", first: "Madison", last: "Green" },
-      email: "madison.green@example.com",
-      nat: 4,
-    },
-    {
-      gender: "male",
-      name: { title: "Mr", first: "Ahmed", last: "Garvik" },
-      email: "ahmed.garvik@example.com",
-      nat: 1,
-    },
-    {
-      gender: "male",
-      name: { title: "Mr", first: "Ed", last: "Cox" },
-      email: "ed.cox@example.com",
-      nat: 2,
-    },
-    {
-      gender: "female",
-      name: { title: "Ms", first: "Caitlin", last: "Zhang" },
-      email: "caitlin.zhang@example.com",
-      nat: 3,
-    },
-    {
-      gender: "female",
-      name: { title: "Ms", first: "Elizabete", last: "da Mata" },
-      email: "elizabete.damata@example.com",
-      nat: 1,
-    },
-    {
-      gender: "female",
-      name: { title: "Ms", first: "Mandy", last: "Roberts" },
-      email: "mandy.roberts@example.com",
-      nat: 4,
-    },
-    {
-      gender: "female",
-      name: { title: "Miss", first: "Alejandra", last: "Lopez" },
-      email: "alejandra.lopez@example.com",
-      nat: 3,
-    },
-    {
-      gender: "male",
-      name: { title: "Mr", first: "Carsten", last: "Rehberg" },
-      email: "carsten.rehberg@example.com",
-      nat: 5,
-    },
-    {
-      gender: "male",
-      name: { title: "Mr", first: "Alexandre", last: "Addy" },
-      email: "alexandre.addy@example.com",
-      nat: 1,
-    },
-  ],
-};
-const theslice = res.results.slice(0, count);
+const apiBaseUrl = process.env.apiBaseUrl;
+/* const res = 
+const theslice = res.results.slice(0, 5); */
 const CourseReviewViewWidget = ({ course_details }) => {
   /*  const {
     relatedCourse,
@@ -100,9 +26,9 @@ const CourseReviewViewWidget = ({ course_details }) => {
   //END REMOVE
   const [initLoading, setInitLoading] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState(theslice);
-  const [list, setList] = useState(theslice);
-
+  const [data, setData] = useState("");
+  const [list, setList] = useState("");
+  const [count, setCount] = useState(5);
   const loadMore =
     !initLoading && !loading ? (
       <div
@@ -113,56 +39,48 @@ const CourseReviewViewWidget = ({ course_details }) => {
           lineHeight: "32px",
         }}
       >
-        <Button onClick={OnLoadMore}>loading more</Button>
+        <Button onClick={()=>OnLoadMore()}>loading more</Button>
       </div>
     ) : null;
 
   useEffect(() => {
-   
-    console.log(theslice);
+    /* console.log(theslice);
     setInitLoading(false);
     setData(theslice);
-    setList(theslice);
-    /* GetData(res => {
-      console.log(theslice)
+    setList(theslice); */
+    GetData((res) => {
+      let getThree = res.slice(0, count);
+      //console.log(res);
       setInitLoading(false);
-      setData(theslice);
-      setList(theslice);
-    }); */
+      setData(res);
+      setList(getThree);
+    });
   }, []);
   //https://codesandbox.io/s/3z8tf?file=/index.js
   const GetData = (callback) => {
-    return res;
-    /* reqwest({
-      url: fakeDataUrl,
-      type: "json",
-      method: "get",
-      contentType: "application/json",
-      success: (res) => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((result) => {
+        var res = result.data;
         callback(res);
-      },
-    }); */
+        //console.log(res);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error.response.data);
+      });
   };
 
   const OnLoadMore = () => {
-    /* setLoading(true);
+    
+    setLoading(true);
+    let currCount = count;
+    let getThree = data.slice(0, currCount+5);
+    setCount(currCount+3)
     setList(
-      data.concat(
-        [...new Array(count)].map(() => ({ loading: true, name: {} }))
-      )
+      getThree
     );
-
-    GetData((res) => {
-      const data = data.concat(res.results);
-      setData(data);
-      setList(data);
-      setLoading(false, () => {
-        // Resetting window's offsetTop so as to display react-virtualized demo underfloor.
-        // In real scene, you can using public method of react-virtualized:
-        // https://stackoverflow.com/questions/46700726/how-to-use-public-method-updateposition-of-react-virtualized
-        window.dispatchEvent(new Event("resize"));
-      });
-    }); */
+    
   };
   return (
     <div className="tab-content">
@@ -177,7 +95,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
             renderItem={(item) => (
               <List.Item
                 actions={[
-                  <span style={{fontWeight:"700"}}>{item.nat}/5</span>,
+                  <span style={{ fontWeight: "700" }}>{item.id}/5</span>,
                 ]}
               >
                 <Skeleton avatar title={false} loading={item.loading} active>
@@ -188,11 +106,11 @@ const CourseReviewViewWidget = ({ course_details }) => {
                         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                       />
                     }
-                    title={<span>{item.name.last}</span>}
+                    title={<span>{item.name}</span>}
                     description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                   />
                   <div>
-                    <Rate allowHalf disabled defaultValue={item.nat} />
+                    <Rate allowHalf disabled defaultValue={item.id} />
                   </div>
                 </Skeleton>
               </List.Item>

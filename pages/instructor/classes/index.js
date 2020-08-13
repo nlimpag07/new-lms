@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import ClassesCourseList from "../../../components/course/ClassesCourseList";
+import ClassesCourseList from "../../../components/class/ClassesCourseList";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 

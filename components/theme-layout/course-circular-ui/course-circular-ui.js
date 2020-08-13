@@ -107,6 +107,7 @@ const CourseCircularUi = () => {
       <style jsx global>{`
         .circular-ui {
           background-color: #000000;
+          z-index:1000;
         }
       `}</style>
     </div>

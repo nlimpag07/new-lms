@@ -18,6 +18,7 @@ import {
   Dropdown,
   Select,
   Input,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -54,6 +55,8 @@ const list = {
   },
 };
 const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+
 
 const CourseList = (props) => {
   const router = useRouter();
@@ -92,7 +95,9 @@ const CourseList = (props) => {
             <h3 className="widget-title">Latest First</h3>
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
-            <span>{courseAllList.length ? courseAllList.length: 0} Results</span>{" "}
+            <span>
+              {courseAllList.length ? courseAllList.length : 0} Results
+            </span>{" "}
             <button
               className="switch-grid"
               key="Switch"
@@ -170,11 +175,11 @@ const CourseList = (props) => {
 
       <CourseCircularUi />
       <style jsx global>{`
-        .AuthoredCourses-ListItems .ant-card-actions > li {
-          padding: 12px 0;
+        .ant-card-actions > li {
+          padding: 0;
           margin: 0;
         }
-        .AuthoredCourses-ListItems .ant-card-actions > li:hover {
+        .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
         }
@@ -321,6 +326,12 @@ const CourseList = (props) => {
         .widget-holder-col .ant-card-cover a img {
           width: 100%;
         }
+        .class-icon-holder {
+          padding: 12px 0;
+        }
+        .ant-card-actions > li > span:hover {
+          color: #e69138;
+        }
       `}</style>
     </Row>
   );
@@ -356,37 +367,62 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                   as={`/instructor/course/view/${course.id}`}
                 >
                   <a>
-                    <img alt="example" src={course.featureImage} />
+                    <img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />
                   </a>
                 </Link>
               }
               actions={[
-                course.isPublished ? <CloudDownloadOutlined
-                  key="Unpublish"
-                  onClick={() => setModal2Visible(true)}
-                />:<CloudUploadOutlined
-                key="publish"
-                onClick={() => setModal2Visible(true)}
-              />,
-                <EditOutlined
-                  key="edit"
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/edit/${course.id}`
-                    )
-                  }
-                />,
-                <EyeOutlined
-                  key="View"
-                  //onClick={() => setModal2Visible(true)}
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/view/${course.id}`
-                    )
-                  }
-                />,
+                course.isPublished ? (
+                  <Tooltip title="Unpublish">
+                    <div
+                      className="class-icon-holder"
+                      onClick={() => setModal2Visible(true)}
+                    >
+                      <CloudDownloadOutlined
+                        key="unpublish"
+                        onClick={() => setModal2Visible(true)}
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Publish">
+                    <div
+                      className="class-icon-holder"
+                      onClick={() => setModal2Visible(true)}
+                    >
+                      <CloudUploadOutlined key="publish" />
+                    </div>
+                  </Tooltip>
+                ),
+                <Tooltip title="Edit">
+                  <div
+                    className="class-icon-holder"
+                    onClick={() =>
+                      router.push(
+                        `/instructor/[course]/[...manage]`,
+                        `/instructor/course/edit/${course.id}`
+                      )
+                    }
+                  >
+                    <EditOutlined key="edit" />
+                  </div>
+                </Tooltip>,
+                <Tooltip title="View">
+                  <div
+                    className="class-icon-holder"
+                    onClick={() =>
+                      router.push(
+                        `/instructor/[course]/[...manage]`,
+                        `/instructor/course/view/${course.id}`
+                      )
+                    }
+                  >
+                    <EyeOutlined
+                      key="View"
+                      //onClick={() => setModal2Visible(true)}
+                    />
+                  </div>
+                </Tooltip>,
               ]}
             >
               <Meta

@@ -26,7 +26,7 @@ import {
   Typography,
   List,
   Tabs,
-  Empty
+  Empty,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -49,8 +49,6 @@ import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-Learnin
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
-
-
 
 const { Meta } = Card;
 /**TabPane declaration */
@@ -91,10 +89,11 @@ const framerEffect = {
     },
   },
 };
-
+const apidirectoryUrl = process.env.directoryUrl;
+const homeUrl = process.env.homeUrl;
 const CourseView = ({ course_id }) => {
   var [courseId, setCourseId] = useState(course_id);
-  const homeUrl = process.env.homeUrl;
+ 
   const { courseAllList } = useCourseList();
   const [course, setCourse] = useState("");
   const [modal2Visible, setModal2Visible] = useState("");
@@ -139,6 +138,8 @@ const CourseView = ({ course_id }) => {
     courseTag,
     relatedCourse,
   } = courseDetails;
+  featureImage = `${apidirectoryUrl}/${featureImage}`
+  featureVideo = `${apidirectoryUrl}/${featureVideo}.mp4`
 
   let lessons = courseOutline ? courseOutline.length : 0;
   const listData = [
@@ -290,22 +291,15 @@ const CourseView = ({ course_id }) => {
                   />
                 </TabPane>
                 <TabPane tab="COMPETENCIES" key="4">
-                <CourseCompetenciesviewWidget
+                  <CourseCompetenciesviewWidget
                     course_details={courseDetails}
                   />
-                  
                 </TabPane>
                 <TabPane tab="ENROLLMENTS" key="5">
-                <CourseEnrollmentsviewWidget
-                    course_details={courseDetails}
-                  />
-                  
+                  <CourseEnrollmentsviewWidget course_details={courseDetails} />
                 </TabPane>
                 <TabPane tab="REVIEWS" key="6">
-                <CourseReviewViewWidget
-                    course_details={courseDetails}
-                  />
-                  
+                  <CourseReviewViewWidget course_details={courseDetails} />
                 </TabPane>
               </Tabs>
             </Col>
@@ -449,7 +443,7 @@ const CourseView = ({ course_id }) => {
           position: relative;
         }
         .Course-View h2,
-        .Course-View h3,        
+        .Course-View h3,
         .Course-View h5 {
           color: #e69138;
         }

@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar, Empty } from "antd";
+import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar, Empty, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
 import Loader from "../../components/theme-layout/loader/loader";
@@ -40,26 +40,20 @@ const list = {
   },
 };
 
-
-const AuthoredCourses = () => {
-  const apiBaseUrl = process.env.apiBaseUrl;
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const AuthoredCourses = ({authoredCoursesList}) => {
+  
   const router = useRouter();
-  const { courseAllList, setCourseAllList } = useCourseList();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);  
 
-
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState(authoredCoursesList);
+  //console.log(authoredCoursesList)
   useEffect(() => {
-    if (!courseAllList) {
-      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-      //console.log(userData);
-      setCourseAllList(courselist);
-    } else {
-      //put additional Filtration here
-    }
-    setLoading(false);
-  }, [courseAllList]);
+         setLoading(false);
+  }, []);
   return (
     //GridType(gridList)
     <Col
@@ -93,7 +87,7 @@ const AuthoredCourses = () => {
         gutter={[16, 16]}
         style={{ padding: "10px 0" }}
       >
-        {GridType(courseAllList, curGridStyle, setModal2Visible, router, loading)}
+        {GridType(myAuthoredCourses, curGridStyle, setModal2Visible, router, loading, apidirectoryUrl)}
       </Row>
       <Modal
         title="Publish Properties"
@@ -110,11 +104,11 @@ const AuthoredCourses = () => {
         <p>some contents...</p>
       </Modal>
       <style jsx global>{`
-        .AuthoredCourses-ListItems .ant-card-actions > li {
+        .ant-card-actions > li {
           padding: 12px 0;
           margin: 0;
         }
-        .AuthoredCourses-ListItems .ant-card-actions > li:hover {
+        .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
         }
@@ -204,7 +198,7 @@ const AuthoredCourses = () => {
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router, loading) => {
+const GridType = (courses, gridType, setModal2Visible, router, loading, apidirectoryUrl) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 };
   if (gridType == "list") {
@@ -228,31 +222,59 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
               extra={course.isPublished ? "Published" : "Unpublished"}
               hoverable
               style={{ width: "auto" }}
-              cover={<img alt="example" src={course.featureImage} />}
+              cover={<img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />}
               actions={[
-                <CloudDownloadOutlined
-                  key="Unpublish"
-                  onClick={() => setModal2Visible(true)}
-                />,
-                <EditOutlined
-                  key="edit"
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/edit/${course.id}`
-                    )
-                  }
-                />,
-                <EyeOutlined
-                  key="View"
-                  //onClick={() => setModal2Visible(true)}
-                  onClick={() =>
-                    router.push(
-                      `/instructor/[course]/[...manage]`,
-                      `/instructor/course/view/${course.id}`
-                    )
-                  }
-                />,
+                course.isPublished ? (
+                  <Tooltip title="Unpublish">
+                    <div
+                      className="class-icon-holder"
+                      onClick={() => setModal2Visible(true)}
+                    >
+                      <CloudDownloadOutlined
+                        key="unpublish"
+                        onClick={() => setModal2Visible(true)}
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Publish">
+                    <div
+                      className="class-icon-holder"
+                      onClick={() => setModal2Visible(true)}
+                    >
+                      <CloudUploadOutlined key="publish" />
+                    </div>
+                  </Tooltip>
+                ),
+                <Tooltip title="Edit">
+                  <div
+                    className="class-icon-holder"
+                    onClick={() =>
+                      router.push(
+                        `/instructor/[course]/[...manage]`,
+                        `/instructor/course/edit/${course.id}`
+                      )
+                    }
+                  >
+                    <EditOutlined key="edit" />
+                  </div>
+                </Tooltip>,
+                <Tooltip title="View">
+                  <div
+                    className="class-icon-holder"
+                    onClick={() =>
+                      router.push(
+                        `/instructor/[course]/[...manage]`,
+                        `/instructor/course/view/${course.id}`
+                      )
+                    }
+                  >
+                    <EyeOutlined
+                      key="View"
+                      //onClick={() => setModal2Visible(true)}
+                    />
+                  </div>
+                </Tooltip>,
               ]}
             >
               <Meta
@@ -283,5 +305,6 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     </Loader>
   );
 };
+
 
 export default AuthoredCourses;
