@@ -39,7 +39,7 @@ export const CourseListProvider = ({ children }) => {
 
     axios(config)
       .then(function (response) {
-        // console.log(JSON.stringify(response.data));
+        //console.log(JSON.stringify(response.data));
 
         setCourseAllList(response.data);
         localStorage.setItem("courseAllList", JSON.stringify(response.data));

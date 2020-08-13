@@ -16,6 +16,7 @@ import LeaderBoard from "../../components/leaderboard/LeaderBoard";
 
 import RecentActivities from "../../components/recent-activities/RecentActivities";
 import SocialMedia from "../../components/social-media/SocialMedia";
+import cookie from "cookie";
 
 import {
   EditOutlined,
@@ -26,18 +27,43 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const InstructorIndex = () => {
+const InstructorIndex = ({ courselist, token, apiBaseUrl }) => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
-  const [myAuthoredCourses, setMyAuthoredCourses] = useState("");
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState(courselist);
 
   useEffect(() => {
+    /* if (!courselist) {
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/courses",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      async function fetchData(config) {
+        // You can await here
+        const result = await axios(config);
+        setMyAuthoredCourses(result.data.slice(0, 4));
+        // ...
+      }
+      fetchData(config);
+    } else {
+      setMyAuthoredCourses(courselist.slice(0, 4));
+    } */
+
+
     //setCurGridStyle();
     //USE userData for the conditionals
     /* let myData = JSON.parse(localStorage.getItem("userDetails"));
     setUserData(myData); */
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theallCourses = allCourses.slice(0,4);
-    setMyAuthoredCourses(theallCourses);
+    if(allCourses){
+      setMyAuthoredCourses(allCourses.slice(0,4));
+    }else{
+      setMyAuthoredCourses(courselist.slice(0,4));
+    }
+    
     /* setMyAuthoredCourses(
       allCourses.filter((getCourse) => getCourse.isPublished == 1)
     ); */
@@ -82,5 +108,35 @@ const InstructorIndex = () => {
     </MainThemeLayout>
   );
 };
+InstructorIndex.getInitialProps = async (ctx) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = null;
+  var userData;
+  var res;
+  const request = ctx.req;
+  if (request) {
+    request.cookies = cookie.parse(request.headers.cookie || "");
+    token = request.cookies.token;
+    res = null;
+  } else {
+    userData = JSON.parse(localStorage.getItem("userDetails"));
+    token = userData.token;
 
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const result = await axios(config);
+    res = result.data;
+  }
+
+  const data = res;
+  //console.log(apiBaseUrl);
+  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
+};
 export default withAuth(InstructorIndex);

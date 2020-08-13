@@ -36,7 +36,7 @@ import BreadCrumbs from "./breadcrumbs/BreadCrumbs";
 import TemplateFooter from "./templateFooter/templateFooter";
 
 //importing CourseListProvider Context
-import { CourseListProvider } from "../../providers/CourseProvider";
+//import { CourseListProvider } from "../../providers/CourseProvider";
 
 
 const { Header, Content, Sider } = Layout;
@@ -88,7 +88,7 @@ export default function MainThemeLayout({ children }) {
   }, []); 
   return (
     <Loader loading={loading}>
-      <CourseListProvider>
+      
       <Layout style={{ minHeight: "100vh" }}>
         <Sider theme="light" /* collapsible collapsed={collapsed} onCollapse={onCollapse} */ breakpoint="lg"
       collapsedWidth="0"
@@ -140,7 +140,6 @@ export default function MainThemeLayout({ children }) {
           .logo img{width:100%;}
         `}</style>
       </Layout>
-      </CourseListProvider>
     </Loader>
   );
 }

@@ -1,5 +1,7 @@
 import App from "next/app";
 import { AuthProvider } from "../providers/Auth";
+import { CourseListProvider } from "../providers/CourseProvider";
+
 import cookie from "cookie";
 import axios from "axios";
 import "antd/dist/antd.css";
@@ -18,7 +20,9 @@ library.add(fab, fas, far);
 function MyApp({ Component, pageProps, authenticated, usertype }) {
   return (
     <AuthProvider authenticated={authenticated} usertype={usertype}>
+      <CourseListProvider>
       <Component {...pageProps} />
+      </CourseListProvider>
     </AuthProvider>
   );
 }

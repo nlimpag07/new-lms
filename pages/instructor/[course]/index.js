@@ -17,7 +17,6 @@ import withAuth from "../../../hocs/withAuth";
 import { useAuth } from "../../../providers/Auth";
 //import { CourseListProvider } from "../../../providers/CourseProvider";
 
-
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -31,17 +30,16 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Course = ({courselist,token,apiBaseUrl}) => {  
+const Course = ({ courselist, token, apiBaseUrl }) => {
   //console.log(courselist)
-  const[allCourses, setAllCourses] = useState(courselist);
+  const [allCourses, setAllCourses] = useState(courselist);
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-  
+
   /* if (urlquery != "course") {
     return <Error statusCode={404} />;
   } */
-
 
   /*var theContent;
    if (urlPath) {
@@ -53,28 +51,27 @@ const Course = ({courselist,token,apiBaseUrl}) => {
   } */
 
   useEffect(() => {
-  var data = JSON.stringify({});
+    var data = JSON.stringify({});
 
-  var config = {
-    method: "get",
-    url: apiBaseUrl+"/courses",
-    headers: { 
-      'Authorization': 'Bearer '+ token, 
-      'Content-Type': 'application/json'
-    },
-    data: data,
-  };
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
 
-  axios(config)
-    .then(function (response) {
-      //console.log(JSON.stringify(response.data));
-      
-      setAllCourses(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+    axios(config)
+      .then(function (response) {
+        //console.log(JSON.stringify(response.data));
 
+        setAllCourses(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -102,7 +99,7 @@ Course.getInitialProps = async (ctx) => {
   if (request) {
     request.cookies = cookie.parse(request.headers.cookie || "");
     token = request.cookies.token;
-    res=null;
+    res = null;
   } else {
     userData = JSON.parse(localStorage.getItem("userDetails"));
     token = userData.token;
@@ -113,17 +110,16 @@ Course.getInitialProps = async (ctx) => {
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
-        
       },
     };
-  
-     const result = await axios(config);
-    res=result.data
-  }  
-   
-  const data=res;
+
+    const result = await axios(config);
+    res = result.data;
+  }
+
+  const data = res;
   //console.log(apiBaseUrl);
-  return {courselist: data, token:token, apiBaseUrl:apiBaseUrl}
+  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
 };
 
 export default withAuth(Course);

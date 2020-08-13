@@ -57,7 +57,6 @@ const list = {
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 
-
 const CourseList = (props) => {
   const router = useRouter();
   const { courseAllList, setCourseAllList } = useCourseList();
@@ -367,7 +366,10 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                   as={`/instructor/course/view/${course.id}`}
                 >
                   <a>
-                    <img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />
+                    <img
+                      alt="example"
+                      src={`${apidirectoryUrl}/${course.featureImage}`}
+                    />
                   </a>
                 </Link>
               }

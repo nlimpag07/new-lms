@@ -4,20 +4,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //importing ant
 import { Menu } from "antd";
 
-class AdministratorMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+
+  const AdministratorMenu = () => {
+    const router = useRouter();
+  const aspath = router.asPath;
+  const q = router.query; 
+  var selectedKey = "";
+  
+  if(aspath.endsWith("/instructor")){
+    selectedKey = "instructor";
   }
-  /* static async getInitialProps(props) {
-    const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-    const { data } = res;
-    return { posts: data };
-  } */
-  render() {
-    const { pathname } = this.props.defaultSelectedKey;
+  if(aspath.endsWith("/course")){
+    selectedKey = "course";
+  }
+  if(aspath.endsWith("/classes")){
+    selectedKey = "classes";
+  }
     return (
-      <Menu theme="light" defaultselectedkey={pathname} mode="inline">
+      <Menu theme="light" defaultselectedkey={selectedKey} mode="inline">
         
 
         <Menu.Item
@@ -54,7 +58,7 @@ class AdministratorMenu extends Component {
         `}</style>
       </Menu>
     );
-  }
+  
 }
 
 export default AdministratorMenu;

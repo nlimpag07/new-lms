@@ -52,6 +52,7 @@ const AuthoredCourses = ({authoredCoursesList}) => {
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(authoredCoursesList);
   //console.log(authoredCoursesList)
   useEffect(() => {
+        
          setLoading(false);
   }, []);
   return (
