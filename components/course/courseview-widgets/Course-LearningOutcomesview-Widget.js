@@ -37,7 +37,7 @@ const CourseLearninOutcomesviewWidget = ({ course_details }) => {
                   <CaretDownOutlined rotate={isActive ? 180 : 0} />
                 )}
               >
-                <Panel header="Lesson 1. Lorem ipsum dolor sit amet" key="1">
+                <Panel header="Learning Outcome 1. Lorem ipsum dolor sit amet" key="1">
                   {Description()}
                 </Panel>
               </Collapse>
@@ -52,7 +52,7 @@ const CourseLearninOutcomesviewWidget = ({ course_details }) => {
                 )}
               >
                 <Panel
-                  header="Lesson 2. Duis aute irure dolor in reprehenderit in voluptate "
+                  header="Learning Outcome 2. Duis aute irure dolor in reprehenderit in voluptate "
                   key="1"
                 >
                   {Description()}
@@ -69,7 +69,7 @@ const CourseLearninOutcomesviewWidget = ({ course_details }) => {
                 )}
               >
                 <Panel
-                  header="Lesson 3. Excepteur sint occaecat cupidatat non proident"
+                  header="Learning Outcome 3. Excepteur sint occaecat cupidatat non proident"
                   key="1"
                 >
                   {Description()}

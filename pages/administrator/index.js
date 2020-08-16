@@ -1,3 +1,12 @@
+/** NLI
+ * Use NextJs Conditional Importing 
+ * To Load Import Only the needed component
+ **/
+/* Imported Courses Components **/
+//import AdminDashboard from "../../../components/course/CourseList";
+/**End Of Imported Courses Components **/
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -19,6 +28,7 @@ import SocialMedia from "../../components/social-media/SocialMedia";
 import cookie from "cookie";
 import { useCourseList } from "../../providers/CourseProvider";
 
+
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -28,7 +38,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
-const InstructorIndex = () => {
+const AdminIndex = () => {
   //console.log(courselist);
   const [curGridStyle, setCurGridStyle] = useState("grid");
   const {courseAllList, setCourseAllList } = useCourseList();
@@ -78,4 +88,4 @@ const InstructorIndex = () => {
   );
 };
 
-export default withAuth(InstructorIndex);
+export default withAuth(AdminIndex);

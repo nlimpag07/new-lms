@@ -32,7 +32,7 @@ export default function withConditionalRedirect({
   location,
   source,
   userTypeClientCondition,
-  userTypeServerCondition
+  userTypeServerCondition,
 }) {
   const loading = true;
   const WithConditionalRedirectWrapper = (props) => {
@@ -40,16 +40,16 @@ export default function withConditionalRedirect({
     //const theclientcond = clientCondition();
     //let usertypeloc;
     //userTypeClientCondition()? location="/"+userTypeClientCondition():'';
-    let usertypecond = userTypeClientCondition();  
+    let usertypecond = userTypeClientCondition();
     //location=usertypecond;
     const redirectCondition = clientCondition();
     if (isBrowser() && redirectCondition) {
-      if(usertypecond =="learner"){
-        location= "/learner"
-      }else if(usertypecond =="instructor"){
-        location= "/instructor"
-      }else if(usertypecond =="admin"){
-        location= "/admin"
+      if (usertypecond == "learner") {
+        location = "/learner";
+      } else if (usertypecond == "instructor") {
+        location = "/instructor";
+      } else if (usertypecond == "administrator") {
+        location = "/administrator";
       }
       router.push(location);
       return <Loader loading={loading} />;
@@ -62,19 +62,18 @@ export default function withConditionalRedirect({
     //userTypeServerCondition(ctx)?location= "/"+userTypeServerCondition(ctx):'';
     if (!isBrowser() && ctx.res) {
       if (serverCondition(ctx)) {
-        if(usertypecond =="learner"){
-          location= "/learner"
-        }else if(usertypecond =="instructor"){
-          location= "/instructor"
-        }else if(usertypecond =="admin"){
-          location= "/admin"
+        if (usertypecond == "learner") {
+          location = "/learner";
+        } else if (usertypecond == "instructor") {
+          location = "/instructor";
+        } else if (usertypecond == "administrator") {
+          location = "/administrator";
         }
         ctx.res.writeHead(302, { Location: location });
         ctx.res.end();
-      }      
-    
+      }
     }
-    
+
     const componentProps =
       WrappedComponent.getInitialProps &&
       (await WrappedComponent.getInitialProps(ctx));

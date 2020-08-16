@@ -37,7 +37,7 @@ const Course = () => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-
+  
   /* useEffect(() => {
     setCourseAllList(courselist)
     var data = JSON.stringify({});

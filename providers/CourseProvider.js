@@ -8,6 +8,8 @@ import React, {
 import axios from "axios";
 import cookie from "cookie";
 import Cookies from "js-cookie";
+import { useIsAuthenticated } from "./Auth";
+
 export const CourseListContext = createContext({
   courseAllList: null,
   setCourseAllList: () => {},
@@ -19,44 +21,51 @@ export const CourseListContext = createContext({
  * the prop from then on. The value can be changed by calling the
  * `setAuthenticated()` method in the context.
  */
-export const CourseListProvider = ({ children }) => {
+export const CourseListProvider = ({ children, courselist }) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = Cookies.get("token");
-  const [courseAllList, setCourseAllList] = useState("");
+  const [courseAllList, setCourseAllList] = useState(courselist);
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    var data = JSON.stringify({});
-
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        //console.log(JSON.stringify(response.data));
-
-        setCourseAllList(response.data);
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    if (courseAllList) {
-
+    if (courseAllList && isAuthenticated) {
       localStorage.setItem("courseAllList", JSON.stringify(courseAllList));
-      setCourseAllList(courseAllList);
     } else {
-      const userData = JSON.parse(localStorage.getItem("courseAllList"));
-      setCourseAllList(userData);
+      if (isAuthenticated) {
+        const courseListData = JSON.parse(localStorage.getItem("courseAllList"));
+        //console.log(courseListData);
+        setCourseAllList(courseListData);
+      }
     }
-  }, []);
+  }, [courseAllList]);
+
+  /* useEffect(() => {
+    if (isAuthenticated) {
+      var data = JSON.stringify({});
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/courses",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      async function fetchData(config) {
+        const response = await axios(config);
+        if (response) {
+          localStorage.setItem("courseAllList", JSON.stringify(response.data));
+          setCourseAllList(response.data);
+          console.log(response.data)
+        } else {
+          const userData = JSON.parse(localStorage.getItem("courseAllList"));
+          setCourseAllList(userData);
+        }
+      }
+      fetchData(config);
+    }
+  }, []); */
 
   return (
     <CourseListContext.Provider
@@ -77,16 +86,3 @@ export function useCourseList() {
   }
   return context;
 }
-
-/* export function useIsAuthenticated() {
-  const context = useAuth();
-  return context.isAuthenticated;
-}
-export function useIsUserType() {
-  const context = useAuth();
-  return context.isUsertype;
-}
-export function useUserDetails() {
-  const context = useAuth();
-  return context.isUsertype;
-} */

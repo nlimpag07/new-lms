@@ -16,7 +16,7 @@ import LeaderBoard from "../../components/leaderboard/LeaderBoard";
 
 import RecentActivities from "../../components/recent-activities/RecentActivities";
 import SocialMedia from "../../components/social-media/SocialMedia";
-import { useCourseList } from "../providers/CourseProvider";
+import { useCourseList } from "../../providers/CourseProvider";
 
 import {
   EditOutlined,

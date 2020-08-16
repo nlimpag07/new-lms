@@ -6,6 +6,7 @@ import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar, Empty, Tooltip 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
 import Loader from "../../components/theme-layout/loader/loader";
+import Cookies from "js-cookie";
 
 import {
   EditOutlined,
@@ -42,21 +43,44 @@ const list = {
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
 const AuthoredCourses = ({authoredCoursesList}) => {
+  const { courseAllList, setCourseAllList } = useCourseList();
   
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [loading, setLoading] = useState(true);  
-
-  const [myAuthoredCourses, setMyAuthoredCourses] = useState(authoredCoursesList);
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
   //console.log(authoredCoursesList)
   useEffect(() => {
-        
+    var data = JSON.stringify({});
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        localStorage.setItem("courseAllList", JSON.stringify(response.data));
+        setCourseAllList(response.data);
+        setMyAuthoredCourses(response.data.slice(0, 4));
+      } else {
+        const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        setMyAuthoredCourses(userData.slice(0, 4));
+      }
+    }
+    fetchData(
+      config
+    );
          setLoading(false);
   }, []);
   return (
-    //GridType(gridList)
     <Col
       className="gutter-row widget-holder-col"
       xs={24}

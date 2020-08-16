@@ -4,6 +4,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import withoutAuth from "../hocs/withoutAuth";
 import { useAuth } from "../providers/Auth";
+import { useCourseList } from "../providers/CourseProvider";
+
 import Loader from "../components/theme-layout/loader/loader";
 const { Option } = Select;
 const layout = {
@@ -28,6 +30,8 @@ export default withoutAuth(function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { setAuthenticated, setUsertype, setUserDetails } = useAuth();
+  const { setCourseAllList } = useCourseList();
+
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm();
 
@@ -50,17 +54,17 @@ export default withoutAuth(function Login() {
         if (_result) {
           var userType;
           if (_result.isAdministrator == 1) {
-            userType = "admin";
+            userType = "administrator";
           } else if (_result.isInstructor == 1) {
             userType = "instructor";
           } else {
             userType = "learner";
           }
 
-          var params = {
+          /* var params = {
             userType: userType,
             token: _result.token,
-          };
+          }; */
           Cookies.set("session", "1", {
             expires: 7,
             path: "/",
@@ -76,6 +80,27 @@ export default withoutAuth(function Login() {
             path: "/",
             SameSite: "lax",
           });
+          
+
+          var config = {
+            method: "get",
+            url: apiBaseUrl + "/courses",
+            headers: {
+              Authorization: "Bearer " + _result.token,
+              "Content-Type": "application/json",
+            }
+          };
+    
+          async function fetchData(config) {
+            // You can await here
+            const response = await axios(config);
+            if (response) {
+              localStorage.setItem("courseAllList", JSON.stringify(response.data));
+              setCourseAllList(response.data);
+              //console.log(response.data)
+            }
+          }
+          fetchData(config);
           setAuthenticated(true);
           setUsertype(userType);
           setUserDetails(_result);
@@ -207,24 +232,21 @@ export default withoutAuth(function Login() {
                       Submit
                     </Button>
                   </Form.Item>
-                  {
-                    error && (                  
-
-                  <Form.Item {...tailLayout}>
-                    <div className="ant-form-item-has-error">
-                      <div
-                        className="ant-form-item-explain"
-                        style={{
-                          textAlign: "center",
-                          textTransform: "capitalize",
-                        }}
-                      >
-                        {error}
+                  {error && (
+                    <Form.Item {...tailLayout}>
+                      <div className="ant-form-item-has-error">
+                        <div
+                          className="ant-form-item-explain"
+                          style={{
+                            textAlign: "center",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {error}
+                        </div>
                       </div>
-                    </div>
-                  </Form.Item>
-                  )
-                }
+                    </Form.Item>
+                  )}
                 </Form>
               </div>
             </div>

@@ -5,6 +5,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+
 import {
   Layout,
   Row,
@@ -56,6 +58,7 @@ const list = {
 };
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
 
 const CourseList = (props) => {
   const router = useRouter();
@@ -64,19 +67,41 @@ const CourseList = (props) => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
-  /*const [grid,setGrid] = useState(gridList);*/
+
   useEffect(() => {
+    var data = JSON.stringify({});
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        localStorage.setItem("courseAllList", JSON.stringify(response.data));
+        setCourseAllList(response.data);
+        //console.log(response.data);
+      } else {
+        const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        setCourseAllList(userData);
+      }
+    }
+    fetchData(
+      config
+    ); /* 
     if (!courseAllList) {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       //console.log(userData);
       setCourseAllList(courselist);
     } else {
       //put additional Filtration here
-    }
-  }, [courseAllList]);
-  //console.log(courseAllList.length)
+    } */
+  }, []);
   return (
-    //GridType(gridList)
     <Row
       className="widget-container"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}

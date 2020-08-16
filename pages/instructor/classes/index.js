@@ -30,30 +30,19 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Classes = ({ courselist, token, apiBaseUrl }) => {
-  //console.log(courselist)
-  const [myPublishedCourses, setMyPublishedCourses] = useState(courselist);
-  const [userData, setUserData] = useState("");
+const Classes = () => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
 
   useEffect(() => {
-    //USE userData for the conditionals
-    /* let myData = JSON.parse(localStorage.getItem("userDetails"));
-    setUserData(myData); */
-    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    setMyPublishedCourses(
-      allCourses.filter((getCourse) => getCourse.isPublished == 1)
-    );
-
     //setLoading(false);
   }, []);
 
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <ClassesCourseList myPublishedCourses={myPublishedCourses} />
+        <ClassesCourseList />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -64,38 +53,6 @@ const Classes = ({ courselist, token, apiBaseUrl }) => {
       `}</style>
     </MainThemeLayout>
   );
-};
-
-Classes.getInitialProps = async (ctx) => {
-  var apiBaseUrl = process.env.apiBaseUrl;
-  var token = null;
-  var userData;
-  var res;
-  const request = ctx.req;
-  if (request) {
-    request.cookies = cookie.parse(request.headers.cookie || "");
-    token = request.cookies.token;
-    res = null;
-  } else {
-    userData = JSON.parse(localStorage.getItem("userDetails"));
-    token = userData.token;
-
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-
-    const result = await axios(config);
-    res = result.data;
-  }
-
-  const data = res;
-  //console.log(apiBaseUrl);
-  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
 };
 
 export default withAuth(Classes);

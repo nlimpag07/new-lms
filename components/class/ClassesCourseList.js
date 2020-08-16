@@ -5,6 +5,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+
 import {
   Layout,
   Row,
@@ -55,19 +57,46 @@ const list = {
 };
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
 
-const ClassesCourseList = ({ myPublishedCourses }) => {
+const ClassesCourseList = () => {
   const router = useRouter();
 
   const { courseAllList, setCourseAllList } = useCourseList();
+  const [publishedCourses, setPublishedCourses] = useState(courseAllList);
+
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
-    setCourseAllList(myPublishedCourses);
-  }, [courseAllList]);
+    var data = JSON.stringify({});
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        localStorage.setItem("courseAllList", JSON.stringify(response.data));
+        setCourseAllList(response.data);
+        setPublishedCourses(response.data.filter((getCourse) => getCourse.isPublished == 1));
+        //console.log(response.data);
+      } else {
+        const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        setPublishedCourses(userData.filter((getCourse) => getCourse.isPublished == 1));
+      }
+    }
+    fetchData(
+      config
+    );
+  }, []);
   //console.log(courseAllList.length)
   return (
     //GridType(gridList)
@@ -89,7 +118,7 @@ const ClassesCourseList = ({ myPublishedCourses }) => {
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
             <span>
-              {courseAllList.length ? courseAllList.length : 0} Results
+              {publishedCourses.length ? publishedCourses.length : 0} Results
             </span>{" "}
             <button
               className="switch-grid"
@@ -148,7 +177,7 @@ const ClassesCourseList = ({ myPublishedCourses }) => {
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(courseAllList, curGridStyle, setModal2Visible, router,apidirectoryUrl)}
+          {GridType(publishedCourses, curGridStyle, setModal2Visible, router,apidirectoryUrl)}
         </Row>
       </Col>
       <Modal
