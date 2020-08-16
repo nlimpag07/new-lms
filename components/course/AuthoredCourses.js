@@ -2,7 +2,18 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Layout, Row, Col, Button, Modal, Divider, Card, Avatar, Empty, Tooltip } from "antd";
+import {
+  Layout,
+  Row,
+  Col,
+  Button,
+  Modal,
+  Divider,
+  Card,
+  Avatar,
+  Empty,
+  Tooltip,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
 import Loader from "../../components/theme-layout/loader/loader";
@@ -44,13 +55,15 @@ const list = {
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
-const AuthoredCourses = ({authoredCoursesList}) => {
+const linkUrl = Cookies.get("usertype");
+
+const AuthoredCourses = ({ authoredCoursesList }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
-  
+
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(true);
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
   //console.log(authoredCoursesList)
   useEffect(() => {
@@ -75,10 +88,8 @@ const AuthoredCourses = ({authoredCoursesList}) => {
         setMyAuthoredCourses(userData.slice(0, 4));
       }
     }
-    fetchData(
-      config
-    );
-         setLoading(false);
+    fetchData(config);
+    setLoading(false);
   }, []);
   return (
     <Col
@@ -112,7 +123,13 @@ const AuthoredCourses = ({authoredCoursesList}) => {
         gutter={[16, 16]}
         style={{ padding: "10px 0" }}
       >
-        {GridType(myAuthoredCourses, curGridStyle, setModal2Visible, router, loading, apidirectoryUrl)}
+        {GridType(
+          myAuthoredCourses,
+          curGridStyle,
+          setModal2Visible,
+          router,
+          loading
+        )}
       </Row>
       <Modal
         title="Publish Properties"
@@ -193,6 +210,9 @@ const AuthoredCourses = ({authoredCoursesList}) => {
           padding: 0 0;
           font-size: 12px;
         }
+        .grid-list .ant-card-cover {
+          width: 33.5%;
+        }
         .grid-list .ant-card-cover,
         .grid-list .ant-card-body {
           float: left;
@@ -218,12 +238,15 @@ const AuthoredCourses = ({authoredCoursesList}) => {
         .widget-holder-col .ant-card-meta-title a:hover {
           color: #e69138;
         }
+        .widget-holder-col .ant-card-cover a img {
+          width: 100%;
+        }
       `}</style>
     </Col>
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router, loading, apidirectoryUrl) => {
+const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 };
   if (gridType == "list") {
@@ -247,7 +270,19 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
               extra={course.isPublished ? "Published" : "Unpublished"}
               hoverable
               style={{ width: "auto" }}
-              cover={<img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />}
+              cover={
+                <Link
+                  href={`/${linkUrl}/[course]/[...manage]`}
+                  as={`/${linkUrl}/course/view/${course.id}`}
+                >
+                  <a>
+                    <img
+                      alt={`${course.title}`}
+                      src={`${apidirectoryUrl}/${course.featureImage}`}
+                    />
+                  </a>
+                </Link>
+              }
               actions={[
                 course.isPublished ? (
                   <Tooltip title="Unpublish">
@@ -276,8 +311,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/instructor/[course]/[...manage]`,
-                        `/instructor/course/edit/${course.id}`
+                        `/${linkUrl}/[course]/[...manage]`,
+                        `/${linkUrl}/course/edit/${course.id}`
                       )
                     }
                   >
@@ -289,8 +324,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/instructor/[course]/[...manage]`,
-                        `/instructor/course/view/${course.id}`
+                        `/${linkUrl}/[course]/[...manage]`,
+                        `/${linkUrl}/course/view/${course.id}`
                       )
                     }
                   >
@@ -305,8 +340,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
               <Meta
                 title={
                   <Link
-                    href={`/instructor/[course]/[...manage]`}
-                    as={`/instructor/course/view/${course.id}`}
+                    href={`/${linkUrl}/[course]/[...manage]`}
+                    as={`/${linkUrl}/course/view/${course.id}`}
                   >
                     <a>{course.title}</a>
                   </Link>
@@ -322,7 +357,6 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
           </motion.div>
         </Col>
       ))}
-      
     </>
   ) : (
     <Loader loading={loading}>
@@ -330,6 +364,5 @@ const GridType = (courses, gridType, setModal2Visible, router, loading, apidirec
     </Loader>
   );
 };
-
 
 export default AuthoredCourses;

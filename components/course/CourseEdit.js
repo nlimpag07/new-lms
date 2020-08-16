@@ -46,6 +46,8 @@ import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeat
 
 import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
+import Cookies from "js-cookie";
+
 const { Meta } = Card;
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -55,8 +57,8 @@ const menulists = [
     title: "Save",
     icon: "&#xf055;",
     active: true,
-    url: "/instructor/[course]/edit",
-    urlAs: "/instructor/course/edit",
+    url: "/${linkUrl}/[course]/edit",
+    urlAs: "/${linkUrl}/course/edit",
     callback: "Save",
   },
 ];
@@ -85,7 +87,7 @@ const framerEffect = {
     },
   },
 };
-
+const linkUrl = Cookies.get("usertype");
 // reset form fields when modal is form, closed
 const useResetFormOnCloseModal = ({ form, visible }) => {
   const prevVisibleRef = useRef();

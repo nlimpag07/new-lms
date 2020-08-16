@@ -49,6 +49,7 @@ import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-Learnin
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
+import Cookies from "js-cookie";
 
 const { Meta } = Card;
 /**TabPane declaration */
@@ -59,8 +60,8 @@ const menulists = [
     title: "Save",
     icon: "&#xf055;",
     active: true,
-    url: "/instructor/[course]/edit",
-    urlAs: "/instructor/course/edit",
+    url: "/${linkUrl}/[course]/edit",
+    urlAs: "/${linkUrl}/course/edit",
     callback: "Save",
   },
 ];
@@ -91,6 +92,8 @@ const framerEffect = {
 };
 const apidirectoryUrl = process.env.directoryUrl;
 const homeUrl = process.env.homeUrl;
+const linkUrl = Cookies.get("usertype");
+
 const CourseView = ({ course_id }) => {
   var [courseId, setCourseId] = useState(course_id);
  

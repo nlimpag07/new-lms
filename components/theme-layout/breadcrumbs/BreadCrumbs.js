@@ -8,9 +8,6 @@ const BreadCrumbs = () => {
   const router = useRouter();
   var pathname = router.asPath.split("/");
 
-  /* console.log(pathname);
-  console.log(pathname.length); */
-
   let pathn = pathname.map((path, index) => {
     switch (index) {
       case 0:

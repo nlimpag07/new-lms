@@ -2,7 +2,9 @@ import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import { Row, Col } from "antd";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
+const linkUrl = Cookies.get("usertype");
 const CourseOverviewWidget = ({ course_details }) => {
   /* var [courseId, setCourseId] = useState(course_id);
   const homeUrl = process.env.homeUrl;
@@ -58,8 +60,8 @@ const CourseOverviewWidget = ({ course_details }) => {
             ? relatedCourse.map((rltdCourse, index) => (
                 <Link
                   key={index}
-                  href={`/instructor/[course]/[...manage]`}
-                  as={`/instructor/course/view/${rltdCourse.courseRelated.course.id}`}
+                  href={`/${linkUrl}/[course]/[...manage]`}
+                  as={`/${linkUrl}/course/view/${rltdCourse.courseRelated.course.id}`}
                 >
                   <a>{rltdCourse.courseRelated.course.title}</a>
                 </Link>

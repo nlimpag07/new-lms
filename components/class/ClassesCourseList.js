@@ -58,10 +58,10 @@ const list = {
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const ClassesCourseList = () => {
   const router = useRouter();
-
   const { courseAllList, setCourseAllList } = useCourseList();
   const [publishedCourses, setPublishedCourses] = useState(courseAllList);
 
@@ -177,7 +177,7 @@ const ClassesCourseList = () => {
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(publishedCourses, curGridStyle, setModal2Visible, router,apidirectoryUrl)}
+          {GridType(publishedCourses, curGridStyle, setModal2Visible, router)}
         </Row>
       </Col>
       <Modal
@@ -261,6 +261,9 @@ const ClassesCourseList = () => {
           color: #ffffff;
           padding: 0 0;
           font-size: 12px;
+        }
+        .grid-list .ant-card-cover {
+          width: 25%;
         }
         .grid-list .ant-card-cover,
         .grid-list .ant-card-body {
@@ -357,7 +360,7 @@ const ClassesCourseList = () => {
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) => {
+const GridType = (courses, gridType, setModal2Visible, router) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
   if (gridType == "list") {
@@ -383,8 +386,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
               style={{ width: "auto" }}
               cover={
                 <Link
-                  href={`/instructor/[course]/[...manage]`}
-                  as={`/instructor/course/view/${course.id}`}
+                  href={`/${linkUrl}/[course]/[...manage]`}
+                  as={`/${linkUrl}/course/view/${course.id}`}
                 >
                   <a>
                     <img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />
@@ -398,8 +401,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
                     onClick={(e) => {
                       e.preventDefault();
                       router.push(
-                        `/instructor/classes/[...manageclasses]`,
-                        `/instructor/classes/sessions/${course.id}`
+                        `/${linkUrl}/classes/[...manageclasses]`,
+                        `/${linkUrl}/classes/sessions/${course.id}`
                       );
                     }}
                   >
@@ -416,8 +419,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
                     onClick={(e) => {
                       e.preventDefault();
                       router.push(
-                        `/instructor/classes/[...manageclasses]`,
-                        `/instructor/classes/enrollments/${course.id}`
+                        `/${linkUrl}/classes/[...manageclasses]`,
+                        `/${linkUrl}/classes/enrollments/${course.id}`
                       );
                     }}
                   >
@@ -434,8 +437,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
                     onClick={(e) => {
                       e.preventDefault();
                       router.push(
-                        `/instructor/classes/[...manageclasses]`,
-                        `/instructor/classes/class/${course.id}`
+                        `/${linkUrl}/classes/[...manageclasses]`,
+                        `/${linkUrl}/classes/class/${course.id}`
                       );
                     }}
                   >
@@ -452,8 +455,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
                     onClick={(e) =>{
                       e.preventDefault();
                       router.push(
-                        `/instructor/classes/[...manageclasses]`,
-                        `/instructor/classes/attendance/${course.id}`
+                        `/${linkUrl}/classes/[...manageclasses]`,
+                        `/${linkUrl}/classes/attendance/${course.id}`
                       )
                     }}
                   >
@@ -470,8 +473,8 @@ const GridType = (courses, gridType, setModal2Visible, router, apidirectoryUrl) 
               <Meta
                 title={
                   <Link
-                    href={`/instructor/[course]/[...manage]`}
-                    as={`/instructor/course/view/${course.id}`}
+                    href={`/${linkUrl}/[course]/[...manage]`}
+                    as={`/${linkUrl}/course/view/${course.id}`}
                   >
                     <a>{course.title}</a>
                   </Link>

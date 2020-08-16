@@ -59,14 +59,15 @@ const list = {
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const CourseList = (props) => {
   const router = useRouter();
+  //console.log(router);
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-
 
   useEffect(() => {
     var data = JSON.stringify({});
@@ -179,7 +180,7 @@ const CourseList = (props) => {
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(courseAllList, curGridStyle, setModal2Visible, router)}
+          {GridType(courseAllList, curGridStyle, setModal2Visible, router, linkUrl)}
         </Row>
       </Col>
       <Modal
@@ -265,6 +266,9 @@ const CourseList = (props) => {
           color: #ffffff;
           padding: 0 0;
           font-size: 12px;
+        }
+        .grid-list .ant-card-cover {
+          width: 25%;
         }
         .grid-list .ant-card-cover,
         .grid-list .ant-card-body {
@@ -387,8 +391,8 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
               style={{ width: "auto" }}
               cover={
                 <Link
-                  href={`/instructor/[course]/[...manage]`}
-                  as={`/instructor/course/view/${course.id}`}
+                  href={`/${linkUrl}/[course]/[...manage]`}
+                  as={`/${linkUrl}/course/view/${course.id}`}
                 >
                   <a>
                     <img
@@ -426,8 +430,8 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/instructor/[course]/[...manage]`,
-                        `/instructor/course/edit/${course.id}`
+                        `/${linkUrl}/[course]/[...manage]`,
+                        `/${linkUrl}/course/edit/${course.id}`
                       )
                     }
                   >
@@ -439,8 +443,8 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/instructor/[course]/[...manage]`,
-                        `/instructor/course/view/${course.id}`
+                        `/${linkUrl}/[course]/[...manage]`,
+                        `/${linkUrl}/course/view/${course.id}`
                       )
                     }
                   >
@@ -455,8 +459,8 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
               <Meta
                 title={
                   <Link
-                    href={`/instructor/[course]/[...manage]`}
-                    as={`/instructor/course/view/${course.id}`}
+                    href={`/${linkUrl}/[course]/[...manage]`}
+                    as={`/${linkUrl}/course/view/${course.id}`}
                   >
                     <a>{course.title}</a>
                   </Link>

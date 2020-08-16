@@ -5,6 +5,8 @@ import { Row, Col, Affix, Button, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 /***Radial Import***/
 import RadialUI from "./radial-ui";
+import Cookies from "js-cookie";
+const linkUrl = Cookies.get("usertype");
 
 /*Menu for Radial
  * required title, icon, url, urlAs
@@ -18,52 +20,53 @@ const menulists = [
     title: "Add",
     icon: "&#xf055;",
     active: true,    
-    url: "/instructor/[course]/[...manage]",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/[course]/[...manage]`,
+    urlAs: `/${linkUrl}/course/add`,
   },
   {
     title: "Edit",
     icon: "&#xf044;",    
-    url: "/instructor/[course]/edit",
-    urlAs: "/instructor/course/edit",
+    url: `"/${linkUrl}/[course]/edit"`,
+    urlAs: `/${linkUrl}/course/edit`,
     callback: "Edit",
   },
   {
     title: "Delete",
     icon: "&#xf056;",    
-    url: "/instructor/course",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/course`,
+    urlAs: `/${linkUrl}/course/add`,
     callback: "Delete",
   },
   {
     title: "Print",
     icon: "&#xf02f;",    
-    url: "/instructor/dashboard",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/dashboard`,
+    urlAs: `/${linkUrl}/course/add`,
     callback: "Print",
   },
   {
     title: "Copy From",
     icon: "&#xf0c5;",    
-    url: "/instructor/course",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/course`,
+    urlAs: `/${linkUrl}/course/add`,
     callback: "Copy From",
   },
   {
     title: "Import",
     icon: "&#xf1c3;",
-    url: "/instructor/dashboard",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/dashboard`,
+    urlAs: `/${linkUrl}/course/add`,
     callback: "Import",
   },
   {
     title: "Export",
     icon: "&#xf019;",
-    url: "/instructor/course",
-    urlAs: "/instructor/course/add",
+    url: `/${linkUrl}/course`,
+    urlAs: `/${linkUrl}/course/add`,
     callback: "Export",
   },
 ];
+
 
 const CourseCircularUi = () => {
   var [courseActionModal, setCourseActionModal] = useState({
