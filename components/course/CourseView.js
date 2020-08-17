@@ -72,7 +72,6 @@ const framerEffect = {
   visible: {
     opacity: 1,
     transition: {
-      delay: 0.1,
       ease: "easeIn",
       duration: 0.3,
       when: "afterChildren",
@@ -82,7 +81,6 @@ const framerEffect = {
   hidden: {
     opacity: 0,
     transition: {
-      delay: 0.1,
       ease: "easeIn",
       duration: 0.3,
       when: "afterChildren",

@@ -61,7 +61,7 @@ const AdministratorMenu = () => {
         </Link>
       </Menu.Item>
       <Menu.Item
-        icon={<FontAwesomeIcon icon={["fas", "picklists"]} size="lg" />}
+        icon={<FontAwesomeIcon icon={["fas", "sliders-h"]} size="lg" />}
         key="picklists"
       >
         <Link href="/administrator/picklists" as={`/administrator/picklists`}>

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
 import { useIsAuthenticated } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
-import UserRoleSwitcher from "../../user/UserRoleSwitcher";
+import UserRoleSwitcher from "../../users/UserRoleSwitcher";
 
 const InstructorNavbar = () => {
   const isAuthenticated = useIsAuthenticated();

@@ -231,7 +231,6 @@ const ClassesEnrollments = ({ course_id }) => {
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
 
-  
   var lastSelectedIndex = 0;
   const ddata = products.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)

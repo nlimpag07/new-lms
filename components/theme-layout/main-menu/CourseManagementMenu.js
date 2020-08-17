@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+
 //importing ant
 import { Menu } from "antd";
+const linkUrl = Cookies.get("usertype");
 
 const CourseManagementMenu = (props) => {
   const router = useRouter();
   const aspath = router.asPath;
   const q = router.query;
   var selectedKey = "";
+  //console.log(linkUrl);
 
   if (q.manage[0] == "view") {
     selectedKey = "view";
@@ -68,19 +72,31 @@ const CmMenuView = (q, selectedKey, setGoback) => {
   return q.course == "course" && q.manage[0] == "view" ? (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
-        key={`/instructor/${q.course}`}
+        key={`/${linkUrl}/[course]`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <span onClick={() => setGoback(true)}>Back</span>
+        {/* <span onClick={() => setGoback(true)}>Back</span> */}
+        <Link
+          href={`/${linkUrl}/[course]`}
+          as={`/${linkUrl}/course`}
+        >
+          <a>Back to Courses</a>
+        </Link>
       </Menu.Item>
     </Menu>
   ) : q.course == "course" && q.manage[0] == "add" ? (
     <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
       <Menu.Item
-        key={`/instructor/${q.course}`}
+        key={`/${linkUrl}/[course]`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <span onClick={() => setGoback(true)}>Back</span>
+        {/* <span onClick={() => setGoback(true)}>Back</span> */}
+        <Link
+          href={`/${linkUrl}/[course]`}
+          as={`/${linkUrl}/course`}
+        >
+          <a>Back to Courses</a>
+        </Link>
       </Menu.Item>
 
       <Menu.Item
@@ -88,8 +104,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}`}
         >
           <a>General</a>
         </Link>
@@ -97,11 +113,17 @@ const CmMenuView = (q, selectedKey, setGoback) => {
     </Menu>
   ) : (
     <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
-      <Menu.Item
-        key={`/instructor/${q.course}`}
+     <Menu.Item
+        key={`/${linkUrl}/[course]`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
-        <span onClick={() => setGoback(true)}>Back</span>
+        {/* <span onClick={() => setGoback(true)}>Back</span> */}
+        <Link
+          href={`/${linkUrl}/[course]`}
+          as={`/${linkUrl}/course`}
+        >
+          <a>Back to Courses</a>
+        </Link>
       </Menu.Item>
 
       <Menu.Item
@@ -109,8 +131,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}`}
         >
           <a>General</a>
         </Link>
@@ -120,8 +142,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         icon={<FontAwesomeIcon icon={["far", "list-alt"]} size="lg" />}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/course-outline`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/course-outline`}
         >
           <a>Course Outline</a>
         </Link>
@@ -132,8 +154,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         key={`learning-outcomes`}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/learning-outcomes`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/learning-outcomes`}
         >
           <a>Learning Outcomes</a>
         </Link>
@@ -143,8 +165,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         key={`assessments`}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/assessments`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/assessments`}
         >
           <a>Assessments</a>
         </Link>
@@ -154,8 +176,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         key={`instructors`}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/instructors`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/instructors`}
         >
           <a>Instructor</a>
         </Link>
@@ -165,8 +187,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         key={`competencies`}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/competencies`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/competencies`}
         >
           <a>Competencies</a>
         </Link>
@@ -176,8 +198,8 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         key={`evaluations`}
       >
         <Link
-          href="/instructor/[course]/[...manage]"
-          as={`/instructor/${q.course}/${q.manage[0]}/${q.manage[1]}/evaluations`}
+          href={`/${linkUrl}/[course]/[...manage]`}
+          as={`/${linkUrl}/${q.course}/${q.manage[0]}/${q.manage[1]}/evaluations`}
         >
           <a>Post Evaluation</a>
         </Link>

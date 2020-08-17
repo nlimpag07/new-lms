@@ -67,9 +67,12 @@ export default function MainThemeLayout({ children }) {
       }
       
     
-  } else if (router.route.startsWith("/admin")) {
+  } else if (router.route.startsWith("/administrator")) {
     
     NavigationMenu = <AdministratorMenu />;
+    if (router.route.startsWith("/administrator/[course]/")) {
+      NavigationMenu = <CourseManagementMenu />;
+    }
     //MainNav = <AdministratorNavbar />;
   
 } else {

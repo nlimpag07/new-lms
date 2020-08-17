@@ -33,7 +33,6 @@ const list = {
   visible: {
     opacity: 1,
     transition: {
-      delay: 0.1,
       ease: "easeIn",
       duration: 0.5,
       when: "beforeChildren",
@@ -43,7 +42,6 @@ const list = {
   hidden: {
     opacity: 0,
     transition: {
-      delay: 0.1,
       ease: "easeIn",
       duration: 0.5,
       when: "afterChildren",
