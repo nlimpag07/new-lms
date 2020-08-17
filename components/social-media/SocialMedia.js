@@ -133,68 +133,52 @@ const GridType = (gridType) => {
     case "list":
       return (
         <>
-          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
+          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  </Col>
-                }
-                actions={[
-                  <CloudUploadOutlined key="Publish" />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title List"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
+              <Avatar
+              icon={<LinkedinFilled />}
+              size={60}
+                style={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                }}
+              />
             </motion.div>
           </Col>
-          <Col className="gutter-row grid-list" xs={24} sm={24} md={24} lg={24}>
+          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Card
-                extra="Published"
-                hoverable
-                style={{ width: "auto" }}
-                cover={
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <img
-                      alt="example"
-                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                    />
-                  </Col>
-                }
-                actions={[
-                  <CloudUploadOutlined key="Publish" />,
-                  <EditOutlined key="edit" />,
-                  <EyeOutlined key="View" />,
-                ]}
-              >
-                <Meta
-                  title="Card title List"
-                  description={
-                    <div>
-                      <div>Instructor-led Training</div>
-                      <div>Public</div>
-                    </div>
-                  }
-                />
-              </Card>
+            <Avatar
+              icon={<TwitterCircleFilled />}
+              size={60}
+                style={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                }}
+              />
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+            <Avatar
+              icon={<InstagramFilled />}
+              size={60}
+                style={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                }}
+              />
+            </motion.div>
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+            <Avatar
+              icon={<FacebookFilled />}
+              size={60}
+                style={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                }}
+              />
             </motion.div>
           </Col>
         </>

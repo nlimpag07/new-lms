@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 //import MainMenu from "./main-menu/MainMenu";
 const MainMenu = dynamic(() => import("./main-menu/MainMenu"));
 //import UserMenu from "./main-menu/UserMenu";
-const UserMenu = dynamic(() => import("./main-menu/UserMenu"));
+const LearnerMenu = dynamic(() => import("./main-menu/LearnerMenu"));
 //import InstructorMenu from "./main-menu/InstructorMenu";
 const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
 const CourseManagementMenu = dynamic(() => import("./main-menu/CourseManagementMenu"));
@@ -52,7 +52,10 @@ export default function MainThemeLayout({ children }) {
   footer = <TemplateFooter />;
   //console.log(router.pathname)
   if (router.route.startsWith("/learner")) {
-    NavigationMenu = <UserMenu />;
+    NavigationMenu = <LearnerMenu />;
+    if (router.route.startsWith("/learner/[course]/")) {
+      NavigationMenu = <CourseManagementMenu />;
+    }
     
   } else if (router.route.startsWith("/instructor")) {
     

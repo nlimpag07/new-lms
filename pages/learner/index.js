@@ -6,6 +6,7 @@
 //import AdminDashboard from "../../../components/course/CourseList";
 /**End Of Imported Courses Components **/
 
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
@@ -13,10 +14,20 @@ import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../hocs/withAuth";
-import Error from 'next/error'
 
+import StatusBar from "../../components/status_bar/StatusBar";
 
-import { useRouter } from "next/router";
+import RecentCourses from "../../components/course/RecentCourses";
+import ToDos from "../../components/todos/ToDos";
+
+import Graph from "../../components/graph/Graph";
+import LeaderBoard from "../../components/leaderboard/LeaderBoard";
+
+import RecentActivities from "../../components/recent-activities/RecentActivities";
+import SocialMedia from "../../components/social-media/SocialMedia";
+import cookie from "cookie";
+import { useCourseList } from "../../providers/CourseProvider";
+
 
 import {
   EditOutlined,
@@ -26,37 +37,49 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 const { Meta } = Card;
-
+var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = () => {
-  const router = useRouter();
-  var urlPath = router.asPath;
-  var urlquery = router.query.course;
-  //console.log(urlquery)
-  //if(urlquery != "course"){ return <Error statusCode={404} />;}
-  /*var theContent;
-   if (urlPath) {
-    var thePage = urlPath[urlPath.length - 1];
-    thePage == "add" && (theContent = <CourseAdd />);
-    thePage == "edit" && (theContent = "HELLO Edit");
-    thePage == "publish" && (theContent = "HELLO Publish");
-    thePage == "course" && (theContent = <CourseList />);
-  } */
-
+  //console.log(courselist);
+  const [curGridStyle, setCurGridStyle] = useState("grid");
+  const {courseAllList, setCourseAllList } = useCourseList();
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
+ 
+  //console.log(courseAllList);
   useEffect(() => {
+    
   }, []);
 
   return (
     <MainThemeLayout>
-      <Layout className="main-content-holder courses-class" id="courses-class">
-        <div className="learner-index">Learner's Index</div>
+      <Layout className="main-content-holder">
+        <StatusBar />
+        <Row
+          className="widget-container"
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          style={{ margin: "1rem 0" }}
+        >
+          <RecentCourses />
+          <ToDos />
+        </Row>
+        {/*2nd Level*/}
+        <Row
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          style={{ margin: "1rem 0" }}
+        >
+          <Graph />
+          <LeaderBoard />
+        </Row>
+        <Row
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          style={{ margin: "1rem 0" }}
+        >
+          <RecentActivities />
+          <SocialMedia />
+        </Row>
       </Layout>
 
       <style jsx global>{`
-        /* .status-col {
-          background: #eeeeee;
-          padding: 8px 0;
-          min-height: 150px;
-        } */
+        
       `}</style>
     </MainThemeLayout>
   );

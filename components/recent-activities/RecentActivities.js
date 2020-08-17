@@ -64,9 +64,14 @@ const RecentActivities = () => {
           </button>
         </Col>
       </Row>
-      <Row gutter={[16, 16]} style={{ padding: "10px 0" }}>
+      <Row gutter={[16, 16]} style={{ padding: "10px 0" }} className="recent-activities">
         {GridType(curGridStyle)}
       </Row>
+      <style jsx global>{`
+        .recent-activities .grid-list .ant-card-cover {
+          width: auto;
+      }
+      `}</style>
     </Col>
   );
 };
@@ -95,7 +100,7 @@ const GridType = (gridType) => {
                 ]}
               >
                 <Meta
-                  title="Card title Grid"
+                  title="Activity title Grid"
                   description={
                     <div>
                       <div>Instructor-led Training</div>
@@ -125,7 +130,7 @@ const GridType = (gridType) => {
                 ]}
               >
                 <Meta
-                  title="Card title Grid"
+                  title="Activity title Grid"
                   description={
                     <div>
                       <div>Instructor-led Training</div>
@@ -155,7 +160,7 @@ const GridType = (gridType) => {
                 ]}
               >
                 <Meta
-                  title="Card title Grid"
+                  title="Activity title Grid"
                   description={
                     <div>
                       <div>Instructor-led Training</div>
@@ -192,7 +197,7 @@ const GridType = (gridType) => {
                 ]}
               >
                 <Meta
-                  title="Card title List"
+                  title="Activity title List"
                   description={
                     <div>
                       <div>Instructor-led Training</div>
@@ -224,7 +229,7 @@ const GridType = (gridType) => {
                 ]}
               >
                 <Meta
-                  title="Card title List"
+                  title="Activity title List"
                   description={
                     <div>
                       <div>Instructor-led Training</div>
