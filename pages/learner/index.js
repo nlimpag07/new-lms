@@ -17,7 +17,7 @@ import withAuth from "../../hocs/withAuth";
 
 import StatusBar from "../../components/status_bar/StatusBar";
 
-import RecentCourses from "../../components/course/RecentCourses";
+import RecentCourses from "../../components/learners-course/RecentCourses";
 import ToDos from "../../components/todos/ToDos";
 
 import Graph from "../../components/graph/Graph";

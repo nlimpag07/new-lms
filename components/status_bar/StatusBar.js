@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 
 const StatusBar = () => {
   const usertype = Cookies.get("usertype");
-  console.log(usertype)
+  //console.log(usertype)
   const [uType,setUtype] = useState("");
   useEffect(() => {
     if(usertype =="learner"){

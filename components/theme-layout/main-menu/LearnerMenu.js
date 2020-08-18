@@ -11,12 +11,10 @@ const LearnerMenu = () => {
   const aspath = router.asPath;
   const q = router.query;
   var selectedKey = "";
-  console.log(aspath)
-  console.log(q)
   if (aspath.endsWith("/learner")) {
     selectedKey = "learner";
   }
-  if (aspath.endsWith("/catalogue")) {
+  if (aspath.endsWith("/course-catalogue")) {
     selectedKey = "catalogue";
   }
   if (aspath.endsWith("/course")) {
@@ -47,9 +45,9 @@ const LearnerMenu = () => {
 
         <Menu.Item
           icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          ikey="catalogue"
+          key="catalogue"
         >
-          <Link href="/learner/[course]" as={`/learner/catalogue`}>
+          <Link href="/learner/course-catalogue" as={`/learner/course-catalogue`}>
             <a>Course Catalogue</a>
           </Link>
         </Menu.Item>

@@ -37,7 +37,7 @@ const CourseWidgetLevel = (props) => {
                         //console.log(users[index].name);
                         field = {
                           ...field,
-                          value: users[index].name + " - " + users[index].age,
+                          value: users[index].name,
                         };
                         //console.log({...field});
                         return (
@@ -118,7 +118,7 @@ const modalFormBody = () => {
     <>
       <Form.Item
         name="name"
-        label="User Name"
+        label="Level"
         rules={[
           {
             required: true,
@@ -126,17 +126,6 @@ const modalFormBody = () => {
         ]}
       >
         <Input />
-      </Form.Item>
-      <Form.Item
-        name="age"
-        label="User Age"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <InputNumber />
       </Form.Item>
     </>
   );

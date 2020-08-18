@@ -65,7 +65,15 @@ const RecentCourses = ({ RecentCoursesList }) => {
   const [myRecentCourses, setMyRecentCourses] = useState(courseAllList);
   //console.log(RecentCoursesList)
   useEffect(() => {
-    var data = JSON.stringify({});
+    if (courseAllList) {
+      /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
+      setCourseAllList(response.data); */
+      setMyRecentCourses(courseAllList.filter((getCourse) => getCourse.isPublished == 1));
+    } else {
+      const userData = JSON.parse(localStorage.getItem("courseAllList"));
+      setMyRecentCourses(userData.filter((getCourse) => getCourse.isPublished == 1));
+    }
+    /* var data = JSON.stringify({});
     var config = {
       method: "get",
       url: apiBaseUrl + "/courses",
@@ -86,7 +94,7 @@ const RecentCourses = ({ RecentCoursesList }) => {
         setMyRecentCourses(userData.slice(0, 6));
       }
     }
-    fetchData(config);
+    fetchData(config); */
     setLoading(false);
   }, []);
   return (
