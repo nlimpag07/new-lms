@@ -25,6 +25,7 @@ import {
   Input,
   Tooltip,
   Drawer,
+  Progress,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -34,6 +35,7 @@ import {
   EyeOutlined,
   CloudUploadOutlined,
   CloudDownloadOutlined,
+  PlayCircleFilled,
 } from "@ant-design/icons";
 const { Meta } = Card;
 
@@ -184,7 +186,8 @@ const LearnersCourseList = (props) => {
             courseAllList,
             curGridStyle,
             setDrawer2Visible,
-            setCourseDrawerDetails
+            setCourseDrawerDetails,
+            router
           )}
         </Row>
         {/* <Row className="course-details">asdasdasd</Row> */}
@@ -203,14 +206,32 @@ const LearnersCourseList = (props) => {
         <p>some contents...</p>
         <p>some contents...</p>
       </Modal> */}
-      {courseDrawerDetails && <DrawerCourseDetails drawerVisible={drawer2Visible} setdrawerVisible={setDrawer2Visible} courseDetails = {courseDrawerDetails} />}
-           
+      {courseDrawerDetails && (
+        <DrawerCourseDetails
+          drawerVisible={drawer2Visible}
+          setdrawerVisible={setDrawer2Visible}
+          courseDetails={courseDrawerDetails}
+        />
+      )}
 
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
+        .LearnersCourses-ListItems .ant-card-cover {
+          margin-right: 0;
+          margin-left: 0;
+        }
+        .LearnersCourses-ListItems .ant-card-actions li span {
+          padding: 0.5rem 0;
+        }
+        .LearnersCourses-ListItems .ant-card-actions li span h4 {
+          margin: 0;
+        }
         .ant-card-actions > li {
           padding: 0;
           margin: 0;
+        }
+        .LearnersCourses-ListItems .ant-progress-line {
+          width: 97%;
         }
         .ant-card-actions > li:hover {
           background-color: #f0f0f0;
@@ -417,8 +438,10 @@ const LearnersCourseList = (props) => {
         } */
         .selected-c-body .ant-card-hoverable {
           border-color: transparent;
-          box-shadow: 0 1px 2px -2px rgba(242,163,5,0.3), 0 3px 6px 0 rgba(242,163,5,0.3), 0 5px 12px 4px rgba(242,163,5,0.3);
-      }
+          box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
+            0 3px 6px 0 rgba(242, 163, 5, 0.3),
+            0 5px 12px 4px rgba(242, 163, 5, 0.3);
+        }
       `}</style>
     </Row>
   );
@@ -428,8 +451,10 @@ const GridType = (
   courses,
   gridType,
   setDrawer2Visible,
-  setCourseDrawerDetails
+  setCourseDrawerDetails,
+  router
 ) => {
+  //console.log(router);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -494,6 +519,16 @@ const GridType = (
                   src={`${apidirectoryUrl}/${course.featureImage}`}
                 />
               }
+              actions={
+                router.asPath.endsWith("/my-courses")
+                  ? [
+                      <h4>
+                        Continue{" "}
+                        <PlayCircleFilled key="action" title="Continue" />
+                      </h4>,
+                    ]
+                  : null
+              }
             >
               <Meta
                 title={course.title}
@@ -501,6 +536,17 @@ const GridType = (
                   <div>
                     <div>{course.description}</div>
                     <div>Public</div>
+                    {router.asPath.endsWith("/my-courses") && (
+                      <div>
+                        <Progress
+                          strokeColor={{
+                            "0%": "#108ee9",
+                            "100%": "#87d068",
+                          }}
+                          percent={99.9}
+                        />
+                      </div>
+                    )}
                   </div>
                 }
               />

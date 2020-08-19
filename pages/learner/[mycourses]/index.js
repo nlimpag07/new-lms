@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import CourseList from "../../../components/course/CourseList";
+import LearnersCourseList from "../../../components/learners-course/LearnersCourseList";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -30,7 +30,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Course = () => {
+const MyCourse = () => {
   //console.log(courselist)
   const {courseAllList, setCourseAllList } = useCourseList();
   //const [allCourses, setAllCourses] = useState(courselist);
@@ -63,7 +63,7 @@ const Course = () => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <CourseList />
+        <LearnersCourseList />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -107,4 +107,4 @@ const Course = () => {
   return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
 }; */
 
-export default withAuth(Course);
+export default withAuth(MyCourse);

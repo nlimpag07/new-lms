@@ -19,7 +19,7 @@ const LearnerMenu = () => {
   if (aspath.endsWith("/course-catalogue")) {
     selectedKey = "catalogue";
   }
-  if (aspath.endsWith("/course")) {
+  if (aspath.endsWith("/my-courses")) {
     selectedKey = "my-courses";
   }
   if (aspath.endsWith("/picklists")) {
@@ -51,7 +51,7 @@ const LearnerMenu = () => {
         }
       `}</style>
     </Menu>
-  ) : aspath.startsWith("/learner/my-course/") ? (
+  ) : aspath.startsWith("/learner/my-courses/") ? (
     <h3>wahahaha</h3>
   ) : (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
@@ -77,7 +77,7 @@ const LearnerMenu = () => {
         icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
         key="my-courses"
       >
-        <Link href="/learner/[course]" as={`/learner/course`}>
+        <Link href="/learner/[mycourses]" as={`/learner/my-courses`}>
           <a>My Courses</a>
         </Link>
       </Menu.Item>

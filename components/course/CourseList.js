@@ -409,7 +409,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                     >
                       <CloudDownloadOutlined
                         key="unpublish"
-                        onClick={() => setModal2Visible(true)}
+                       /*  onClick={() => setModal2Visible(true)} */
                       />
                     </div>
                   </Tooltip>

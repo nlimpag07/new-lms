@@ -186,8 +186,8 @@ const DrawerCourseDetails = ({
                   ? relatedCourse.map((rltdCourse, index) => (
                       <Link
                         key={index}
-                        href={`/${linkUrl}/[course]/[...manage]`}
-                        as={`/${linkUrl}/course/view/${rltdCourse.courseRelated.course.id}`}
+                        href={`/${linkUrl}/course-catalogue/[...manage]`}
+                        as={`/${linkUrl}/course-catalogue/view/${rltdCourse.courseRelated.course.id}`}
                       >
                         <a className="drawer-related-course">
                           {rltdCourse.courseRelated.course.title}
@@ -199,15 +199,51 @@ const DrawerCourseDetails = ({
             </Row>
           </Col>
           <Col xs={24} sm={24} md={6}>
-            <div xs={24} className="drawerActionButtons">
-              <Button type="primary" shape="round" size="large" onClick={()=>router.push( `/${linkUrl}/course-catalogue/[...manage]`, `/${linkUrl}/course-catalogue/view/${id}`)}>
-                TAKE THIS COURSE
-              </Button>{" "}
-              <Button shape="round" size="large" onClick={()=>router.push( `/${linkUrl}/course-catalogue/[...manage]`, `/${linkUrl}/course-catalogue/view/${id}`)}>
-                LEARN MORE
-              </Button>
-            </div>
-
+            {router.asPath.endsWith("/my-courses") ? (
+              <div xs={24} className="drawerActionButtons">
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  onClick={() =>
+                    router.push(
+                      `/${linkUrl}/course-catalogue/[...manage]`,
+                      `/${linkUrl}/course-catalogue/view/${id}`
+                    )
+                  }
+                >
+                  CONTINUE
+                </Button>
+              </div>
+            ) : (
+              <div xs={24} className="drawerActionButtons">
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  onClick={() =>
+                    router.push(
+                      `/${linkUrl}/course-catalogue/[...manage]`,
+                      `/${linkUrl}/course-catalogue/view/${id}`
+                    )
+                  }
+                >
+                  TAKE THIS COURSE
+                </Button>{" "}
+                <Button
+                  shape="round"
+                  size="large"
+                  onClick={() =>
+                    router.push(
+                      `/${linkUrl}/course-catalogue/[...manage]`,
+                      `/${linkUrl}/course-catalogue/view/${id}`
+                    )
+                  }
+                >
+                  LEARN MORE
+                </Button>
+              </div>
+            )}
             <List
               itemLayout="horizontal"
               dataSource={listData}
@@ -270,12 +306,12 @@ const DrawerCourseDetails = ({
           margin-right: 15px;
           background-color: #ffffff;
         }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons{
-          margin-bottom:2rem;
+        .drawer-course-details .ant-drawer-content .drawerActionButtons {
+          margin-bottom: 2rem;
         }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons button{
-          margin-right:1rem;
-          font-size:1rem;
+        .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+          margin-right: 1rem;
+          font-size: 1rem;
         }
       `}</style>
     </Drawer>
