@@ -3,9 +3,17 @@ import ReactDOM from "react-dom";
 import { Row, Col } from "antd";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const linkUrl = Cookies.get("usertype");
 const CourseOverviewWidget = ({ course_details }) => {
+  const router = useRouter();
+  var aspath = router.asPath.split("/");
+  aspath = `${aspath[2]}/${aspath[3]}`
+  const route = router.route;
+
+  
+  //var pathname = router.asPath.split("/");
   /* var [courseId, setCourseId] = useState(course_id);
   const homeUrl = process.env.homeUrl;
   const { courseAllList } = useCourseList();
@@ -60,8 +68,8 @@ const CourseOverviewWidget = ({ course_details }) => {
             ? relatedCourse.map((rltdCourse, index) => (
                 <Link
                   key={index}
-                  href={`/${linkUrl}/[course]/[...manage]`}
-                  as={`/${linkUrl}/course/view/${rltdCourse.courseRelated.course.id}`}
+                  href={`${route}`}
+                  as={`/${linkUrl}/${aspath}/${rltdCourse.courseRelated.course.id}`}
                 >
                   <a>{rltdCourse.courseRelated.course.title}</a>
                 </Link>

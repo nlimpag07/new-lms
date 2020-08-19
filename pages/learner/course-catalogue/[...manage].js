@@ -43,7 +43,7 @@ const CourseManagement = (props) => {
   //console.log(props);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
-  const managePages = ["add", "edit", "view", "publish"];
+  const managePages = ["view"];
   //check if the value of router.query.manage[0] is in managePages
   const isPageIncluded = managePages.includes(router.query.manage[0]);
   const courseSubPanels = [
@@ -94,7 +94,7 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
-    thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
+    if(thePage[0] == "edit"){return <Error statusCode={404} />}; // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
@@ -119,7 +119,7 @@ const CourseManagement = (props) => {
       thePage[2] == "evaluations" &&
       (theContent = "HELLO View Course post-evaluation"); // viewing the course
     
-    thePage[0] == "edit" &&
+    /* thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
       (theContent = "HELLO Edit Course Outline"); // Editing the course
     thePage[0] == "edit" &&
@@ -136,7 +136,7 @@ const CourseManagement = (props) => {
       (theContent = "HELLO View Edit competencies"); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "evaluations" &&
-      (theContent = "HELLO View Edit post-evaluation"); // Editing the course
+      (theContent = "HELLO View Edit post-evaluation"); // Editing the course */
   } else {
     return <Error statusCode={404} />;
   }

@@ -206,7 +206,7 @@ const LearnersCourseList = (props) => {
       {courseDrawerDetails && <DrawerCourseDetails drawerVisible={drawer2Visible} setdrawerVisible={setDrawer2Visible} courseDetails = {courseDrawerDetails} />}
            
 
-      <CourseCircularUi />
+      {/* <CourseCircularUi /> */}
       <style jsx global>{`
         .ant-card-actions > li {
           padding: 0;
@@ -369,7 +369,7 @@ const LearnersCourseList = (props) => {
           color: #e69138;
         }
         .ant-card-bordered {
-          border: 8px solid #f0f0f0;
+          border: 1px solid #f0f0f0;
         }
 
         .course-details,
@@ -387,13 +387,13 @@ const LearnersCourseList = (props) => {
           cursor: pointer;
         }
         .card-holder:hover .ant-card-bordered {
-          border: 8px solid #f9c48e61;
+          border: 1px solid #f9c48e61;
         }
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
         }
         .selected-c-body .ant-card-bordered {
-          border: 8px solid #ff9d3761;
+          border: 1px solid #ff9d3761;
         }
         /*.selected-c-body .ant-card-body::after {
           display: table;
@@ -415,7 +415,10 @@ const LearnersCourseList = (props) => {
     left: 30%;
           background-color: #666666;
         } */
-        
+        .selected-c-body .ant-card-hoverable {
+          border-color: transparent;
+          box-shadow: 0 1px 2px -2px rgba(242,163,5,0.3), 0 3px 6px 0 rgba(242,163,5,0.3), 0 5px 12px 4px rgba(242,163,5,0.3);
+      }
       `}</style>
     </Row>
   );

@@ -200,10 +200,10 @@ const DrawerCourseDetails = ({
           </Col>
           <Col xs={24} sm={24} md={6}>
             <div xs={24} className="drawerActionButtons">
-              <Button type="primary" shape="round" size="large">
+              <Button type="primary" shape="round" size="large" onClick={()=>router.push( `/${linkUrl}/course-catalogue/[...manage]`, `/${linkUrl}/course-catalogue/view/${id}`)}>
                 TAKE THIS COURSE
               </Button>{" "}
-              <Button type="primary" shape="round" size="large">
+              <Button shape="round" size="large" onClick={()=>router.push( `/${linkUrl}/course-catalogue/[...manage]`, `/${linkUrl}/course-catalogue/view/${id}`)}>
                 LEARN MORE
               </Button>
             </div>
@@ -218,7 +218,7 @@ const DrawerCourseDetails = ({
               )}
             />
             <div className="Course-Tags">
-              <h2>TAGS</h2>
+              <h2>Tags</h2>
               {courseTag &&
                 courseTag.map((tags, index) => (
                   <Button key={index} className="tag-button">

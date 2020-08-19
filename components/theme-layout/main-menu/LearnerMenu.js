@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 //importing ant
 import { Menu } from "antd";
+const linkUrl = Cookies.get("usertype");
 
 const LearnerMenu = () => {
   const router = useRouter();
@@ -26,12 +28,32 @@ const LearnerMenu = () => {
   if (aspath.endsWith("/reports")) {
     selectedKey = "reports";
   }
-
+  console.log(aspath);
   //const [defaultKey,setDefaultKey] = useState(`'${selectedKey}'`);
   /* useEffect(() => {
     setDefaultKey(`'${selectedKey}'`);
   }, []); */
-  return (
+  return aspath.startsWith("/learner/course-catalogue/") ? (
+    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
+      <Menu.Item
+        key={`/${linkUrl}/course-catalogue`}
+        icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
+      >
+        {/* <span onClick={() => setGoback(true)}>Back</span> */}
+        <Link href={`/${linkUrl}/course-catalogue`} as={`/${linkUrl}/course-catalogue`}>
+          <a>Back to Catalogue</a>
+        </Link>
+      </Menu.Item>
+
+      <style jsx global>{`
+        .ant-layout-sider {
+          background-color: #ffffff;
+        }
+      `}</style>
+    </Menu>
+  ) : aspath.startsWith("/learner/my-course/") ? (
+    <h3>wahahaha</h3>
+  ) : (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
         key="learner"
@@ -41,43 +63,42 @@ const LearnerMenu = () => {
           <a>Dashboard</a>
         </Link>
       </Menu.Item>
-      
 
-        <Menu.Item
-          icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          key="catalogue"
-        >
-          <Link href="/learner/course-catalogue" as={`/learner/course-catalogue`}>
-            <a>Course Catalogue</a>
-          </Link>
-        </Menu.Item>
+      <Menu.Item
+        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
+        key="catalogue"
+      >
+        <Link href="/learner/course-catalogue" as={`/learner/course-catalogue`}>
+          <a>Course Catalogue</a>
+        </Link>
+      </Menu.Item>
 
-        <Menu.Item
-          icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
-          key="my-courses"
-        >
-          <Link href="/learner/[course]" as={`/learner/course`}>
-            <a>My Courses</a>
-          </Link>
-        </Menu.Item>
+      <Menu.Item
+        icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
+        key="my-courses"
+      >
+        <Link href="/learner/[course]" as={`/learner/course`}>
+          <a>My Courses</a>
+        </Link>
+      </Menu.Item>
 
-        <Menu.Item
-          icon={<FontAwesomeIcon icon={["fas", "file-alt"]} size="lg" />}
-          key="/user/transcript"
-        >
-          <Link href="/user/transcript" passHref>
-            <a>My Transcript</a>
-          </Link>
-        </Menu.Item>
+      <Menu.Item
+        icon={<FontAwesomeIcon icon={["fas", "file-alt"]} size="lg" />}
+        key="/user/transcript"
+      >
+        <Link href="/user/transcript" passHref>
+          <a>My Transcript</a>
+        </Link>
+      </Menu.Item>
 
-        <Menu.Item
-          icon={<FontAwesomeIcon icon={["fas", "calendar-alt"]} size="lg" />}
-          key="/user/calendar"
-        >
-          <Link href="/user/calendar" passHref>
-            <a>Calendar</a>
-          </Link>
-        </Menu.Item>
+      <Menu.Item
+        icon={<FontAwesomeIcon icon={["fas", "calendar-alt"]} size="lg" />}
+        key="/user/calendar"
+      >
+        <Link href="/user/calendar" passHref>
+          <a>Calendar</a>
+        </Link>
+      </Menu.Item>
 
       <style jsx global>{`
         .ant-layout-sider {
@@ -89,4 +110,3 @@ const LearnerMenu = () => {
 };
 
 export default LearnerMenu;
-
