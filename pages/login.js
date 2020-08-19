@@ -80,7 +80,6 @@ export default withoutAuth(function Login() {
             path: "/",
             SameSite: "lax",
           });
-          
 
           var config = {
             method: "get",
@@ -88,14 +87,17 @@ export default withoutAuth(function Login() {
             headers: {
               Authorization: "Bearer " + _result.token,
               "Content-Type": "application/json",
-            }
+            },
           };
-    
+
           async function fetchData(config) {
             // You can await here
             const response = await axios(config);
             if (response) {
-              localStorage.setItem("courseAllList", JSON.stringify(response.data));
+              localStorage.setItem(
+                "courseAllList",
+                JSON.stringify(response.data)
+              );
               setCourseAllList(response.data);
               //console.log(response.data)
             }
@@ -162,7 +164,7 @@ export default withoutAuth(function Login() {
     <Loader loading={loading}>
       <Layout className="login" style={{ minHeight: "100vh" }}>
         <Row style={{ minHeight: "100vh" }}>
-          <Col className="logo-container" xs={24} sm={12} md={12}>
+          <Col className="logo-container" xs={24} sm={24} md={12}>
             <div className="logo-holder">
               <img
                 id="left-logo"
