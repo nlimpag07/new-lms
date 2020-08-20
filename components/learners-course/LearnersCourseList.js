@@ -190,7 +190,7 @@ const LearnersCourseList = (props) => {
             router
           )}
         </Row>
-        {/* <Row className="course-details">asdasdasd</Row> */}
+        
       </Col>
       {/* <Modal
         title="Publish Properties"
