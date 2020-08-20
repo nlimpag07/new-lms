@@ -91,6 +91,8 @@ const framerEffect = {
 const apidirectoryUrl = process.env.directoryUrl;
 const homeUrl = process.env.homeUrl;
 const linkUrl = Cookies.get("usertype");
+const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
 
 const CourseView = ({ course_id }) => {
   var [courseId, setCourseId] = useState(course_id);
@@ -100,30 +102,42 @@ const CourseView = ({ course_id }) => {
   const [modal2Visible, setModal2Visible] = useState("");
   var courseData = "";
   const [loading, setLoading] = useState(true);
-  /* console.log("course_id ? ", course_id);
-  console.log("courseId ? ", courseId); */
-  /* if (courseAllList) {
-    courseData = courseAllList.filter((getCourse) => getCourse.id == course_id);
-  } */
 
-  //console.log("Default getting CourseData ", courseData);
   useEffect(() => {
     setCourseId(course_id);
-    //if (!courseData) {
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    //console.log(userData);
     setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
-    /* } else {
-      //put additional Filtration here
-      setCourse(courseData);
-    } */
+
+    /* var data = JSON.stringify({});
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        localStorage.setItem("courseAllList", JSON.stringify(response.data));
+        setCourseAllList(response.data);
+        //console.log(response.data);
+      } else {
+        const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        setCourseAllList(userData);
+      }
+    }
+    fetchData(
+      config
+    ); */
+    
     setLoading(false);
 
-    //return (() => setCourseId(course_id))
   }, [course_id]);
 
   let courseDetails = course[0] || "";
-  //console.log("CourseDetails ", courseDetails);
   let {
     id,
     featureImage,
