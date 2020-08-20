@@ -132,8 +132,9 @@ const CourseView = ({ course_id }) => {
     fetchData(
       config
     ); */
-
+    
     setLoading(false);
+
   }, [course_id]);
 
   let courseDetails = course[0] || "";
