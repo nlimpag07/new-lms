@@ -105,6 +105,11 @@ const CourseView = ({ course_id }) => {
   const [course_outline, setCourse_outline] = useState("");
   const [course_outcome, setCourse_outcome] = useState("");
   const [course_competencies, setCourse_competencies] = useState("");
+  const [course_enrollments, setCourse_enrollments] = useState("");
+  const [course_reviews, setCourse_reviews] = useState("");
+
+
+
 
   useEffect(() => {
     setCourseId(course_id);
@@ -124,13 +129,18 @@ const CourseView = ({ course_id }) => {
         axios.get(apiBaseUrl + "/courseoutline/" + course_id, config),
         axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
         axios.get(apiBaseUrl + "/coursecompetencies/" + course_id, config),
+        axios.get(apiBaseUrl + "/enrollment/", config),
       ])
       .then(
-        axios.spread((courseoutline, courseoutcome, competencies) => {
-          console.log(competencies.data.response)
+        axios.spread((courseoutline, courseoutcome, competencies,enrollments) => {
+          //console.log(competencies.data.response)
           !courseoutline.data.response?setCourse_outline(courseoutline.data):setCourse_outline(null);
           !courseoutcome.data.response?setCourse_outcome(courseoutcome.data):setCourse_outcome(null);
           !competencies.data.response?setCourse_competencies(competencies.data):setCourse_competencies(null);
+          !enrollments.data.response?setCourse_enrollments(enrollments.data):setCourse_enrollments(null);
+          !enrollments.data.response?setCourse_reviews(enrollments.data):setCourse_reviews(null);
+
+
         })
       )
       .catch((errors) => {
@@ -327,10 +337,10 @@ const CourseView = ({ course_id }) => {
                   />
                 </TabPane>
                 <TabPane tab="ENROLLMENTS" key="5">
-                  <CourseEnrollmentsviewWidget course_details={courseDetails} />
+                  <CourseEnrollmentsviewWidget course_id={course_id} course_enrollments = {course_enrollments} />
                 </TabPane>
                 <TabPane tab="REVIEWS" key="6">
-                  <CourseReviewViewWidget course_details={courseDetails} />
+                  <CourseReviewViewWidget course_id={course_id} course_reviews = {course_reviews} />
                 </TabPane>
               </Tabs>
             </Col>

@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const CourseCompetenciesviewWidget = ({ course_competencies }) => {
   const [loading, setLoading] = useState(true);
-  console.log(course_competencies);
+  //console.log(course_competencies);
   const listData = course_competencies
     ? course_competencies.map((competency, index) => ({
         title: <button>{competency.title}</button>,
@@ -45,7 +45,7 @@ const CourseCompetenciesviewWidget = ({ course_competencies }) => {
     </div>
   ) : (
     <Loader loading={loading}>
-      <Empty />
+      <Empty style={{ marginTop: "1rem" }} />
     </Loader>
   );
 };
