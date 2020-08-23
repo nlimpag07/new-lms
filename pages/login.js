@@ -168,14 +168,14 @@ export default withoutAuth(function Login() {
             <div className="logo-holder">
               <img
                 id="left-logo"
-                src="/images/fsxonline-logo.svg"
+                src="/images/fastrax-logo-white.svg"
                 alt="Fastrax Logo"
               />
             </div>
           </Col>
           <Col className="loginform-container" xs={24} sm={12} md={12}>
             <div className="loginform-banner">
-              <img src="/images/fsxonline-logo.svg" alt="Fastrax Logo" />
+              <img src="/images/fastrax-logo-white.svg" alt="Fastrax Logo" />
             </div>
             <div className="loginform-holder">
               <div className="loginform-form">
