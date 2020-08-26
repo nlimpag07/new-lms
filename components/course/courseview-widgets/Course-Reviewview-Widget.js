@@ -10,20 +10,7 @@ import axios from "axios";
 const apiBaseUrl = process.env.apiBaseUrl;
 /* const res = 
 const theslice = res.results.slice(0, 5); */
-const CourseReviewViewWidget = ({ course_details }) => {
-  /*  const {
-    relatedCourse,
-    courseCompetencies,
-    courseInstructor,
-  } = course_details;
-  console.log(course_details);
-
-  useEffect(() => {}, []); */
-
-  //To be Removed in real data
-  //const theslice = res.results.slice(0, count);
-  //console.log(theslice)
-  //END REMOVE
+const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
   const [initLoading, setInitLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState("");
@@ -39,7 +26,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
           lineHeight: "32px",
         }}
       >
-        <Button onClick={()=>OnLoadMore()}>loading more</Button>
+        <Button onClick={() => OnLoadMore()}>loading more</Button>
       </div>
     ) : null;
 
@@ -50,15 +37,16 @@ const CourseReviewViewWidget = ({ course_details }) => {
     setList(theslice); */
     GetData((res) => {
       let getThree = res.slice(0, count);
-      //console.log(res);
+      console.log(res);
       setInitLoading(false);
       setData(res);
       setList(getThree);
     });
   }, []);
+  
   //https://codesandbox.io/s/3z8tf?file=/index.js
   const GetData = (callback) => {
-    axios
+    /* axios
       .get("https://jsonplaceholder.typicode.com/users")
       .then((result) => {
         var res = result.data;
@@ -68,19 +56,30 @@ const CourseReviewViewWidget = ({ course_details }) => {
       .catch(function (error) {
         // handle error
         console.log(error.response.data);
+      }); */
+
+    var enrollees = [];
+    const tdata = course_reviews.map((dataItem) => {
+      //console.log("tdata", dataItem);
+      dataItem.learner.map((item) => {
+        if (item.courseId == course_id) {
+          dataItem["courseRating"] = item.courseRating;
+          dataItem["courseReview"] = item.courseReview;/* 
+          dataItem["startDate"] = item.startDate; */
+          enrollees.push(dataItem);
+        }
       });
+      //console.log("tdata", dataItem);
+    });
+    callback(enrollees);
   };
 
   const OnLoadMore = () => {
-    
     setLoading(true);
     let currCount = count;
-    let getThree = data.slice(0, currCount+5);
-    setCount(currCount+3)
-    setList(
-      getThree
-    );
-    
+    let getThree = data.slice(0, currCount + 5);
+    setCount(currCount + 3);
+    setList(getThree);
   };
   return (
     <div className="tab-content">
@@ -95,7 +94,7 @@ const CourseReviewViewWidget = ({ course_details }) => {
             renderItem={(item) => (
               <List.Item
                 actions={[
-                  <span style={{ fontWeight: "700" }}>{item.id}/5</span>,
+                  <span style={{ fontWeight: "700" }}>{item.courseRating}/5</span>,
                 ]}
               >
                 <Skeleton avatar title={false} loading={item.loading} active>
@@ -106,11 +105,11 @@ const CourseReviewViewWidget = ({ course_details }) => {
                         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                       />
                     }
-                    title={<span>{item.name}</span>}
-                    description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    title={<span>{item.firstName + " " + item.lastName}</span>}
+                    description={item.courseReview?item.courseReview: "No review message"}
                   />
                   <div>
-                    <Rate allowHalf disabled defaultValue={item.id} />
+                    <Rate allowHalf disabled defaultValue={item.courseRating} />
                   </div>
                 </Skeleton>
               </List.Item>

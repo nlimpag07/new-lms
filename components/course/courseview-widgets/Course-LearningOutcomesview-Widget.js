@@ -1,81 +1,31 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import { Row, Col, Steps, Timeline, Collapse } from "antd";
+import { Row, Col, Steps, Timeline, Collapse, Empty } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import Loader from "../../../components/theme-layout/loader/loader";
+
 import Link from "next/link";
 const { Step } = Steps;
 const { Panel } = Collapse;
-const CourseLearninOutcomesviewWidget = ({ course_details }) => {
-  /* var [courseId, setCourseId] = useState(course_id);
-  const homeUrl = process.env.homeUrl;
-  const { courseAllList } = useCourseList();
-  const [course, setCourse] = useState("");
-  const [modal2Visible, setModal2Visible] = useState("");
-  var courseData = ""; */
-  const { relatedCourse, description, courseInstructor } = course_details;
-  //console.log(course_details);
+const CourseLearninOutcomesviewWidget = ({ course_outcome }) => {
   const [current, setCurrent] = useState(0);
-  const [fullDetails, setFullDetails] = useState("off");
+  const [loading, setLoading] = useState(true);
 
-  /* useEffect(() => {
-    setFullDetails("shown");
-  }, [current]); */
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
-
+  const onChange = (current) => {
+    //console.log("onChange:", current);
+    setCurrent(current);
+  };
 
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
-      <Col xs={24}>
+        <Col xs={24}>
           <Timeline>
-            <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel header="Learning Outcome 1. Lorem ipsum dolor sit amet" key="1">
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item>
-            <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel
-                  header="Learning Outcome 2. Duis aute irure dolor in reprehenderit in voluptate "
-                  key="1"
-                >
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item>
-            <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel
-                  header="Learning Outcome 3. Excepteur sint occaecat cupidatat non proident"
-                  key="1"
-                >
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item>
+            {OutComePanels(course_outcome,loading)}            
           </Timeline>
         </Col>
       </Row>
@@ -98,35 +48,47 @@ const CourseLearninOutcomesviewWidget = ({ course_details }) => {
           background-color: #ff8c00;
           width: 15px;
           height: 15px;
-          top:-2px;
+          top: -2px;
         }
         .Course-OutlineView .ant-timeline-item-tail {
           left: 6px;
         }
-        .Course-OutlineView .ant-collapse-header{
-          font-weight:500;
+        .Course-OutlineView .ant-collapse-header {
+          font-weight: 500;
         }
-        .Course-OutlineView .ant-timeline{padding-top:1rem;}
+        .Course-OutlineView .ant-timeline {
+          padding-top: 1rem;
+        }
       `}</style>
     </div>
   );
 };
 
-const Description = () => {
-  return (
-    <div>
-      <div className="summary">
-        A dog is a type of domesticated animal. Known for its loyalty and
-        faithfulness, it can be found as a welcome guest in many households
-        across the world.
-      </div>
-      <div className={`fullDetails fullDetails-shown`}>
-        Full Details A dog is a type of domesticated animal. Known for its
-        loyalty and faithfulness, it can be found as a welcome guest in many
-        households across the world.
-      </div>
-    </div>
+const OutComePanels = (courseoutcome,loading) => {
+  return courseoutcome.length ? (
+    courseoutcome.map((outcome,index) => (
+      <Timeline.Item color="orange" key={index}>
+        <Collapse
+          defaultActiveKey={outcome.id}
+          accordion
+          expandIconPosition="right"
+          ghost
+          expandIcon={({ isActive }) => (
+            <CaretDownOutlined rotate={isActive ? 180 : 0} />
+          )}
+        >
+          <Panel header={outcome.title} key={outcome.id}>
+            {outcome.description}
+          </Panel>
+        </Collapse>
+      </Timeline.Item>
+    ))
+  ) : (
+    <Loader loading={loading}>
+      <Empty />
+    </Loader>
   );
 };
 
 export default CourseLearninOutcomesviewWidget;
+

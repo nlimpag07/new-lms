@@ -96,45 +96,71 @@ const token = Cookies.get("token");
 
 const CourseView = ({ course_id }) => {
   var [courseId, setCourseId] = useState(course_id);
- 
+
   const { courseAllList } = useCourseList();
   const [course, setCourse] = useState("");
   const [modal2Visible, setModal2Visible] = useState("");
-  var courseData = "";
   const [loading, setLoading] = useState(true);
+
+  const [course_outline, setCourse_outline] = useState("");
+  const [course_outcome, setCourse_outcome] = useState("");
+  const [course_competencies, setCourse_competencies] = useState("");
+  const [course_enrollments, setCourse_enrollments] = useState("");
+  const [course_reviews, setCourse_reviews] = useState("");
+
+
+
 
   useEffect(() => {
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
     setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
 
-    /* var data = JSON.stringify({});
     var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
+      /* method: "get",
+      url: apiBaseUrl + "/courseoutline/" + course_id, */
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
-      data: data,
     };
-    async function fetchData(config) {
+    axios
+      .all([
+        axios.get(apiBaseUrl + "/courseoutline/" + course_id, config),
+        axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
+        axios.get(apiBaseUrl + "/coursecompetencies/" + course_id, config),
+        axios.get(apiBaseUrl + "/enrollment/", config),
+      ])
+      .then(
+        axios.spread((courseoutline, courseoutcome, competencies,enrollments) => {
+          //console.log(competencies.data.response)
+          !courseoutline.data.response?setCourse_outline(courseoutline.data):setCourse_outline(null);
+          !courseoutcome.data.response?setCourse_outcome(courseoutcome.data):setCourse_outcome(null);
+          !competencies.data.response?setCourse_competencies(competencies.data):setCourse_competencies(null);
+          !enrollments.data.response?setCourse_enrollments(enrollments.data):setCourse_enrollments(null);
+          !enrollments.data.response?setCourse_reviews(enrollments.data):setCourse_reviews(null);
+
+
+        })
+      )
+      .catch((errors) => {
+        // react on errors.
+        console.error(errors);
+      });
+    /* async function fetchData(config) {      
       const response = await axios(config);
       if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(response.data);
-        //console.log(response.data);
+        //localStorage.setItem("courseAllList", JSON.stringify(response.data));
+        //setCourseAllList(response.data);
+        console.log(response.data);
       } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(userData);
+        //const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        //setCourseAllList(userData);
       }
     }
-    fetchData(
-      config
-    ); */
-    
-    setLoading(false);
+    fetchData(config); */
 
+    setLoading(false);
   }, [course_id]);
 
   let courseDetails = course[0] || "";
@@ -153,8 +179,8 @@ const CourseView = ({ course_id }) => {
     courseTag,
     relatedCourse,
   } = courseDetails;
-  featureImage = `${apidirectoryUrl}/${featureImage}`
-  featureVideo = `${apidirectoryUrl}/${featureVideo}.mp4`
+  featureImage = `${apidirectoryUrl}/${featureImage}`;
+  featureVideo = `${apidirectoryUrl}/${featureVideo}.mp4`;
 
   let lessons = courseOutline ? courseOutline.length : 0;
   const listData = [
@@ -298,23 +324,23 @@ const CourseView = ({ course_id }) => {
                   <CourseOverviewWidget course_details={courseDetails} />
                 </TabPane>
                 <TabPane tab="COURSE OUTLINE" key="2">
-                  <CourseOutlineviewWidget course_details={courseDetails} />
+                  <CourseOutlineviewWidget course_outline={course_outline} />
                 </TabPane>
                 <TabPane tab="LEARNING OUTCOMES" key="3">
                   <CourseLearninOutcomesviewWidget
-                    course_details={courseDetails}
+                    course_outcome={course_outcome}
                   />
                 </TabPane>
                 <TabPane tab="COMPETENCIES" key="4">
                   <CourseCompetenciesviewWidget
-                    course_details={courseDetails}
+                    course_competencies={course_competencies}
                   />
                 </TabPane>
                 <TabPane tab="ENROLLMENTS" key="5">
-                  <CourseEnrollmentsviewWidget course_details={courseDetails} />
+                  <CourseEnrollmentsviewWidget course_id={course_id} course_enrollments = {course_enrollments} />
                 </TabPane>
                 <TabPane tab="REVIEWS" key="6">
-                  <CourseReviewViewWidget course_details={courseDetails} />
+                  <CourseReviewViewWidget course_id={course_id} course_reviews = {course_reviews} />
                 </TabPane>
               </Tabs>
             </Col>

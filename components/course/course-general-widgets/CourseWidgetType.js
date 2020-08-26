@@ -27,6 +27,7 @@ const CourseWidgetType = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
+            console.log(thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {

@@ -21,7 +21,7 @@ const CourseOverviewWidget = ({ course_details }) => {
   const [modal2Visible, setModal2Visible] = useState("");
   var courseData = ""; */
   const { relatedCourse, description, courseInstructor } = course_details;
-  console.log(course_details);
+  //console.log(course_details);
 
   useEffect(() => {}, []);
 

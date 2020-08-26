@@ -52,10 +52,11 @@ const list = {
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
-const token = Cookies.get("token");
+//const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const AuthoredCourses = ({ authoredCoursesList }) => {
+  const token = Cookies.get("token");
   const { courseAllList, setCourseAllList } = useCourseList();
 
   const router = useRouter();

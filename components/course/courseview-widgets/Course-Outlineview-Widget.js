@@ -1,37 +1,32 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import { Row, Col, Steps, Timeline, Collapse } from "antd";
+import { Row, Col, Steps, Timeline, Collapse, Empty } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import Loader from "../../../components/theme-layout/loader/loader";
+
 import Link from "next/link";
 const { Step } = Steps;
 const { Panel } = Collapse;
-const CourseOutlineviewWidget = ({ course_details }) => {
-  /* var [courseId, setCourseId] = useState(course_id);
-  const homeUrl = process.env.homeUrl;
-  const { courseAllList } = useCourseList();
-  const [course, setCourse] = useState("");
-  const [modal2Visible, setModal2Visible] = useState("");
-  var courseData = ""; */
-  const { relatedCourse, description, courseInstructor } = course_details;
-  //console.log(course_details);
+const CourseOutlineviewWidget = ({ course_outline }) => {
   const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  /* useEffect(() => {
-    setFullDetails("shown");
-  }, [current]); */
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const onChange = (current) => {
     //console.log("onChange:", current);
     setCurrent(current);
   };
 
-
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
         <Col xs={24}>
           <Timeline>
-            <Timeline.Item color="orange">
+            {OutlinePanels(course_outline,loading)}
+            {/* <Timeline.Item color="orange">
               <Collapse
                 accordion
                 expandIconPosition="right"
@@ -78,7 +73,7 @@ const CourseOutlineviewWidget = ({ course_details }) => {
                   {Description()}
                 </Panel>
               </Collapse>
-            </Timeline.Item>
+            </Timeline.Item> */}
           </Timeline>
         </Col>
       </Row>
@@ -101,34 +96,45 @@ const CourseOutlineviewWidget = ({ course_details }) => {
           background-color: #ff8c00;
           width: 15px;
           height: 15px;
-          top:-2px;
+          top: -2px;
         }
         .Course-OutlineView .ant-timeline-item-tail {
           left: 6px;
         }
-        .Course-OutlineView .ant-collapse-header{
-          font-weight:500;
+        .Course-OutlineView .ant-collapse-header {
+          font-weight: 500;
         }
-        .Course-OutlineView .ant-timeline{padding-top:1rem;}
+        .Course-OutlineView .ant-timeline {
+          padding-top: 1rem;
+        }
       `}</style>
     </div>
   );
 };
 
-const Description = () => {
-  return (
-    <div>
-      <div className="summary">
-        A dog is a type of domesticated animal. Known for its loyalty and
-        faithfulness, it can be found as a welcome guest in many households
-        across the world.
-      </div>
-      <div className={`fullDetails fullDetails-shown`}>
-        Full Details A dog is a type of domesticated animal. Known for its
-        loyalty and faithfulness, it can be found as a welcome guest in many
-        households across the world.
-      </div>
-    </div>
+const OutlinePanels = (courseoutline, loading) => {
+  return courseoutline.length ? (
+    courseoutline.map((outline, index) => (
+      <Timeline.Item color="orange" key={index}>
+        <Collapse
+          defaultActiveKey={outline.id}
+          accordion
+          expandIconPosition="right"
+          ghost
+          expandIcon={({ isActive }) => (
+            <CaretDownOutlined rotate={isActive ? 180 : 0} />
+          )}
+        >
+          <Panel header={outline.title} key={outline.id}>
+            {outline.description}
+          </Panel>
+        </Collapse>
+      </Timeline.Item>
+    ))
+  ) : (
+    <Loader loading={loading}>
+      <Empty />
+    </Loader>
   );
 };
 
