@@ -4,6 +4,8 @@ import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
 import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+
 import {
   Layout,
   Row,
@@ -22,6 +24,7 @@ import {
   Cascader,
   Collapse,
   Typography,
+  Upload,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -33,6 +36,7 @@ import {
   CloudDownloadOutlined,
   PlusOutlined,
   MinusCircleOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
 import CourseWidgetCategory from "./course-general-widgets/CourseWidgetCategory";
@@ -88,6 +92,9 @@ const framerEffect = {
     },
   },
 };
+
+const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
 
 // reset form fields when modal is form, closed
 const useResetFormOnCloseModal = ({ form, visible }) => {
@@ -161,7 +168,10 @@ const ModalForm = ({
 
 const CourseAdd = () => {
   const router = useRouter();
-
+  const [featuredMedia, setFeatureMedia] = useState({
+    image: [""],
+    video: [""],
+  });
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
@@ -186,10 +196,11 @@ const CourseAdd = () => {
     });
   };
 
+
   const onFormFinishProcess = (name, { values, forms }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
-   
+
     if (name === "picklistlevel") {
       basicForm.setFieldsValue({
         picklistlevel: [...picklistFields, values],
@@ -204,11 +215,13 @@ const CourseAdd = () => {
       basicForm.setFieldsValue({
         picklisttype: [...picklistFields, values],
       });
+      console.log(values)
     }
     if (name === "picklistrelatedcourses") {
       basicForm.setFieldsValue({
         picklistrelatedcourses: [...picklistFields, values],
       });
+      console.log(values)
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -229,7 +242,8 @@ const CourseAdd = () => {
       basicForm.setFieldsValue({
         picklistfeaturedimage: [values],
       });
-      //console.log(values);
+      setFeatureMedia({ image: values.name });
+      //console.log("AddCourse fileList ",values.name.fileList);
     }
     if (name === "picklistfeaturedvideo") {
       basicForm.setFieldsValue({
@@ -262,7 +276,51 @@ const CourseAdd = () => {
       modalFormName: "",
       modalBodyContent: "",
     });
-    router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
+    var data = new FormData();
+    data.append('title', values.title);
+    data.append('description', encodeURI(decodeURI(values.description)));
+    data.append('durationTime', values.durationTime);
+    data.append('durationType', values.durationType);
+    data.append('passingGrade', values.passingGrade);    
+    data.append('capacity', values.capacity);    
+    values.picklistcategory.map((category, index) => {
+      data.append(`courseCategory[${index}][categoryId]`, category.name);
+    })
+    values.picklistlevel.map((level, index) => {
+      data.append(`courseLevel[${index}][levelId]`, level.name);
+    })
+    values.picklistrelatedcourses.map((relatedcourses, index) => {
+      data.append(`relatedCourse[${index}][relatedCourseId]`, relatedcourses.name);
+    })
+    //console.log( JSON.stringify(values.picklistcategory))
+    data = JSON.stringify(data);
+
+    var config = {
+      method: "post",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+    /* const response =  axios(config);
+      if (response) {
+        
+        console.log("response data: ",response.data);
+      } else {
+        console.log("Error data: ",response.data);
+      } */
+
+    //router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
   };
 
   const validateMessages = {
@@ -323,7 +381,7 @@ const CourseAdd = () => {
               >
                 <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
                   <Form.Item
-                    name="coursetitle"
+                    name="title"
                     label="Course Title"
                     rules={[
                       {
@@ -336,12 +394,12 @@ const CourseAdd = () => {
 
                   <Form.Item
                     label="Course Description"
-                    name="coursedescription"
-                    rules={[
+                    name="description"
+                    /* rules={[
                       {
                         required: true,
                       },
-                    ]}
+                    ]} */
                   >
                     <TextArea
                       rows={10}
@@ -349,7 +407,7 @@ const CourseAdd = () => {
                       allowClear
                       /* onChange={onChange} */
                     />
-                  </Form.Item>
+                  </Form.Item>                  
                 </Col>
               </Row>
             </Col>
@@ -455,7 +513,6 @@ const CourseAdd = () => {
                         }
                         showModal={showModal}
                       />
-                      
                     </Panel>
                     <Panel
                       header="PASSING GRADE"

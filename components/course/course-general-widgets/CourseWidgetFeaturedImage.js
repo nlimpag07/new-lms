@@ -10,15 +10,20 @@ import {
   Form,
   Collapse,
   Button,
+  Upload,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   PlusOutlined,
   MinusCircleOutlined,
   VideoCameraOutlined,
+  UploadOutlined,
+  InboxOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 /**TextArea declaration */
 const { TextArea } = Input;
+const { Dragger } = Upload;
 /*formlabels used for modal */
 const widgetFieldLabels = {
   catname: "Picklist - Featured Media",
@@ -42,104 +47,114 @@ const CourseWidgetFeaturedImage = (props) => {
 
           if (thisPicklist.length) {
             return (
-              
-                <Form.List name={widgetFieldLabels.catFormName}>
-                  {(fields, { add, remove }) => {
-                    return (
-                      <Input.Group compact style={{ textAlign: "center",marginBottom: "15px", }}>
-                        {fields.map((field, index) => {
-                          field = {
-                            ...field,
-                            value: thisPicklist[index].name,
-                          };
-                          return (
-                            <Form.Item
-                              required={false}
-                              key={`${widgetFieldLabels.catFormName}-${field.key}`}
-                              style={{
-                                width: "calc(70% - 8px)",
-                                margin:"0"
-                              }}
-                            >
-                              <Form.Item noStyle key={field.key}>
-                                <Input
-                                  placeholder={widgetFieldLabels.catValueLabel}
-                                  size="medium"
-                                  key={field.key}
-                                  value={field.value}
-                                  readOnly
-                                />
-                              </Form.Item>
-                              
-                            </Form.Item>
-                          );
-                        })}
-                        <Form.Item style={{ marginBottom: "0" }}>
-                          <Button
-                            size="medium"
-                            onClick={() =>
-                              showModal(
-                                widgetFieldLabels.catname,
-                                widgetFieldLabels.catFormName,
-                                modalFormBody
-                              )
-                            }
+              <Form.List name={widgetFieldLabels.catFormName}>
+                {(fields, { add, remove }) => {
+                  return (
+                    <Input.Group
+                      compact
+                      style={{ textAlign: "center", marginBottom: "15px" }}
+                    >
+                      {fields.map((field, index) => {
+                        field = {
+                          ...field,
+                          value: thisPicklist[index].name.file.name,
+                        };
+                        return (
+                          <Form.Item
+                            required={false}
+                            key={`${widgetFieldLabels.catFormName}-${field.key}`}
+                            style={{
+                              width: "calc(70% - 8px)",
+                              margin: "0",
+                            }}
                           >
-                            <VideoCameraOutlined /> Upload
-                          </Button>
-                        </Form.Item>
-                      </Input.Group>
-                    );
-                  }}
-                </Form.List>
+                            <Form.Item noStyle key={field.key}>
+                              <Input
+                                placeholder={widgetFieldLabels.catValueLabel}
+                                size="medium"
+                                key={field.key}
+                                value={field.value}
+                                readOnly
+                              />
+                              <Input
+                                type="file"
+                                placeholder={widgetFieldLabels.catValueLabel}
+                                size="medium"
+                                key={`0-${field.key}`}
+                                hidden
+                              />
+                            </Form.Item>
+                          </Form.Item>
+                        );
+                      })}
+                      <Form.Item style={{ marginBottom: "0" }}>
+                        <Button
+                          size="medium"
+                          onClick={() =>
+                            showModal(
+                              widgetFieldLabels.catname,
+                              widgetFieldLabels.catFormName,
+                              modalFormBody
+                            )
+                          }
+                        >
+                          <VideoCameraOutlined /> Upload
+                        </Button>
+                      </Form.Item>
+                    </Input.Group>
+                  );
+                }}
+              </Form.List>
             );
           } else {
             return (
-              
-                <Form.List name={widgetFieldLabels.catFormName}>
-                  {(fields, { add, remove }) => {
-                    return (
-                      <Input.Group compact style={{ textAlign: "center",marginBottom: "15px", }}>
-                        
-                            <Form.Item
-                              required={false}
-                              key={`${widgetFieldLabels.catFormName}-0`}
-                              style={{
-                                width: "calc(70% - 8px)",
-                                margin: "0",
-                              }}
-                            >
-                              <Form.Item noStyle key={`${widgetFieldLabels.catFormName}-01`}>
-                                <Input
-                                  placeholder={widgetFieldLabels.catValueLabel}
-                                  size="medium"
-                                  key={`${widgetFieldLabels.catFormName}-02`}
-                                  value=""
-                                  readOnly
-                                />
-                              </Form.Item>
-                              
-                            </Form.Item>
-                         
-                        <Form.Item style={{ marginBottom: "0" }}>
-                          <Button
+              <Form.List name={widgetFieldLabels.catFormName}>
+                {(fields, { add, remove }) => {
+                  return (
+                    <Input.Group
+                      compact
+                      style={{ textAlign: "center", marginBottom: "15px" }}
+                    >
+                      <Form.Item
+                        required={false}
+                        key={`${widgetFieldLabels.catFormName}-0`}
+                        style={{
+                          width: "calc(70% - 8px)",
+                          margin: "0",
+                        }}
+                      >
+                        <Form.Item
+                          noStyle
+                          key={`${widgetFieldLabels.catFormName}-01`}
+                        >
+                          <Input
+                            placeholder={widgetFieldLabels.catValueLabel}
                             size="medium"
-                            onClick={() =>
-                              showModal(
-                                widgetFieldLabels.catname,
-                                widgetFieldLabels.catFormName,
-                                modalFormBody
-                              )
-                            }
-                          >
-                            <VideoCameraOutlined /> Upload
-                          </Button>
+                            key={`${widgetFieldLabels.catFormName}-02`}
+                            value=""
+                            readOnly
+                          />
                         </Form.Item>
-                      </Input.Group>
-                    );
-                  }}
-                </Form.List>
-              
+                      </Form.Item>
+
+                      <Form.Item style={{ marginBottom: "0" }}>
+                        <Button
+                          size="medium"
+                          onClick={() =>
+                            showModal(
+                              widgetFieldLabels.catname,
+                              widgetFieldLabels.catFormName,
+                              modalFormBody
+                            )
+                          }
+                        >
+                          <VideoCameraOutlined /> Upload
+                        </Button>
+                      </Form.Item>
+                    </Input.Group>
+                  );
+                }}
+              </Form.List>
             );
           }
         }}
@@ -149,17 +164,88 @@ const CourseWidgetFeaturedImage = (props) => {
   );
 };
 const modalFormBody = () => {
+  const [fileList, seFileList] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  const handleChange = (info) => {
+    setLoading(true);
+    console.log("set Loading to True");
+    
+    let fileList = [...info.fileList];
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    fileList = fileList.slice(-1);
+    console.log(fileList);
+    seFileList(info);
+    console.log(fileList);
+    if (Array.isArray(fileList) && fileList.length) {
+      getBase64(fileList[0].originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+        setLoading(false);
+      });
+    } else {
+      seFileList("");
+      setImageUrl("");
+      setLoading(false);
+    }
+    console.log("DONE EXECUTION");
+  };
+  const onRemove = (info) => {
+    seFileList("");
+    setImageUrl("");
+    setLoading(false);
+  };
+  const beforeUpload = () => {
+    console.log("Before Upload fired");
+
+    setLoading(true);
+    return false;
+  };
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : 
+      <div className="ant-upload-text">
+        <p className="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p className="ant-upload-text">
+          Click or drag file to this area to upload
+        </p>
+        <p className="ant-upload-hint">
+          Support for a single or bulk upload. Strictly prohibit from uploading
+          company data or other band files
+        </p>
+      </div>
+      }
+    </div>
+  );
   return (
-    <Form.Item
-      name="name"
-      label="Featured Image"
-      rules={[
-        {
-          required: true,
-        },
-      ]}
-    >
-      <Input />
+    <Form.Item name="name">
+      <Dragger
+        onChange={handleChange}
+        multiple={false}
+        beforeUpload={beforeUpload}
+        fileList={fileList.fileList}
+        onRemove={onRemove}
+      >
+        {imageUrl ? (
+          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+        ) : (
+          uploadButton
+        )}
+      </Dragger>
+      {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
+        <Button>
+          <UploadOutlined /> Upload
+        </Button>
+      </Upload> */}
+      {/* <Input type="file" onChange={handleChange} /> */}
     </Form.Item>
   );
 };

@@ -1,9 +1,20 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
-import { Row, Modal, Card, Input, InputNumber, Form, Collapse } from "antd";
+import {
+  Row,
+  Modal,
+  Card,
+  Input,
+  InputNumber,
+  Form,
+  Collapse,
+  Table,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { useCourseList } from "../../../providers/CourseProvider";
+
 /**TextArea declaration */
 const { TextArea } = Input;
 /*formlabels used for modal */
@@ -14,6 +25,7 @@ const widgetFieldLabels = {
 
 const CourseWidgetRelatedCourses = (props) => {
   const { shouldUpdate, showModal } = props;
+  const { courseAllList, setCourseAllList } = useCourseList();
 
   return (
     <>
@@ -27,6 +39,7 @@ const CourseWidgetRelatedCourses = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
+            //console.log(thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
@@ -89,7 +102,7 @@ const CourseWidgetRelatedCourses = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              modalFormBody
+              () => modalFormBody(courseAllList)
             )
           }
         />
@@ -99,19 +112,83 @@ const CourseWidgetRelatedCourses = (props) => {
     </>
   );
 };
-const modalFormBody = () => {
+const modalFormBody = (courseAllList) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState([""]);
+  const [fileList, seFileList] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [form] = Form.useForm("picklistrelatedcourses");
+  //const { id, title, code } = courseAllList;
+  console.log(form);
+  const columns = [
+    {
+      title: "Course",
+      dataIndex: "name",
+    },
+    {
+      title: "Pre-requisite",
+      dataIndex: "isPreRequisite",
+    },
+  ];
+  const data = [];
+  courseAllList.map((courses, index) => {
+    data.push({
+      key: courses.id,
+      name: courses.title,
+      isPreRequisite: courses.id,
+    });
+  });
+  var formRef = React.createRef();
+  //console.log(data);
+  const onSelectChange = (selectedRowKeys) => {
+    setSelectedRowKeys(selectedRowKeys);   
+  };
+  console.log("selectedRowKeys changed: ", selectedRowKeys);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  
   return (
     <>
       <Form.Item
-        name="name"
-        label="Related Courses"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
+        shouldUpdate={(prevValues, currentValues) =>
+          prevValues.name !== currentValues.name
+        }
       >
-        <Input />
+        {({ getFieldValue }) => {
+          console.log(getFieldValue);
+          return getFieldValue("name") ? (
+            <Form.Item
+              name="name"
+              label="Customize Gender"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input value={selectedRowKeys} />
+            </Form.Item>
+          ) : (
+            <Form.Item
+              name="name"
+              label="Customize Gender"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          );
+        }}
+        <Table
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={data}
+        />
       </Form.Item>
     </>
   );

@@ -1,11 +1,13 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
-import { Row, Modal, Card, Input, InputNumber, Form, Collapse } from "antd";
+import { Row, Modal, Card, Input, InputNumber, Form, Collapse, Select } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 /**TextArea declaration */
 const { TextArea } = Input;
+const { Option } = Select;
+
 /*formlabels used for modal */
 const widgetFieldLabels = {
   catname: "Picklist - Passing Grade",
@@ -17,95 +19,39 @@ const CourseWidgetPassingGrade = (props) => {
 
   return (
     <>
-      <Form.Item
-        label={widgetFieldLabels.catname}
-        noStyle
-        allowClear
-        shouldUpdate={shouldUpdate}
-      >
-        {({ getFieldValue }) => {
-          var thisPicklist =
-            getFieldValue(widgetFieldLabels.catValueLabel) || [];
-          if (thisPicklist.length) {
-            return (
-              <Form.List name={widgetFieldLabels.catValueLabel}>
-                {(fields, { add, remove }) => {
-                  return (
-                    <Row className="" gutter={[4, 8]}>
-                      {fields.map((field, index) => {
-                        field = {
-                          ...field,
-                          value: thisPicklist[index].name,
-                        };
-                        return (
-                          <Form.Item
-                            required={false}
-                            key={field.key}
-                            gutter={[16, 16]}
-                          >
-                            <Form.Item noStyle key={field.key}>
-                              <Input
-                                placeholder={widgetFieldLabels.catname}
-                                style={{ width: "85%" }}
-                                key={field.key}
-                                value={field.value}
-                                readOnly
-                              />
-                            </Form.Item>
-                            {fields.length >= 1 ? (
-                              <MinusCircleOutlined
-                                className="dynamic-delete-button"
-                                style={{ margin: "0 8px" }}
-                                key={`del-${field.key}`}
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            ) : null}
-                          </Form.Item>
-                        );
-                      })}
-                    </Row>
-                  );
-                }}
-              </Form.List>
-            );
-          } else {
-            return <></>;
-          }
-        }}
+      <Form.Item style={{ marginBottom: 0 }} className="course-PassingGrade-panel">
+        <Form.Item
+          name="passingGrade"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Passing Grade" size="medium">
+              <Option value="75">75</Option>
+              <Option value="80">80</Option>
+              <Option value="85">85</Option>
+              <Option value="90">90</Option>
+              <Option value="95">95</Option>
+              <Option value="100">100</Option>
+            </Select>            
+        </Form.Item>
+        <Form.Item>
+          <div style={{ margin: '0 8px',display:'block' }}>%</div>            
+        </Form.Item>
+        
       </Form.Item>
-      <span>
-        <PlusOutlined
-          onClick={() =>
-            showModal(
-              widgetFieldLabels.catname,
-              widgetFieldLabels.catValueLabel,
-              modalFormBody
-            )
-          }
-        />
-      </span>
 
-      <style jsx global>{``}</style>
+      <style jsx global>{`
+        .course-PassingGrade-panel .ant-form-item{
+          display: inline-block;
+          width:30%;
+          margin:15px 8px;
+        }
+        .course-PassingGrade-panel .ant-select-selector{
+          font-weight:normal !important;
+          text-transform:Capitalize !important;
+        }
+      `}</style>
     </>
   );
 };
-const modalFormBody = () => {
-  return (
-    <>
-      <Form.Item
-        name="name"
-        label="Passing Grade"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-    </>
-  );
-};
+
 export default CourseWidgetPassingGrade;
