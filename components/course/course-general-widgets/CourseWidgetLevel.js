@@ -34,7 +34,7 @@ const CourseWidgetLevel = (props) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
                       {fields.map((field, index) => {
-                        //console.log(users[index].name);
+                        console.log(field);
                         field = {
                           ...field,
                           value: users[index].name,
@@ -119,6 +119,17 @@ const modalFormBody = () => {
       <Form.Item
         name="name"
         label="Level"
+        rules={[
+          {
+            required: true,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="last"
+        label="Last"
         rules={[
           {
             required: true,

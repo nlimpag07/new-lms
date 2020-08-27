@@ -39,18 +39,21 @@ const CourseWidgetRelatedCourses = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
-            //console.log(thisPicklist);
+            console.log('received picklist value: ', thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
                       {fields.map((field, index) => {
+                        
                         field = {
                           ...field,
-                          value: thisPicklist[index].name,
+                          value: thisPicklist[index].course_title,
                         };
+                        //console.log('Individual Fields:', field)
                         return (
+                          <div key={field.key}>
                           <Form.Item
                             required={false}
                             key={field.key}
@@ -84,6 +87,7 @@ const CourseWidgetRelatedCourses = (props) => {
                               />
                             ) : null}
                           </Form.Item>
+                          </div>
                         );
                       })}
                     </Row>
@@ -102,7 +106,8 @@ const CourseWidgetRelatedCourses = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(courseAllList)
+              () =>
+                modalFormBody(courseAllList, widgetFieldLabels.catValueLabel)
             )
           }
         />
@@ -112,85 +117,133 @@ const CourseWidgetRelatedCourses = (props) => {
     </>
   );
 };
-const modalFormBody = (courseAllList) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([""]);
+const modalFormBody = (courseAllList, formname) => {
+  const [chosenKeys, setChosenKeys] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+
   const [fileList, seFileList] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [form] = Form.useForm("picklistrelatedcourses");
   //const { id, title, code } = courseAllList;
-  console.log(form);
+  const [form] = Form.useForm();
   const columns = [
     {
       title: "Course",
-      dataIndex: "name",
+      dataIndex: "title",
     },
     {
       title: "Pre-requisite",
-      dataIndex: "isPreRequisite",
+      dataIndex: "isreq",
     },
   ];
   const data = [];
   courseAllList.map((courses, index) => {
     data.push({
-      key: courses.id,
-      name: courses.title,
-      isPreRequisite: courses.id,
+      key: index,
+      inputkey: courses.id,
+      title: courses.title,
+      isreq: courses.id,
     });
   });
-  var formRef = React.createRef();
+
   //console.log(data);
-  const onSelectChange = (selectedRowKeys) => {
-    setSelectedRowKeys(selectedRowKeys);   
-  };
-  console.log("selectedRowKeys changed: ", selectedRowKeys);
-  const rowSelection = {
+  /* const onSelectChange = (selectedRowKeys,selectedRows) => {
+    setSelectedRowKeys(selectedRowKeys);
+    console.log(selectedRows)
+  }; */
+  //console.log("selectedRowKeys changed: ", selectedRowKeys);
+  /* const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+  }; */
+  useEffect(() => {
+    if(!chosenKeys.length){
+    var initialrows = []; 
+    setSelectedRows(initialrows);
+    }
+  }, [chosenKeys]);
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setChosenKeys(selectedRowKeys);
+      setSelectedRows(selectedRows);      
+    },
+    /* onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
+    }, */
   };
-  
   return (
-    <>
-      <Form.Item
-        shouldUpdate={(prevValues, currentValues) =>
-          prevValues.name !== currentValues.name
-        }
-      >
-        {({ getFieldValue }) => {
-          console.log(getFieldValue);
-          return getFieldValue("name") ? (
-            <Form.Item
-              name="name"
-              label="Customize Gender"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input value={selectedRowKeys} />
-            </Form.Item>
-          ) : (
-            <Form.Item
-              name="name"
-              label="Customize Gender"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          );
-        }}
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={data}
-        />
-      </Form.Item>
-    </>
+    <Form.List name="relatedcourses">
+      {(fields, { add, remove }) => {
+        //console.log(chosenRows);
+       /*  console.log("================================")
+      console.log('chosenRows: ', selectedRows);
+      console.log("================================") */
+        return (
+          <div>
+            {selectedRows.map((field, index) => {
+              field = {
+                ...field,
+                name: index,
+              };
+              //console.log(field);
+              return (
+                <div key={index}>
+                  <Form.Item
+                    name={[field.name, "course_id"]}
+                    initialValue={field.inputkey}
+                    key={`course_id-${field.key}`}
+                    hidden
+                  ><Input placeholder="Course ID" value={field.inputkey} /></Form.Item>
+                  <Form.Item
+                    name={[field.name, "course_title"]}
+                    initialValue={field.title}
+                    key={`course-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="Course Title" value={field.title} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isreq"]}
+                    initialValue={field.isreq}
+                    key={`isprerequesite-${index}`}
+                    hidden
+                  >
+                    <Input placeholder="Course Requisite" value={field.isreq} />
+                  </Form.Item>
+
+                  {/* <MinusCircleOutlined
+                  onClick={() => {
+                    remove(field.name);
+                  }}
+                /> */}
+                </div>
+              );
+            })}
+
+            <Table
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+            />
+
+            {/* <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    onValueChange('Dummy')
+                    add();
+                  }}
+                  block
+                >
+                  <PlusOutlined /> Add field
+                </Button>
+              </Form.Item> */}
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };
 export default CourseWidgetRelatedCourses;

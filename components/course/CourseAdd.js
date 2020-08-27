@@ -196,7 +196,6 @@ const CourseAdd = () => {
     });
   };
 
-
   const onFormFinishProcess = (name, { values, forms }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
@@ -205,6 +204,7 @@ const CourseAdd = () => {
       basicForm.setFieldsValue({
         picklistlevel: [...picklistFields, values],
       });
+      console.log(values);
     }
     if (name === "picklistcategory") {
       basicForm.setFieldsValue({
@@ -215,13 +215,22 @@ const CourseAdd = () => {
       basicForm.setFieldsValue({
         picklisttype: [...picklistFields, values],
       });
-      console.log(values)
+      console.log(values);
     }
     if (name === "picklistrelatedcourses") {
+      //var theValueList = picklistFields;
+       var value = values.relatedcourses.map((related, index) => (
+         related
+         ))
+      /* console.log('Sent From modalForm', [value]);
+      console.log('=======================');
+      console.log('old value', theValueList);
+      console.log('======================='); */
       basicForm.setFieldsValue({
-        picklistrelatedcourses: [...picklistFields, values],
+        picklistrelatedcourses: [...picklistFields, ...value],
       });
-      console.log(values)
+      /* console.log('combined value', [...picklistFields, ...value]);
+      console.log('======================='); */
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -277,21 +286,24 @@ const CourseAdd = () => {
       modalBodyContent: "",
     });
     var data = new FormData();
-    data.append('title', values.title);
-    data.append('description', encodeURI(decodeURI(values.description)));
-    data.append('durationTime', values.durationTime);
-    data.append('durationType', values.durationType);
-    data.append('passingGrade', values.passingGrade);    
-    data.append('capacity', values.capacity);    
+    data.append("title", values.title);
+    data.append("description", encodeURI(decodeURI(values.description)));
+    data.append("durationTime", values.durationTime);
+    data.append("durationType", values.durationType);
+    data.append("passingGrade", values.passingGrade);
+    data.append("capacity", values.capacity);
     values.picklistcategory.map((category, index) => {
       data.append(`courseCategory[${index}][categoryId]`, category.name);
-    })
+    });
     values.picklistlevel.map((level, index) => {
       data.append(`courseLevel[${index}][levelId]`, level.name);
-    })
+    });
     values.picklistrelatedcourses.map((relatedcourses, index) => {
-      data.append(`relatedCourse[${index}][relatedCourseId]`, relatedcourses.name);
-    })
+      data.append(
+        `relatedCourse[${index}][relatedCourseId]`,
+        relatedcourses.name
+      );
+    });
     //console.log( JSON.stringify(values.picklistcategory))
     data = JSON.stringify(data);
 
@@ -407,7 +419,7 @@ const CourseAdd = () => {
                       allowClear
                       /* onChange={onChange} */
                     />
-                  </Form.Item>                  
+                  </Form.Item>
                 </Col>
               </Row>
             </Col>
