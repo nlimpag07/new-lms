@@ -139,6 +139,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
+        form.resetFields();
       },
     };
     width = 750;
@@ -172,6 +173,12 @@ const CourseAdd = () => {
     image: [""],
     video: [""],
   });
+  const [defaultWidgetValues, setdefaultWidgetValues] = useState({
+    relatedcourses: [],
+  });
+  useEffect(() => {
+    setdefaultWidgetValues(defaultWidgetValues);
+  }, [defaultWidgetValues]);
   var [courseActionModal, setCourseActionModal] = useState({
     StateModal: false,
     modalTitle: "",
@@ -219,15 +226,24 @@ const CourseAdd = () => {
     }
     if (name === "picklistrelatedcourses") {
       //var theValueList = picklistFields;
-       var value = values.relatedcourses.map((related, index) => (
-         related
-         ))
-      /* console.log('Sent From modalForm', [value]);
-      console.log('=======================');
-      console.log('old value', theValueList);
-      console.log('======================='); */
+
+      var value = values.relatedcourses
+        ? values.relatedcourses.map((related, index) => related)
+        : "";
+      console.log("Sent From modalForm", value);
+      console.log("=======================");
+      console.log("=======================");
+      console.log("old value", [...picklistFields]);
+      console.log("=======================");
+      var pickField = [...picklistFields, ...value];
+      var thepickField = [...new Set([...pickField])];
+      console.log("combined value", pickField);
+
       basicForm.setFieldsValue({
-        picklistrelatedcourses: [...picklistFields, ...value],
+        picklistrelatedcourses: [...value],
+      });
+      setdefaultWidgetValues({
+        relatedcourses: [ ...value],
       });
       /* console.log('combined value', [...picklistFields, ...value]);
       console.log('======================='); */
@@ -478,6 +494,8 @@ const CourseAdd = () => {
                           curValues.picklistrelatedcourses
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel header="DURATION" key="5" className="greyBackground">

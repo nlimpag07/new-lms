@@ -24,8 +24,21 @@ const widgetFieldLabels = {
 };
 
 const CourseWidgetRelatedCourses = (props) => {
-  const { shouldUpdate, showModal } = props;
+  const {
+    shouldUpdate,
+    showModal,
+    defaultWidgetValues,
+    setdefaultWidgetValues,
+  } = props;
   const { courseAllList, setCourseAllList } = useCourseList();
+  const chosenRows = defaultWidgetValues.relatedcourses;
+  //console.log(chosenRows)
+
+  const onRemove = (id) => {
+    console.log("Removing: ", id);
+    let newValues = chosenRows.filter((value) => value.course_id !== id);
+    setdefaultWidgetValues({ relatedcourses: newValues });
+  };
 
   return (
     <>
@@ -39,54 +52,55 @@ const CourseWidgetRelatedCourses = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
-            console.log('received picklist value: ', thisPicklist);
+            //console.log('received picklist value: ', thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
                       {fields.map((field, index) => {
-                        
                         field = {
                           ...field,
                           value: thisPicklist[index].course_title,
+                          course_id: thisPicklist[index].course_id,
                         };
                         //console.log('Individual Fields:', field)
                         return (
                           <div key={field.key}>
-                          <Form.Item
-                            required={false}
-                            key={field.key}
-                            gutter={[16, 16]}
-                          >
                             <Form.Item
-                              noStyle
+                              required={false}
                               key={field.key}
-                              rules={[
-                                {
-                                  required: true,
-                                },
-                              ]}
+                              gutter={[16, 16]}
                             >
-                              <Input
-                                placeholder={widgetFieldLabels.catname}
-                                style={{ width: "85%" }}
+                              <Form.Item
+                                noStyle
                                 key={field.key}
-                                value={field.value}
-                                readOnly
-                              />
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={widgetFieldLabels.catname}
+                                  style={{ width: "85%" }}
+                                  key={field.key}
+                                  value={field.value}
+                                  readOnly
+                                />
+                              </Form.Item>
+                              {fields.length >= 1 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  style={{ margin: "0 8px" }}
+                                  key={`del-${field.key}`}
+                                  onClick={() => {
+                                    remove(field.name);
+                                    onRemove(field.course_id);
+                                  }}
+                                />
+                              ) : null}
                             </Form.Item>
-                            {fields.length >= 1 ? (
-                              <MinusCircleOutlined
-                                className="dynamic-delete-button"
-                                style={{ margin: "0 8px" }}
-                                key={`del-${field.key}`}
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            ) : null}
-                          </Form.Item>
                           </div>
                         );
                       })}
@@ -106,8 +120,7 @@ const CourseWidgetRelatedCourses = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () =>
-                modalFormBody(courseAllList, widgetFieldLabels.catValueLabel)
+              () => modalFormBody(courseAllList, chosenRows)
             )
           }
         />
@@ -117,10 +130,19 @@ const CourseWidgetRelatedCourses = (props) => {
     </>
   );
 };
-const modalFormBody = (courseAllList, formname) => {
-  const [chosenKeys, setChosenKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
+const modalFormBody = (courseAllList, chosenRows) => {
+  const data = [];
+  courseAllList.map((courses, index) => {
+    data.push({
+      key: index,
+      inputkey: courses.id,
+      title: courses.title,
+      isreq: courses.id,
+    });
+  });
 
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [fileList, seFileList] = useState("");
   const [loading, setLoading] = useState(false);
   //const { id, title, code } = courseAllList;
@@ -135,51 +157,40 @@ const modalFormBody = (courseAllList, formname) => {
       dataIndex: "isreq",
     },
   ];
-  const data = [];
-  courseAllList.map((courses, index) => {
-    data.push({
-      key: index,
-      inputkey: courses.id,
-      title: courses.title,
-      isreq: courses.id,
-    });
-  });
 
-  //console.log(data);
-  /* const onSelectChange = (selectedRowKeys,selectedRows) => {
+  const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    console.log(selectedRows)
-  }; */
-  //console.log("selectedRowKeys changed: ", selectedRowKeys);
-  /* const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }; */
-  useEffect(() => {
-    if(!chosenKeys.length){
-    var initialrows = []; 
-    setSelectedRows(initialrows);
-    }
-  }, [chosenKeys]);
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setChosenKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);      
-    },
-    /* onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      console.log(selected, selectedRows, changeRows);
-    }, */
+    setSelectedRows(selectedRows);
+    console.log(selectedRowKeys)
   };
+  const rowSelection = {
+    selectedRowKeys,
+    selectedRows,
+    onChange: onSelectChange,
+  };
+  useEffect(() => {
+    //console.log(chosenRows);
+    if (chosenRows.length) {
+      //selectedRowKeys: data.filter(item => item.chosen).map(item => item.key), // Ch
+      let thekeys = []
+      chosenRows.map((chosen, index) => {
+        let theItem = data.filter((item) => {
+          if (item.inputkey == chosen.course_id) {
+            //console.log(item.key);
+            thekeys.push(item.key)
+            //setSelectedRowKeys(item.key);
+          }
+        });
+      });
+      //console.log(thekeys)
+      setSelectedRowKeys(thekeys);
+
+    }
+    
+  }, []);
   return (
     <Form.List name="relatedcourses">
       {(fields, { add, remove }) => {
-        //console.log(chosenRows);
-       /*  console.log("================================")
-      console.log('chosenRows: ', selectedRows);
-      console.log("================================") */
         return (
           <div>
             {selectedRows.map((field, index) => {
@@ -187,15 +198,16 @@ const modalFormBody = (courseAllList, formname) => {
                 ...field,
                 name: index,
               };
-              //console.log(field);
-              return (
+              return field ? (
                 <div key={index}>
                   <Form.Item
                     name={[field.name, "course_id"]}
                     initialValue={field.inputkey}
                     key={`course_id-${field.key}`}
                     hidden
-                  ><Input placeholder="Course ID" value={field.inputkey} /></Form.Item>
+                  >
+                    <Input placeholder="Course ID" value={field.inputkey} />
+                  </Form.Item>
                   <Form.Item
                     name={[field.name, "course_title"]}
                     initialValue={field.title}
@@ -212,13 +224,9 @@ const modalFormBody = (courseAllList, formname) => {
                   >
                     <Input placeholder="Course Requisite" value={field.isreq} />
                   </Form.Item>
-
-                  {/* <MinusCircleOutlined
-                  onClick={() => {
-                    remove(field.name);
-                  }}
-                /> */}
                 </div>
+              ) : (
+                <div>Hello</div>
               );
             })}
 
@@ -227,19 +235,6 @@ const modalFormBody = (courseAllList, formname) => {
               columns={columns}
               dataSource={data}
             />
-
-            {/* <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => {
-                    onValueChange('Dummy')
-                    add();
-                  }}
-                  block
-                >
-                  <PlusOutlined /> Add field
-                </Button>
-              </Form.Item> */}
           </div>
         );
       }}
