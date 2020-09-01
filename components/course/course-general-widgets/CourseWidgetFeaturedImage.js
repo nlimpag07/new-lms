@@ -44,7 +44,7 @@ const CourseWidgetFeaturedImage = (props) => {
       >
         {({ getFieldValue }) => {
           var thisPicklist = getFieldValue(widgetFieldLabels.catFormName) || [];
-
+          //console.log(thisPicklist)
           if (thisPicklist.length) {
             return (
               <Form.List name={widgetFieldLabels.catFormName}>
@@ -175,15 +175,11 @@ const modalFormBody = () => {
   }
   const handleChange = (info) => {
     setLoading(true);
-    console.log("set Loading to True");
-    
+    //console.log("set Loading to True");
+
     let fileList = [...info.fileList];
-    // 1. Limit the number of uploaded files
-    // Only to show two recent uploaded files, and old ones will be replaced by the new
     fileList = fileList.slice(-1);
-    console.log(fileList);
     seFileList(info);
-    console.log(fileList);
     if (Array.isArray(fileList) && fileList.length) {
       getBase64(fileList[0].originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
@@ -194,7 +190,6 @@ const modalFormBody = () => {
       setImageUrl("");
       setLoading(false);
     }
-    console.log("DONE EXECUTION");
   };
   const onRemove = (info) => {
     seFileList("");
@@ -202,27 +197,27 @@ const modalFormBody = () => {
     setLoading(false);
   };
   const beforeUpload = () => {
-    console.log("Before Upload fired");
-
     setLoading(true);
     return false;
   };
   const uploadButton = (
     <div>
-      {loading ? <LoadingOutlined /> : 
-      <div className="ant-upload-text">
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibit from uploading
-          company data or other band files
-        </p>
-      </div>
-      }
+      {loading ? (
+        <LoadingOutlined />
+      ) : (
+        <div className="ant-upload-text">
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibit from
+            uploading company data or other band files
+          </p>
+        </div>
+      )}
     </div>
   );
   return (

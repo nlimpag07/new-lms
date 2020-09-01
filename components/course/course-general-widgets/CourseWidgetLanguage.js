@@ -1,9 +1,27 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
-import { Row, Modal, Card, Input, InputNumber, Form, Collapse } from "antd";
+import {
+  Row,
+  Modal,
+  Card,
+  Input,
+  InputNumber,
+  Form,
+  Collapse,
+  Table,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { useCourseList } from "../../../providers/CourseProvider";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
+
 /**TextArea declaration */
 const { TextArea } = Input;
 /*formlabels used for modal */
@@ -13,7 +31,44 @@ const widgetFieldLabels = {
 };
 
 const CourseWidgetLanguage = (props) => {
-  const { shouldUpdate, showModal } = props;
+  const {
+    shouldUpdate,
+    showModal,
+    defaultWidgetValues,
+    setdefaultWidgetValues,
+  } = props;
+  const [allCourseLanguage, setAllCourseLanguage] = useState();
+  const chosenRows = defaultWidgetValues.courselanguage;
+  //console.log(chosenRows)
+  useEffect(() => {
+    var data = JSON.stringify({});
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/picklist/language",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        setAllCourseLanguage(response.data);
+        //console.log(response.data)
+      } else {
+        console.log(
+          "Network Error: Please contact your administrator to fix this issue."
+        );
+      }
+    }
+    fetchData(config);
+  }, []);
+
+  const onRemove = (id) => {
+    let newValues = chosenRows.filter((value) => value.id !== id);
+    setdefaultWidgetValues({ ...defaultWidgetValues, courselanguage: newValues });
+  };
 
   return (
     <>
@@ -27,6 +82,7 @@ const CourseWidgetLanguage = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
+            //console.log('received picklist value: ', thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
@@ -35,34 +91,47 @@ const CourseWidgetLanguage = (props) => {
                       {fields.map((field, index) => {
                         field = {
                           ...field,
-                          value: thisPicklist[index].name,
+                          value: thisPicklist[index].title,
+                          id: thisPicklist[index].id,
                         };
+                        //console.log('Individual Fields:', field)
                         return (
-                          <Form.Item
-                            required={false}
-                            key={field.key}
-                            gutter={[16, 16]}
-                          >
-                            <Form.Item noStyle key={field.key}>
-                              <Input
-                                placeholder={widgetFieldLabels.catname}
-                                style={{ width: "85%" }}
+                          <div key={field.key}>
+                            <Form.Item
+                              required={false}
+                              key={field.key}
+                              gutter={[16, 16]}
+                            >
+                              <Form.Item
+                                noStyle
                                 key={field.key}
-                                value={field.value}
-                                readOnly
-                              />
+                                rules={[
+                                  {
+                                    required: true,
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={widgetFieldLabels.catname}
+                                  style={{ width: "85%" }}
+                                  key={field.key}
+                                  value={field.value}
+                                  readOnly
+                                />
+                              </Form.Item>
+                              {fields.length >= 1 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  style={{ margin: "0 8px" }}
+                                  key={`del-${field.key}`}
+                                  onClick={() => {
+                                    remove(field.name);
+                                    onRemove(field.id);
+                                  }}
+                                />
+                              ) : null}
                             </Form.Item>
-                            {fields.length >= 1 ? (
-                              <MinusCircleOutlined
-                                className="dynamic-delete-button"
-                                style={{ margin: "0 8px" }}
-                                key={`del-${field.key}`}
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            ) : null}
-                          </Form.Item>
+                          </div>
                         );
                       })}
                     </Row>
@@ -81,7 +150,7 @@ const CourseWidgetLanguage = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              modalFormBody
+              () => modalFormBody(allCourseLanguage, chosenRows)
             )
           }
         />
@@ -91,21 +160,106 @@ const CourseWidgetLanguage = (props) => {
     </>
   );
 };
-const modalFormBody = () => {
+const modalFormBody = (allCourseLanguage, chosenRows) => {
+  const data = [];
+  allCourseLanguage.map((language, index) => {
+    data.push({
+      key: index,
+      id: language.id,
+      title: language.name,
+    });
+  });
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [fileList, seFileList] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+  const columns = [
+    {
+      title: "Language",
+      dataIndex: "title",
+    },
+    /*  {
+      title: "Pre-requisite",
+      dataIndex: "isreq",
+    }, */
+  ];
+
+  const onSelectChange = (selectedRowKeys, selectedRows) => {
+    setSelectedRowKeys(selectedRowKeys);
+    setSelectedRows(selectedRows);
+    //console.log(selectedRows);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    selectedRows,
+    onChange: onSelectChange,
+  };
+  useEffect(() => {
+    if (chosenRows.length) {
+      let defaultKeys = [];
+      let defaultRows = [];
+      chosenRows.map((chosen, index) => {
+        data.filter((item) => {
+          if (item.id == chosen.id) {
+            defaultRows.push(item);
+            defaultKeys.push(item.key);
+          }
+        });
+      });
+      //console.log(thekeys)
+      setSelectedRowKeys(defaultKeys);
+      setSelectedRows(defaultRows);
+    }
+  }, []);
   return (
-    <>
-      <Form.Item
-        name="name"
-        label="Language"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-    </>
+    <Form.List name="courselanguage">
+      {(fields, { add, remove }) => {
+        return (
+          <div>
+            {selectedRows.map((field, index) => {
+              field = {
+                ...field,
+                name: index,
+              };
+              return field ? (
+                <div key={index}>
+                  <Form.Item
+                    name={[field.name, "id"]}
+                    initialValue={field.id}
+                    key={`language_id-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="Course Language ID" value={field.id} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "title"]}
+                    initialValue={field.title}
+                    key={`language-${field.key}`}
+                    hidden
+                  >
+                    <Input
+                      placeholder="Course Language Title"
+                      value={field.title}
+                    />
+                  </Form.Item>
+                </div>
+              ) : (
+                <div>Data Empty</div>
+              );
+            })}
+
+            <Table
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+            />
+          </div>
+        );
+      }}
+    </Form.List>
   );
 };
 export default CourseWidgetLanguage;
+

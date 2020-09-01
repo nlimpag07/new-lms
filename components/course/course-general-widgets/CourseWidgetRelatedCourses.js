@@ -35,9 +35,12 @@ const CourseWidgetRelatedCourses = (props) => {
   //console.log(chosenRows)
 
   const onRemove = (id) => {
-    console.log("Removing: ", id);
+    //console.log("Removing: ", id);
     let newValues = chosenRows.filter((value) => value.course_id !== id);
-    setdefaultWidgetValues({ relatedcourses: newValues });
+    setdefaultWidgetValues({
+      ...defaultWidgetValues,
+      relatedcourses: newValues,
+    });
   };
 
   return (
@@ -145,7 +148,6 @@ const modalFormBody = (courseAllList, chosenRows) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [fileList, seFileList] = useState("");
   const [loading, setLoading] = useState(false);
-  //const { id, title, code } = courseAllList;
   const [form] = Form.useForm();
   const columns = [
     {
@@ -158,36 +160,34 @@ const modalFormBody = (courseAllList, chosenRows) => {
     },
   ];
 
+  useEffect(() => {
+    if (chosenRows.length) {
+      let defaultKeys = [];
+      let defaultRows = [];
+      chosenRows.map((chosen, index) => {
+        data.filter((item) => {
+          if (item.inputkey == chosen.course_id) {
+            defaultRows.push(item);
+            defaultKeys.push(item.key);
+          }
+        });
+      });
+      //console.log(thekeys)
+      setSelectedRowKeys(defaultKeys);
+      setSelectedRows(defaultRows);
+    }
+  }, []);
+
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
-    console.log(selectedRowKeys)
   };
   const rowSelection = {
     selectedRowKeys,
     selectedRows,
     onChange: onSelectChange,
   };
-  useEffect(() => {
-    //console.log(chosenRows);
-    if (chosenRows.length) {
-      //selectedRowKeys: data.filter(item => item.chosen).map(item => item.key), // Ch
-      let thekeys = []
-      chosenRows.map((chosen, index) => {
-        let theItem = data.filter((item) => {
-          if (item.inputkey == chosen.course_id) {
-            //console.log(item.key);
-            thekeys.push(item.key)
-            //setSelectedRowKeys(item.key);
-          }
-        });
-      });
-      //console.log(thekeys)
-      setSelectedRowKeys(thekeys);
 
-    }
-    
-  }, []);
   return (
     <Form.List name="relatedcourses">
       {(fields, { add, remove }) => {

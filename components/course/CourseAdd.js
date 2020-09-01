@@ -139,7 +139,13 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        form.resetFields();
+        modalFormName === "picklistrelatedcourses" && form.resetFields();
+        modalFormName === "picklistlevel" && form.resetFields();
+        modalFormName === "picklistcategory" && form.resetFields();
+        modalFormName === "picklisttype" && form.resetFields();
+        modalFormName === "picklistlanguage" && form.resetFields();
+        modalFormName === "picklisttags" && form.resetFields();
+        //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
       },
     };
     width = 750;
@@ -175,6 +181,13 @@ const CourseAdd = () => {
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     relatedcourses: [],
+    courselevel: [],
+    coursecategory: [],
+    coursetype: [],
+    courselanguage: [],
+    coursetag: [],
+    featuredimage: [],
+    featuredvideo: [],
   });
   useEffect(() => {
     setdefaultWidgetValues(defaultWidgetValues);
@@ -208,42 +221,51 @@ const CourseAdd = () => {
     const picklistFields = basicForm.getFieldValue(name) || [];
 
     if (name === "picklistlevel") {
+      var value = values.courselevel
+        ? values.courselevel.map((level, index) => level)
+        : "";
       basicForm.setFieldsValue({
-        picklistlevel: [...picklistFields, values],
+        picklistlevel: [...value],
       });
-      console.log(values);
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        courselevel: [...value],
+      });
     }
     if (name === "picklistcategory") {
+      var value = values.coursecategory
+        ? values.coursecategory.map((level, index) => level)
+        : "";
       basicForm.setFieldsValue({
-        picklistcategory: [...picklistFields, values],
+        picklistcategory: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursecategory: [...value],
       });
     }
     if (name === "picklisttype") {
+      var value = values.coursetype
+        ? values.coursetype.map((level, index) => level)
+        : "";
       basicForm.setFieldsValue({
-        picklisttype: [...picklistFields, values],
+        picklisttype: [...value],
       });
-      console.log(values);
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursetype: [...value],
+      });
     }
     if (name === "picklistrelatedcourses") {
-      //var theValueList = picklistFields;
-
       var value = values.relatedcourses
         ? values.relatedcourses.map((related, index) => related)
         : "";
-      console.log("Sent From modalForm", value);
-      console.log("=======================");
-      console.log("=======================");
-      console.log("old value", [...picklistFields]);
-      console.log("=======================");
-      var pickField = [...picklistFields, ...value];
-      var thepickField = [...new Set([...pickField])];
-      console.log("combined value", pickField);
-
       basicForm.setFieldsValue({
         picklistrelatedcourses: [...value],
       });
       setdefaultWidgetValues({
-        relatedcourses: [ ...value],
+        ...defaultWidgetValues,
+        relatedcourses: [...value],
       });
       /* console.log('combined value', [...picklistFields, ...value]);
       console.log('======================='); */
@@ -253,26 +275,48 @@ const CourseAdd = () => {
         picklistduration: [...picklistFields, values],
       });
     }
-    if (name === "picklistlanguage") {
+    if (name === "picklistlanguage") {      
+      var value = values.courselanguage
+        ? values.courselanguage.map((level, index) => level)
+        : "";
       basicForm.setFieldsValue({
-        picklistlanguage: [...picklistFields, values],
+        picklistlanguage: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        courselanguage: [...value],
       });
     }
-    if (name === "picklisttags") {
+    if (name === "picklisttags") {     
+      var value = values.coursetag
+        ? values.coursetag.map((level, index) => level)
+        : "";
       basicForm.setFieldsValue({
-        picklisttags: [...picklistFields, values],
+        picklisttags: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursetag: [...value],
       });
     }
     if (name === "picklistfeaturedimage") {
       basicForm.setFieldsValue({
         picklistfeaturedimage: [values],
       });
-      setFeatureMedia({ image: values.name });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        featuredimage: values.name,
+      });
+      //setFeatureMedia({ image: values.name });
       //console.log("AddCourse fileList ",values.name.fileList);
     }
     if (name === "picklistfeaturedvideo") {
       basicForm.setFieldsValue({
         picklistfeaturedvideo: [values],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        featuredvideo: values.name,
       });
       //console.log(values);
     }
@@ -464,6 +508,8 @@ const CourseAdd = () => {
                           prevValues.picklistlevel !== curValues.picklistlevel
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel header="CATEGORY" key="2" className="greyBackground">
@@ -473,6 +519,8 @@ const CourseAdd = () => {
                           curValues.picklistcategory
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel header="TYPE" key="3" className="greyBackground">
@@ -481,6 +529,8 @@ const CourseAdd = () => {
                           prevValues.picklisttype !== curValues.picklisttype
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel
@@ -514,6 +564,8 @@ const CourseAdd = () => {
                           curValues.picklistlanguage
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel header="TAGS" key="7" className="greyBackground">
@@ -522,6 +574,8 @@ const CourseAdd = () => {
                           prevValues.picklisttags !== curValues.picklisttags
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel
