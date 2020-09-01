@@ -460,12 +460,12 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                     href={`/${linkUrl}/[course]/[...manage]`}
                     as={`/${linkUrl}/course/view/${course.id}`}
                   >
-                    <a>{course.title}</a>
+                    <a>{decodeURI(course.title)}</a>
                   </Link>
                 }
                 description={
                   <div>
-                    <div>{course.description}</div>
+                    <div>{decodeURI(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

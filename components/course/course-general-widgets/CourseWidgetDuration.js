@@ -20,8 +20,7 @@ const CourseWidgetDuration = (props) => {
     <>
       <Form.Item style={{ marginBottom: 0 }} className="course-duration-panel">
         <Form.Item
-          name="durationTime"
-          rules={[{ required: true }]}
+          name="durationTime"         
         >
           <Select placeholder="Duration Time" size="medium">
               <Option value="1">1</Option>
@@ -36,7 +35,6 @@ const CourseWidgetDuration = (props) => {
         </Form.Item>
         <Form.Item
           name="durationType"
-          rules={[{ required: true }]}
         >
           <Select placeholder="Duration Type" size="medium">
               <Option value="Minutes">Minutes</Option>

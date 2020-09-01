@@ -25,6 +25,7 @@ import {
   Collapse,
   Typography,
   Upload,
+  Spin,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -134,7 +135,7 @@ const ModalForm = ({
   if (title == "Save") {
     adProps = { okButtonProps: onFinish };
     modalBodyContent = <p>Are you sure you are going to save?</p>;
-    width = 450;
+    width = 750;
   } else {
     adProps = {
       onOk: () => {
@@ -175,9 +176,11 @@ const ModalForm = ({
 
 const CourseAdd = () => {
   const router = useRouter();
-  const [featuredMedia, setFeatureMedia] = useState({
-    image: [""],
-    video: [""],
+  const [spinner, setSpinner] = useState(false);
+  const [dataProcessModal, setDataProcessModal] = useState({
+    isvisible: false,
+    title: "",
+    content: "",
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     relatedcourses: [],
@@ -275,7 +278,7 @@ const CourseAdd = () => {
         picklistduration: [...picklistFields, values],
       });
     }
-    if (name === "picklistlanguage") {      
+    if (name === "picklistlanguage") {
       var value = values.courselanguage
         ? values.courselanguage.map((level, index) => level)
         : "";
@@ -287,7 +290,7 @@ const CourseAdd = () => {
         courselanguage: [...value],
       });
     }
-    if (name === "picklisttags") {     
+    if (name === "picklisttags") {
       var value = values.coursetag
         ? values.coursetag.map((level, index) => level)
         : "";
@@ -301,7 +304,7 @@ const CourseAdd = () => {
     }
     if (name === "picklistfeaturedimage") {
       basicForm.setFieldsValue({
-        picklistfeaturedimage: [values],
+        picklistfeaturedimage: [values.name],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
@@ -312,7 +315,7 @@ const CourseAdd = () => {
     }
     if (name === "picklistfeaturedvideo") {
       basicForm.setFieldsValue({
-        picklistfeaturedvideo: [values],
+        picklistfeaturedvideo: [values.name],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
@@ -337,54 +340,195 @@ const CourseAdd = () => {
       modalBodyContent: "",
     });
   };
+
   const onFinish = (values) => {
-    console.log("Finish:", values);
     setCourseActionModal({
       StateModal: false,
       modalTitle: "",
       modalFormName: "",
       modalBodyContent: "",
     });
+    setSpinner(true);
+
+    console.log("Finish:", values);
+
+    const params = [
+      "title",
+      "description",
+      "durationTime",
+      "durationType",
+      "passingGrade",
+      "capacity",
+      "picklistcategory",
+      "picklistlevel",
+      "picklistrelatedcourses",
+      "picklistlanguage",
+      "picklisttags",
+      "picklisttype",
+      "picklistfeaturedimage",
+      "picklistfeaturedvideo",
+    ];
+    /* console.log(Object.values(params).sort());
+    console.log("========================"); */
+    /* console.log(Object.keys(values).sort());
+    var allTrue = [];
+    Object.values(params)
+      .sort()
+      .forEach((param) => {
+        let paramFound = Object.keys(values).includes(param);
+        allTrue.push(paramFound);
+      }); */
+
     var data = new FormData();
-    data.append("title", values.title);
-    data.append("description", encodeURI(decodeURI(values.description)));
+    var errorList = [];
+    //NLI: Extended Form Values Processing & Filtration
+    !!values.title
+      ? data.append("title", values.title)
+      : errorList.push("Missing Course Title");
+    !!values.description
+      ? data.append("description", encodeURI(decodeURI(values.description)))
+      : errorList.push("Missing Course Description");
+    !!values.durationTime
+      ? data.append("durationTime", values.durationTime)
+      : errorList.push("Missing Course Duration Time");
+    !!values.durationType
+      ? data.append("durationType", values.durationType)
+      : errorList.push("Missing Course Duration Type");
+    !!values.passingGrade
+      ? data.append("passingGrade", values.passingGrade)
+      : errorList.push("Missing Course Passing Grade");
+    !!values.capacity
+      ? data.append("capacity", values.capacity)
+      : errorList.push("Missing Course Capacity");
+    !!values.picklistlevel
+      ? values.picklistlevel.map((level, index) => {
+          data.append(`courseLevel[${index}][levelId]`, level.id);
+        })
+      : errorList.push("Missing Course Level");
+    !!values.picklistcategory
+      ? values.picklistcategory.map((category, index) => {
+          data.append(`courseCategory[${index}][categoryId]`, category.id);
+        })
+      : errorList.push("Missing Course Category");
+    !!values.picklistrelatedcourses
+      ? values.picklistrelatedcourses.map((relatedcourse, index) => {
+          data.append(
+            `relatedCourse[${index}][relatedCourseId]`,
+            relatedcourse.course_id
+          );
+          data.append(
+            `relatedCourse[${index}][isPrerequisite]`,
+            relatedcourse.isreq
+          );
+        })
+      : errorList.push("Add Related Course");
+    !!values.picklistlanguage
+      ? values.picklistlanguage.map((language, index) => {
+          data.append(`courseLanguage[${index}][languageId]`, language.id);
+        })
+      : errorList.push("Missing Course Language");
+    !!values.picklisttags
+      ? values.picklisttags.map((tag, index) => {
+          data.append(`courseTag[${index}][tagId]`, tag.id);
+        })
+      : errorList.push("Missing Course Tag");
+    !!values.picklisttype
+      ? values.picklisttype.map((type, index) => {
+          data.append(`courseType[${index}][courseTypeId]`, type.id);
+        })
+      : errorList.push("Missing Course Type");
+    !!values.picklistfeaturedimage
+      ? values.picklistfeaturedimage.map((image, index) => {
+          data.append(`featureImage`, image.fileList[0].originFileObj);
+        })
+      : errorList.push("Missing Course Image");
+    values.picklistfeaturedvideo &&
+      values.picklistfeaturedvideo.map((video, index) => {
+        //console.log(image.fileList[0].originFileObj);
+        data.append(`featureVideo`, video.fileList[0].originFileObj);
+      });
+    /* !!values.picklistfeaturedvideo
+      ? values.picklistfeaturedvideo.map((video, index) => {
+          data.append(`featureVideo`, video.fileList[0].originFileObj);
+        })
+      : errorList.push("Missing Course Video"); */
+
+    /* data.append("description", encodeURI(decodeURI(values.description)));
     data.append("durationTime", values.durationTime);
-    data.append("durationType", values.durationType);
+    data.append("durationType", values.durationType); 
     data.append("passingGrade", values.passingGrade);
     data.append("capacity", values.capacity);
-    values.picklistcategory.map((category, index) => {
-      data.append(`courseCategory[${index}][categoryId]`, category.name);
-    });
-    values.picklistlevel.map((level, index) => {
-      data.append(`courseLevel[${index}][levelId]`, level.name);
-    });
-    values.picklistrelatedcourses.map((relatedcourses, index) => {
-      data.append(
-        `relatedCourse[${index}][relatedCourseId]`,
-        relatedcourses.name
-      );
-    });
-    //console.log( JSON.stringify(values.picklistcategory))
-    data = JSON.stringify(data);
-
-    var config = {
-      method: "post",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then((res) => {
-        console.log("res", res);
-      })
-      .catch((err) => {
-        console.log("err", err);
+    values.picklistcategory &&
+      values.picklistcategory.map((category, index) => {
+        data.append(`courseCategory[${index}][categoryId]`, category.id);
       });
-    /* const response =  axios(config);
+    values.picklistlevel &&
+      values.picklistlevel.map((level, index) => {
+        data.append(`courseLevel[${index}][levelId]`, level.id);
+      });
+    values.picklistrelatedcourses &&
+      values.picklistrelatedcourses.map((relatedcourse, index) => {
+        data.append(
+          `relatedCourse[${index}][relatedCourseId]`,
+          relatedcourse.course_id
+        );
+        data.append(
+          `relatedCourse[${index}][isPrerequisite]`,
+          relatedcourse.isreq
+        );
+      });
+    values.picklistlanguage &&
+      values.picklistlanguage.map((language, index) => {
+        data.append(`courseLanguage[${index}][languageId]`, language.id);
+      });
+    values.picklisttags &&
+      values.picklisttags.map((tag, index) => {
+        data.append(`courseTag[${index}][tagId]`, tag.id);
+      });
+    values.picklisttype &&
+      values.picklisttype.map((type, index) => {
+        data.append(`courseType[${index}][courseTypeId]`, type.id);
+      });
+    values.picklistfeaturedimage &&
+      values.picklistfeaturedimage.map((image, index) => {
+        //console.log(image.fileList[0].originFileObj);
+        data.append(`featureImage`, image.fileList[0].originFileObj);
+      });
+    values.picklistfeaturedvideo &&
+      values.picklistfeaturedvideo.map((video, index) => {
+        //console.log(image.fileList[0].originFileObj);
+        data.append(`featureVideo`, video.fileList[0].originFileObj);
+      });*/
+    //console.log( JSON.stringify(values.picklistcategory))
+    //data = JSON.stringify(data);
+    if (errorList.length) {
+      console.log("ERRORS: ", errorList);
+      onFinishModal(errorList);
+    } else {
+      //console.log("NO ERROR, PROCEED WITH SUBMISSION");
+
+      var config = {
+        method: "post",
+        url: apiBaseUrl + "/courses",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log("res: ", res.data);
+          onFinishModal("", res.data.message);
+        })
+        .catch((err) => {
+          console.log("err: ", err.response.data);
+          errorList.push(err.response.data.message);
+          onFinishModal(errorList, "");
+        });
+
+      /* const response =  axios(config);
       if (response) {
         
         console.log("response data: ",response.data);
@@ -392,9 +536,48 @@ const CourseAdd = () => {
         console.log("Error data: ",response.data);
       } */
 
-    //router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
+      //router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
+    }
   };
 
+  const onFinishModal = (errorList, courseDetails) => {
+    setSpinner(false);
+    var modalWidth = 750;
+    var theBody='';
+    if (errorList) {
+      theBody = (
+        <div>
+          <p>The following error(s) has been generated:</p>
+          <ul>
+            {errorList.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      );
+      //errorList.map((error, index) => level);
+      Modal.error({
+        title: "Submission Failed",
+        content: theBody,
+        centered: true,
+        width: modalWidth,
+      });
+    } else {
+      //Success submission
+      theBody = (
+        <div>
+          <p>{courseDetails}</p>          
+        </div>
+      );
+      //errorList.map((error, index) => level);
+      Modal.success({
+        title: "Submission Success",
+        content: theBody,
+        centered: true,
+        width: modalWidth,
+      });
+    }
+  };
   const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -644,7 +827,12 @@ const CourseAdd = () => {
                 htmlType: "submit",
               }}
             />
-
+            <Spin
+              size="large"
+              tip="Processing..."
+              spinning={spinner}
+              delay={100}
+            ></Spin>
             <RadialUI
               listMenu={menulists}
               position="bottom-right"
@@ -682,6 +870,17 @@ const CourseAdd = () => {
               }
               .course-management .ant-form-item-label {
                 display: none;
+              }
+              .courses-class .ant-spin-spinning {
+                position: fixed;
+                display: block;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #ffffff9e;
+                z-index: 3;
+                padding: 23% 0;
               }
             `}</style>
           </Row>

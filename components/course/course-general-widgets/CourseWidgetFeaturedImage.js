@@ -57,7 +57,7 @@ const CourseWidgetFeaturedImage = (props) => {
                       {fields.map((field, index) => {
                         field = {
                           ...field,
-                          value: thisPicklist[index].name.file.name,
+                          value: thisPicklist[index].file.name,
                         };
                         return (
                           <Form.Item
