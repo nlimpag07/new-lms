@@ -24,8 +24,8 @@ const CourseManagementMenu = (props) => {
   if (q.manage[0] == "edit" && q.manage.length === 2) {
     selectedKey = "general";
   }
-  if (q.manage[0] == "edit" && q.manage.length === 3) {
-    /* aspath.endsWith("course-outline")
+  /*if (q.manage[0] == "edit" && q.manage.length === 3) {
+     aspath.endsWith("course-outline")
       ? (selectedKey = "course-outline")
       : aspath.endsWith("learning-outcomes")
       ? (selectedKey = "learning-outcomes")
@@ -37,14 +37,13 @@ const CourseManagementMenu = (props) => {
       ? (selectedKey = "competencies")
       : aspath.endsWith("evaluations")
       ? (selectedKey = "evaluations")
-      :''; */
-  }
+      : ""; 
+  }*/
   if (aspath.endsWith("course-outline")) {
-    console.log("course-outline");
+    //console.log("course-outline");
     selectedKey = "course-outline";
-  }
-  if (aspath.endsWith("learning-outcomes")) {
-    console.log("learning-outcomes");
+  } else if (aspath.endsWith("learning-outcomes")) {
+    //console.log("learning-outcomes");
     selectedKey = "learning-outcomes";
   } else if (aspath.endsWith("assessments")) {
     selectedKey = "assessments";
@@ -76,10 +75,7 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
         {/* <span onClick={() => setGoback(true)}>Back</span> */}
-        <Link
-          href={`/${linkUrl}/[course]`}
-          as={`/${linkUrl}/course`}
-        >
+        <Link href={`/${linkUrl}/[course]`} as={`/${linkUrl}/course`}>
           <a>Back to Courses</a>
         </Link>
       </Menu.Item>
@@ -91,10 +87,7 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
         {/* <span onClick={() => setGoback(true)}>Back</span> */}
-        <Link
-          href={`/${linkUrl}/[course]`}
-          as={`/${linkUrl}/course`}
-        >
+        <Link href={`/${linkUrl}/[course]`} as={`/${linkUrl}/course`}>
           <a>Back to Courses</a>
         </Link>
       </Menu.Item>
@@ -113,15 +106,12 @@ const CmMenuView = (q, selectedKey, setGoback) => {
     </Menu>
   ) : (
     <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
-     <Menu.Item
+      <Menu.Item
         key={`/${linkUrl}/[course]`}
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
         {/* <span onClick={() => setGoback(true)}>Back</span> */}
-        <Link
-          href={`/${linkUrl}/[course]`}
-          as={`/${linkUrl}/course`}
-        >
+        <Link href={`/${linkUrl}/[course]`} as={`/${linkUrl}/course`}>
           <a>Back to Courses</a>
         </Link>
       </Menu.Item>

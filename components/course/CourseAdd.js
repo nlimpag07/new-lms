@@ -28,7 +28,6 @@ import {
   Spin,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -70,7 +69,7 @@ const menulists = [
 ];
 /**Panel used by collapsible accordion */
 const { Panel } = Collapse;
-
+const { Option } = Select;
 const framerEffect = {
   visible: {
     opacity: 1,
@@ -96,6 +95,7 @@ const framerEffect = {
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 // reset form fields when modal is form, closed
 const useResetFormOnCloseModal = ({ form, visible }) => {
@@ -191,6 +191,9 @@ const CourseAdd = () => {
     coursetag: [],
     featuredimage: [],
     featuredvideo: [],
+    duration: [],
+    passinggrade: [],
+    capacity: [],
   });
   useEffect(() => {
     setdefaultWidgetValues(defaultWidgetValues);
@@ -352,33 +355,6 @@ const CourseAdd = () => {
 
     console.log("Finish:", values);
 
-    const params = [
-      "title",
-      "description",
-      "durationTime",
-      "durationType",
-      "passingGrade",
-      "capacity",
-      "picklistcategory",
-      "picklistlevel",
-      "picklistrelatedcourses",
-      "picklistlanguage",
-      "picklisttags",
-      "picklisttype",
-      "picklistfeaturedimage",
-      "picklistfeaturedvideo",
-    ];
-    /* console.log(Object.values(params).sort());
-    console.log("========================"); */
-    /* console.log(Object.keys(values).sort());
-    var allTrue = [];
-    Object.values(params)
-      .sort()
-      .forEach((param) => {
-        let paramFound = Object.keys(values).includes(param);
-        allTrue.push(paramFound);
-      }); */
-
     var data = new FormData();
     var errorList = [];
     //NLI: Extended Form Values Processing & Filtration
@@ -414,14 +390,14 @@ const CourseAdd = () => {
       ? values.picklistrelatedcourses.map((relatedcourse, index) => {
           data.append(
             `relatedCourse[${index}][relatedCourseId]`,
-            relatedcourse.course_id
+            relatedcourse.id
           );
           data.append(
             `relatedCourse[${index}][isPrerequisite]`,
             relatedcourse.isreq
           );
         })
-      : errorList.push("Add Related Course");
+      : errorList.push("Missing Related Course");
     !!values.picklistlanguage
       ? values.picklistlanguage.map((language, index) => {
           data.append(`courseLanguage[${index}][languageId]`, language.id);
@@ -453,60 +429,12 @@ const CourseAdd = () => {
         })
       : errorList.push("Missing Course Video"); */
 
-    /* data.append("description", encodeURI(decodeURI(values.description)));
-    data.append("durationTime", values.durationTime);
-    data.append("durationType", values.durationType); 
-    data.append("passingGrade", values.passingGrade);
-    data.append("capacity", values.capacity);
-    values.picklistcategory &&
-      values.picklistcategory.map((category, index) => {
-        data.append(`courseCategory[${index}][categoryId]`, category.id);
-      });
-    values.picklistlevel &&
-      values.picklistlevel.map((level, index) => {
-        data.append(`courseLevel[${index}][levelId]`, level.id);
-      });
-    values.picklistrelatedcourses &&
-      values.picklistrelatedcourses.map((relatedcourse, index) => {
-        data.append(
-          `relatedCourse[${index}][relatedCourseId]`,
-          relatedcourse.course_id
-        );
-        data.append(
-          `relatedCourse[${index}][isPrerequisite]`,
-          relatedcourse.isreq
-        );
-      });
-    values.picklistlanguage &&
-      values.picklistlanguage.map((language, index) => {
-        data.append(`courseLanguage[${index}][languageId]`, language.id);
-      });
-    values.picklisttags &&
-      values.picklisttags.map((tag, index) => {
-        data.append(`courseTag[${index}][tagId]`, tag.id);
-      });
-    values.picklisttype &&
-      values.picklisttype.map((type, index) => {
-        data.append(`courseType[${index}][courseTypeId]`, type.id);
-      });
-    values.picklistfeaturedimage &&
-      values.picklistfeaturedimage.map((image, index) => {
-        //console.log(image.fileList[0].originFileObj);
-        data.append(`featureImage`, image.fileList[0].originFileObj);
-      });
-    values.picklistfeaturedvideo &&
-      values.picklistfeaturedvideo.map((video, index) => {
-        //console.log(image.fileList[0].originFileObj);
-        data.append(`featureVideo`, video.fileList[0].originFileObj);
-      });*/
-    //console.log( JSON.stringify(values.picklistcategory))
     //data = JSON.stringify(data);
     if (errorList.length) {
       console.log("ERRORS: ", errorList);
       onFinishModal(errorList);
     } else {
       //console.log("NO ERROR, PROCEED WITH SUBMISSION");
-
       var config = {
         method: "post",
         url: apiBaseUrl + "/courses",
@@ -520,30 +448,20 @@ const CourseAdd = () => {
       axios(config)
         .then((res) => {
           console.log("res: ", res.data);
-          onFinishModal("", res.data.message);
+          onFinishModal("", res.data);
         })
         .catch((err) => {
-          console.log("err: ", err.response.data);
+          //console.log("err: ", err.response.data);
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "");
         });
-
-      /* const response =  axios(config);
-      if (response) {
-        
-        console.log("response data: ",response.data);
-      } else {
-        console.log("Error data: ",response.data);
-      } */
-
-      //router.push("/instructor/[course]/[...manage]","/instructor/course/edit/1")
     }
   };
 
-  const onFinishModal = (errorList, courseDetails) => {
+  const onFinishModal = (errorList, response) => {
     setSpinner(false);
     var modalWidth = 750;
-    var theBody='';
+    var theBody = "";
     if (errorList) {
       theBody = (
         <div>
@@ -566,15 +484,23 @@ const CourseAdd = () => {
       //Success submission
       theBody = (
         <div>
-          <p>{courseDetails}</p>          
+          <p>{response.message}</p>
         </div>
       );
       //errorList.map((error, index) => level);
       Modal.success({
-        title: "Submission Success",
+        title: "Course has been successfully created",
         content: theBody,
         centered: true,
         width: modalWidth,
+        onOk: () => {
+          console.log("response before redirection:", response);
+          visible: false;
+          router.push(
+            `/${linkUrl}/[course]/[...manage]`,
+            `/${linkUrl}/course/edit/${response.id}/course-outline`
+          );
+        },
       });
     }
   };
@@ -647,15 +573,7 @@ const CourseAdd = () => {
                     <Input placeholder="Course title" allowClear />
                   </Form.Item>
 
-                  <Form.Item
-                    label="Course Description"
-                    name="description"
-                    /* rules={[
-                      {
-                        required: true,
-                      },
-                    ]} */
-                  >
+                  <Form.Item label="Course Description" name="description">
                     <TextArea
                       rows={10}
                       placeholder="Course Description"
@@ -738,6 +656,8 @@ const CourseAdd = () => {
                           curValues.picklistduration
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel header="LANGUAGE" key="6" className="greyBackground">
@@ -772,6 +692,8 @@ const CourseAdd = () => {
                           curValues.picklistfeaturedimage
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                       <CourseWidgetFeaturedVideo
                         shouldUpdate={(prevValues, curValues) =>
@@ -779,6 +701,8 @@ const CourseAdd = () => {
                           curValues.picklistfeaturedvideo
                         }
                         showModal={showModal}
+                        defaultWidgetValues={defaultWidgetValues}
+                        setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
                     <Panel
@@ -890,9 +814,8 @@ const CourseAdd = () => {
   );
 };
 
-const { Option } = Select;
-function onChange(value) {
+/* function onChange(value) {
   console.log(`selected ${value}`);
-}
+} */
 
 export default CourseAdd;

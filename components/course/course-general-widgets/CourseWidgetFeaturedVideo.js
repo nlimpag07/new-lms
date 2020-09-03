@@ -32,7 +32,13 @@ const widgetFieldLabels = {
 };
 
 const CourseWidgetFeaturedVideo = (props) => {
-  const { shouldUpdate, showModal } = props;
+  const {
+    shouldUpdate,
+    showModal,
+    defaultWidgetValues,
+    setdefaultWidgetValues,
+  } = props;
+  var featured_video = defaultWidgetValues.featuredvideo?defaultWidgetValues.featuredvideo:'';
 
   return (
     <>
@@ -131,7 +137,7 @@ const CourseWidgetFeaturedVideo = (props) => {
                             placeholder={widgetFieldLabels.catValueLabel}
                             size="medium"
                             key={`${widgetFieldLabels.catFormName}-02`}
-                            value=""
+                            value={featured_video}
                             readOnly
                           />
                         </Form.Item>
@@ -210,11 +216,10 @@ const modalFormBody = () => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">
-            Click or drag file to this area to upload
+            Click or drag an .MP4 file to this area to upload
           </p>
           <p className="ant-upload-hint">
-            Support for a single or bulk upload. Strictly prohibit from
-            uploading company data or other band files
+            Please upload an .mp4 file or leave it blank.
           </p>
         </div>
       )}
@@ -245,4 +250,3 @@ const modalFormBody = () => {
   );
 };
 export default CourseWidgetFeaturedVideo;
-

@@ -10,6 +10,7 @@ import {
   Form,
   Collapse,
   Table,
+  Switch,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -36,7 +37,7 @@ const CourseWidgetRelatedCourses = (props) => {
 
   const onRemove = (id) => {
     //console.log("Removing: ", id);
-    let newValues = chosenRows.filter((value) => value.course_id !== id);
+    let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
       relatedcourses: newValues,
@@ -61,11 +62,12 @@ const CourseWidgetRelatedCourses = (props) => {
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
-                      {fields.map((field, index) => {
+                      {thisPicklist.map((field, index) => {
                         field = {
                           ...field,
-                          value: thisPicklist[index].course_title,
-                          course_id: thisPicklist[index].course_id,
+                          name: index,
+                          key: index,
+                          value: field.title,
                         };
                         //console.log('Individual Fields:', field)
                         return (
@@ -99,7 +101,7 @@ const CourseWidgetRelatedCourses = (props) => {
                                   key={`del-${field.key}`}
                                   onClick={() => {
                                     remove(field.name);
-                                    onRemove(field.course_id);
+                                    onRemove(field.id);
                                   }}
                                 />
                               ) : null}
@@ -113,7 +115,67 @@ const CourseWidgetRelatedCourses = (props) => {
               </Form.List>
             );
           } else {
-            return <></>;
+            //NLI: EDIT COURSE: ---This is used in edit course
+            //console.log(chosenRows)
+            if (chosenRows) {
+              return (
+                <Form.List name={widgetFieldLabels.catValueLabel}>
+                  {(fields, { add, remove }) => {
+                    return (
+                      <Row className="" gutter={[4, 8]}>
+                        {chosenRows.map((field, index) => {
+                          field = {
+                            ...field,
+                            name: index,
+                            key: index,
+                            value: field.title,
+                          };
+                          //console.log("Individual Fields:", field);
+                          return (
+                            <div key={field.key}>
+                              <Form.Item
+                                required={false}
+                                key={field.key}
+                                gutter={[16, 16]}
+                              >
+                                <Form.Item
+                                  noStyle
+                                  key={field.key}
+                                  rules={[
+                                    {
+                                      required: true,
+                                    },
+                                  ]}
+                                >
+                                  <Input
+                                    placeholder={widgetFieldLabels.catname}
+                                    style={{ width: "85%" }}
+                                    key={field.key}
+                                    value={field.value}
+                                    readOnly
+                                  />
+                                </Form.Item>
+                                {chosenRows.length >= 1 ? (
+                                  <MinusCircleOutlined
+                                    className="dynamic-delete-button"
+                                    style={{ margin: "0 8px" }}
+                                    key={`del-${field.key}`}
+                                    onClick={() => {
+                                      remove(field.name);
+                                      onRemove(field.id);
+                                    }}
+                                  />
+                                ) : null}
+                              </Form.Item>
+                            </div>
+                          );
+                        })}
+                      </Row>
+                    );
+                  }}
+                </Form.List>
+              );
+            }
           }
         }}
       </Form.Item>
@@ -134,14 +196,30 @@ const CourseWidgetRelatedCourses = (props) => {
   );
 };
 const modalFormBody = (courseAllList, chosenRows) => {
-  const data = [];
+  var data = [];
   courseAllList.map((courses, index) => {
-    data.push({
-      key: index,
-      inputkey: courses.id,
-      title: courses.title,
-      isreq: courses.id,
-    });
+    let isreqvalue = 0;
+    if (chosenRows.length) {
+      chosenRows.map((chosen, index) => {        
+        if (courses.id == chosen.id) {
+          isreqvalue = chosen.isreq
+        }
+            
+      });
+      data.push({
+        key: index,
+        id: courses.id,
+        title: courses.title,
+        isreq: isreqvalue,
+      });
+    } else{
+      data.push({
+        key: index,
+        id: courses.id,
+        title: courses.title,
+        isreq: isreqvalue,
+      });
+    }
   });
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -157,27 +235,64 @@ const modalFormBody = (courseAllList, chosenRows) => {
     {
       title: "Pre-requisite",
       dataIndex: "isreq",
+      render: (dataIndex, record, index) => (
+        <Switch
+          onChange={() => onSwitchChange(record, index)}
+          defaultChecked={dataIndex}
+        />
+      ),
     },
   ];
 
   useEffect(() => {
+    //console.log("ChosenRows in Modal: ", chosenRows);
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
       chosenRows.map((chosen, index) => {
         data.filter((item) => {
-          if (item.inputkey == chosen.course_id) {
+          if (item.id == chosen.id) {
             defaultRows.push(item);
             defaultKeys.push(item.key);
           }
         });
       });
-      //console.log(thekeys)
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
     }
   }, []);
+  const onSwitchChange = (record, index) => {
+    //console.log(record);
 
+    /* console.log("isreq value: ",record.isreq)*/
+    /* let isreqValue = record.isreq == 1 ? 0 : 1;
+    //console.log("isreq New value: ",isreqValue)
+    let theRecord = { ...record, isreq: isreqValue };
+    console.log("the new record: ", theRecord); */
+
+    /* let dataRecords = data.map((thedata) => {
+      if (thedata.key == record.key) {
+        thedata.isreq = record.isreq == 1 ? 0 : 1;
+        //console.log("Changed Data: ", thedata);
+      }      
+      return thedata;
+    });
+    data = dataRecords; */
+    //console.log(data)
+
+    //let ddata = [...data,theRecord]
+    //setSelectedRows([theRecord]);
+    //onSelectChange(selectedRowKeys,theRecords);
+
+    let theRecords = selectedRows.map((selectedrow) => {
+      if (selectedrow.key == record.key) {
+        selectedrow.isreq = record.isreq == 1 ? 0 : 1;
+      }
+      return selectedrow;
+    });
+    setSelectedRows([...theRecords]);
+    //onSelectChange(selectedRowKeys,theRecords);
+  };
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
@@ -187,7 +302,9 @@ const modalFormBody = (courseAllList, chosenRows) => {
     selectedRows,
     onChange: onSelectChange,
   };
-
+  /*console.log("Updata Data List: ", data);
+  console.log("=========================");
+  console.log("Selected Rows:", selectedRows);*/
   return (
     <Form.List name="relatedcourses">
       {(fields, { add, remove }) => {
@@ -201,15 +318,15 @@ const modalFormBody = (courseAllList, chosenRows) => {
               return field ? (
                 <div key={index}>
                   <Form.Item
-                    name={[field.name, "course_id"]}
-                    initialValue={field.inputkey}
+                    name={[field.name, "id"]}
+                    initialValue={field.id}
                     key={`course_id-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="Course ID" value={field.inputkey} />
+                    <Input placeholder="Course ID" value={field.id} />
                   </Form.Item>
                   <Form.Item
-                    name={[field.name, "course_title"]}
+                    name={[field.name, "title"]}
                     initialValue={field.title}
                     key={`course-${field.key}`}
                     hidden

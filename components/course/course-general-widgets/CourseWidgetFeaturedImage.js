@@ -20,6 +20,7 @@ import {
   UploadOutlined,
   InboxOutlined,
   LoadingOutlined,
+  FileImageOutlined,
 } from "@ant-design/icons";
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -30,10 +31,16 @@ const widgetFieldLabels = {
   catValueLabel: "Featured Image",
   catFormName: "picklistfeaturedimage",
 };
-
 const CourseWidgetFeaturedImage = (props) => {
-  const { shouldUpdate, showModal } = props;
-
+  const {
+    shouldUpdate,
+    showModal,
+    defaultWidgetValues,
+    setdefaultWidgetValues,
+  } = props;
+  var featured_image = defaultWidgetValues.featuredimage?defaultWidgetValues.featuredimage:'';
+  //console.log(defaultWidgetValues.featuredimage)
+  
   return (
     <>
       <Form.Item
@@ -98,7 +105,7 @@ const CourseWidgetFeaturedImage = (props) => {
                             )
                           }
                         >
-                          <VideoCameraOutlined /> Upload
+                          <FileImageOutlined /> Upload
                         </Button>
                       </Form.Item>
                     </Input.Group>
@@ -131,7 +138,7 @@ const CourseWidgetFeaturedImage = (props) => {
                             placeholder={widgetFieldLabels.catValueLabel}
                             size="medium"
                             key={`${widgetFieldLabels.catFormName}-02`}
-                            value=""
+                            value={featured_image}
                             readOnly
                           />
                         </Form.Item>
@@ -148,7 +155,7 @@ const CourseWidgetFeaturedImage = (props) => {
                             )
                           }
                         >
-                          <VideoCameraOutlined /> Upload
+                          <FileImageOutlined /> Upload
                         </Button>
                       </Form.Item>
                     </Input.Group>
@@ -212,10 +219,7 @@ const modalFormBody = () => {
           <p className="ant-upload-text">
             Click or drag file to this area to upload
           </p>
-          <p className="ant-upload-hint">
-            Support for a single or bulk upload. Strictly prohibit from
-            uploading company data or other band files
-          </p>
+          <p className="ant-upload-hint">Please upload an image file only.</p>
         </div>
       )}
     </div>

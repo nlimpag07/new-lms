@@ -22,7 +22,6 @@ const CourseWidgetCapacity = (props) => {
       <Form.Item style={{ marginBottom: 0 }} className="course-capacity-panel">
         <Form.Item
           name="capacity"
-          rules={[{ required: true }]}
         >
           <Select placeholder="Capacity" size="medium">
               <Option value="75">75</Option>

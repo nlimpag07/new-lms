@@ -88,11 +88,13 @@ const CourseWidgetTags = (props) => {
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
-                      {fields.map((field, index) => {
+                      {thisPicklist.map((field, index) => {
                         field = {
                           ...field,
-                          value: thisPicklist[index].title,
-                          id: thisPicklist[index].id,
+                          name: index,
+                          key: index,
+                          value: field.title,
+                          id: field.id,
                         };
                         //console.log('Individual Fields:', field)
                         return (
@@ -140,7 +142,67 @@ const CourseWidgetTags = (props) => {
               </Form.List>
             );
           } else {
-            return <></>;
+            //NLI: EDIT COURSE: ---This is used in edit course
+            //console.log(chosenRows)
+            if (chosenRows) {
+              return (
+                <Form.List name={widgetFieldLabels.catValueLabel}>
+                  {(fields, { add, remove }) => {
+                    return (
+                      <Row className="" gutter={[4, 8]}>
+                        {chosenRows.map((field, index) => {
+                          field = {
+                            ...field,
+                            name: index,
+                            key: index,
+                            value: field.title,
+                          };
+                          //console.log("Individual Fields:", field);
+                          return (
+                            <div key={field.key}>
+                              <Form.Item
+                                required={false}
+                                key={field.key}
+                                gutter={[16, 16]}
+                              >
+                                <Form.Item
+                                  noStyle
+                                  key={field.key}
+                                  rules={[
+                                    {
+                                      required: true,
+                                    },
+                                  ]}
+                                >
+                                  <Input
+                                    placeholder={widgetFieldLabels.catname}
+                                    style={{ width: "85%" }}
+                                    key={field.key}
+                                    value={field.value}
+                                    readOnly
+                                  />
+                                </Form.Item>
+                                {chosenRows.length >= 1 ? (
+                                  <MinusCircleOutlined
+                                    className="dynamic-delete-button"
+                                    style={{ margin: "0 8px" }}
+                                    key={`del-${field.key}`}
+                                    onClick={() => {
+                                      remove(field.name);
+                                      onRemove(field.id);
+                                    }}
+                                  />
+                                ) : null}
+                              </Form.Item>
+                            </div>
+                          );
+                        })}
+                      </Row>
+                    );
+                  }}
+                </Form.List>
+              );
+            }
           }
         }}
       </Form.Item>

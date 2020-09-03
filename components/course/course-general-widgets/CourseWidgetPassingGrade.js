@@ -22,7 +22,6 @@ const CourseWidgetPassingGrade = (props) => {
       <Form.Item style={{ marginBottom: 0 }} className="course-PassingGrade-panel">
         <Form.Item
           name="passingGrade"
-          rules={[{ required: true }]}
         >
           <Select placeholder="Passing Grade" size="medium">
               <Option value="75">75</Option>

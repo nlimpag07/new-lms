@@ -26,6 +26,9 @@ import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
 import Error from "next/error";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import cookie from "cookie";
+
 
 import {
   EditOutlined,
@@ -36,7 +39,12 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
+/* const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype"); */
+
 const CourseManagement = (props) => {
+  //console.log(props)
   const router = useRouter();
   var urlPath = router.asPath;
   var theContent; //content assignment variable
@@ -94,7 +102,7 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
-    thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
+    thePage[0] == "edit" && (theContent = <CourseEdit course_id={thePage[1]} />); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
@@ -142,7 +150,6 @@ const CourseManagement = (props) => {
   }
 
   //console.log(router.query.manage.length);
-
   //
 
   useEffect(() => {}, []);
@@ -163,5 +170,34 @@ const CourseManagement = (props) => {
     </MainThemeLayout>
   );
 };
+/* CourseManagement.getInitialProps = async (ctx) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = null;
+  var userData;
+  var res;
+  const request = ctx.req;
+  if (request) {
+    request.cookies = cookie.parse(request.headers.cookie || "");
+    token = request.cookies.token;
+    //res = null;
+  } else {
+    userData = JSON.parse(localStorage.getItem("userDetails"));
+    token = userData.token;
+  }
 
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/courses",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const result = await axios(config);
+    res = result.data;
+  const data = res;
+  console.log(data);
+  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
+}; */
 export default withAuth(CourseManagement);

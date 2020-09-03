@@ -118,7 +118,7 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       thePage[2] == "evaluations" &&
       (theContent = "HELLO View Course post-evaluation"); // viewing the course
-    
+
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
       (theContent = "HELLO Edit Course Outline"); // Editing the course
@@ -163,5 +163,4 @@ const CourseManagement = (props) => {
     </MainThemeLayout>
   );
 };
-
 export default withAuth(CourseManagement);
