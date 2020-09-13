@@ -200,11 +200,10 @@ const modalFormBody = (courseAllList, chosenRows) => {
   courseAllList.map((courses, index) => {
     let isreqvalue = 0;
     if (chosenRows.length) {
-      chosenRows.map((chosen, index) => {        
+      chosenRows.map((chosen, index) => {
         if (courses.id == chosen.id) {
-          isreqvalue = chosen.isreq
+          isreqvalue = chosen.isreq;
         }
-            
       });
       data.push({
         key: index,
@@ -212,7 +211,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
         title: courses.title,
         isreq: isreqvalue,
       });
-    } else{
+    } else {
       data.push({
         key: index,
         id: courses.id,
