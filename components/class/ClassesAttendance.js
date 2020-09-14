@@ -283,7 +283,9 @@ const ClassesAttendance = ({ course_id }) => {
 
   useEffect(() => {
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourses.result.filter(
+      (getCourse) => getCourse.id == course_id
+    );
     setCourseDetails(theCourse[0]);
   }, []);
 

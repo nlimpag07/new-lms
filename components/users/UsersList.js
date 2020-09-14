@@ -38,7 +38,7 @@ const list = {
 
 
 const UsersList = ({ userlist }) => {
-  
+  userlist = userlist.result;
   const router = useRouter();
   //console.log(userlist);
 

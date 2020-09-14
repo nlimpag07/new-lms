@@ -211,7 +211,7 @@ const CourseEdit = ({ course_id }) => {
   useEffect(() => {
     //setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourse.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourse.result.filter((getCourse) => getCourse.id == course_id);
     //setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
     if (theCourse.length) {
       console.log("In Course: ", theCourse);

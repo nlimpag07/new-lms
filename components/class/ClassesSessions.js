@@ -103,7 +103,7 @@ const ClassesSessions = ({ course_id }) => {
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourses.result.filter((getCourse) => getCourse.id == course_id);
     setCourseDetails(theCourse[0]);
   }, []);
 
