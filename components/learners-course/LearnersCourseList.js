@@ -454,6 +454,7 @@ const GridType = (
   setCourseDrawerDetails,
   router
 ) => {
+  courses = courses.result;
   //console.log(router);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";

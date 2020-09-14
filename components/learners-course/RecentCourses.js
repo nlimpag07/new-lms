@@ -62,16 +62,16 @@ const RecentCourses = ({ RecentCoursesList }) => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [loading, setLoading] = useState(true);
-  const [myRecentCourses, setMyRecentCourses] = useState(courseAllList);
+  const [myRecentCourses, setMyRecentCourses] = useState('');
   //console.log(RecentCoursesList)
   useEffect(() => {
     if (courseAllList) {
       /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
       setCourseAllList(response.data); */
-      setMyRecentCourses(courseAllList.filter((getCourse) => getCourse.isPublished == 1));
+      setMyRecentCourses(courseAllList.result.filter((getCourse) => getCourse.isPublished == 1));
     } else {
-      const userData = JSON.parse(localStorage.getItem("courseAllList"));
-      setMyRecentCourses(userData.filter((getCourse) => getCourse.isPublished == 1));
+      const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+      setMyRecentCourses(allCourses.result.filter((getCourse) => getCourse.isPublished == 1));
     }
     /* var data = JSON.stringify({});
     var config = {
