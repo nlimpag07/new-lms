@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
+import Loader from "../../components/theme-layout/loader/loader";
 
 import {
   Layout,
@@ -21,6 +22,7 @@ import {
   Select,
   Input,
   Tooltip,
+  Empty,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -61,9 +63,10 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const ClassesCourseList = () => {
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { courseAllList, setCourseAllList } = useCourseList();
-  const [publishedCourses, setPublishedCourses] = useState(courseAllList);
+  const [publishedCourses, setPublishedCourses] = useState("");
 
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -86,16 +89,19 @@ const ClassesCourseList = () => {
       if (response) {
         localStorage.setItem("courseAllList", JSON.stringify(response.data));
         setCourseAllList(response.data);
-        setPublishedCourses(response.data.filter((getCourse) => getCourse.isPublished == 1));
+        setPublishedCourses(
+          response.data.result.filter((getCourse) => getCourse.isPublished == 1)
+        );
         //console.log(response.data);
       } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setPublishedCourses(userData.filter((getCourse) => getCourse.isPublished == 1));
+        const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+        setPublishedCourses(
+          allCourses.result.filter((getCourse) => getCourse.isPublished == 1)
+        );
       }
+      setLoading(false);
     }
-    fetchData(
-      config
-    );
+    fetchData(config);
   }, []);
   //console.log(courseAllList.length)
   return (
@@ -177,7 +183,13 @@ const ClassesCourseList = () => {
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(publishedCourses, curGridStyle, setModal2Visible, router)}
+          {GridType(
+            publishedCourses,
+            curGridStyle,
+            setModal2Visible,
+            router,
+            loading
+          )}
         </Row>
       </Col>
       <Modal
@@ -360,7 +372,7 @@ const ClassesCourseList = () => {
   );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router) => {
+const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
   if (gridType == "list") {
@@ -390,7 +402,10 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                   as={`/${linkUrl}/course/view/${course.id}`}
                 >
                   <a>
-                    <img alt="example" src={`${apidirectoryUrl}/${course.featureImage}`} />
+                    <img
+                      alt="example"
+                      src={`${apidirectoryUrl}/${course.featureImage}`}
+                    />
                   </a>
                 </Link>
               }
@@ -452,12 +467,12 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                 <Tooltip title="Attendance">
                   <div
                     className="class-icon-holder"
-                    onClick={(e) =>{
+                    onClick={(e) => {
                       e.preventDefault();
                       router.push(
                         `/${linkUrl}/classes/[...manageclasses]`,
                         `/${linkUrl}/classes/attendance/${course.id}`
-                      )
+                      );
                     }}
                   >
                     <FontAwesomeIcon
@@ -492,9 +507,11 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
       ))}
     </>
   ) : (
-    <>
-      <p className="loading">..Loading</p>
-    </>
+    <div style={{ minHeight: "50vh" }}>
+      <Loader loading={loading}>
+        <Empty />
+      </Loader>
+    </div>
   );
 };
 

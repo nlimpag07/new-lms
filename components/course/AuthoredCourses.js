@@ -16,6 +16,7 @@ import {
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
+import { useAuth } from "../../providers/Auth";
 import Loader from "../../components/theme-layout/loader/loader";
 import Cookies from "js-cookie";
 
@@ -57,13 +58,15 @@ const linkUrl = Cookies.get("usertype");
 
 const AuthoredCourses = ({ authoredCoursesList }) => {
   const token = Cookies.get("token");
+  const {userDetails} = useAuth();
+  const userId= userDetails.id;
   const { courseAllList, setCourseAllList } = useCourseList();
-
+  
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [loading, setLoading] = useState(true);
-  const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState('');
   //console.log(authoredCoursesList)
   useEffect(() => {
     var data = JSON.stringify({});
@@ -81,14 +84,15 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
       if (response) {
         localStorage.setItem("courseAllList", JSON.stringify(response.data));
         setCourseAllList(response.data);
-        setMyAuthoredCourses(response.data.slice(0, 4));
+        setMyAuthoredCourses(response.data.result.filter(course => course.authorId==userId));
       } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setMyAuthoredCourses(userData.slice(0, 4));
+        const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+        setMyAuthoredCourses(allCourses.result.filter(course => course.authorId==userId));
       }
+      setLoading(false);
     }
     fetchData(config);
-    setLoading(false);
+    
   }, []);
   return (
     <Col
@@ -252,7 +256,9 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-
+  
+  /* let courses = courseList.result.filter(course => course.authorId==userId)*/
+  //console.log(courses) 
   return courses ? (
     <>
       {courses.map((course) => (

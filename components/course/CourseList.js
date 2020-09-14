@@ -85,8 +85,8 @@ const CourseList = (props) => {
         setCourseAllList(response.data);
         //console.log(response.data);
       } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(userData);
+        const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
+        setCourseAllList(allCourses);
       }
     }
     fetchData(
@@ -370,7 +370,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-
+  courses = courses.result;
   return courses ? (
     <>
       {courses.map((course) => (

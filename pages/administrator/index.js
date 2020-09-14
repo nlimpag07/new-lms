@@ -39,7 +39,7 @@ import {
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
 const AdminIndex = () => {
-  //console.log(courselist);
+  //console.log(useAuth());
   const [curGridStyle, setCurGridStyle] = useState("grid");
   const {courseAllList, setCourseAllList } = useCourseList();
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);

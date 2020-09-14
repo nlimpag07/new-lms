@@ -59,7 +59,7 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
       }); */
 
     var enrollees = [];
-    const tdata = course_reviews.map((dataItem) => {
+    const tdata = course_reviews.result.map((dataItem) => {
       //console.log("tdata", dataItem);
       dataItem.learner.map((item) => {
         if (item.courseId == course_id) {

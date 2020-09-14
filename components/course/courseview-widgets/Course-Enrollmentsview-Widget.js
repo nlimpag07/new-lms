@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const CourseEnrollmentsviewWidget = ({ course_id, course_enrollments }) => {
   var enrollees = [];
-  const tdata = course_enrollments.map((dataItem) => {
+  const tdata = course_enrollments.result.map((dataItem) => {
     dataItem.learner.map((item) => {
       if(item.courseId ==course_id){
         dataItem['enrollmentType']=item.enrollmentType;

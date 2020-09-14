@@ -114,7 +114,7 @@ const CourseView = ({ course_id }) => {
   useEffect(() => {
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
+    setCourse(allCourse.result.filter((getCourse) => getCourse.id == course_id));
 
     var config = {
       /* method: "get",
