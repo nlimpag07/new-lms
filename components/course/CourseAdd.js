@@ -593,7 +593,7 @@ const CourseAdd = () => {
             >
               <Row className="widget-header-row" justify="start">
                 <Col xs={24}>
-                  <h3 className="">Draft Status here</h3>
+                  <h3 className="widget-title">Draft Status here</h3>
                 </Col>
               </Row>
               <Row

@@ -12,6 +12,9 @@ const CourseAdd = dynamic(() => import("../../../components/course/CourseAdd"));
 const CourseEdit = dynamic(() =>
   import("../../../components/course/CourseEdit")
 );
+const CourseEditOutline = dynamic(() =>
+  import("../../../components/course/CourseEditOutline")
+);
 const CourseView = dynamic(() =>
   import("../../../components/course/CourseView")
 );
@@ -106,9 +109,9 @@ const CourseManagement = (props) => {
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
-    (thePage[0] == "view" || thePage[0] == "edit")
+    (/* thePage[0] == "view" || */ thePage[0] == "edit")
   ) {
-    thePage[0] == "view" &&
+    /* thePage[0] == "view" &&
       thePage[2] == "course-outline" &&
       (theContent = "HELLO View Course Outline"); // viewing the course
     thePage[0] == "view" &&
@@ -125,11 +128,11 @@ const CourseManagement = (props) => {
       (theContent = "HELLO View Course competencies"); // viewing the course
     thePage[0] == "view" &&
       thePage[2] == "evaluations" &&
-      (theContent = "HELLO View Course post-evaluation"); // viewing the course
+      (theContent = "HELLO View Course post-evaluation"); // viewing the course */
     
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
-      (theContent = "HELLO Edit Course Outline"); // Editing the course
+      (theContent = <CourseEditOutline course_id={thePage[1]} />); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "learning-outcomes" &&
       (theContent = "HELLO Edit Course learning-outcomes"); // Editing the course

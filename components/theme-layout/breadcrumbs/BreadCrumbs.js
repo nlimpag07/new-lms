@@ -147,7 +147,7 @@ const BreadCrumbs = () => {
     )
   ); */
   return (
-    <Breadcrumb style={{ margin: "16px 0" }} separator=">">
+    <Breadcrumb style={{ margin: "16px" }} separator=">">
       {pathn}
       {/* <div className="breadcrumbs">
       <div>{pathname}</div>
