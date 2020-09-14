@@ -62,6 +62,7 @@ const CourseWidgetFeaturedImage = (props) => {
                       style={{ textAlign: "center", marginBottom: "15px" }}
                     >
                       {fields.map((field, index) => {
+                        
                         field = {
                           ...field,
                           value: thisPicklist[index].file.name,

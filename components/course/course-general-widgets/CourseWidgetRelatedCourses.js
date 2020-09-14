@@ -197,6 +197,7 @@ const CourseWidgetRelatedCourses = (props) => {
 };
 const modalFormBody = (courseAllList, chosenRows) => {
   var data = [];
+  courseAllList = courseAllList.result;
   courseAllList.map((courses, index) => {
     let isreqvalue = 0;
     if (chosenRows.length) {

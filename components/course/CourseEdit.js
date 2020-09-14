@@ -211,10 +211,12 @@ const CourseEdit = ({ course_id }) => {
   useEffect(() => {
     //setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourse.result.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourse.result.filter(
+      (getCourse) => getCourse.id == course_id
+    );
     //setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
     if (theCourse.length) {
-      console.log("In Course: ", theCourse);
+      //console.log("In Course: ", theCourse);
       setCourse(theCourse);
     } else {
       var config = {
@@ -347,24 +349,30 @@ const CourseEdit = ({ course_id }) => {
       });
     }
     if (name === "picklistfeaturedimage") {
-      basicForm.setFieldsValue({
-        picklistfeaturedimage: [values.name],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        featuredimage: values.name,
-      });
+      var value = values.name ? values : "";
+      if (value) {
+        basicForm.setFieldsValue({
+          picklistfeaturedimage: [values.name],
+        });
+        setdefaultWidgetValues({
+          ...defaultWidgetValues,
+          featuredimage: values.name,
+        });
+      }
       //setFeatureMedia({ image: values.name });
-      //console.log("AddCourse fileList ",values.name.fileList);
+      //console.log("Edit Course fileList ",value);
     }
     if (name === "picklistfeaturedvideo") {
-      basicForm.setFieldsValue({
-        picklistfeaturedvideo: [values.name],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        featuredvideo: values.name,
-      });
+      var value = values.name ? values : "";
+      if (value) {
+        basicForm.setFieldsValue({
+          picklistfeaturedvideo: [values.name],
+        });
+        setdefaultWidgetValues({
+          ...defaultWidgetValues,
+          featuredvideo: values.name,
+        });
+      }
       //console.log(values);
     }
     if (name === "picklistpassinggrade") {

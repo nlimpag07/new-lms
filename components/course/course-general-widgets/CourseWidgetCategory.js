@@ -54,7 +54,7 @@ const CourseWidgetCategory = (props) => {
     async function fetchData(config) {
       const response = await axios(config);
       if (response) {
-        setAllCourseCategory(response.data);
+        setAllCourseCategory(response.data.result);
         //console.log(response.data)
       } else {
         console.log(

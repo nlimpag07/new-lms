@@ -54,7 +54,7 @@ const CourseWidgetLevel = (props) => {
     async function fetchData(config) {
       const response = await axios(config);
       if (response) {
-        setAllCourseLevel(response.data);
+        setAllCourseLevel(response.data.result);
         //console.log(response.data)
       } else {
         console.log(
