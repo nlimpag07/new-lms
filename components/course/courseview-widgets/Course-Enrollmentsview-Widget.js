@@ -6,23 +6,22 @@ import ReactDOM from "react-dom";
 import { Row, Col, List } from "antd";
 import Link from "next/link";
 
-
-
 const CourseEnrollmentsviewWidget = ({ course_id, course_enrollments }) => {
   var enrollees = [];
-  const tdata = course_enrollments.result.map((dataItem) => {
-    dataItem.learner.map((item) => {
-      if(item.courseId ==course_id){
-        dataItem['enrollmentType']=item.enrollmentType;
-        dataItem['statusName']=item.statusName;
-        dataItem['startDate']=item.startDate;
-        enrollees.push(dataItem)
-      }
+  if (course_enrollments) {
+    const tdata = course_enrollments.result.map((dataItem) => {
+      dataItem.learner.map((item) => {
+        if (item.courseId == course_id) {
+          dataItem["enrollmentType"] = item.enrollmentType;
+          dataItem["statusName"] = item.statusName;
+          dataItem["startDate"] = item.startDate;
+          enrollees.push(dataItem);
+        }
+      });
+      //console.log("tdata", dataItem);
     });
-    //console.log("tdata", dataItem);
-  });
-  //console.log(enrollees)
-
+    //console.log(enrollees)
+  }
 
   var lastSelectedIndex = 0;
   const ddata = enrollees.map((dataItem) =>

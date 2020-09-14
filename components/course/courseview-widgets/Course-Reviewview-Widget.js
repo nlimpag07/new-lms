@@ -43,7 +43,7 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
       setList(getThree);
     });
   }, []);
-  
+
   //https://codesandbox.io/s/3z8tf?file=/index.js
   const GetData = (callback) => {
     /* axios
@@ -59,18 +59,19 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
       }); */
 
     var enrollees = [];
-    const tdata = course_reviews.result.map((dataItem) => {
-      //console.log("tdata", dataItem);
-      dataItem.learner.map((item) => {
-        if (item.courseId == course_id) {
-          dataItem["courseRating"] = item.courseRating;
-          dataItem["courseReview"] = item.courseReview;/* 
-          dataItem["startDate"] = item.startDate; */
-          enrollees.push(dataItem);
-        }
+    if (course_reviews) {
+      const tdata = course_reviews.result.map((dataItem) => {
+        //console.log("tdata", dataItem);
+        dataItem.learner.map((item) => {
+          if (item.courseId == course_id) {
+            dataItem["courseRating"] = item.courseRating;
+            dataItem["courseReview"] = item.courseReview;
+            enrollees.push(dataItem);
+          }
+        });
+        //console.log("tdata", dataItem);
       });
-      //console.log("tdata", dataItem);
-    });
+    }
     callback(enrollees);
   };
 
@@ -94,7 +95,9 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
             renderItem={(item) => (
               <List.Item
                 actions={[
-                  <span style={{ fontWeight: "700" }}>{item.courseRating}/5</span>,
+                  <span style={{ fontWeight: "700" }}>
+                    {item.courseRating}/5
+                  </span>,
                 ]}
               >
                 <Skeleton avatar title={false} loading={item.loading} active>
@@ -106,7 +109,11 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
                       />
                     }
                     title={<span>{item.firstName + " " + item.lastName}</span>}
-                    description={item.courseReview?item.courseReview: "No review message"}
+                    description={
+                      item.courseReview
+                        ? item.courseReview
+                        : "No review message"
+                    }
                   />
                   <div>
                     <Rate allowHalf disabled defaultValue={item.courseRating} />
