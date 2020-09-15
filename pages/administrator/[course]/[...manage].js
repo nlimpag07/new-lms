@@ -32,7 +32,6 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import cookie from "cookie";
 
-
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -105,11 +104,12 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
-    thePage[0] == "edit" && (theContent = <CourseEdit course_id={thePage[1]} />); // url /edit/couseId - Editing Course General
+    thePage[0] == "edit" &&
+      (theContent = <CourseEdit course_id={thePage[1]} />); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
-    (/* thePage[0] == "view" || */ thePage[0] == "edit")
+    /* thePage[0] == "view" || */ thePage[0] == "edit"
   ) {
     /* thePage[0] == "view" &&
       thePage[2] == "course-outline" &&
@@ -129,7 +129,7 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       thePage[2] == "evaluations" &&
       (theContent = "HELLO View Course post-evaluation"); // viewing the course */
-    
+
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
       (theContent = <CourseEditOutline course_id={thePage[1]} />); // Editing the course

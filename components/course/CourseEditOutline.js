@@ -41,6 +41,11 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import CourseOutlineList from "./course-outline-widgets/CourseOutlineList";
+import CourseOutlineDetails from "./course-outline-widgets/CourseOutlineDetails";
+import CourseOutlineFeaturedImage from "./course-outline-widgets/CourseOutlineFeaturedImage";
+import CourseOutlineFeaturedVideo from "./course-outline-widgets/CourseOutlineFeaturedVideo";
+import CourseOutlinePrerequisite from "./course-outline-widgets/CourseOutlinePrerequisite";
+
 import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
 import CourseWidgetCategory from "./course-general-widgets/CourseWidgetCategory";
 import CourseWidgetType from "./course-general-widgets/CourseWidgetType";
@@ -144,7 +149,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "picklistrelatedcourses" && form.resetFields();
+        modalFormName === "outlinerequisite" && form.resetFields();
         modalFormName === "picklistlevel" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
@@ -194,19 +199,19 @@ const CourseEditOutline = ({ course_id }) => {
     content: "",
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
-    relatedcourses: [],
+    outlinerequisite: [],
     courselevel: [],
     coursecategory: [],
     coursetype: [],
     courselanguage: [],
     coursetag: [],
-    featuredimage: [],
-    featuredvideo: [],
+    outlinefeaturedimage: [],
+    outlinefeaturedvideo: [],
     duration: [],
     passinggrade: [],
     capacity: [],
   });
-  var [courseActionModal, setOutlineActionModal] = useState({
+  var [outlineActionModal, setOutlineActionModal] = useState({
     StateModal: false,
     modalTitle: "",
     modalFormName: "",
@@ -235,7 +240,7 @@ const CourseEditOutline = ({ course_id }) => {
       }
       setLoading(false);
     }
-    fetchData(config); 
+    fetchData(config);
   }, []);
 
   const showModal = (modaltitle, modalformname, modalbodycontent) => {
@@ -256,72 +261,425 @@ const CourseEditOutline = ({ course_id }) => {
     });
   };
 
-  return loading==false ? (
+  const onFormFinishProcess = (name, { values, forms }) => {
+    const { basicForm } = forms;
+    const picklistFields = basicForm.getFieldValue(name) || [];
+
+    if (name === "picklistlevel") {
+      var value = values.courselevel
+        ? values.courselevel.map((level, index) => level)
+        : "";
+      basicForm.setFieldsValue({
+        picklistlevel: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        courselevel: [...value],
+      });
+    }
+    if (name === "picklistcategory") {
+      var value = values.coursecategory
+        ? values.coursecategory.map((level, index) => level)
+        : "";
+      basicForm.setFieldsValue({
+        picklistcategory: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursecategory: [...value],
+      });
+    }
+    if (name === "picklisttype") {
+      var value = values.coursetype
+        ? values.coursetype.map((level, index) => level)
+        : "";
+      basicForm.setFieldsValue({
+        picklisttype: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursetype: [...value],
+      });
+    }
+    if (name === "outlinerequisite") {
+      var value = values.outlinerequisite
+        ? values.outlinerequisite.map((related, index) => related)
+        : "";
+      basicForm.setFieldsValue({
+        outlinerequisite: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        outlinerequisite: [...value],
+      });
+      /* console.log('combined value', [...picklistFields, ...value]);
+      console.log('======================='); */
+    }
+    if (name === "picklistduration") {
+      basicForm.setFieldsValue({
+        picklistduration: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistlanguage") {
+      var value = values.courselanguage
+        ? values.courselanguage.map((level, index) => level)
+        : "";
+      basicForm.setFieldsValue({
+        picklistlanguage: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        courselanguage: [...value],
+      });
+    }
+    if (name === "picklisttags") {
+      var value = values.coursetag
+        ? values.coursetag.map((level, index) => level)
+        : "";
+      basicForm.setFieldsValue({
+        picklisttags: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        coursetag: [...value],
+      });
+    }
+    if (name === "outlinefeaturedimage") {
+      var value = values.name ? values : "";
+      if (value) {
+        basicForm.setFieldsValue({
+          outlinefeaturedimage: [values.name],
+        });
+        setdefaultWidgetValues({
+          ...defaultWidgetValues,
+          outlinefeaturedimage: values.name,
+        });
+      }
+      //setFeatureMedia({ image: values.name });
+      //console.log("Course Outline Featured Image: ",value);
+    }
+    if (name === "outlinefeaturedvideo") {
+      var value = values.name ? values : "";
+      if (value) {
+        basicForm.setFieldsValue({
+          outlinefeaturedvideo: [values.name],
+        });
+        setdefaultWidgetValues({
+          ...defaultWidgetValues,
+          outlinefeaturedvideo: values.name,
+        });
+      }
+      //console.log(values);
+    }
+    if (name === "picklistpassinggrade") {
+      basicForm.setFieldsValue({
+        picklistpassinggrade: [...picklistFields, values],
+      });
+    }
+    if (name === "picklistcapacity") {
+      basicForm.setFieldsValue({
+        picklistcapacity: [...picklistFields, values],
+      });
+    }
+    setOutlineActionModal({
+      StateModal: false,
+      modalTitle: "",
+      modalFormName: "",
+      modalBodyContent: "",
+    });
+  };
+
+  const onFinish = (values) => {
+    setOutlineActionModal({
+      StateModal: false,
+      modalTitle: "",
+      modalFormName: "",
+      modalBodyContent: "",
+    });
+    setSpinner(true);
+
+    console.log("Finish:", values);
+
+    var data = new FormData();
+    var errorList = [];
+    //NLI: Extended Form Values Processing & Filtration
+    !!values.title
+      ? data.append("title", values.title)
+      : errorList.push("Missing Course Title");
+    !!values.description
+      ? data.append("description", encodeURI(decodeURI(values.description)))
+      : errorList.push("Missing Course Description");
+    !!values.durationTime
+      ? data.append("durationTime", values.durationTime)
+      : errorList.push("Missing Course Duration Time");
+    !!values.durationType
+      ? data.append("durationType", values.durationType)
+      : errorList.push("Missing Course Duration Type");
+    !!values.passingGrade
+      ? data.append("passingGrade", values.passingGrade)
+      : errorList.push("Missing Course Passing Grade");
+    !!values.capacity
+      ? data.append("capacity", values.capacity)
+      : errorList.push("Missing Course Capacity");
+    !!values.picklistlevel && values.picklistlevel.length
+      ? values.picklistlevel.map((level, index) => {
+          data.append(`courseLevel[${index}][levelId]`, level.id);
+        })
+      : errorList.push("Missing Course Level");
+    !!values.picklistcategory && values.picklistcategory.length
+      ? values.picklistcategory.map((category, index) => {
+          data.append(`courseCategory[${index}][categoryId]`, category.id);
+        })
+      : errorList.push("Missing Course Category");
+    !!values.outlinerequisite && values.outlinerequisite.length
+      ? values.outlinerequisite.map((relatedcourse, index) => {
+          data.append(
+            `relatedCourse[${index}][relatedCourseId]`,
+            relatedcourse.course_id
+          );
+          data.append(
+            `relatedCourse[${index}][isPrerequisite]`,
+            relatedcourse.isreq
+          );
+        })
+      : errorList.push("Missing Related Course");
+    !!values.picklistlanguage && values.picklistlanguage.length
+      ? values.picklistlanguage.map((language, index) => {
+          data.append(`courseLanguage[${index}][languageId]`, language.id);
+        })
+      : errorList.push("Missing Course Language");
+    !!values.picklisttags && values.picklisttags.length
+      ? values.picklisttags.map((tag, index) => {
+          data.append(`courseTag[${index}][tagId]`, tag.id);
+        })
+      : errorList.push("Missing Course Tag");
+    !!values.picklisttype && values.picklisttype.length
+      ? values.picklisttype.map((type, index) => {
+          data.append(`courseType[${index}][courseTypeId]`, type.id);
+        })
+      : errorList.push("Missing Course Type");
+    !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
+      ? values.outlinefeaturedimage.map((image, index) => {
+          data.append(`featureImage`, image.fileList[0].originFileObj);
+        })
+      : errorList.push("Missing Course Image");
+    values.outlinefeaturedvideo &&
+      values.outlinefeaturedvideo.length &&
+      values.outlinefeaturedvideo.map((video, index) => {
+        //console.log(image.fileList[0].originFileObj);
+        data.append(`featureVideo`, video.fileList[0].originFileObj);
+      });
+    /* !!values.outlinefeaturedvideo
+      ? values.outlinefeaturedvideo.map((video, index) => {
+          data.append(`featureVideo`, video.fileList[0].originFileObj);
+        })
+      : errorList.push("Missing Course Video"); */
+
+    //data = JSON.stringify(data);
+    if (errorList.length) {
+      console.log("ERRORS: ", errorList);
+      onFinishModal(errorList);
+    } else {
+      //console.log("NO ERROR, PROCEED WITH SUBMISSION");
+      var config = {
+        method: "post",
+        url: apiBaseUrl + "/courses",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log("res: ", res.data);
+          onFinishModal("", res.data);
+        })
+        .catch((err) => {
+          //console.log("err: ", err.response.data);
+          errorList.push(err.response.data.message);
+          onFinishModal(errorList, "");
+        });
+    }
+  };
+
+  const onFinishModal = (errorList, response) => {
+    setSpinner(false);
+    var modalWidth = 750;
+    var theBody = "";
+    if (errorList) {
+      theBody = (
+        <div>
+          <p>The following error(s) has been generated:</p>
+          <ul>
+            {errorList.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      );
+      //errorList.map((error, index) => level);
+      Modal.error({
+        title: "Submission Failed",
+        content: theBody,
+        centered: true,
+        width: modalWidth,
+      });
+    } else {
+      //Success submission
+      theBody = (
+        <div>
+          <p>{response.message}</p>
+        </div>
+      );
+      //errorList.map((error, index) => level);
+      Modal.success({
+        title: "Course has been successfully created",
+        content: theBody,
+        centered: true,
+        width: modalWidth,
+        onOk: () => {
+          console.log("response before redirection:", response);
+          visible: false;
+          router.push(
+            `/${linkUrl}/[course]/[...manage]`,
+            `/${linkUrl}/course/edit/${response.id}/course-outline`
+          );
+        },
+      });
+    }
+  };
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not validate email!",
+      number: "${label} is not a validate number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+  const formInitialValues = {
+    /* initialValues: {
+      title: title,
+      description: decodeURI(description),
+      durationTime: durationTime,
+      durationType: durationType,
+      capacity: capacity,
+      passingGrade: passingGrade,
+    }, */
+  };
+  return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
-      <Row
-        className="widget-container course-management"
-        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ margin: "0" }}
-      >
-        <Col
-          className="gutter-row widget-holder-col cm-main-left"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={16}
+      <Form.Provider onFormFinish={onFormFinishProcess}>
+        <Row
+          className="widget-container course-management"
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          style={{ margin: "0" }}
         >
-          <Row className="widget-header-row" justify="start">
-            <Col xs={24}>
-              <h3 className="widget-title">Add/Edit Course Outline</h3>
-            </Col>
-          </Row>
-          <Row
-            className="cm-main-content"
-            gutter={[16, 16]}
-            /* style={{ padding: "10px 0" }} */
+          <Col
+            className="gutter-row widget-holder-col cm-main-left"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={16}
           >
-            {" "}
-            <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-              <CourseOutlineList outlineList={outlineList} />
-            </Col>
-          </Row>
-        </Col>
-        <Col
-          className="gutter-row widget-holder-col cm-main-right"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={8}
-        >
-          <Row className="widget-header-row" justify="start">
-            <Col xs={24}>
-              <h3 className="widget-title">Draft Status here</h3>
-            </Col>
-          </Row>
-          <Row
-            className="cm-main-right-content"
-            gutter={[16, 16]}
-            style={{ padding: "0" }}
+            <Row className="widget-header-row" justify="start">
+              <Col xs={24}>
+                <h3 className="widget-title">Add/Edit Course Outline</h3>
+              </Col>
+            </Row>
+            <Row
+              className="cm-main-content"
+              gutter={[16, 16]}
+              /* style={{ padding: "10px 0" }} */
+            >
+              {" "}
+              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                <CourseOutlineList outlineList={outlineList} />
+              </Col>
+            </Row>
+          </Col>
+          <Col
+            className="gutter-row widget-holder-col cm-main-right"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={8}
           >
-            <Col xs={24}>
-              <Form.Provider>
+            <Row className="widget-header-row" justify="start">
+              <Col xs={24}>
+                <h3 className="widget-title">Draft Status here</h3>
+              </Col>
+            </Row>
+            <Row
+              className="cm-main-right-content"
+              gutter={[16, 16]}
+              style={{ padding: "0" }}
+            >
+              <Col xs={24}>
                 <Form
                   style={{ width: "100%" }}
                   name="basicForm"
                   hideRequiredMark={true}
+                  onFinish={onFinish}
+                  validateMessages={validateMessages}
+                  {...formInitialValues}
                 >
-                  <Collapse accordion expandIconPosition={"right"}>
-                    <Panel header="LEVEL" key="1" className="greyBackground">
-                      <CourseWidgetLevel
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.picklistlevel !== curValues.picklistlevel
-                        }
-                        showModal={showModal}
-                        defaultWidgetValues={defaultWidgetValues}
-                        setdefaultWidgetValues={setdefaultWidgetValues}
-                      />
+                  <Collapse
+                    defaultActiveKey={["1"]}
+                    expandIconPosition={"right"}
+                  >
+                    <Panel header="Details" key="1" className="greyBackground">
+                      <div className="outlineWidgetHolder">
+                        <CourseOutlineDetails
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.picklistlevel !== curValues.picklistlevel
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                        />
+                        <CourseOutlineFeaturedImage
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.outlinefeaturedimage !==
+                            curValues.outlinefeaturedimage
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                        />
+                        <CourseOutlineFeaturedVideo
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.outlinefeaturedvideo !==
+                            curValues.outlinefeaturedvideo
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                        />
+                      </div>
                     </Panel>
-                    <Panel header="CATEGORY" key="2" className="greyBackground">
+                    <Panel
+                      header="Prerequisite"
+                      key="2"
+                      className="greyBackground"
+                    >
+                      <div className="outlineWidgetHolder">
+                        <CourseOutlinePrerequisite
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.outlinerequisite !==
+                            curValues.outlinerequisite
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                          outlineList={outlineList}
+                        />
+                      </div>
+                    </Panel>
+                    <Panel header="CATEGORY" key="3" className="greyBackground">
                       <CourseWidgetCategory
                         shouldUpdate={(prevValues, curValues) =>
                           prevValues.picklistcategory !==
@@ -332,7 +690,7 @@ const CourseEditOutline = ({ course_id }) => {
                         setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                     </Panel>
-                    <Panel header="TYPE" key="3" className="greyBackground">
+                    <Panel header="TYPE" key="4" className="greyBackground">
                       <CourseWidgetType
                         shouldUpdate={(prevValues, curValues) =>
                           prevValues.picklisttype !== curValues.picklisttype
@@ -344,13 +702,13 @@ const CourseEditOutline = ({ course_id }) => {
                     </Panel>
                     <Panel
                       header="RELATED COURSES"
-                      key="4"
+                      key="5"
                       className="greyBackground"
                     >
                       <CourseWidgetRelatedCourses
                         shouldUpdate={(prevValues, curValues) =>
-                          prevValues.picklistrelatedcourses !==
-                          curValues.picklistrelatedcourses
+                          prevValues.outlinerequisite !==
+                          curValues.outlinerequisite
                         }
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
@@ -359,81 +717,84 @@ const CourseEditOutline = ({ course_id }) => {
                     </Panel>
                   </Collapse>
                 </Form>
-              </Form.Provider>
-            </Col>
-          </Row>
-        </Col>
+              </Col>
+            </Row>
+          </Col>
 
-        <ModalForm
-          title={courseActionModal.modalTitle}
-          modalFormName={courseActionModal.modalFormName}
-          modalBodyContent={courseActionModal.modalBodyContent}
-          visible={courseActionModal.StateModal}
-          onCancel={hideModal}
-          okText={`${courseActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
-          onFinish={{
-            form: "basicForm",
-            key: "submit",
-            htmlType: "submit",
-          }}
-        />
-        <Spin
-          size="large"
-          tip="Processing..."
-          spinning={spinner}
-          delay={100}
-        ></Spin>
-        <RadialUI
-          listMenu={menulists}
-          position="bottom-right"
-          iconColor="#8998BA"
-          toggleModal={showModal}
-        />
-        <style jsx global>{`
-          .greyBackground {
-            background-color: #eeeeee;
-            text-transform: uppercase;
-            font-weight: bold;
-          }
-          .greyBackground p {
-            font-weight: normal;
-            text-transform: initial;
-          }
-          .widget-holder-col .widget-title {
-            color: #e69138;
-            margin-bottom: 0;
-            text-transform: uppercase;
-          }
-          .widget-holder-col .widget-header-row {
-            padding: 1rem 0;
-            color: #e69138;
-          }
-          .course-management .ant-input-affix-wrapper {
-            border-radius: 0.5rem;
-            border: 1px solid #888787;
-          }
-          .course-management .ant-form-item textarea.ant-input {
-            background-color: #eeeeee;
-          }
-          .course-management .cm-main-right .widget-header-row {
-            text-align: end;
-          }
-          .course-management .ant-form-item-label {
-            display: none;
-          }
-          .courses-class .ant-spin-spinning {
-            position: fixed;
-            display: block;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #ffffff9e;
-            z-index: 3;
-            padding: 23% 0;
-          }
-        `}</style>
-      </Row>
+          <ModalForm
+            title={outlineActionModal.modalTitle}
+            modalFormName={outlineActionModal.modalFormName}
+            modalBodyContent={outlineActionModal.modalBodyContent}
+            visible={outlineActionModal.StateModal}
+            onCancel={hideModal}
+            okText={`${outlineActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
+            onFinish={{
+              form: "basicForm",
+              key: "submit",
+              htmlType: "submit",
+            }}
+          />
+          <Spin
+            size="large"
+            tip="Processing..."
+            spinning={spinner}
+            delay={100}
+          ></Spin>
+          <RadialUI
+            listMenu={menulists}
+            position="bottom-right"
+            iconColor="#8998BA"
+            toggleModal={showModal}
+          />
+          <style jsx global>{`
+            .greyBackground .ant-collapse-header {
+              background-color: #eeeeee;
+              text-transform: uppercase;
+              font-weight: bold;
+            }
+            .greyBackground p {
+              font-weight: normal;
+              text-transform: initial;
+            }
+            .widget-holder-col .widget-title {
+              color: #e69138;
+              margin-bottom: 0;
+              text-transform: uppercase;
+            }
+            .widget-holder-col .widget-header-row {
+              padding: 1rem 0;
+              color: #e69138;
+            }
+            .course-management .ant-input-affix-wrapper {
+              border-radius: 0.5rem;
+              border: 1px solid #888787;
+            }
+            .course-management .ant-form-item textarea.ant-input {
+              background-color: #eeeeee;
+            }
+            .course-management .cm-main-right .widget-header-row {
+              text-align: end;
+            }
+            .course-management .ant-form-item-label {
+              display: none;
+            }
+            .courses-class .ant-spin-spinning {
+              position: fixed;
+              display: block;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              background-color: #ffffff9e;
+              z-index: 3;
+              padding: 23% 0;
+            }
+            .outlineWidgetHolder {
+              padding: 10px 0;
+            }
+          `}</style>
+        </Row>
+      </Form.Provider>
     </motion.div>
   ) : (
     <Loader loading={loading}>
