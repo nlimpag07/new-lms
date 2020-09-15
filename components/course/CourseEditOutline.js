@@ -45,6 +45,8 @@ import CourseOutlineDetails from "./course-outline-widgets/CourseOutlineDetails"
 import CourseOutlineFeaturedImage from "./course-outline-widgets/CourseOutlineFeaturedImage";
 import CourseOutlineFeaturedVideo from "./course-outline-widgets/CourseOutlineFeaturedVideo";
 import CourseOutlinePrerequisite from "./course-outline-widgets/CourseOutlinePrerequisite";
+import CourseOutlineMediaFiles from "./course-outline-widgets/CourseOutlineMediaFiles";
+import CourseOutlineDuration from "./course-outline-widgets/CourseOutlineDuration";
 
 import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
 import CourseWidgetCategory from "./course-general-widgets/CourseWidgetCategory";
@@ -205,9 +207,10 @@ const CourseEditOutline = ({ course_id }) => {
     coursetype: [],
     courselanguage: [],
     coursetag: [],
+    outlinemediafiles: [],
     outlinefeaturedimage: [],
     outlinefeaturedvideo: [],
-    duration: [],
+    outlineduration: [],
     passinggrade: [],
     capacity: [],
   });
@@ -371,6 +374,23 @@ const CourseEditOutline = ({ course_id }) => {
       }
       //console.log(values);
     }
+    if (name === "outlinemediafiles") {
+      var value = values.outlinemediafiles
+        ? values.outlinemediafiles.map((mediafile, index) => mediafile)
+        : "";
+      basicForm.setFieldsValue({
+        outlinemediafiles: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        outlinemediafiles: [...value],
+      });
+    }
+    if (name === "outlineduration") {
+      basicForm.setFieldsValue({
+        outlineduration: [...picklistFields, values],
+      });
+    }
     if (name === "picklistpassinggrade") {
       basicForm.setFieldsValue({
         picklistpassinggrade: [...picklistFields, values],
@@ -400,7 +420,7 @@ const CourseEditOutline = ({ course_id }) => {
 
     console.log("Finish:", values);
 
-    var data = new FormData();
+    /* var data = new FormData();
     var errorList = [];
     //NLI: Extended Form Values Processing & Filtration
     !!values.title
@@ -469,11 +489,6 @@ const CourseEditOutline = ({ course_id }) => {
         //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       });
-    /* !!values.outlinefeaturedvideo
-      ? values.outlinefeaturedvideo.map((video, index) => {
-          data.append(`featureVideo`, video.fileList[0].originFileObj);
-        })
-      : errorList.push("Missing Course Video"); */
 
     //data = JSON.stringify(data);
     if (errorList.length) {
@@ -501,7 +516,7 @@ const CourseEditOutline = ({ course_id }) => {
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "");
         });
-    }
+    } */
   };
 
   const onFinishModal = (errorList, response) => {
@@ -679,18 +694,25 @@ const CourseEditOutline = ({ course_id }) => {
                         />
                       </div>
                     </Panel>
-                    <Panel header="CATEGORY" key="3" className="greyBackground">
-                      <CourseWidgetCategory
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.picklistcategory !==
-                          curValues.picklistcategory
-                        }
-                        showModal={showModal}
-                        defaultWidgetValues={defaultWidgetValues}
-                        setdefaultWidgetValues={setdefaultWidgetValues}
-                      />
+                    <Panel
+                      header="Media Files"
+                      key="3"
+                      className="greyBackground"
+                    >
+                      <div className="outlineWidgetHolder">
+                        <CourseOutlineMediaFiles
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.outlinemediafiles !==
+                            curValues.outlinemediafiles
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                        />
+                      </div>
                     </Panel>
-                    <Panel header="TYPE" key="4" className="greyBackground">
+                    <Panel header="Milestones" key="4" className="greyBackground">
+                    <div className="outlineWidgetHolder">
                       <CourseWidgetType
                         shouldUpdate={(prevValues, curValues) =>
                           prevValues.picklisttype !== curValues.picklisttype
@@ -699,22 +721,25 @@ const CourseEditOutline = ({ course_id }) => {
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
                       />
+                      </div>
                     </Panel>
                     <Panel
-                      header="RELATED COURSES"
-                      key="5"
-                      className="greyBackground"
-                    >
-                      <CourseWidgetRelatedCourses
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.outlinerequisite !==
-                          curValues.outlinerequisite
-                        }
-                        showModal={showModal}
-                        defaultWidgetValues={defaultWidgetValues}
-                        setdefaultWidgetValues={setdefaultWidgetValues}
-                      />
-                    </Panel>
+                        header="DURATION"
+                        key="5"
+                        className="greyBackground"
+                      >
+                        <div className="outlineWidgetHolder">
+                        <CourseOutlineDuration
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.outlineduration !==
+                            curValues.outlineduration
+                          }
+                          showModal={showModal}
+                          defaultWidgetValues={defaultWidgetValues}
+                          setdefaultWidgetValues={setdefaultWidgetValues}
+                        />
+                        </div>
+                      </Panel>
                   </Collapse>
                 </Form>
               </Col>

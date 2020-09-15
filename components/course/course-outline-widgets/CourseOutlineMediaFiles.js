@@ -26,27 +26,25 @@ const linkUrl = Cookies.get("usertype");
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Outline - Prerequisite",
-  catValueLabel: "outlinerequisite",
+  catname: "Outline - Media Files",
+  catValueLabel: "outlinemediafiles",
 };
 
-const CourseOutlinePrerequisite = (props) => {
+const CourseOutlineMediaFiles = (props) => {
   const {
     shouldUpdate,
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
-    outlineList,
   } = props;
-  //console.log(outlineList);
-  //const [outlineList, setoutlineList] = useState();
-  const chosenRows = defaultWidgetValues.outlinerequisite;
+  const [allMediaFiles, setAllMediaFiles] = useState();
+  const chosenRows = defaultWidgetValues.outlinemediafiles;
   //console.log(chosenRows)
-  /* useEffect(() => {
+  useEffect(() => {
     var data = JSON.stringify({});
     var config = {
       method: "get",
-      url: apiBaseUrl + "/picklist/outline",
+      url: apiBaseUrl + "/picklist/coursetype",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -56,7 +54,7 @@ const CourseOutlinePrerequisite = (props) => {
     async function fetchData(config) {
       const response = await axios(config);
       if (response) {
-        setoutlineList(response.data.result);
+        setAllMediaFiles(response.data.result);
         //console.log(response.data)
       } else {
         console.log(
@@ -65,21 +63,19 @@ const CourseOutlinePrerequisite = (props) => {
       }
     }
     fetchData(config);
-  }, []); */
+  }, []);
 
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
-    setdefaultWidgetValues({
-      ...defaultWidgetValues,
-      outlinerequisite: newValues,
-    });
+    setdefaultWidgetValues({ ...defaultWidgetValues, coursetype: newValues });
   };
 
   return (
     <>
       <Form.Item
         label={widgetFieldLabels.catname}
-        noStyle        
+        noStyle
+        allowClear
         shouldUpdate={shouldUpdate}
       >
         {({ getFieldValue }) => {
@@ -210,33 +206,29 @@ const CourseOutlinePrerequisite = (props) => {
           }
         }}
       </Form.Item>
-      {outlineList ? (
-        <span>
-          <PlusOutlined
-            onClick={() =>
-              showModal(
-                widgetFieldLabels.catname,
-                widgetFieldLabels.catValueLabel,
-                () => modalFormBody(outlineList, chosenRows)
-              )
-            }
-          />
-        </span>
-      ) : (
-        <span>There is no course outline added yet.</span>
-      )}
+      <span>
+        <PlusOutlined
+          onClick={() =>
+            showModal(
+              widgetFieldLabels.catname,
+              widgetFieldLabels.catValueLabel,
+              () => modalFormBody(allMediaFiles, chosenRows)
+            )
+          }
+        />
+      </span>
 
       <style jsx global>{``}</style>
     </>
   );
 };
-const modalFormBody = (outlineList, chosenRows) => {
+const modalFormBody = (allMediaFiles, chosenRows) => {
   const data = [];
-  outlineList.map((outline, index) => {
+  allMediaFiles.map((type, index) => {
     data.push({
       key: index,
-      id: outline.id,
-      title: outline.name,
+      id: type.id,
+      title: type.name,
     });
   });
 
@@ -247,7 +239,7 @@ const modalFormBody = (outlineList, chosenRows) => {
   const [form] = Form.useForm();
   const columns = [
     {
-      title: "Prerequisite",
+      title: "Type",
       dataIndex: "title",
     },
     /*  {
@@ -259,7 +251,7 @@ const modalFormBody = (outlineList, chosenRows) => {
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
-    console.log(selectedRows);
+    //console.log(selectedRows);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -284,7 +276,7 @@ const modalFormBody = (outlineList, chosenRows) => {
     }
   }, []);
   return (
-    <Form.List name="outlinerequisite">
+    <Form.List name="outlinemediafiles">
       {(fields, { add, remove }) => {
         return (
           <div>
@@ -298,22 +290,25 @@ const modalFormBody = (outlineList, chosenRows) => {
                   <Form.Item
                     name={[field.name, "id"]}
                     initialValue={field.id}
-                    key={`outline_id-${field.key}`}
+                    key={`type_id-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="Outline ID" value={field.id} />
+                    <Input placeholder="Course Type ID" value={field.id} />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "title"]}
                     initialValue={field.title}
-                    key={`outline-${field.key}`}
+                    key={`type-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="Outline Title" value={field.title} />
+                    <Input
+                      placeholder="Course Type Title"
+                      value={field.title}
+                    />
                   </Form.Item>
                 </div>
               ) : (
-                <div>Hello</div>
+                <div>Data Empty</div>
               );
             })}
 
@@ -328,4 +323,4 @@ const modalFormBody = (outlineList, chosenRows) => {
     </Form.List>
   );
 };
-export default CourseOutlinePrerequisite;
+export default CourseOutlineMediaFiles;

@@ -50,7 +50,7 @@ const CourseOutlineDetails = (props) => {
           },
         ]}
       >
-        <Input.Group compact className="course-duration-panel">
+        <Input.Group compact className="course-outline-details">
           <Form.Item name="userGroup" label="User Group" noStyle>
             <Select
               placeholder="User Group"
@@ -92,12 +92,12 @@ const CourseOutlineDetails = (props) => {
         />
       </Form.Item>
       <style jsx global>{`
-        .course-duration-panel .ant-form-item {
+        .course-outline-details .ant-form-item {
           display: inline-block;
           width: 30%;
           margin: 15px 8px;
         }
-        .course-duration-panel .ant-select-selector {
+        .course-outline-details .ant-select-selector {
           font-weight: normal !important;
           text-transform: Capitalize !important;
         }
