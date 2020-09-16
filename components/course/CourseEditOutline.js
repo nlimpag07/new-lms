@@ -151,7 +151,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "outlinerequisite" && form.resetFields();
+        modalFormName === "outlineprerequisite" && form.resetFields();
         modalFormName === "picklistlevel" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
@@ -192,7 +192,6 @@ const CourseEditOutline = ({ course_id }) => {
   const [loading, setLoading] = useState(true);
   const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [outlineList, setOutlineList] = useState("");
-  const [courseId, setCourseId] = useState("");
   const [outline, setOutline] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [dataProcessModal, setDataProcessModal] = useState({
@@ -201,7 +200,7 @@ const CourseEditOutline = ({ course_id }) => {
     content: "",
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
-    outlinerequisite: [],
+    outlineprerequisite: [],
     courselevel: [],
     coursecategory: [],
     coursetype: [],
@@ -304,16 +303,16 @@ const CourseEditOutline = ({ course_id }) => {
         coursetype: [...value],
       });
     }
-    if (name === "outlinerequisite") {
-      var value = values.outlinerequisite
-        ? values.outlinerequisite.map((related, index) => related)
+    if (name === "outlineprerequisite") {
+      var value = values.outlineprerequisite
+        ? values.outlineprerequisite.map((related, index) => related)
         : "";
       basicForm.setFieldsValue({
-        outlinerequisite: [...value],
+        outlineprerequisite: [...value],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlinerequisite: [...value],
+        outlineprerequisite: [...value],
       });
       /* console.log('combined value', [...picklistFields, ...value]);
       console.log('======================='); */
@@ -451,8 +450,8 @@ const CourseEditOutline = ({ course_id }) => {
           data.append(`courseCategory[${index}][categoryId]`, category.id);
         })
       : errorList.push("Missing Course Category");
-    !!values.outlinerequisite && values.outlinerequisite.length
-      ? values.outlinerequisite.map((relatedcourse, index) => {
+    !!values.outlineprerequisite && values.outlineprerequisite.length
+      ? values.outlineprerequisite.map((relatedcourse, index) => {
           data.append(
             `relatedCourse[${index}][relatedCourseId]`,
             relatedcourse.course_id
@@ -575,6 +574,119 @@ const CourseEditOutline = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
+
+  /* let {
+    id,
+    featureImage,
+    featureVideo,
+    courseLanguage,
+    courseCategory,
+    title,
+    description,
+    courseInstructor,
+    courseOutline,
+    courseType,
+    courseLevel,
+    courseTag,
+    relatedCourse,
+    durationTime,
+    durationType,
+    capacity,
+    passingGrade,
+  } = outline[0] || "";
+
+  useEffect(() => {
+    //setdefaultWidgetValues(defaultWidgetValues);
+    let {
+      relateds,
+      categories,
+      levels,
+      types,
+      languages,
+      tags,
+      image,
+      video,
+      durationtime,
+      durationtype,
+    } = "";
+
+    if (relatedCourse) {
+      relateds = relatedCourse.map((c_related, index) => {
+        let list = {
+          id: c_related.courseRelated.course.id,
+          title: c_related.courseRelated.course.title,
+          isreq: c_related.isPrerequisite,
+        };
+        return list;
+      });
+    }
+    if (courseCategory) {
+      categories = courseCategory.map((c_category, index) => {
+        let list = {
+          id: c_category.category.id,
+          title: c_category.category.name,
+        };
+        return list;
+      });
+    }
+    if (courseLevel) {
+      levels = courseLevel.map((c_level, index) => {
+        let list = { id: c_level.level.id, title: c_level.level.name };
+        return list;
+      });
+    }
+    if (courseType) {
+      types = courseType.map((c_type, index) => {
+        let list = {
+          id: c_type.courseType.id,
+          title: c_type.courseType.name,
+        };
+        return list;
+      });
+    }
+    if (courseLanguage) {
+      languages = courseLanguage.map((c_language, index) => {
+        let list = {
+          id: c_language.language.id,
+          title: c_language.language.name,
+        };
+        return list;
+      });
+    }
+    if (courseTag) {
+      tags = courseTag.map((c_tag, index) => {
+        let list = {
+          id: c_tag.tag.id,
+          title: c_tag.tag.name,
+        };
+        return list;
+      });
+    }
+    if (featureImage) {
+      image = featureImage;
+    }
+    if (featureVideo) {
+      video = featureVideo;
+    }
+    if (durationTime && durationType) {
+      video = featureVideo;
+    }
+    if (durationTime && durationType) {
+      durationtime = { durationTime: durationTime, durationType: durationType };
+    }
+    setdefaultWidgetValues({
+      ...defaultWidgetValues,
+      courselevel: levels,
+      coursecategory: categories,
+      coursetype: types,
+      courselanguage: languages,
+      coursetag: tags,
+      featuredimage: image,
+      featuredvideo: video,
+      relatedcourses: relateds,
+      duration: [durationtime],
+    });
+  }, [outline]); */
   const formInitialValues = {
     /* initialValues: {
       title: title,
@@ -612,7 +724,7 @@ const CourseEditOutline = ({ course_id }) => {
             >
               {" "}
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseOutlineList outlineList={outlineList} />
+                <CourseOutlineList outlineList={outlineList} outline={outline} setOutline={setOutline} />
               </Col>
             </Row>
           </Col>
@@ -684,8 +796,8 @@ const CourseEditOutline = ({ course_id }) => {
                       <div className="outlineWidgetHolder">
                         <CourseOutlinePrerequisite
                           shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinerequisite !==
-                            curValues.outlinerequisite
+                            prevValues.outlineprerequisite !==
+                            curValues.outlineprerequisite
                           }
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}

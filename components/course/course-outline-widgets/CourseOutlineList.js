@@ -59,14 +59,17 @@ const userlist = [
     }, */
 ];
 
-const CourseOutlineList = ({ outlineList }) => {
+const CourseOutlineList = (props) => {
   /* userlist = userlist.result; */
   const router = useRouter();
-  //console.log(outlineList);
+  const {    
+    outline,
+    setOutline,
+    outlineList,
+  } = props;
 
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
-
   var dataList = [];
   if (outlineList) {
     outlineList.map((dataItem) => {
@@ -93,17 +96,21 @@ const CourseOutlineList = ({ outlineList }) => {
   });
   //console.log(Data)
 
-  const selectionChange = (event) => {
+  const selectionChange = (event) => {    
     const theData = Data.map((item) => {
       if (item.id === event.dataItem.id) {
         item.selected = !event.dataItem.selected;
+        //setOutline(item);
       } else {
         item.selected = false;
       }
       return item;
     });
     setData(theData);
-    console.log("The Data: ", theData);
+    
+    let isSelected = theData.filter((newdata) => newdata.selected === true);
+    setOutline(isSelected);
+    //console.log("The Data: ", isSelected);
   };
   const rowClick = (event) => {
     let last = lastSelectedIndex;
@@ -156,7 +163,7 @@ const CourseOutlineList = ({ outlineList }) => {
                 selectedField="selected"
                 onSelectionChange={selectionChange}
                 /* onHeaderSelectionChange={headerSelectionChange} */
-                onRowClick={rowClick}
+                onRowClick={selectionChange}
                 sortable
                 sort={theSort.sort}
                 onSortChange={(e) => {

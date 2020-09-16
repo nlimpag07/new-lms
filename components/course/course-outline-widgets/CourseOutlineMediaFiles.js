@@ -67,7 +67,7 @@ const CourseOutlineMediaFiles = (props) => {
 
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
-    setdefaultWidgetValues({ ...defaultWidgetValues, coursetype: newValues });
+    setdefaultWidgetValues({ ...defaultWidgetValues, outlinemediafiles: newValues });
   };
 
   return (

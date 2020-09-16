@@ -27,7 +27,7 @@ const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
   catname: "Outline - Prerequisite",
-  catValueLabel: "outlinerequisite",
+  catValueLabel: "outlineprerequisite",
 };
 
 const CourseOutlinePrerequisite = (props) => {
@@ -38,9 +38,9 @@ const CourseOutlinePrerequisite = (props) => {
     setdefaultWidgetValues,
     outlineList,
   } = props;
-  //console.log(outlineList);
+  console.log(outlineList);
   //const [outlineList, setoutlineList] = useState();
-  const chosenRows = defaultWidgetValues.outlinerequisite;
+  const chosenRows = defaultWidgetValues.outlineprerequisite;
   //console.log(chosenRows)
   /* useEffect(() => {
     var data = JSON.stringify({});
@@ -71,7 +71,7 @@ const CourseOutlinePrerequisite = (props) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
-      outlinerequisite: newValues,
+      outlineprerequisite: newValues,
     });
   };
 
@@ -284,7 +284,7 @@ const modalFormBody = (outlineList, chosenRows) => {
     }
   }, []);
   return (
-    <Form.List name="outlinerequisite">
+    <Form.List name="outlineprerequisite">
       {(fields, { add, remove }) => {
         return (
           <div>
