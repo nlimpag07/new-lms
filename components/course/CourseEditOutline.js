@@ -574,30 +574,16 @@ const CourseEditOutline = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-
-  /* let {
-    id,
-    featureImage,
-    featureVideo,
-    courseLanguage,
-    courseCategory,
-    title,
-    description,
-    courseInstructor,
-    courseOutline,
-    courseType,
-    courseLevel,
-    courseTag,
-    relatedCourse,
-    durationTime,
-    durationType,
-    capacity,
-    passingGrade,
-  } = outline[0] || "";
+  /* console.log(outline)
+  console.log(outlineList)  */ 
 
   useEffect(() => {
+    if(outline.length){
+      console.log(outline)
+    }
+    
     //setdefaultWidgetValues(defaultWidgetValues);
-    let {
+    /* let {
       relateds,
       categories,
       levels,
@@ -685,8 +671,8 @@ const CourseEditOutline = ({ course_id }) => {
       featuredvideo: video,
       relatedcourses: relateds,
       duration: [durationtime],
-    });
-  }, [outline]); */
+    }); */
+  }, [outline]); 
   const formInitialValues = {
     /* initialValues: {
       title: title,

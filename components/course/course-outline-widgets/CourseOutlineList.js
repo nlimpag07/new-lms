@@ -74,13 +74,13 @@ const CourseOutlineList = (props) => {
   if (outlineList) {
     outlineList.map((dataItem) => {
       //dataItem.
-      let outline = {
+      let theoutline = {
         id: dataItem.id,
         title: dataItem.title,
         userGroup: dataItem.userGroup.name,
         visibility: dataItem.visibility === 1 ? "Private" : "Public",
       };
-      dataList.push(outline);
+      dataList.push(theoutline);
       //console.log('Data Items: ',outline);
     });
     //console.log('Data List: ',dataList);
