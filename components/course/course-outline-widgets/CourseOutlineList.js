@@ -63,8 +63,8 @@ const CourseOutlineList = (props) => {
   /* userlist = userlist.result; */
   const router = useRouter();
   const {    
-    outline,
-    setOutline,
+    curOutlineId,
+    setcurOutlineId,
     outlineList,
   } = props;
 
@@ -109,7 +109,7 @@ const CourseOutlineList = (props) => {
     setData(theData);
     
     let isSelected = theData.filter((newdata) => newdata.selected === true);
-    setOutline(isSelected);
+    setcurOutlineId(isSelected);
     //console.log("The Data: ", isSelected);
   };
   const rowClick = (event) => {

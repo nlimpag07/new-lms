@@ -57,9 +57,6 @@ import CourseWidgetLanguage from "./course-general-widgets/CourseWidgetLanguage"
 import CourseWidgetTags from "./course-general-widgets/CourseWidgetTags";
 import CourseWidgetFeaturedImage from "./course-general-widgets/CourseWidgetFeaturedImage";
 import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeaturedVideo";
-
-import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
-import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -193,6 +190,8 @@ const CourseEditOutline = ({ course_id }) => {
   const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [outlineList, setOutlineList] = useState("");
   const [outline, setOutline] = useState("");
+  const [curOutlineId, setcurOutlineId] = useState("");
+
   const [spinner, setSpinner] = useState(false);
   const [dataProcessModal, setDataProcessModal] = useState({
     isvisible: false,
@@ -200,18 +199,12 @@ const CourseEditOutline = ({ course_id }) => {
     content: "",
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
+    outlinedetails: [],
     outlineprerequisite: [],
-    courselevel: [],
-    coursecategory: [],
-    coursetype: [],
-    courselanguage: [],
-    coursetag: [],
     outlinemediafiles: [],
     outlinefeaturedimage: [],
     outlinefeaturedvideo: [],
     outlineduration: [],
-    passinggrade: [],
-    capacity: [],
   });
   var [outlineActionModal, setOutlineActionModal] = useState({
     StateModal: false,
@@ -267,42 +260,6 @@ const CourseEditOutline = ({ course_id }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
 
-    if (name === "picklistlevel") {
-      var value = values.courselevel
-        ? values.courselevel.map((level, index) => level)
-        : "";
-      basicForm.setFieldsValue({
-        picklistlevel: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        courselevel: [...value],
-      });
-    }
-    if (name === "picklistcategory") {
-      var value = values.coursecategory
-        ? values.coursecategory.map((level, index) => level)
-        : "";
-      basicForm.setFieldsValue({
-        picklistcategory: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        coursecategory: [...value],
-      });
-    }
-    if (name === "picklisttype") {
-      var value = values.coursetype
-        ? values.coursetype.map((level, index) => level)
-        : "";
-      basicForm.setFieldsValue({
-        picklisttype: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        coursetype: [...value],
-      });
-    }
     if (name === "outlineprerequisite") {
       var value = values.outlineprerequisite
         ? values.outlineprerequisite.map((related, index) => related)
@@ -322,30 +279,7 @@ const CourseEditOutline = ({ course_id }) => {
         picklistduration: [...picklistFields, values],
       });
     }
-    if (name === "picklistlanguage") {
-      var value = values.courselanguage
-        ? values.courselanguage.map((level, index) => level)
-        : "";
-      basicForm.setFieldsValue({
-        picklistlanguage: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        courselanguage: [...value],
-      });
-    }
-    if (name === "picklisttags") {
-      var value = values.coursetag
-        ? values.coursetag.map((level, index) => level)
-        : "";
-      basicForm.setFieldsValue({
-        picklisttags: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        coursetag: [...value],
-      });
-    }
+
     if (name === "outlinefeaturedimage") {
       var value = values.name ? values : "";
       if (value) {
@@ -390,16 +324,7 @@ const CourseEditOutline = ({ course_id }) => {
         outlineduration: [...picklistFields, values],
       });
     }
-    if (name === "picklistpassinggrade") {
-      basicForm.setFieldsValue({
-        picklistpassinggrade: [...picklistFields, values],
-      });
-    }
-    if (name === "picklistcapacity") {
-      basicForm.setFieldsValue({
-        picklistcapacity: [...picklistFields, values],
-      });
-    }
+
     setOutlineActionModal({
       StateModal: false,
       modalTitle: "",
@@ -433,23 +358,9 @@ const CourseEditOutline = ({ course_id }) => {
       : errorList.push("Missing Course Duration Time");
     !!values.durationType
       ? data.append("durationType", values.durationType)
-      : errorList.push("Missing Course Duration Type");
-    !!values.passingGrade
-      ? data.append("passingGrade", values.passingGrade)
-      : errorList.push("Missing Course Passing Grade");
-    !!values.capacity
-      ? data.append("capacity", values.capacity)
-      : errorList.push("Missing Course Capacity");
-    !!values.picklistlevel && values.picklistlevel.length
-      ? values.picklistlevel.map((level, index) => {
-          data.append(`courseLevel[${index}][levelId]`, level.id);
-        })
-      : errorList.push("Missing Course Level");
-    !!values.picklistcategory && values.picklistcategory.length
-      ? values.picklistcategory.map((category, index) => {
-          data.append(`courseCategory[${index}][categoryId]`, category.id);
-        })
-      : errorList.push("Missing Course Category");
+      : errorList.push("Missing Course Duration Type");    
+      
+    
     !!values.outlineprerequisite && values.outlineprerequisite.length
       ? values.outlineprerequisite.map((relatedcourse, index) => {
           data.append(
@@ -462,21 +373,6 @@ const CourseEditOutline = ({ course_id }) => {
           );
         })
       : errorList.push("Missing Related Course");
-    !!values.picklistlanguage && values.picklistlanguage.length
-      ? values.picklistlanguage.map((language, index) => {
-          data.append(`courseLanguage[${index}][languageId]`, language.id);
-        })
-      : errorList.push("Missing Course Language");
-    !!values.picklisttags && values.picklisttags.length
-      ? values.picklisttags.map((tag, index) => {
-          data.append(`courseTag[${index}][tagId]`, tag.id);
-        })
-      : errorList.push("Missing Course Tag");
-    !!values.picklisttype && values.picklisttype.length
-      ? values.picklisttype.map((type, index) => {
-          data.append(`courseType[${index}][courseTypeId]`, type.id);
-        })
-      : errorList.push("Missing Course Type");
     !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
       ? values.outlinefeaturedimage.map((image, index) => {
           data.append(`featureImage`, image.fileList[0].originFileObj);
@@ -574,14 +470,71 @@ const CourseEditOutline = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  /* console.log(outline)
-  console.log(outlineList)  */ 
-
+  // console.log(curOutlineId)
+  /*console.log(outlineList)  */
+  /* let {
+    id,
+    courseOutlineMedia,
+    courseOutlineMilestone,
+    courseOutlinePrerequisite,
+    description,
+    duration,
+    featureImage,
+    interactiveVideo,
+    title,
+    userGroup,
+  } = ""; */
   useEffect(() => {
-    if(outline.length){
-      console.log(outline)
+    let {
+      id,
+      courseOutlineMedia,
+      courseOutlineMilestone,
+      courseOutlinePrerequisite,
+      description,
+      duration,
+      featureImage,
+      interactiveVideo,
+      title,
+      userGroupId,
+      visibility,
+    } = "";
+    if (curOutlineId.length) {
+      //console.log(outline)
+      let isSelected = outlineList.filter(
+        (selecteOutline) => selecteOutline.id === curOutlineId[0].id
+      );
+      //setOutline(isSelected[0])
+      console.log(isSelected[0]);
+      /*title = isSelected[0].title;
+        description = isSelected[0].description;
+        userGroupId = isSelected[0].userGroupId;
+        visibility = isSelected[0].visibility; */
+
+      //console.log(outlineItem)
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        outlinedetails: [
+          {
+            title: isSelected[0].title,
+            description: isSelected[0].description,
+            userGroupId: isSelected[0].userGroupId,
+            visibility: isSelected[0].visibility,
+          },
+        ],
+        /* featuredvideo: video,
+          relatedcourses: relateds,
+          duration: [durationtime], */
+      });
+    } else {
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        outlinedetails: [],
+        /* featuredvideo: video,
+        relatedcourses: relateds,
+        duration: [durationtime], */
+      });
     }
-    
+    //console.log(title)
     //setdefaultWidgetValues(defaultWidgetValues);
     /* let {
       relateds,
@@ -606,48 +559,7 @@ const CourseEditOutline = ({ course_id }) => {
         return list;
       });
     }
-    if (courseCategory) {
-      categories = courseCategory.map((c_category, index) => {
-        let list = {
-          id: c_category.category.id,
-          title: c_category.category.name,
-        };
-        return list;
-      });
-    }
-    if (courseLevel) {
-      levels = courseLevel.map((c_level, index) => {
-        let list = { id: c_level.level.id, title: c_level.level.name };
-        return list;
-      });
-    }
-    if (courseType) {
-      types = courseType.map((c_type, index) => {
-        let list = {
-          id: c_type.courseType.id,
-          title: c_type.courseType.name,
-        };
-        return list;
-      });
-    }
-    if (courseLanguage) {
-      languages = courseLanguage.map((c_language, index) => {
-        let list = {
-          id: c_language.language.id,
-          title: c_language.language.name,
-        };
-        return list;
-      });
-    }
-    if (courseTag) {
-      tags = courseTag.map((c_tag, index) => {
-        let list = {
-          id: c_tag.tag.id,
-          title: c_tag.tag.name,
-        };
-        return list;
-      });
-    }
+    
     if (featureImage) {
       image = featureImage;
     }
@@ -662,25 +574,19 @@ const CourseEditOutline = ({ course_id }) => {
     }
     setdefaultWidgetValues({
       ...defaultWidgetValues,
-      courselevel: levels,
-      coursecategory: categories,
-      coursetype: types,
-      courselanguage: languages,
-      coursetag: tags,
       featuredimage: image,
       featuredvideo: video,
       relatedcourses: relateds,
       duration: [durationtime],
     }); */
-  }, [outline]); 
+  }, [curOutlineId]);
+  /* console.log(defaultWidgetValues)
+  console.log(outline) */
   const formInitialValues = {
     /* initialValues: {
-      title: title,
-      description: decodeURI(description),
-      durationTime: durationTime,
-      durationType: durationType,
-      capacity: capacity,
-      passingGrade: passingGrade,
+      outlinetitle: title,
+      outlinedescription: decodeURI(description),
+      outlineduration: duration,     
     }, */
   };
   return loading == false ? (
@@ -710,7 +616,11 @@ const CourseEditOutline = ({ course_id }) => {
             >
               {" "}
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseOutlineList outlineList={outlineList} outline={outline} setOutline={setOutline} />
+                <CourseOutlineList
+                  outlineList={outlineList}
+                  curOutlineId={curOutlineId}
+                  setcurOutlineId={setcurOutlineId}
+                />
               </Col>
             </Row>
           </Col>
@@ -748,9 +658,11 @@ const CourseEditOutline = ({ course_id }) => {
                       <div className="outlineWidgetHolder">
                         <CourseOutlineDetails
                           shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistlevel !== curValues.picklistlevel
+                            prevValues.outlinedetails !==
+                            curValues.outlinedetails
                           }
                           showModal={showModal}
+                          outline={outline}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
                         />
@@ -774,7 +686,7 @@ const CourseEditOutline = ({ course_id }) => {
                         />
                       </div>
                     </Panel>
-                    <Panel
+                    {/* <Panel
                       header="Prerequisite"
                       key="2"
                       className="greyBackground"
@@ -837,7 +749,7 @@ const CourseEditOutline = ({ course_id }) => {
                           setdefaultWidgetValues={setdefaultWidgetValues}
                         />
                         </div>
-                      </Panel>
+                      </Panel> */}
                   </Collapse>
                 </Form>
               </Col>
