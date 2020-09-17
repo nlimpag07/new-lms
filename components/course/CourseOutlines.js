@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
-import Loader from "../../components/theme-layout/loader/loader";
+import Loader from "../theme-layout/loader/loader";
 
 import {
   Layout,
@@ -182,7 +182,7 @@ const ModalForm = ({
   );
 };
 
-const CourseEditOutline = ({ course_id }) => {
+const CourseOutlines = ({ course_id }) => {
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -517,7 +517,8 @@ const CourseEditOutline = ({ course_id }) => {
           {
             title: isSelected[0].title,
             description: isSelected[0].description,
-            userGroupId: isSelected[0].userGroupId,
+            usergroup:  isSelected[0].userGroup.name,
+            usergroupid: isSelected[0].userGroupId,
             visibility: isSelected[0].visibility,
           },
         ],
@@ -838,4 +839,4 @@ const CourseEditOutline = ({ course_id }) => {
   );
 };
 
-export default CourseEditOutline;
+export default CourseOutlines;

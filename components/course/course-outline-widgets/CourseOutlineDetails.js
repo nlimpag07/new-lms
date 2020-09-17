@@ -36,175 +36,182 @@ const CourseOutlineDetails = (props) => {
   /* useEffect(() => {
     console.log(chosenRows);
   }, [outline]); */
-  // console.log(chosenRows);
+  //console.log(chosenRows);
   //return outline?(title):("Nothing");
   return !chosenRows.length ? (
     <>
-      <Form.List name={widgetFieldLabels.catValueLabel}>
-        {(fields, { add, remove }) => {
-          return (
-            <>
-              <Form.Item
-                label="Outline Title"
-                name="outlinetitle"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
+      <Form.Item
+        label={widgetFieldLabels.catname}
+        noStyle
+        allowClear
+        shouldUpdate={shouldUpdate}
+      >
+        <Form.Item
+          label="Outline Title"
+          name={["outlinedetails", "outlinetitle"]}
+        >
+          <Input placeholder="Outline Title" />
+        </Form.Item>
+        <Form.Item>
+          <Input.Group compact className="course-outline-details">
+            <Form.Item
+              name={["outlinedetails", "usergroup"]}
+              label="User Group"
+              noStyle
+            >
+              <Select
+                placeholder="User Group"
+                size="medium"
+                style={{ width: "50%" }}
               >
-                <Input placeholder="Outline Title" />
-              </Form.Item>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
+                <Option value="1">Administrator</Option>
+                <Option value="2">Human Resource</Option>
+                <Option value="3">Manager</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item name={["outlinedetails", "visibility"]} noStyle>
+              <Select
+                placeholder="Visibility"
+                size="medium"
+                style={{ width: "50%" }}
               >
-                <Input.Group compact className="course-outline-details">
-                  <Form.Item name="userGroup" label="User Group" noStyle>
-                    <Select
-                      placeholder="User Group"
-                      size="medium"
-                      style={{ width: "50%" }}
-                    >
-                      <Option value="1">1</Option>
-                      <Option value="2">2</Option>
-                      <Option value="3">3</Option>
-                      <Option value="4">4</Option>
-                      <Option value="5">5</Option>
-                      <Option value="6">6</Option>
-                      <Option value="7">7</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item name="visibility" noStyle>
-                    <Select
-                      placeholder="Visibility"
-                      size="medium"
-                      style={{ width: "50%" }}
-                    >
-                      <Option value="0">Public</Option>
-                      <Option value="1">Private</Option>
-                    </Select>
-                  </Form.Item>
-                </Input.Group>
-              </Form.Item>
-              <Form.Item name="outlinedescription">
-                <TextArea rows={5} placeholder="Outline Description" />
-              </Form.Item>
-            </>
-          );
-        }}
-      </Form.List>
-      <style jsx global>{`
-        .course-outline-details .ant-form-item {
-          display: inline-block;
-          width: 30%;
-          margin: 15px 8px;
-        }
-        .course-outline-details .ant-select-selector {
-          font-weight: normal !important;
-          text-transform: Capitalize !important;
-        }
-      `}</style>
+                <Option value="0">Public</Option>
+                <Option value="1">Private</Option>
+              </Select>
+            </Form.Item>
+          </Input.Group>
+        </Form.Item>
+        <Form.Item name={["outlinedetails", "outlinedescription"]}>
+          <TextArea rows={5} placeholder="Outline Description" />
+        </Form.Item>
+
+        <style jsx global>{`
+          .course-outline-details .ant-form-item {
+            display: inline-block;
+            width: 30%;
+            margin: 15px 8px;
+          }
+          .course-outline-details .ant-select-selector {
+            font-weight: normal !important;
+            text-transform: Capitalize !important;
+          }
+        `}</style>
+      </Form.Item>
     </>
   ) : (
     <>
-      <Form.List name={widgetFieldLabels.catValueLabel}>
-        {(fields, { add, remove }) => {
-          //console.log(chosenRows);
-          return (
-            <>
-              {chosenRows.map((field, index) => {
-                field = {
-                  ...field,
-                  key: index,
-                };
-                console.log("Individual Fields:", field);
-                return (
-                  <div key={field.key}>
-                    {/* <Form.Item
-                      key={field.key}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Input
-                        placeholder={widgetFieldLabels.catname}
-                        value={field.title}
-                      />
-                    </Form.Item> */}
-                    <Form.Item
-                      label="Outline Title"
-                      key={`${field.key}-title`}
-                      /*  rules={[
-                        {
-                          required: true,
-                        },
-                      ]} */
-                    >
-                      <Input placeholder="Outline Title" value={field.title} />
-                    </Form.Item>
-                    <Form.Item>
-                      <Input.Group compact className="course-outline-details">
-                        <Form.Item name="userGroup" label="User Group" noStyle>
-                          <Select
-                            placeholder="User Group"
-                            size="medium"
-                            style={{ width: "50%" }}
+      <Form.Item
+        label={widgetFieldLabels.catname}
+        noStyle
+        allowClear
+        shouldUpdate={shouldUpdate}
+      >
+        <Form.List name={widgetFieldLabels.catValueLabel}>
+          {(fields, { add, remove }) => {
+            return (
+              <>
+                {chosenRows.map((field, index) => {
+                  field = {
+                    ...field,
+                    name: index,
+                    key: index,
+                  };
+                  console.log("Individual Fields:", field);
+                  return (
+                    <div key={field.key}>
+                      <Form.Item
+                        label="Outline Title"
+                        name={[field.name, "outlinetitle"]}
+                        key={`${field.key}-title`}
+                      >
+                        <Input
+                          placeholder={field.title}
+                          //defaultValue={field.title}
+                        />
+                      </Form.Item>
+                      <Form.Item>
+                        <Input.Group compact className="course-outline-details">
+                          <Form.Item
+                            name={[field.name, "usergroup"]}
+                            label="User Group"
+                            noStyle
                           >
-                            <Option value="1">1</Option>
-                            <Option value="2">2</Option>
-                            <Option value="3">3</Option>
-                            <Option value="4">4</Option>
-                            <Option value="5">5</Option>
-                            <Option value="6">6</Option>
-                            <Option value="7">7</Option>
-                          </Select>
-                        </Form.Item>
-                        <Form.Item name="visibility" noStyle>
-                          <Select
-                            placeholder="Visibility"
-                            size="medium"
-                            style={{ width: "50%" }}
-                          >
-                            <Option value="0">Public</Option>
-                            <Option value="1">Private</Option>
-                          </Select>
-                        </Form.Item>
-                      </Input.Group>
-                    </Form.Item>
-                    <Form.Item name="outlinedescription">
-                      <TextArea rows={5} placeholder="Outline Description" />
-                    </Form.Item>
-
-                    {/* <Form.Item
-                      noStyle
-                      key={field.key}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Input
-                        placeholder={widgetFieldLabels.catname}
-                        style={{ width: "85%" }}
-                        key={field.key}
-                        value={field.value}
-                        readOnly
-                      />
-                    </Form.Item> */}
-                  </div>
-                );
-              })}
-            </>
-          );
-        }}
-      </Form.List>
+                            <Select
+                              placeholder={`${field.usergroup}`}
+                              size="medium"
+                              style={{ width: "50%" }}
+                              //defaultActiveFirstOption={`${field.usergroupid}`}
+                            >
+                              <Option value="1">Administrator</Option>
+                              <Option value="2">Human Resource</Option>
+                              <Option value="3">Manager</Option>
+                            </Select>
+                          </Form.Item>
+                          <Form.Item name={[field.name, "visibility"]} noStyle>
+                            <Select
+                              placeholder={`${
+                                field.visibility == 1 ? "Private" : "Public"
+                              }`}
+                              size="medium"
+                              style={{ width: "50%" }}
+                            >
+                              <Option value="0">Public</Option>
+                              <Option value="1">Private</Option>
+                            </Select>
+                          </Form.Item>
+                        </Input.Group>
+                      </Form.Item>
+                      <Form.Item
+                        name={[field.name, "description"]}
+                      >
+                        <TextArea rows={5} placeholder={`${field.description}`} />
+                      </Form.Item>
+                    </div>
+                  );
+                })}
+              </>
+            );
+          }}
+        </Form.List>
+      </Form.Item>
+      {/* <Form.Item
+        label="Outline Title"
+        name={["outlinedetails", "outlinetitle"]}
+      >
+        <Input placeholder="Outline Title" value={chosenRows.title} />
+      </Form.Item>
+      <Form.Item>
+        <Input.Group compact className="course-outline-details">
+          <Form.Item name={["outlinedetails", "usergroup"]} label="User Group" noStyle>
+            <Select
+              placeholder="User Group"
+              size="medium"
+              style={{ width: "50%" }}
+            >
+              <Option value="1">1</Option>
+              <Option value="2">2</Option>
+              <Option value="3">3</Option>
+              <Option value="4">4</Option>
+              <Option value="5">5</Option>
+              <Option value="6">6</Option>
+              <Option value="7">7</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name={["outlinedetails", "visibility"]} noStyle>
+            <Select
+              placeholder="Visibility"
+              size="medium"
+              style={{ width: "50%" }}
+            >
+              <Option value="0">Public</Option>
+              <Option value="1">Private</Option>
+            </Select>
+          </Form.Item>
+        </Input.Group>
+      </Form.Item>
+      <Form.Item name={["outlinedetails", "outlinedescription"]}>
+        <TextArea rows={5} placeholder="Outline Description" />
+      </Form.Item> */}
       <style jsx global>{`
         .course-outline-details .ant-form-item {
           display: inline-block;
