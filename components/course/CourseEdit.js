@@ -415,26 +415,26 @@ const CourseEdit = ({ course_id }) => {
       : errorList.push("Missing Course Description");
     !!values.durationTime
       ? data.append("durationTime", values.durationTime)
-      : errorList.push("Missing Course Duration Time");
+      : '';
     !!values.durationType
       ? data.append("durationType", values.durationType)
-      : errorList.push("Missing Course Duration Type");
+      : '';
     !!values.passingGrade
       ? data.append("passingGrade", values.passingGrade)
-      : errorList.push("Missing Course Passing Grade");
+      : '';
     !!values.capacity
       ? data.append("capacity", values.capacity)
-      : errorList.push("Missing Course Capacity");
+      : '';
     !!values.picklistlevel && values.picklistlevel.length
       ? values.picklistlevel.map((level, index) => {
           data.append(`courseLevel[${index}][levelId]`, level.id);
         })
-      : errorList.push("Missing Course Level");
+      : '';
     !!values.picklistcategory && values.picklistcategory.length
       ? values.picklistcategory.map((category, index) => {
           data.append(`courseCategory[${index}][categoryId]`, category.id);
         })
-      : errorList.push("Missing Course Category");
+      : '';
     !!values.picklistrelatedcourses && values.picklistrelatedcourses.length
       ? values.picklistrelatedcourses.map((relatedcourse, index) => {
           data.append(
@@ -446,33 +446,32 @@ const CourseEdit = ({ course_id }) => {
             relatedcourse.isreq
           );
         })
-      : errorList.push("Missing Related Course");
+      : '';
     !!values.picklistlanguage && values.picklistlanguage.length
       ? values.picklistlanguage.map((language, index) => {
           data.append(`courseLanguage[${index}][languageId]`, language.id);
         })
-      : errorList.push("Missing Course Language");
+      : '';
     !!values.picklisttags && values.picklisttags.length
       ? values.picklisttags.map((tag, index) => {
           data.append(`courseTag[${index}][tagId]`, tag.id);
         })
-      : errorList.push("Missing Course Tag");
+      : '';
     !!values.picklisttype && values.picklisttype.length
       ? values.picklisttype.map((type, index) => {
           data.append(`courseType[${index}][courseTypeId]`, type.id);
         })
-      : errorList.push("Missing Course Type");
+      : '';
     !!values.picklistfeaturedimage && values.picklistfeaturedimage.length
       ? values.picklistfeaturedimage.map((image, index) => {
           data.append(`featureImage`, image.fileList[0].originFileObj);
         })
-      : errorList.push("Missing Course Image");
-    values.picklistfeaturedvideo &&
-      values.picklistfeaturedvideo.length &&
+      : '';
+    !!values.picklistfeaturedvideo &&
+      values.picklistfeaturedvideo.length ?
       values.picklistfeaturedvideo.map((video, index) => {
-        //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
-      });
+      }):'';
     /* !!values.picklistfeaturedvideo
       ? values.picklistfeaturedvideo.map((video, index) => {
           data.append(`featureVideo`, video.fileList[0].originFileObj);
@@ -486,8 +485,8 @@ const CourseEdit = ({ course_id }) => {
     } else {
       //console.log("NO ERROR, PROCEED WITH SUBMISSION");
       var config = {
-        method: "post",
-        url: apiBaseUrl + "/courses",
+        method: "put",
+        url: apiBaseUrl + "/courses/" + course_id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -498,17 +497,17 @@ const CourseEdit = ({ course_id }) => {
       axios(config)
         .then((res) => {
           console.log("res: ", res.data);
-          onFinishModal("", res.data);
+          onFinishModal("", res.data, course_id);
         })
         .catch((err) => {
-          //console.log("err: ", err.response.data);
+          console.log("err: ", err.response.data);
           errorList.push(err.response.data.message);
-          onFinishModal(errorList, "");
+          onFinishModal(errorList, "", course_id);
         });
     }
   };
 
-  const onFinishModal = (errorList, response) => {
+  const onFinishModal = (errorList, response, course_id) => {
     setSpinner(false);
     var modalWidth = 750;
     var theBody = "";
@@ -548,7 +547,7 @@ const CourseEdit = ({ course_id }) => {
           visible: false;
           router.push(
             `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${response.id}/course-outline`
+            `/${linkUrl}/course/edit/${course_id}`
           );
         },
       });
@@ -744,19 +743,19 @@ const CourseEdit = ({ course_id }) => {
                     <Form.Item
                       name="title"
                       label="Course Title"
-                      rules={[
+                      /* rules={[
                         {
                           required: true,
                         },
-                      ]}
+                      ]} */
                     >
-                      <Input placeholder="Course title" allowClear />
+                      <Input placeholder={`${title}`} allowClear />
                     </Form.Item>
 
                     <Form.Item label="Course Description" name="description">
                       <TextArea
                         rows={10}
-                        placeholder="Course Description"
+                        placeholder={`${decodeURI(description)}`}
                         allowClear
                         /* onChange={onChange} */
                       />
