@@ -283,7 +283,7 @@ const CourseEdit = ({ course_id }) => {
       var value = values.courselevel
         ? values.courselevel.map((level, index) => level)
         : "";
-      console.log(value);
+      //console.log(value);
       basicForm.setFieldsValue({
         picklistlevel: [...value],
       });
@@ -413,13 +413,9 @@ const CourseEdit = ({ course_id }) => {
     });
     setSpinner(true);
 
-    /* console.log("Finish:", values);
-    console.log("Const Default Values ", constDefaultValues.courselevel);
-    console.log("=========================================");
-    console.log("Form Values ", values.picklistlevel); */
+    console.log("Finish:", values);
 
-
-    /* var data = new FormData();
+    var data = new FormData();
     var errorList = [];
     //NLI: Extended Form Values Processing & Filtration
     !!values.title
@@ -428,6 +424,309 @@ const CourseEdit = ({ course_id }) => {
     !!values.description
       ? data.append("description", encodeURI(decodeURI(values.description)))
       : errorList.push("Missing Course Description");
+
+    //Edit picklistlevel
+    if (values.picklistlevel) {
+      //Array for Level Addition
+      var processPickListLevel;
+      processPickListLevel = values.picklistlevel.map(
+        (submittedlevel, index) => {
+          let prevLevel = constDefaultValues.courselevel.filter(
+            (previouslevel) => {
+              let theItem = "";
+              if (submittedlevel.levelId == previouslevel.levelId) {
+                theItem = previouslevel;
+              }
+              return theItem;
+            }
+          );
+          let newLevels = {
+            id: prevLevel.length ? prevLevel[0].id : 0,
+            title: submittedlevel.title,
+            levelId: submittedlevel.levelId,
+            isticked: submittedlevel.isticked,
+          };
+          return newLevels;
+        }
+      );
+      //console.log("SubmittedLevels: ", processPickListLevel);
+      processPickListLevel.map((level, index) => {
+        data.append(`courseLevel[${index}][id]`, level.id);
+        data.append(`courseLevel[${index}][levelId]`, level.levelId);
+      });
+
+      //Array for Level deletion
+      var tobedeleted = [];
+      constDefaultValues.courselevel.map((constantlevel, index) => {
+        let newlevel = processPickListLevel.filter((latest) => {
+          let theItem = "";
+          if (constantlevel.levelId == latest.levelId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newlevel.length) {
+          let delLevel = {
+            id: constantlevel.id,
+            title: constantlevel.title,
+            levelId: constantlevel.levelId,
+            isticked: false,
+          };
+          tobedeleted.push(delLevel);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedLevels: ", tobedeleted);
+      tobedeleted.map((level, index) => {        
+        data.append(`deleteCourseLevel[${index}][id]`, level.id);
+        data.append(`deleteCourseLevel[${index}][levelId]`, level.levelId);
+      })
+
+    }
+
+    //Edit picklistcategory
+    if (values.picklistcategory) {
+      //Array for Addition
+      var processPickListCategory;
+      processPickListCategory = values.picklistcategory.map(
+        (submittedCat, index) => {
+          let prevCat = constDefaultValues.coursecategory.filter(
+            (previousCat) => {
+              let theItem = "";
+              if (submittedCat.categoryId == previousCat.categoryId) {
+                theItem = previousCat;
+              }
+              return theItem;
+            }
+          );
+          let newCats = {
+            id: prevCat.length ? prevCat[0].id : 0,
+            title: submittedCat.title,
+            categoryId: submittedCat.categoryId,
+            isticked: submittedCat.isticked,
+          };
+          return newCats;
+        }
+      );
+      //console.log("SubmittedCats: ", processPickListCategory);
+      processPickListCategory.map((cat, index) => {
+        data.append(`courseCategory[${index}][id]`, cat.id);
+        data.append(`courseCategory[${index}][categoryId]`, cat.categoryId);
+      });
+
+      //Array for deletion
+      var tobedeleted = [];
+      constDefaultValues.coursecategory.map((constantcat, index) => {
+        let newCat = processPickListCategory.filter((latest) => {
+          let theItem = "";
+          if (constantcat.categoryId == latest.categoryId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newCat.length) {
+          let delCat = {
+            id: constantcat.id,
+            title: constantcat.title,
+            categoryId: constantcat.categoryId,
+            isticked: false,
+          };
+          tobedeleted.push(delCat);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedCategories: ", tobedeleted);
+      tobedeleted.map((cat, index) => {        
+        data.append(`deleteCourseCategory[${index}][id]`, cat.id);
+        data.append(`deleteCourseCategory[${index}][categoryId]`, cat.categoryId);
+      })
+
+    }
+
+    //Edit picklisttype
+    if (values.picklisttype) {
+      //Array for Addition
+      var processPickListType;
+      processPickListType = values.picklisttype.map(
+        (submittedType, index) => {
+          let prevType = constDefaultValues.coursetype.filter(
+            (previousType) => {
+              let theItem = "";
+              if (submittedType.courseTypeId == previousType.courseTypeId) {
+                theItem = previousType;
+              }
+              return theItem;
+            }
+          );
+          let newTypes = {
+            id: prevType.length ? prevType[0].id : 0,
+            title: submittedType.title,
+            courseTypeId: submittedType.courseTypeId,
+            isticked: submittedType.isticked,
+          };
+          return newTypes;
+        }
+      );
+      //console.log("SubmittedTypes: ", processPickListType);
+      processPickListType.map((typ, index) => {
+        data.append(`courseType[${index}][id]`, typ.id);
+        data.append(`courseType[${index}][courseTypeId]`, typ.courseTypeId);
+      });
+
+      //Array for deletion
+      var tobedeleted = [];
+      constDefaultValues.coursetype.map((constanttype, index) => {
+        let newTyp = processPickListType.filter((latest) => {
+          let theItem = "";
+          if (constanttype.courseTypeId == latest.courseTypeId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newTyp.length) {
+          let delTyp = {
+            id: constanttype.id,
+            title: constanttype.title,
+            courseTypeId: constanttype.courseTypeId,
+            isticked: false,
+          };
+          tobedeleted.push(delTyp);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedTypes: ", tobedeleted);
+      tobedeleted.map((typ, index) => {        
+        data.append(`deleteCourseType[${index}][id]`, typ.id);
+        data.append(`deleteCourseType[${index}][courseTypeId]`, typ.courseTypeId);
+      })
+
+    }
+
+
+    //Edit picklistlanguage
+    if (values.picklistlanguage) {
+      //Array for Addition
+      var processPickListLanguage;
+      processPickListLanguage = values.picklistlanguage.map(
+        (submittedLang, index) => {
+          let prevLang = constDefaultValues.courselanguage.filter(
+            (previousLanguage) => {
+              let theItem = "";
+              if (submittedLang.languageId == previousLanguage.languageId) {
+                theItem = previousLanguage;
+              }
+              return theItem;
+            }
+          );
+          let newLanguages = {
+            id: prevLang.length ? prevLang[0].id : 0,
+            title: submittedLang.title,
+            languageId: submittedLang.languageId,
+            isticked: submittedLang.isticked,
+          };
+          return newLanguages;
+        }
+      );
+      //console.log("submittedLang: ", processPickListLanguage);
+      processPickListLanguage.map((lang, index) => {
+        data.append(`courseLanguage[${index}][id]`, lang.id);
+        data.append(`courseLanguage[${index}][languageId]`, lang.languageId);
+      });
+
+      //Array for deletion
+      var tobedeleted = [];
+      constDefaultValues.courselanguage.map((constantlang, index) => {
+        let newLang = processPickListLanguage.filter((latest) => {
+          let theItem = "";
+          if (constantlang.languageId == latest.languageId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newLang.length) {
+          let delLang = {
+            id: constantlang.id,
+            title: constantlang.title,
+            languageId: constantlang.languageId,
+            isticked: false,
+          };
+          tobedeleted.push(delLang);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedLanguages: ", tobedeleted);
+      tobedeleted.map((lang, index) => {        
+        data.append(`deleteCourseLanguage[${index}][id]`, lang.id);
+        data.append(`deleteCourseLanguage[${index}][languageId]`, lang.languageId);
+      })
+
+    }
+
+    //Edit picklistTags
+    if (values.picklisttags) {
+      //Array for Addition
+      var processPickListTags;
+      processPickListTags = values.picklisttags.map(
+        (submittedTag, index) => {
+          let prevTag = constDefaultValues.coursetag.filter(
+            (previousTag) => {
+              let theItem = "";
+              if (submittedTag.tagId == previousTag.tagId) {
+                theItem = previousTag;
+              }
+              return theItem;
+            }
+          );
+          let newTags = {
+            id: prevTag.length ? prevTag[0].id : 0,
+            title: submittedTag.title,
+            tagId: submittedTag.tagId,
+            isticked: submittedTag.isticked,
+          };
+          return newTags;
+        }
+      );
+      //console.log("submittedTag: ", processPickListTags);
+      processPickListTags.map((tag, index) => {
+        data.append(`courseTag[${index}][id]`, tag.id);
+        data.append(`courseTag[${index}][tagId]`, tag.tagId);
+      });
+
+      //Array for deletion
+      var tobedeleted = [];
+      constDefaultValues.coursetag.map((constanttag, index) => {
+        let newTag = processPickListTags.filter((latest) => {
+          let theItem = "";
+          if (constanttag.tagId == latest.tagId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newTag.length) {
+          let delTag = {
+            id: constanttag.id,
+            title: constanttag.title,
+            tagId: constanttag.tagId,
+            isticked: false,
+          };
+          tobedeleted.push(delTag);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedTags: ", tobedeleted);
+      tobedeleted.map((tag, index) => {        
+        data.append(`deleteCourseTag[${index}][id]`, tag.id);
+        data.append(`deleteCourseTag[${index}][tagId]`, tag.tagId);
+      })
+
+    }
+    
+    /* 
     !!values.durationTime
       ? data.append("durationTime", values.durationTime)
       : '';
@@ -604,7 +903,7 @@ const CourseEdit = ({ course_id }) => {
     capacity,
     passingGrade,
   } = course[0] || "";
-
+  //console.log(course[0])
   useEffect(() => {
     //setdefaultWidgetValues(defaultWidgetValues);
     let {
@@ -621,11 +920,14 @@ const CourseEdit = ({ course_id }) => {
     } = "";
 
     if (relatedCourse) {
+      //console.log(relatedCourse);
       relateds = relatedCourse.map((c_related, index) => {
         let list = {
           id: c_related.courseRelated.course.id,
           title: c_related.courseRelated.course.title,
           isreq: c_related.isPrerequisite,
+          courseRelatedId: c_related.courseRelated.courseRelatedId,
+          isticked: true,          
         };
         return list;
       });
@@ -635,6 +937,8 @@ const CourseEdit = ({ course_id }) => {
         let list = {
           id: c_category.category.id,
           title: c_category.category.name,
+          categoryId: c_category.categoryId,
+          isticked: true,
         };
         return list;
       });
@@ -644,7 +948,6 @@ const CourseEdit = ({ course_id }) => {
       levels = courseLevel.map((c_level, index) => {
         let list = {
           id: c_level.id,
-          /* courseId: c_level.courseId, */
           levelId: c_level.levelId,
           title: c_level.level.name,
           isticked: true,
@@ -653,28 +956,37 @@ const CourseEdit = ({ course_id }) => {
       });
     }
     if (courseType) {
+      //console.log(courseType);
       types = courseType.map((c_type, index) => {
         let list = {
           id: c_type.courseType.id,
           title: c_type.courseType.name,
+          courseTypeId: c_type.courseTypeId,
+          isticked: true,
         };
         return list;
       });
     }
     if (courseLanguage) {
+      //console.log(courseLanguage);
       languages = courseLanguage.map((c_language, index) => {
         let list = {
           id: c_language.language.id,
           title: c_language.language.name,
+          languageId: c_language.languageId,
+          isticked: true,
         };
         return list;
       });
     }
     if (courseTag) {
+      //console.log(courseTag)
       tags = courseTag.map((c_tag, index) => {
         let list = {
           id: c_tag.tag.id,
           title: c_tag.tag.name,
+          tagId:c_tag.tagId,
+          isticked: true,
         };
         return list;
       });

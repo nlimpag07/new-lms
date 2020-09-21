@@ -124,7 +124,7 @@ const CourseWidgetCategory = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -134,7 +134,7 @@ const CourseWidgetCategory = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -185,7 +185,7 @@ const CourseWidgetCategory = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -195,7 +195,7 @@ const CourseWidgetCategory = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -226,14 +226,15 @@ const CourseWidgetCategory = (props) => {
   );
 };
 const modalFormBody = (allCourseCategory, chosenRows) => {
+  const [sourceData, setsourceData] = useState([]);
   const data = [];
-  allCourseCategory.map((category, index) => {
+  /* allCourseCategory.map((category, index) => {
     data.push({
       key: index,
       id: category.id,
       title: category.name,
     });
-  });
+  }); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -253,8 +254,13 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    console.log(selectedRows);
+    let rowData = selectedRows.map((entry, index) => {
+      entry.isticked = true;
+      return entry;
+    });
+    setSelectedRows(rowData);
+    //setSelectedRows(selectedRows);
+    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -265,17 +271,45 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.id) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
+      let datamap = allCourseCategory.map((category, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (item.categoryId == category.id) {
+            newitem = true;
           }
+          return newitem;
         });
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: category.name,
+          categoryId: category.id,
+          isticked: theChosen.length ? true : false,
+        };
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
+        return theitem;
       });
-      //console.log(thekeys)
+
+      setsourceData(datamap);
+      //console.log(datamap);
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
+    } else {
+      let theSource = allCourseCategory.map((category, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: category.name,
+          categoryId: category.id,
+          isticked: false,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
   }, []);
   return (
@@ -306,6 +340,25 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
                   >
                     <Input placeholder="Category Title" value={field.title} />
                   </Form.Item>
+                  <Form.Item
+                    name={[field.name, "categoryId"]}
+                    initialValue={field.categoryId}
+                    key={`categoryId-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="categoryId Title" value={field.categoryId} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isticked"]}
+                    initialValue={field.isticked}
+                    key={`isticked-${field.key}`}
+                    hidden
+                  >
+                    <Input
+                      placeholder="isTicked Title"
+                      value={field.isticked}
+                    />
+                  </Form.Item>
                 </div>
               ) : (
                 <div>Hello</div>
@@ -315,7 +368,7 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );

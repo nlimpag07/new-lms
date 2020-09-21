@@ -124,7 +124,7 @@ const CourseWidgetLanguage = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -134,7 +134,7 @@ const CourseWidgetLanguage = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -185,7 +185,7 @@ const CourseWidgetLanguage = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -195,7 +195,7 @@ const CourseWidgetLanguage = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -226,14 +226,15 @@ const CourseWidgetLanguage = (props) => {
   );
 };
 const modalFormBody = (allCourseLanguage, chosenRows) => {
+  const [sourceData, setsourceData] = useState([]);
   const data = [];
-  allCourseLanguage.map((language, index) => {
+  /* allCourseLanguage.map((language, index) => {
     data.push({
       key: index,
       id: language.id,
       title: language.name,
     });
-  });
+  }); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -253,8 +254,13 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    //console.log(selectedRows);
+    let rowData = selectedRows.map((entry, index) => {
+      entry.isticked = true;
+      return entry;
+    });
+    setSelectedRows(rowData);
+    //setSelectedRows(selectedRows);
+    console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -262,20 +268,49 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
     onChange: onSelectChange,
   };
   useEffect(() => {
+    
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.id) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
+      let datamap = allCourseLanguage.map((language, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (item.languageId == language.id) {
+            newitem = true;
           }
+          return newitem;
         });
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: language.name,
+          languageId: language.id,
+          isticked: theChosen.length ? true : false,
+        };
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
+        return theitem;
       });
-      //console.log(thekeys)
+
+      setsourceData(datamap);
+      //console.log(datamap);
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
+    } else {
+      let theSource = allCourseLanguage.map((language, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: language.name,
+          languageId: language.id,
+          isticked: false,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
   }, []);
   return (
@@ -309,6 +344,25 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
                       value={field.title}
                     />
                   </Form.Item>
+                  <Form.Item
+                    name={[field.name, "languageId"]}
+                    initialValue={field.languageId}
+                    key={`languageId-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="languageId Title" value={field.languageId} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isticked"]}
+                    initialValue={field.isticked}
+                    key={`isticked-${field.key}`}
+                    hidden
+                  >
+                    <Input
+                      placeholder="isTicked Title"
+                      value={field.isticked}
+                    />
+                  </Form.Item>
                 </div>
               ) : (
                 <div>Data Empty</div>
@@ -318,7 +372,7 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );

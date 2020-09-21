@@ -211,7 +211,7 @@ const CourseWidgetLevel = (props) => {
         }}
       </Form.Item>
       <span>
-        <SettingFilled
+        <PlusOutlined
           onClick={() =>
             showModal(
               widgetFieldLabels.catname,
@@ -260,8 +260,13 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    //console.log(selectedRows);
+    let rowData = selectedRows.map((entry, index) => {
+      entry.isticked = true;
+      return entry;
+    });
+    setSelectedRows(rowData);
+    //setSelectedRows(selectedRows);
+    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -280,7 +285,6 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
           }
           return newitem;
         });
-        console.log(theChosen);
         let theitem = {
           key: index,
           id: theChosen.length ? theChosen[0].id : 0,
@@ -288,32 +292,18 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
           levelId: level.id,
           isticked: theChosen.length ? true : false,
         };
-        /* chosenRows.map(chosen => {
-          let ticked = false;
-          if(level.levelId ==chosen.levelId){
-            ticked=true;
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
-          }         
-        }) */
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
         return theitem;
-        //console.log(theChosen[index]);
       });
 
       setsourceData(datamap);
-      console.log(datamap);
-
-      /* chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.levelId == chosen.levelId) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
-          }
-        });
-      });
-      //console.log(thekeys)
+      //console.log(datamap);
       setSelectedRowKeys(defaultKeys);
-      setSelectedRows(defaultRows); */
+      setSelectedRows(defaultRows);
     } else {
       let theSource = allCourseLevel.map((level, index) => {
         let item = {
@@ -328,6 +318,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
       setsourceData(theSource);
     }
   }, []);
+  //console.log(selectedRows)
   return (
     <Form.List name="courselevel">
       {(fields, { add, remove }) => {
@@ -344,6 +335,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "id"]}
                     initialValue={field.id}
                     key={`level_id-${field.key}`}
+                    hidden
                   >
                     <Input placeholder="Level ID" value={field.id} />
                   </Form.Item>
@@ -351,6 +343,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "title"]}
                     initialValue={field.title}
                     key={`level-${field.key}`}
+                    hidden
                   >
                     <Input placeholder="Level Title" value={field.title} />
                   </Form.Item>
@@ -358,6 +351,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "levelId"]}
                     initialValue={field.levelId}
                     key={`levelId-${field.key}`}
+                    hidden
                   >
                     <Input placeholder="LevelId Title" value={field.levelId} />
                   </Form.Item>
@@ -365,6 +359,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "isticked"]}
                     initialValue={field.isticked}
                     key={`isticked-${field.key}`}
+                    hidden
                   >
                     <Input
                       placeholder="isTicked Title"

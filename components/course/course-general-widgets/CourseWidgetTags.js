@@ -121,7 +121,7 @@ const CourseWidgetTags = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -131,7 +131,7 @@ const CourseWidgetTags = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -182,7 +182,7 @@ const CourseWidgetTags = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -192,7 +192,7 @@ const CourseWidgetTags = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -223,14 +223,15 @@ const CourseWidgetTags = (props) => {
   );
 };
 const modalFormBody = (allCourseTags, chosenRows) => {
+  const [sourceData, setsourceData] = useState([]);
   const data = [];
-  allCourseTags.map((tag, index) => {
+  /* allCourseTags.map((tag, index) => {
     data.push({
       key: index,
       id: tag.id,
       title: tag.name,
     });
-  });
+  }); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -250,8 +251,13 @@ const modalFormBody = (allCourseTags, chosenRows) => {
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    //console.log(selectedRows);
+    let rowData = selectedRows.map((entry, index) => {
+      entry.isticked = true;
+      return entry;
+    });
+    setSelectedRows(rowData);
+    //setSelectedRows(selectedRows);
+    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -262,17 +268,45 @@ const modalFormBody = (allCourseTags, chosenRows) => {
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.id) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
+      let datamap = allCourseTags.map((tag, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (item.tagId == tag.id) {
+            newitem = true;
           }
+          return newitem;
         });
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: tag.name,
+          tagId: tag.id,
+          isticked: theChosen.length ? true : false,
+        };
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
+        return theitem;
       });
-      //console.log(thekeys)
+
+      setsourceData(datamap);
+      //console.log(datamap);
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
+    } else {
+      let theSource = allCourseTags.map((tag, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: tag.name,
+          tagId: tag.id,
+          isticked: false,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
   }, []);
   return (
@@ -306,6 +340,25 @@ const modalFormBody = (allCourseTags, chosenRows) => {
                       value={field.title}
                     />
                   </Form.Item>
+                  <Form.Item
+                    name={[field.name, "tagId"]}
+                    initialValue={field.tagId}
+                    key={`tagId-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="tagId Title" value={field.tagId} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isticked"]}
+                    initialValue={field.isticked}
+                    key={`isticked-${field.key}`}
+                    hidden
+                  >
+                    <Input
+                      placeholder="isTicked Title"
+                      value={field.isticked}
+                    />
+                  </Form.Item>
                 </div>
               ) : (
                 <div>Data Empty</div>
@@ -315,7 +368,7 @@ const modalFormBody = (allCourseTags, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );
