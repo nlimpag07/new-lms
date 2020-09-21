@@ -31,6 +31,7 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import cookie from "cookie";
+import { useCourseList } from "../../../providers/CourseProvider";
 
 import {
   EditOutlined,
@@ -46,7 +47,13 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype"); */
 
 const CourseManagement = (props) => {
-  //console.log(props)
+  const { courselist } = props;
+  const { courseAllList, setCourseAllList } = useCourseList();
+
+  //console.log("Manage InitialProps", courselist);
+  useEffect(() => {
+    setCourseAllList(courselist);
+  }, []);
   const router = useRouter();
   var urlPath = router.asPath;
   var theContent; //content assignment variable
@@ -154,8 +161,7 @@ const CourseManagement = (props) => {
 
   //console.log(router.query.manage.length);
   //
-
-  useEffect(() => {}, []);
+  
 
   return (
     <MainThemeLayout>
@@ -173,7 +179,7 @@ const CourseManagement = (props) => {
     </MainThemeLayout>
   );
 };
-/* CourseManagement.getInitialProps = async (ctx) => {
+CourseManagement.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -188,19 +194,19 @@ const CourseManagement = (props) => {
     token = userData.token;
   }
 
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/courses",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
 
-    const result = await axios(config);
-    res = result.data;
+  const result = await axios(config);
+  res = result.data;
   const data = res;
-  console.log(data);
-  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
-}; */
+  //console.log(data);
+  return { courselist: res };
+};
 export default withAuth(CourseManagement);

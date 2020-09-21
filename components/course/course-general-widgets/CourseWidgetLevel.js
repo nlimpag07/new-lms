@@ -12,7 +12,11 @@ import {
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  SettingFilled,
+} from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -92,7 +96,7 @@ const CourseWidgetLevel = (props) => {
                         field = {
                           ...field,
                           name: index,
-                            key: index,
+                          key: index,
                           value: field.title,
                           id: field.id,
                         };
@@ -121,7 +125,7 @@ const CourseWidgetLevel = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -131,7 +135,7 @@ const CourseWidgetLevel = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -182,7 +186,7 @@ const CourseWidgetLevel = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -192,7 +196,7 @@ const CourseWidgetLevel = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -207,7 +211,7 @@ const CourseWidgetLevel = (props) => {
         }}
       </Form.Item>
       <span>
-        <PlusOutlined
+        <SettingFilled
           onClick={() =>
             showModal(
               widgetFieldLabels.catname,
@@ -223,14 +227,20 @@ const CourseWidgetLevel = (props) => {
   );
 };
 const modalFormBody = (allCourseLevel, chosenRows) => {
+  const [sourceData, setsourceData] = useState([]);
   const data = [];
-  allCourseLevel.map((level, index) => {
+  /* allCourseLevel.map((level, index) => {
     data.push({
       key: index,
       id: level.id,
       title: level.name,
+      levelId:level.id,
+      isticked:false,
     });
-  });
+  }); */
+  /* console.log(data);
+  console.log("=================");
+  console.log(chosenRows); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -251,7 +261,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
-    console.log(selectedRows);
+    //console.log(selectedRows);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -262,9 +272,40 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
-      chosenRows.map((chosen, index) => {
+      let datamap = allCourseLevel.map((level, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (item.levelId == level.id) {
+            newitem = true;
+          }
+          return newitem;
+        });
+        console.log(theChosen);
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: level.name,
+          levelId: level.id,
+          isticked: theChosen.length ? true : false,
+        };
+        /* chosenRows.map(chosen => {
+          let ticked = false;
+          if(level.levelId ==chosen.levelId){
+            ticked=true;
+            defaultRows.push(item);
+            defaultKeys.push(item.key);
+          }         
+        }) */
+        return theitem;
+        //console.log(theChosen[index]);
+      });
+
+      setsourceData(datamap);
+      console.log(datamap);
+
+      /* chosenRows.map((chosen, index) => {
         data.filter((item) => {
-          if (item.id == chosen.id) {
+          if (item.levelId == chosen.levelId) {
             defaultRows.push(item);
             defaultKeys.push(item.key);
           }
@@ -272,7 +313,19 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
       });
       //console.log(thekeys)
       setSelectedRowKeys(defaultKeys);
-      setSelectedRows(defaultRows);
+      setSelectedRows(defaultRows); */
+    } else {
+      let theSource = allCourseLevel.map((level, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: level.name,
+          levelId: level.id,
+          isticked: false,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
   }, []);
   return (
@@ -291,7 +344,6 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "id"]}
                     initialValue={field.id}
                     key={`level_id-${field.key}`}
-                    hidden
                   >
                     <Input placeholder="Level ID" value={field.id} />
                   </Form.Item>
@@ -299,9 +351,25 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
                     name={[field.name, "title"]}
                     initialValue={field.title}
                     key={`level-${field.key}`}
-                    hidden
                   >
                     <Input placeholder="Level Title" value={field.title} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "levelId"]}
+                    initialValue={field.levelId}
+                    key={`levelId-${field.key}`}
+                  >
+                    <Input placeholder="LevelId Title" value={field.levelId} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isticked"]}
+                    initialValue={field.isticked}
+                    key={`isticked-${field.key}`}
+                  >
+                    <Input
+                      placeholder="isTicked Title"
+                      value={field.isticked}
+                    />
                   </Form.Item>
                 </div>
               ) : (
@@ -312,7 +380,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );

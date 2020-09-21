@@ -30,14 +30,19 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const Course = () => {
+const Course = (props) => {
+  const { courselist } = props;
+
   //console.log(courselist)
   const {courseAllList, setCourseAllList } = useCourseList();
   //const [allCourses, setAllCourses] = useState(courselist);
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-  
+
+  useEffect(() => {
+    setCourseAllList(courselist);
+  }, []);
   /* useEffect(() => {
     setCourseAllList(courselist)
     var data = JSON.stringify({});
@@ -76,7 +81,7 @@ const Course = () => {
   );
 };
 
-/* Course.getInitialProps = async (ctx) => {
+Course.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -104,7 +109,7 @@ const Course = () => {
     res = result.data;
   const data = res;
   //console.log(data);
-  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
-}; */
+  return { courselist: res};
+};
 
 export default withAuth(Course);

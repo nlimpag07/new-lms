@@ -60,6 +60,8 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const CourseList = (props) => {
+  //const { courselist } = props;
+
   const router = useRouter();
   //console.log(router);
   const { courseAllList, setCourseAllList } = useCourseList();
@@ -68,7 +70,7 @@ const CourseList = (props) => {
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
   useEffect(() => {
-    var data = JSON.stringify({});
+    /* var data = JSON.stringify({});
     var config = {
       method: "get",
       url: apiBaseUrl + "/courses",
@@ -91,7 +93,8 @@ const CourseList = (props) => {
     }
     fetchData(
       config
-    ); /* 
+    );  */
+    /* 
     if (!courseAllList) {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       //console.log(userData);

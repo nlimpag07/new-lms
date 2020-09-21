@@ -28,15 +28,15 @@ export const CourseListProvider = ({ children, courselist }) => {
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    if (courseAllList && isAuthenticated) {
+    if (isAuthenticated) {
       localStorage.setItem("courseAllList", JSON.stringify(courseAllList));
-    } else {
+    }/*  else {
       if (isAuthenticated) {
         const courseListData = JSON.parse(localStorage.getItem("courseAllList"));
         //console.log(courseListData);
         setCourseAllList(courseListData);
       }
-    }
+    } */
   }, [courseAllList]);
 
   /* useEffect(() => {

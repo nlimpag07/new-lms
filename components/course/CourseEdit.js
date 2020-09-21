@@ -54,6 +54,7 @@ import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity"
 import Error from "next/error";
 
 import { useRouter } from "next/router";
+import { useCourseList } from "../../providers/CourseProvider";
 
 const { Meta } = Card;
 /**TextArea declaration */
@@ -178,6 +179,8 @@ const ModalForm = ({
 
 const CourseEdit = ({ course_id }) => {
   const router = useRouter();
+  const { courseAllList, setCourseAllList } = useCourseList();
+
   //const courseId = router.query.manage[1];
   //console.log(props);
   const [loadingSpinner, setLoadingSpinner] = useState(false);
@@ -187,6 +190,14 @@ const CourseEdit = ({ course_id }) => {
     isvisible: false,
     title: "",
     content: "",
+  });
+  const [constDefaultValues, setconstDefaultValues] = useState({
+    relatedcourses: [],
+    courselevel: [],
+    coursecategory: [],
+    coursetype: [],
+    courselanguage: [],
+    coursetag: [],
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     relatedcourses: [],
@@ -209,8 +220,12 @@ const CourseEdit = ({ course_id }) => {
   });
 
   useEffect(() => {
-    //setCourseId(course_id);
-    let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
+    let theCourse = courseAllList.result.filter(
+      (getCourse) => getCourse.id == course_id
+    );
+    setCourse(theCourse);
+
+    /* let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
     let theCourse = allCourse.result.filter(
       (getCourse) => getCourse.id == course_id
     );
@@ -229,18 +244,13 @@ const CourseEdit = ({ course_id }) => {
       };
       async function fetchData(config) {
         const response = await axios(config);
-        if (response) {
-          /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(response.data); */
+        if (response) {          
           setCourse(response.data.result);
-          //console.log(response.data.result);
-        } else {
-          /* const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(userData); */
+        } else {          
         }
       }
       fetchData(config);
-    }
+    } */
   }, [course_id]);
 
   useEffect(() => {
@@ -273,6 +283,7 @@ const CourseEdit = ({ course_id }) => {
       var value = values.courselevel
         ? values.courselevel.map((level, index) => level)
         : "";
+      console.log(value);
       basicForm.setFieldsValue({
         picklistlevel: [...value],
       });
@@ -402,9 +413,13 @@ const CourseEdit = ({ course_id }) => {
     });
     setSpinner(true);
 
-    console.log("Finish:", values);
+    /* console.log("Finish:", values);
+    console.log("Const Default Values ", constDefaultValues.courselevel);
+    console.log("=========================================");
+    console.log("Form Values ", values.picklistlevel); */
 
-    var data = new FormData();
+
+    /* var data = new FormData();
     var errorList = [];
     //NLI: Extended Form Values Processing & Filtration
     !!values.title
@@ -472,13 +487,7 @@ const CourseEdit = ({ course_id }) => {
       values.picklistfeaturedvideo.map((video, index) => {
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       }):'';
-    /* !!values.picklistfeaturedvideo
-      ? values.picklistfeaturedvideo.map((video, index) => {
-          data.append(`featureVideo`, video.fileList[0].originFileObj);
-        })
-      : errorList.push("Missing Course Video"); */
-
-    //data = JSON.stringify(data);
+    
     if (errorList.length) {
       console.log("ERRORS: ", errorList);
       onFinishModal(errorList);
@@ -504,7 +513,7 @@ const CourseEdit = ({ course_id }) => {
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "", course_id);
         });
-    }
+    } */
   };
 
   const onFinishModal = (errorList, response, course_id) => {
@@ -631,8 +640,15 @@ const CourseEdit = ({ course_id }) => {
       });
     }
     if (courseLevel) {
+      //console.log(courseLevel);
       levels = courseLevel.map((c_level, index) => {
-        let list = { id: c_level.level.id, title: c_level.level.name };
+        let list = {
+          id: c_level.id,
+          /* courseId: c_level.courseId, */
+          levelId: c_level.levelId,
+          title: c_level.level.name,
+          isticked: true,
+        };
         return list;
       });
     }
@@ -675,6 +691,15 @@ const CourseEdit = ({ course_id }) => {
     if (durationTime && durationType) {
       durationtime = { durationTime: durationTime, durationType: durationType };
     }
+    setconstDefaultValues({
+      ...constDefaultValues,
+      courselevel: levels,
+      coursecategory: categories,
+      coursetype: types,
+      courselanguage: languages,
+      coursetag: tags,
+      relatedcourses: relateds,
+    });
     setdefaultWidgetValues({
       ...defaultWidgetValues,
       courselevel: levels,
@@ -699,6 +724,11 @@ const CourseEdit = ({ course_id }) => {
       passingGrade: passingGrade,
     },
   };
+
+  /* console.log("Const Default Values ", constDefaultValues.courselevel);
+  console.log("=========================================");
+  console.log("Widget Values ", defaultWidgetValues.courselevel); */
+
   return (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       {course ? (
