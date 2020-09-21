@@ -259,7 +259,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   
   /* let courses = courseList.result.filter(course => course.authorId==userId)*/
   //console.log(courses) 
-  return courses ? (
+  return courses.length ? (
     <>
       {courses.map((course) => (
         <Col
@@ -365,7 +365,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     </>
   ) : (
     <Loader loading={loading}>
-      <Empty />
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     </Loader>
   );
 };

@@ -26,6 +26,9 @@ import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../hocs/withAuth";
 import Error from "next/error";
 import { useRouter } from "next/router";
+import cookie from "cookie";
+import { useCourseList } from "../../../providers/CourseProvider";
+
 
 import {
   EditOutlined,
@@ -39,7 +42,15 @@ const { Meta } = Card;
 const CourseManagement = (props) => {
   const router = useRouter();
   var urlPath = router.asPath;
+  const { courselist } = props;
+  const { courseAllList, setCourseAllList } = useCourseList();
+  //console.log("Manage InitialProps", courselist);
+  useEffect(() => {
+    setCourseAllList(courselist);
+  }, []);
+
   var theContent; //content assignment variable
+  
   //console.log(props);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
@@ -162,5 +173,35 @@ const CourseManagement = (props) => {
       `}</style>
     </MainThemeLayout>
   );
+};
+CourseManagement.getInitialProps = async (ctx) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = null;
+  var userData;
+  var res;
+  const request = ctx.req;
+  if (request) {
+    request.cookies = cookie.parse(request.headers.cookie || "");
+    token = request.cookies.token;
+    //res = null;
+  } else {
+    userData = JSON.parse(localStorage.getItem("userDetails"));
+    token = userData.token;
+  }
+
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/courses",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const result = await axios(config);
+  res = result.data;
+  const data = res;
+  //console.log(data);
+  return { courselist: res };
 };
 export default withAuth(CourseManagement);

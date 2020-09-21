@@ -8,9 +8,9 @@ import Link from "next/link";
 
 const CourseCompetenciesviewWidget = ({ course_competencies }) => {
   const [loading, setLoading] = useState(true);
-  //console.log(course_competencies);
+  console.log(course_competencies);
   const listData = course_competencies
-    ? course_competencies.map((competency, index) => ({
+    ? course_competencies.result.map((competency, index) => ({
         title: <button>{competency.title}</button>,
         avatar: <FontAwesomeIcon icon={["fas", "video"]} size="3x" />,
         description: `${competency.description}`,
