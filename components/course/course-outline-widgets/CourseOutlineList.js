@@ -67,7 +67,7 @@ const CourseOutlineList = (props) => {
     setcurOutlineId,
     outlineList,
   } = props;
-
+  
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
@@ -185,7 +185,7 @@ const CourseOutlineList = (props) => {
                 <Column field="userGroup" title="User Group" />
                 <Column field="visibility" title="Visibility" />
                 <Column
-                  width="150px"
+                  width="100px"
                   sortable={false}
                   cell={ActionRender}
                   field="isActive"
@@ -228,15 +228,15 @@ const CourseOutlineList = (props) => {
 const ActionRender = () => {
   return (
     <td>
-      <button
+      {/* <button
         className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
+        onClick={() => {
           edit(this.props.dataItem);
-        }} */
+        }}
       >
-        ✔
+        <FontAwesomeIcon icon={["far", `edit`]} size="lg" />
       </button>
-      &nbsp;
+      &nbsp; */}
       <button
         className="k-button k-grid-remove-command"
         /* onClick={() => {

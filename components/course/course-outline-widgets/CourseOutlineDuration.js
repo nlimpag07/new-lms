@@ -30,11 +30,12 @@ const CourseOutlineDuration = (props) => {
     setdefaultWidgetValues,
   } = props;
   const { outlineduration } = defaultWidgetValues;
+  //console.log(outlineduration)
   return (
     <>
       <Form.Item style={{ marginBottom: 0 }} className="course-duration-panel">
         <Form.Item name="outlineduration">
-          <Select placeholder="Duration" size="medium">
+          <Select placeholder={outlineduration?outlineduration:"Duration"} size="medium">
             <Option value="1">1</Option>
             <Option value="2">2</Option>
             <Option value="3">3</Option>

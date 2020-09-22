@@ -305,10 +305,10 @@ const CourseOutlines = ({ course_id }) => {
           outlinefeaturedvideo: values.name,
         });
       }
-      //console.log(values);
+      console.log('Uploaded Video: ',value);
     }
     if (name === "outlinemediafiles") {
-      var value = values.outlinemediafiles
+      /* var value = values.outlinemediafiles
         ? values.outlinemediafiles.map((mediafile, index) => mediafile)
         : "";
       basicForm.setFieldsValue({
@@ -317,7 +317,8 @@ const CourseOutlines = ({ course_id }) => {
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         outlinemediafiles: [...value],
-      });
+      }); */
+      console.log('Media Files: ',values);
     }
     if (name === "outlineduration") {
       basicForm.setFieldsValue({
@@ -503,12 +504,36 @@ const CourseOutlines = ({ course_id }) => {
       let isSelected = outlineList.filter(
         (selecteOutline) => selecteOutline.id === curOutlineId[0].id
       );
-      //setOutline(isSelected[0])
       console.log(isSelected[0]);
-      /*title = isSelected[0].title;
-        description = isSelected[0].description;
-        userGroupId = isSelected[0].userGroupId;
-        visibility = isSelected[0].visibility; */
+        let prerequisite=[];
+        let currentPrerequisite= isSelected[0].courseOutlinePrerequisite;
+        if (currentPrerequisite.length) {
+          prerequisite = currentPrerequisite.map((c_outlinerequisite, index) => {
+            let getOutline = outlineList.filter((outline)=>c_outlinerequisite.preRequisiteId == outline.id)            
+            let list = {
+              id: c_outlinerequisite.id,
+              title:getOutline[0].title,
+              courseOutlineId: c_outlinerequisite.courseOutlineId,
+              preRequisiteId: c_outlinerequisite.preRequisiteId,
+              isticked: true,
+            };
+            return list;
+          });
+        }
+        let mediaFiles=[];
+        let currentMediaFiles= isSelected[0].courseOutlineMedia;
+        if (currentMediaFiles.length) {
+          mediaFiles = currentMediaFiles.map((c_outlinemediafiles, index) => {
+                      
+            let list = {
+              id: c_outlinemediafiles.id,
+              name:c_outlinemediafiles.fileName,
+              courseOutlineId: c_outlinemediafiles.courseOutlineId,
+              isticked: true,
+            };
+            return list;
+          });
+        }
 
       //console.log(outlineItem)
       setdefaultWidgetValues({
@@ -517,19 +542,26 @@ const CourseOutlines = ({ course_id }) => {
           {
             title: isSelected[0].title,
             description: isSelected[0].description,
-            usergroup:  isSelected[0].userGroup.name,
+            usergroup: isSelected[0].userGroup.name,
             usergroupid: isSelected[0].userGroupId,
             visibility: isSelected[0].visibility,
           },
         ],
-        /* featuredvideo: video,
-          relatedcourses: relateds,
-          duration: [durationtime], */
+        outlinefeaturedimage: isSelected[0].featureImage,
+        outlinefeaturedvideo: isSelected[0].featureVideo,
+        outlineprerequisite: prerequisite,
+        outlineduration: isSelected[0].duration,
+        outlinemediafiles:mediaFiles,
       });
     } else {
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         outlinedetails: [],
+        outlinefeaturedimage: "",
+        outlinefeaturedvideo: "",
+        outlineduration: "",
+        outlineprerequisite: [],
+        outlinemediafiles:[],
         /* featuredvideo: video,
         relatedcourses: relateds,
         duration: [durationtime], */
@@ -687,7 +719,7 @@ const CourseOutlines = ({ course_id }) => {
                         />
                       </div>
                     </Panel>
-                    {/* <Panel
+                    <Panel
                       header="Prerequisite"
                       key="2"
                       className="greyBackground"
@@ -722,7 +754,7 @@ const CourseOutlines = ({ course_id }) => {
                         />
                       </div>
                     </Panel>
-                    <Panel header="Milestones" key="4" className="greyBackground">
+                    {/*<Panel header="Milestones" key="4" className="greyBackground">
                     <div className="outlineWidgetHolder">
                       <CourseWidgetType
                         shouldUpdate={(prevValues, curValues) =>
@@ -734,12 +766,9 @@ const CourseOutlines = ({ course_id }) => {
                       />
                       </div>
                     </Panel>
-                    <Panel
-                        header="DURATION"
-                        key="5"
-                        className="greyBackground"
-                      >
-                        <div className="outlineWidgetHolder">
+                    */}
+                    <Panel header="DURATION" key="5" className="greyBackground">
+                      <div className="outlineWidgetHolder">
                         <CourseOutlineDuration
                           shouldUpdate={(prevValues, curValues) =>
                             prevValues.outlineduration !==
@@ -749,8 +778,8 @@ const CourseOutlines = ({ course_id }) => {
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
                         />
-                        </div>
-                      </Panel> */}
+                      </div>
+                    </Panel>
                   </Collapse>
                 </Form>
               </Col>

@@ -9,10 +9,17 @@ import {
   InputNumber,
   Form,
   Collapse,
+  Upload,
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  InboxOutlined,
+  LoadingOutlined,
+  FileImageOutlined,
+} from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -23,6 +30,7 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 /**TextArea declaration */
+const { Dragger } = Upload;
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
@@ -40,7 +48,7 @@ const CourseOutlineMediaFiles = (props) => {
   const [allMediaFiles, setAllMediaFiles] = useState();
   const chosenRows = defaultWidgetValues.outlinemediafiles;
   //console.log(chosenRows)
-  useEffect(() => {
+  /* useEffect(() => {
     var data = JSON.stringify({});
     var config = {
       method: "get",
@@ -63,11 +71,14 @@ const CourseOutlineMediaFiles = (props) => {
       }
     }
     fetchData(config);
-  }, []);
+  }, []); */
 
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
-    setdefaultWidgetValues({ ...defaultWidgetValues, outlinemediafiles: newValues });
+    setdefaultWidgetValues({
+      ...defaultWidgetValues,
+      outlinemediafiles: newValues,
+    });
   };
 
   return (
@@ -121,7 +132,7 @@ const CourseOutlineMediaFiles = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -131,7 +142,7 @@ const CourseOutlineMediaFiles = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -155,7 +166,7 @@ const CourseOutlineMediaFiles = (props) => {
                             ...field,
                             name: index,
                             key: index,
-                            value: field.title,
+                            value: field.name,
                           };
                           //console.log("Individual Fields:", field);
                           return (
@@ -182,7 +193,7 @@ const CourseOutlineMediaFiles = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -192,7 +203,7 @@ const CourseOutlineMediaFiles = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -222,7 +233,110 @@ const CourseOutlineMediaFiles = (props) => {
     </>
   );
 };
+
+//Image
 const modalFormBody = (allMediaFiles, chosenRows) => {
+  //console.log(chosenRows);
+  const [fileList, seFileList] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    seFileList(chosenRows);
+  }, []);
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  const handleChange = (info) => {
+    setLoading(true);
+    //console.log("set Loading to True");
+
+    let fileList = [...info.fileList];
+    fileList = fileList.slice(-1);
+    seFileList(info);
+    if (Array.isArray(fileList) && fileList.length) {
+      getBase64(fileList[0].originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+        setLoading(false);
+      });
+    } else {
+      seFileList("");
+      setImageUrl("");
+      setLoading(false);
+    }
+  };
+  const onRemove = (info) => {
+    seFileList("");
+    setImageUrl("");
+    setLoading(false);
+  };
+  const beforeUpload = () => {
+    setLoading(true);
+    return false;
+  };
+  console.log(fileList);
+  const defaultFileList = [
+    {
+      uid: "1",
+      name: "xxx.png",
+      status: "done",
+      response: "Server Error 500", // custom error message to show
+      url: "http://www.baidu.com/xxx.png",
+    },
+    {
+      uid: "2",
+      name: "yyy.png",
+      status: "done",
+      url: "http://www.baidu.com/yyy.png",
+    },
+    {
+      uid: "3",
+      name: "zzz.png",
+      status: "error",
+      response: "Server Error 500", // custom error message to show
+      url: "http://www.baidu.com/zzz.png",
+    },
+  ];
+  const uploadButton = (
+    <div>
+      {loading ? (
+        <LoadingOutlined />
+      ) : (
+        <div className="ant-upload-text">
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">Please upload an image file only.</p>
+        </div>
+      )}
+    </div>
+  );
+  return (
+    <Form.Item name="outlinemediafiles">
+      <Dragger
+        onChange={handleChange}
+        multiple={false}
+        beforeUpload={beforeUpload}
+        defaultFileList={defaultFileList}
+        fileList={fileList.fileList}
+        onRemove={onRemove}
+      >
+        {imageUrl ? (
+          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+        ) : (
+          uploadButton
+        )}
+      </Dragger>
+    </Form.Item>
+  );
+};
+
+/* const modalFormBody = (allMediaFiles, chosenRows) => {
   const data = [];
   allMediaFiles.map((type, index) => {
     data.push({
@@ -235,17 +349,14 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [fileList, seFileList] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const columns = [
     {
       title: "Type",
       dataIndex: "title",
-    },
-    /*  {
-      title: "Pre-requisite",
-      dataIndex: "isreq",
-    }, */
+    },    
   ];
 
   const onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -322,5 +433,5 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
       }}
     </Form.List>
   );
-};
+}; */
 export default CourseOutlineMediaFiles;

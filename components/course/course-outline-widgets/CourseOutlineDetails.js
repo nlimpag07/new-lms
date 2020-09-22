@@ -116,7 +116,7 @@ const CourseOutlineDetails = (props) => {
                     name: index,
                     key: index,
                   };
-                  console.log("Individual Fields:", field);
+                  //console.log("Individual Fields:", field);
                   return (
                     <div key={field.key}>
                       <Form.Item

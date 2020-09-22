@@ -38,9 +38,18 @@ const CourseOutlinePrerequisite = (props) => {
     setdefaultWidgetValues,
     outlineList,
   } = props;
-  console.log(outlineList);
+  //console.log('List: ',outlineList);
   //const [outlineList, setoutlineList] = useState();
-  const chosenRows = defaultWidgetValues.outlineprerequisite;
+  var chosenRows = defaultWidgetValues.outlineprerequisite;
+  
+  /* if(chosenRows.length){
+    let choosed = chosenRows.map((chosen,index)=>{
+      let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
+      chosen['title']= newOutline[0].title;
+      return chosen;
+    })
+    chosenRows = choosed;
+  } */
   //console.log(chosenRows)
   /* useEffect(() => {
     var data = JSON.stringify({});
@@ -125,7 +134,7 @@ const CourseOutlinePrerequisite = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -135,7 +144,7 @@ const CourseOutlinePrerequisite = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -186,7 +195,7 @@ const CourseOutlinePrerequisite = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -196,7 +205,7 @@ const CourseOutlinePrerequisite = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -236,7 +245,7 @@ const modalFormBody = (outlineList, chosenRows) => {
     data.push({
       key: index,
       id: outline.id,
-      title: outline.name,
+      title: outline.title,
     });
   });
 

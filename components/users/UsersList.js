@@ -153,7 +153,7 @@ const UsersList = ({ userlist }) => {
                 <Column
                   sortable={false}
                   cell={ActionRender}
-                  field="isActive"
+                  field=""
                   title="Action"
                 />
               </Grid>
@@ -199,7 +199,7 @@ const ActionRender = () => {
           edit(this.props.dataItem);
         }} */
       >
-        ✔
+        <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
       </button>
       &nbsp;
       <button
