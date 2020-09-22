@@ -378,19 +378,19 @@ const CourseAdd = () => {
       : errorList.push("Missing Course Capacity");
     !!values.picklistlevel
       ? values.picklistlevel.map((level, index) => {
-          data.append(`courseLevel[${index}][levelId]`, level.id);
+          data.append(`courseLevel[${index}][levelId]`, level.levelId);
         })
       : errorList.push("Missing Course Level");
     !!values.picklistcategory
       ? values.picklistcategory.map((category, index) => {
-          data.append(`courseCategory[${index}][categoryId]`, category.id);
+          data.append(`courseCategory[${index}][categoryId]`, category.categoryId);
         })
       : errorList.push("Missing Course Category");
     !!values.picklistrelatedcourses
       ? values.picklistrelatedcourses.map((relatedcourse, index) => {
           data.append(
             `relatedCourse[${index}][relatedCourseId]`,
-            relatedcourse.id
+            relatedcourse.courseRelatedId
           );
           data.append(
             `relatedCourse[${index}][isPrerequisite]`,
@@ -400,17 +400,17 @@ const CourseAdd = () => {
       : errorList.push("Missing Related Course");
     !!values.picklistlanguage
       ? values.picklistlanguage.map((language, index) => {
-          data.append(`courseLanguage[${index}][languageId]`, language.id);
+          data.append(`courseLanguage[${index}][languageId]`, language.languageId);
         })
       : errorList.push("Missing Course Language");
     !!values.picklisttags
       ? values.picklisttags.map((tag, index) => {
-          data.append(`courseTag[${index}][tagId]`, tag.id);
+          data.append(`courseTag[${index}][tagId]`, tag.tagId);
         })
       : errorList.push("Missing Course Tag");
     !!values.picklisttype
       ? values.picklisttype.map((type, index) => {
-          data.append(`courseType[${index}][courseTypeId]`, type.id);
+          data.append(`courseType[${index}][courseTypeId]`, type.courseTypeId);
         })
       : errorList.push("Missing Course Type");
     !!values.picklistfeaturedimage
@@ -451,7 +451,7 @@ const CourseAdd = () => {
           onFinishModal("", res.data);
         })
         .catch((err) => {
-          //console.log("err: ", err.response.data);
+          console.log("err: ", err.response.data);
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "");
         });

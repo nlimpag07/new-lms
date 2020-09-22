@@ -478,11 +478,10 @@ const CourseEdit = ({ course_id }) => {
       });
       //console.log("======================");
       //console.log("tobedeletedLevels: ", tobedeleted);
-      tobedeleted.map((level, index) => {        
+      tobedeleted.map((level, index) => {
         data.append(`deleteCourseLevel[${index}][id]`, level.id);
         data.append(`deleteCourseLevel[${index}][levelId]`, level.levelId);
-      })
-
+      });
     }
 
     //Edit picklistcategory
@@ -538,37 +537,35 @@ const CourseEdit = ({ course_id }) => {
       });
       //console.log("======================");
       //console.log("tobedeletedCategories: ", tobedeleted);
-      tobedeleted.map((cat, index) => {        
+      tobedeleted.map((cat, index) => {
         data.append(`deleteCourseCategory[${index}][id]`, cat.id);
-        data.append(`deleteCourseCategory[${index}][categoryId]`, cat.categoryId);
-      })
-
+        data.append(
+          `deleteCourseCategory[${index}][categoryId]`,
+          cat.categoryId
+        );
+      });
     }
 
     //Edit picklisttype
     if (values.picklisttype) {
       //Array for Addition
       var processPickListType;
-      processPickListType = values.picklisttype.map(
-        (submittedType, index) => {
-          let prevType = constDefaultValues.coursetype.filter(
-            (previousType) => {
-              let theItem = "";
-              if (submittedType.courseTypeId == previousType.courseTypeId) {
-                theItem = previousType;
-              }
-              return theItem;
-            }
-          );
-          let newTypes = {
-            id: prevType.length ? prevType[0].id : 0,
-            title: submittedType.title,
-            courseTypeId: submittedType.courseTypeId,
-            isticked: submittedType.isticked,
-          };
-          return newTypes;
-        }
-      );
+      processPickListType = values.picklisttype.map((submittedType, index) => {
+        let prevType = constDefaultValues.coursetype.filter((previousType) => {
+          let theItem = "";
+          if (submittedType.courseTypeId == previousType.courseTypeId) {
+            theItem = previousType;
+          }
+          return theItem;
+        });
+        let newTypes = {
+          id: prevType.length ? prevType[0].id : 0,
+          title: submittedType.title,
+          courseTypeId: submittedType.courseTypeId,
+          isticked: submittedType.isticked,
+        };
+        return newTypes;
+      });
       //console.log("SubmittedTypes: ", processPickListType);
       processPickListType.map((typ, index) => {
         data.append(`courseType[${index}][id]`, typ.id);
@@ -598,13 +595,76 @@ const CourseEdit = ({ course_id }) => {
       });
       //console.log("======================");
       //console.log("tobedeletedTypes: ", tobedeleted);
-      tobedeleted.map((typ, index) => {        
+      tobedeleted.map((typ, index) => {
         data.append(`deleteCourseType[${index}][id]`, typ.id);
-        data.append(`deleteCourseType[${index}][courseTypeId]`, typ.courseTypeId);
-      })
-
+        data.append(
+          `deleteCourseType[${index}][courseTypeId]`,
+          typ.courseTypeId
+        );
+      });
     }
 
+    //Edit picklistrelatedcourses
+    if (values.picklistrelatedcourses) {
+      //Array for Addition
+      var processPickListRelatedCourses;
+      processPickListRelatedCourses = values.picklistrelatedcourses.map(
+        (submittedRelatedCourses, index) => {
+          let prevCourse = constDefaultValues.relatedcourses.filter(
+            (previousCourse) => {
+              let theItem = "";
+              if (submittedRelatedCourses.courseRelatedId == previousCourse.courseRelatedId) {
+                theItem = previousCourse;
+              }
+              return theItem;
+            }
+          );
+          let newCourses = {
+            id: prevCourse.length ? prevCourse[0].id : 0,
+            title: submittedRelatedCourses.title,
+            courseRelatedId: submittedRelatedCourses.courseRelatedId,
+            isticked: submittedRelatedCourses.isticked,
+            isreq: submittedRelatedCourses.isreq,
+          };
+          return newCourses;
+        }
+      );
+      //console.log("SubmittedRelatedCourse: ", processPickListRelatedCourses);       
+      processPickListRelatedCourses.map((related, index) => {
+        data.append(`relatedCourse[${index}][id]`, related.id);
+        data.append(`relatedCourse[${index}][relatedCourseId]`, related.courseRelatedId);
+        data.append(`relatedCourse[${index}][isPrerequisite]`, related.isreq);
+      });
+
+      //Array for deletion
+      var tobedeleted = [];
+      constDefaultValues.relatedcourses.map((constantrelated, index) => {
+        let newRelated = processPickListRelatedCourses.filter((latest) => {
+          let theItem = "";
+          if (constantrelated.courseRelatedId == latest.courseRelatedId) {
+            theItem = latest;
+          }
+          return theItem;
+        });
+
+        if (!newRelated.length) {
+          let delRel = {
+            id: constantrelated.id,
+            title: constantrelated.title,
+            courseRelatedId: constantrelated.courseRelatedId,
+            isticked: false,
+            isreq: constantrelated.isreq,
+          };
+          tobedeleted.push(delRel);
+        }
+      });
+      //console.log("======================");
+      //console.log("tobedeletedRelatedCourses: ", tobedeleted);
+      tobedeleted.map((related, index) => {        
+        data.append(`deleteRelatedCourse[${index}][id]`, related.id);
+        data.append(`deleteRelatedCourse[${index}][courseRelatedId]`, related.courseRelatedId);
+      })
+    }
 
     //Edit picklistlanguage
     if (values.picklistlanguage) {
@@ -659,38 +719,36 @@ const CourseEdit = ({ course_id }) => {
       });
       //console.log("======================");
       //console.log("tobedeletedLanguages: ", tobedeleted);
-      tobedeleted.map((lang, index) => {        
+      tobedeleted.map((lang, index) => {
         data.append(`deleteCourseLanguage[${index}][id]`, lang.id);
-        data.append(`deleteCourseLanguage[${index}][languageId]`, lang.languageId);
-      })
-
+        data.append(
+          `deleteCourseLanguage[${index}][languageId]`,
+          lang.languageId
+        );
+      });
     }
 
     //Edit picklistTags
     if (values.picklisttags) {
       //Array for Addition
       var processPickListTags;
-      processPickListTags = values.picklisttags.map(
-        (submittedTag, index) => {
-          let prevTag = constDefaultValues.coursetag.filter(
-            (previousTag) => {
-              let theItem = "";
-              if (submittedTag.tagId == previousTag.tagId) {
-                theItem = previousTag;
-              }
-              return theItem;
-            }
-          );
-          let newTags = {
-            id: prevTag.length ? prevTag[0].id : 0,
-            title: submittedTag.title,
-            tagId: submittedTag.tagId,
-            isticked: submittedTag.isticked,
-          };
-          return newTags;
-        }
-      );
-      //console.log("submittedTag: ", processPickListTags);
+      processPickListTags = values.picklisttags.map((submittedTag, index) => {
+        let prevTag = constDefaultValues.coursetag.filter((previousTag) => {
+          let theItem = "";
+          if (submittedTag.tagId == previousTag.tagId) {
+            theItem = previousTag;
+          }
+          return theItem;
+        });
+        let newTags = {
+          id: prevTag.length ? prevTag[0].id : 0,
+          title: submittedTag.title,
+          tagId: submittedTag.tagId,
+          isticked: submittedTag.isticked,
+        };
+        return newTags;
+      });
+      console.log("submittedTag: ", processPickListTags);
       processPickListTags.map((tag, index) => {
         data.append(`courseTag[${index}][id]`, tag.id);
         data.append(`courseTag[${index}][tagId]`, tag.tagId);
@@ -717,16 +775,15 @@ const CourseEdit = ({ course_id }) => {
           tobedeleted.push(delTag);
         }
       });
-      //console.log("======================");
-      //console.log("tobedeletedTags: ", tobedeleted);
-      tobedeleted.map((tag, index) => {        
+      console.log("======================");
+      console.log("tobedeletedTags: ", tobedeleted);
+      tobedeleted.map((tag, index) => {
         data.append(`deleteCourseTag[${index}][id]`, tag.id);
         data.append(`deleteCourseTag[${index}][tagId]`, tag.tagId);
-      })
-
+      });
     }
-    
-    /* 
+
+     
     !!values.durationTime
       ? data.append("durationTime", values.durationTime)
       : '';
@@ -739,43 +796,7 @@ const CourseEdit = ({ course_id }) => {
     !!values.capacity
       ? data.append("capacity", values.capacity)
       : '';
-    !!values.picklistlevel && values.picklistlevel.length
-      ? values.picklistlevel.map((level, index) => {
-          data.append(`courseLevel[${index}][levelId]`, level.id);
-        })
-      : '';
-    !!values.picklistcategory && values.picklistcategory.length
-      ? values.picklistcategory.map((category, index) => {
-          data.append(`courseCategory[${index}][categoryId]`, category.id);
-        })
-      : '';
-    !!values.picklistrelatedcourses && values.picklistrelatedcourses.length
-      ? values.picklistrelatedcourses.map((relatedcourse, index) => {
-          data.append(
-            `relatedCourse[${index}][relatedCourseId]`,
-            relatedcourse.course_id
-          );
-          data.append(
-            `relatedCourse[${index}][isPrerequisite]`,
-            relatedcourse.isreq
-          );
-        })
-      : '';
-    !!values.picklistlanguage && values.picklistlanguage.length
-      ? values.picklistlanguage.map((language, index) => {
-          data.append(`courseLanguage[${index}][languageId]`, language.id);
-        })
-      : '';
-    !!values.picklisttags && values.picklisttags.length
-      ? values.picklisttags.map((tag, index) => {
-          data.append(`courseTag[${index}][tagId]`, tag.id);
-        })
-      : '';
-    !!values.picklisttype && values.picklisttype.length
-      ? values.picklisttype.map((type, index) => {
-          data.append(`courseType[${index}][courseTypeId]`, type.id);
-        })
-      : '';
+    
     !!values.picklistfeaturedimage && values.picklistfeaturedimage.length
       ? values.picklistfeaturedimage.map((image, index) => {
           data.append(`featureImage`, image.fileList[0].originFileObj);
@@ -812,7 +833,7 @@ const CourseEdit = ({ course_id }) => {
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "", course_id);
         });
-    } */
+    } 
   };
 
   const onFinishModal = (errorList, response, course_id) => {
@@ -920,14 +941,16 @@ const CourseEdit = ({ course_id }) => {
     } = "";
 
     if (relatedCourse) {
-      //console.log(relatedCourse);
+      /* console.log("============");
+      console.log(relatedCourse); */
       relateds = relatedCourse.map((c_related, index) => {
         let list = {
-          id: c_related.courseRelated.course.id,
+          id: c_related.id,
           title: c_related.courseRelated.course.title,
           isreq: c_related.isPrerequisite,
-          courseRelatedId: c_related.courseRelated.courseRelatedId,
-          isticked: true,          
+          courseRelatedId: c_related.courseRelated.courseId,
+          //relcourseId:c_related.courseRelated.courseId,
+          isticked: true,
         };
         return list;
       });
@@ -944,7 +967,7 @@ const CourseEdit = ({ course_id }) => {
       });
     }
     if (courseLevel) {
-      //console.log(courseLevel);
+      //console.log("level",courseLevel);
       levels = courseLevel.map((c_level, index) => {
         let list = {
           id: c_level.id,
@@ -985,7 +1008,7 @@ const CourseEdit = ({ course_id }) => {
         let list = {
           id: c_tag.tag.id,
           title: c_tag.tag.name,
-          tagId:c_tag.tagId,
+          tagId: c_tag.tagId,
           isticked: true,
         };
         return list;

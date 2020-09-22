@@ -94,7 +94,7 @@ const CourseWidgetRelatedCourses = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {fields.length >= 1 ? (
+                              {/* {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -104,7 +104,7 @@ const CourseWidgetRelatedCourses = (props) => {
                                     onRemove(field.id);
                                   }}
                                 />
-                              ) : null}
+                              ) : null} */}
                             </Form.Item>
                           </div>
                         );
@@ -155,7 +155,7 @@ const CourseWidgetRelatedCourses = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {chosenRows.length >= 1 ? (
+                                {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -165,7 +165,7 @@ const CourseWidgetRelatedCourses = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </Form.Item>
                             </div>
                           );
@@ -196,9 +196,12 @@ const CourseWidgetRelatedCourses = (props) => {
   );
 };
 const modalFormBody = (courseAllList, chosenRows) => {
+  const [sourceData, setsourceData] = useState([]);
+
   var data = [];
   courseAllList = courseAllList.result;
-  courseAllList.map((courses, index) => {
+  //console.log(courseAllList)
+  /* courseAllList.map((courses, index) => {
     let isreqvalue = 0;
     if (chosenRows.length) {
       chosenRows.map((chosen, index) => {
@@ -220,7 +223,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
         isreq: isreqvalue,
       });
     }
-  });
+  }); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -246,7 +249,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
 
   useEffect(() => {
     //console.log("ChosenRows in Modal: ", chosenRows);
-    if (chosenRows.length) {
+    /* if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
       chosenRows.map((chosen, index) => {
@@ -259,6 +262,51 @@ const modalFormBody = (courseAllList, chosenRows) => {
       });
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
+    } */
+    if (chosenRows.length) {
+      let defaultKeys = [];
+      let defaultRows = [];
+      let datamap = courseAllList.map((course, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (course.id == item.courseRelatedId) {
+            newitem = true;
+          }
+          return newitem;
+        });
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: course.title,
+          isreq: theChosen.length ? theChosen[0].isreq:0,
+          courseRelatedId: course.id,
+          isticked: theChosen.length ? true : false,
+        };
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
+        return theitem;
+      });
+
+      setsourceData(datamap);
+      //console.log(datamap);
+      setSelectedRowKeys(defaultKeys);
+      setSelectedRows(defaultRows);
+    } else {
+      let theSource = courseAllList.map((course, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: course.title,
+          isreq: 0,
+          courseRelatedId: course.id,
+          isticked: false,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
   }, []);
   const onSwitchChange = (record, index) => {
@@ -295,7 +343,13 @@ const modalFormBody = (courseAllList, chosenRows) => {
   };
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
+    let rowData = selectedRows.map((entry, index) => {
+      entry.isticked = true;
+      return entry;
+    });
+    setSelectedRows(rowData);
+    //setSelectedRows(selectedRows);
+    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -341,6 +395,25 @@ const modalFormBody = (courseAllList, chosenRows) => {
                   >
                     <Input placeholder="Course Requisite" value={field.isreq} />
                   </Form.Item>
+                  <Form.Item
+                    name={[field.name, "courseRelatedId"]}
+                    initialValue={field.courseRelatedId}
+                    key={`courseRelatedId-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="courseRelatedId Title" value={field.courseRelatedId} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "isticked"]}
+                    initialValue={field.isticked}
+                    key={`isticked-${field.key}`}
+                    hidden
+                  >
+                    <Input
+                      placeholder="isTicked Title"
+                      value={field.isticked}
+                    />
+                  </Form.Item>
                 </div>
               ) : (
                 <div>Hello</div>
@@ -350,7 +423,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );
