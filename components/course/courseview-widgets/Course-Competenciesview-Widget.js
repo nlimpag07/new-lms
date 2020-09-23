@@ -9,7 +9,7 @@ import Link from "next/link";
 const CourseCompetenciesviewWidget = ({ course_competencies }) => {
   const [loading, setLoading] = useState(true);
   console.log(course_competencies);
-  const listData = course_competencies
+  const listData = course_competencies.length
     ? course_competencies.result.map((competency, index) => ({
         title: <button>{competency.title}</button>,
         avatar: <FontAwesomeIcon icon={["fas", "video"]} size="3x" />,
