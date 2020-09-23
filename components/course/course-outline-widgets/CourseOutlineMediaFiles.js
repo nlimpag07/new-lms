@@ -104,7 +104,7 @@ const CourseOutlineMediaFiles = (props) => {
                           ...field,
                           name: index,
                           key: index,
-                          value: field.title,
+                          value: field.name,
                           id: field.id,
                         };
                         //console.log('Individual Fields:', field)
@@ -237,12 +237,27 @@ const CourseOutlineMediaFiles = (props) => {
 //Image
 const modalFormBody = (allMediaFiles, chosenRows) => {
   //console.log(chosenRows);
-  const [fileList, seFileList] = useState("");
+  const [fileList, setFileList] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const dataList = [];
+  if (chosenRows.length) {
+    chosenRows.map((chosen, index) => {
+      dataList.push({
+        uid: index,
+        id: chosen.id,
+        title: chosen.name,
+        name: chosen.name,
+        courseOutlineId: chosen.courseOutlineId,
+        isticked: chosen.isticked,
+        status: "done",
+        originFileObj: chosen.originFileObj?chosen.originFileObj:'',
+      });
+    });
+  }
   useEffect(() => {
-    seFileList(chosenRows);
+    setFileList(dataList);
   }, []);
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -250,56 +265,21 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     reader.readAsDataURL(img);
   }
   const handleChange = (info) => {
-    setLoading(true);
-    //console.log("set Loading to True");
-
-    let fileList = [...info.fileList];
-    fileList = fileList.slice(-1);
-    seFileList(info);
-    if (Array.isArray(fileList) && fileList.length) {
-      getBase64(fileList[0].originFileObj, (imageUrl) => {
-        setImageUrl(imageUrl);
-        setLoading(false);
-      });
-    } else {
-      seFileList("");
-      setImageUrl("");
-      setLoading(false);
-    }
+    //setLoading(true);    
+    //console.log(info.file, info.fileList);
+    setFileList(info.fileList);    
   };
+  //console.log(fileList);
   const onRemove = (info) => {
-    seFileList("");
+    setFileList("");
     setImageUrl("");
     setLoading(false);
   };
-  const beforeUpload = () => {
-    setLoading(true);
-    return false;
-  };
-  console.log(fileList);
-  const defaultFileList = [
-    {
-      uid: "1",
-      name: "xxx.png",
-      status: "done",
-      response: "Server Error 500", // custom error message to show
-      url: "http://www.baidu.com/xxx.png",
-    },
-    {
-      uid: "2",
-      name: "yyy.png",
-      status: "done",
-      url: "http://www.baidu.com/yyy.png",
-    },
-    {
-      uid: "3",
-      name: "zzz.png",
-      status: "error",
-      response: "Server Error 500", // custom error message to show
-      url: "http://www.baidu.com/zzz.png",
-    },
-  ];
-  const uploadButton = (
+  /* const beforeUpload = () => {
+    return setLoading(true);
+    //return false;
+  }; */
+  /* const uploadButton = (
     <div>
       {loading ? (
         <LoadingOutlined />
@@ -315,22 +295,36 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
         </div>
       )}
     </div>
-  );
+  ); */
+  //console.log(loading);
   return (
     <Form.Item name="outlinemediafiles">
       <Dragger
+        /* {...props} */
         onChange={handleChange}
-        multiple={false}
-        beforeUpload={beforeUpload}
-        defaultFileList={defaultFileList}
-        fileList={fileList.fileList}
-        onRemove={onRemove}
+        multiple={true}
+        /* beforeUpload={beforeUpload} */
+        fileList={fileList}
+        /* onRemove={onRemove} */
+        progress={{ type: "line", strokeWidth: 2, showInfo: true }}
       >
-        {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
+        <div>
+          {loading ? (
+            <LoadingOutlined />
+          ) : (
+            <div className="ant-upload-text">
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Please upload an image file only.
+              </p>
+            </div>
+          )}
+        </div>
       </Dragger>
     </Form.Item>
   );
@@ -348,7 +342,7 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [fileList, seFileList] = useState("");
+  const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();

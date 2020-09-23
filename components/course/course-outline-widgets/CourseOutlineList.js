@@ -244,7 +244,7 @@ const ActionRender = () => {
             remove(this.props.dataItem);
         }} */
       >
-        ✖
+        <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
       </button>
     </td>
   );

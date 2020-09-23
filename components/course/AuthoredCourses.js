@@ -283,7 +283,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   <a>
                     <img
                       alt={`${course.title}`}
-                      src={`${apidirectoryUrl}/${course.featureImage}`}
+                      src={`${apidirectoryUrl}/Images/Course/${course.featureImage}`}
                     />
                   </a>
                 </Link>

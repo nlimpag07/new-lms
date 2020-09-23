@@ -9,10 +9,17 @@ import {
   InputNumber,
   Form,
   Collapse,
+  Upload,
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  InboxOutlined,
+  LoadingOutlined,
+  FileImageOutlined,
+} from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -23,39 +30,29 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 /**TextArea declaration */
+const { Dragger } = Upload;
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Outline - Prerequisite",
-  catValueLabel: "outlineprerequisite",
+  catname: "Outline - Milestones",
+  catValueLabel: "outlinemilestones",
 };
 
-const CourseOutlinePrerequisite = (props) => {
+const CourseOutlineMilestones = (props) => {
   const {
     shouldUpdate,
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
-    outlineList,
   } = props;
-  //console.log('List: ',outlineList);
-  //const [outlineList, setoutlineList] = useState();
-  var chosenRows = defaultWidgetValues.outlineprerequisite;
-  
-  /* if(chosenRows.length){
-    let choosed = chosenRows.map((chosen,index)=>{
-      let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
-      chosen['title']= newOutline[0].title;
-      return chosen;
-    })
-    chosenRows = choosed;
-  } */
+  const [allMilestones, setAllMilestones] = useState();
+  const chosenRows = defaultWidgetValues.outlinemilestones;
   //console.log(chosenRows)
   /* useEffect(() => {
     var data = JSON.stringify({});
     var config = {
       method: "get",
-      url: apiBaseUrl + "/picklist/outline",
+      url: apiBaseUrl + "/picklist/coursetype",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -65,7 +62,7 @@ const CourseOutlinePrerequisite = (props) => {
     async function fetchData(config) {
       const response = await axios(config);
       if (response) {
-        setoutlineList(response.data.result);
+        setAllMilestones(response.data.result);
         //console.log(response.data)
       } else {
         console.log(
@@ -80,7 +77,7 @@ const CourseOutlinePrerequisite = (props) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
-      outlineprerequisite: newValues,
+      outlinemilestones: newValues,
     });
   };
 
@@ -88,7 +85,8 @@ const CourseOutlinePrerequisite = (props) => {
     <>
       <Form.Item
         label={widgetFieldLabels.catname}
-        noStyle        
+        noStyle
+        allowClear
         shouldUpdate={shouldUpdate}
       >
         {({ getFieldValue }) => {
@@ -106,7 +104,7 @@ const CourseOutlinePrerequisite = (props) => {
                           ...field,
                           name: index,
                           key: index,
-                          value: field.title,
+                          value: field.name,
                           id: field.id,
                         };
                         //console.log('Individual Fields:', field)
@@ -126,6 +124,7 @@ const CourseOutlinePrerequisite = (props) => {
                                   },
                                 ]}
                               >
+                                <img src={`${apidirectoryUrl}/`} />
                                 <Input
                                   placeholder={widgetFieldLabels.catname}
                                   style={{ width: "85%" }}
@@ -168,15 +167,16 @@ const CourseOutlinePrerequisite = (props) => {
                             ...field,
                             name: index,
                             key: index,
-                            value: field.title,
+                            value: field.name,
                           };
-                          //console.log("Individual Fields:", field);
+                          console.log("Individual Fields:", field);
                           return (
                             <div key={field.key}>
                               <Form.Item
                                 required={false}
                                 key={field.key}
                                 gutter={[16, 16]}
+                                style={{ width: "30%" }}
                               >
                                 <Form.Item
                                   noStyle
@@ -187,11 +187,12 @@ const CourseOutlinePrerequisite = (props) => {
                                     },
                                   ]}
                                 >
+                                  <img title={field.value} alt={field.value} src={`${apidirectoryUrl}/Images/CourseOutlineMilestone/${field.resourceFile}`} style={{ width: "100%" }} />
                                   <Input
                                     placeholder={widgetFieldLabels.catname}
-                                    style={{ width: "85%" }}
                                     key={field.key}
                                     value={field.value}
+                                    title={field.value}
                                     readOnly
                                   />
                                 </Form.Item>
@@ -219,122 +220,95 @@ const CourseOutlinePrerequisite = (props) => {
           }
         }}
       </Form.Item>
-      {outlineList ? (
-        <span>
-          <PlusOutlined
-            onClick={() =>
-              showModal(
-                widgetFieldLabels.catname,
-                widgetFieldLabels.catValueLabel,
-                () => modalFormBody(outlineList, chosenRows)
-              )
-            }
-          />
-        </span>
-      ) : (
-        <span>There is no course outline added yet.</span>
-      )}
+      <span>
+        <PlusOutlined
+          onClick={() =>
+            showModal(
+              widgetFieldLabels.catname,
+              widgetFieldLabels.catValueLabel,
+              () => modalFormBody(allMilestones, chosenRows)
+            )
+          }
+        />
+      </span>
 
       <style jsx global>{``}</style>
     </>
   );
 };
-const modalFormBody = (outlineList, chosenRows) => {
-  const data = [];
-  outlineList.map((outline, index) => {
-    data.push({
-      key: index,
-      id: outline.id,
-      title: outline.title,
-    });
-  });
 
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [fileList, seFileList] = useState("");
+//Image
+const modalFormBody = (allMilestones, chosenRows) => {
+  console.log(chosenRows);
+  const [fileList, setFileList] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();
-  const columns = [
-    {
-      title: "Prerequisite",
-      dataIndex: "title",
-    },
-    /*  {
-      title: "Pre-requisite",
-      dataIndex: "isreq",
-    }, */
-  ];
 
-  const onSelectChange = (selectedRowKeys, selectedRows) => {
-    setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    console.log(selectedRows);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    selectedRows,
-    onChange: onSelectChange,
-  };
-  useEffect(() => {
-    if (chosenRows.length) {
-      let defaultKeys = [];
-      let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.id) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
-          }
-        });
+  const dataList = [];
+  if (chosenRows.length) {
+    chosenRows.map((chosen, index) => {
+      dataList.push({
+        uid: index,
+        id: chosen.id,
+        title: chosen.name,
+        name: chosen.name,
+        courseOutlineId: chosen.courseOutlineId,
+        isticked: chosen.isticked,
+        status: "done",
+        originFileObj: chosen.originFileObj?chosen.originFileObj:'',
       });
-      //console.log(thekeys)
-      setSelectedRowKeys(defaultKeys);
-      setSelectedRows(defaultRows);
-    }
+    });
+  }
+  useEffect(() => {
+    setFileList(dataList);
   }, []);
+  function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  const handleChange = (info) => {
+    //setLoading(true);    
+    //console.log(info.file, info.fileList);
+    setFileList(info.fileList);    
+  };
+  //console.log(fileList);
+  const onRemove = (info) => {
+    setFileList("");
+    setImageUrl("");
+    setLoading(false);
+  };
   return (
-    <Form.List name="outlineprerequisite">
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {selectedRows.map((field, index) => {
-              field = {
-                ...field,
-                name: index,
-              };
-              return field ? (
-                <div key={index}>
-                  <Form.Item
-                    name={[field.name, "id"]}
-                    initialValue={field.id}
-                    key={`outline_id-${field.key}`}
-                    hidden
-                  >
-                    <Input placeholder="Outline ID" value={field.id} />
-                  </Form.Item>
-                  <Form.Item
-                    name={[field.name, "title"]}
-                    initialValue={field.title}
-                    key={`outline-${field.key}`}
-                    hidden
-                  >
-                    <Input placeholder="Outline Title" value={field.title} />
-                  </Form.Item>
-                </div>
-              ) : (
-                <div>Sorry... There is no data at the moment.</div>
-              );
-            })}
-
-            <Table
-              rowSelection={rowSelection}
-              columns={columns}
-              dataSource={data}
-            />
-          </div>
-        );
-      }}
-    </Form.List>
+    <Form.Item name="outlinemilestones">
+      <Dragger
+        /* {...props} */
+        onChange={handleChange}
+        multiple={true}
+        /* beforeUpload={beforeUpload} */
+        fileList={fileList}
+        /* onRemove={onRemove} */
+        progress={{ type: "line", strokeWidth: 2, showInfo: true }}
+      >
+        <div>
+          {loading ? (
+            <LoadingOutlined />
+          ) : (
+            <div className="ant-upload-text">
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Please upload an image file only.
+              </p>
+            </div>
+          )}
+        </div>
+      </Dragger>
+    </Form.Item>
   );
 };
-export default CourseOutlinePrerequisite;
+
+export default CourseOutlineMilestones;

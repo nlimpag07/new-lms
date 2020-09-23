@@ -46,6 +46,7 @@ import CourseOutlineFeaturedImage from "./course-outline-widgets/CourseOutlineFe
 import CourseOutlineFeaturedVideo from "./course-outline-widgets/CourseOutlineFeaturedVideo";
 import CourseOutlinePrerequisite from "./course-outline-widgets/CourseOutlinePrerequisite";
 import CourseOutlineMediaFiles from "./course-outline-widgets/CourseOutlineMediaFiles";
+import CourseOutlineMilestones from "./course-outline-widgets/CourseOutlineMilestones";
 import CourseOutlineDuration from "./course-outline-widgets/CourseOutlineDuration";
 
 import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
@@ -205,6 +206,7 @@ const CourseOutlines = ({ course_id }) => {
     outlinefeaturedimage: [],
     outlinefeaturedvideo: [],
     outlineduration: [],
+    outlinemilestones: [],
   });
   var [outlineActionModal, setOutlineActionModal] = useState({
     StateModal: false,
@@ -305,11 +307,11 @@ const CourseOutlines = ({ course_id }) => {
           outlinefeaturedvideo: values.name,
         });
       }
-      console.log('Uploaded Video: ',value);
+      console.log("Uploaded Video: ", value);
     }
     if (name === "outlinemediafiles") {
-      /* var value = values.outlinemediafiles
-        ? values.outlinemediafiles.map((mediafile, index) => mediafile)
+      var value = values.outlinemediafiles
+        ? values.outlinemediafiles.fileList.map((mediafile, index) => mediafile)
         : "";
       basicForm.setFieldsValue({
         outlinemediafiles: [...value],
@@ -317,9 +319,23 @@ const CourseOutlines = ({ course_id }) => {
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         outlinemediafiles: [...value],
-      }); */
-      console.log('Media Files: ',values);
+      });
+      //console.log('Media Files: ',value);
     }
+    if (name === "outlinemilestones") {
+      var value = values.outlinemilestones
+        ? values.outlinemilestones.fileList.map((mediafile, index) => mediafile)
+        : "";
+      basicForm.setFieldsValue({
+        outlinemilestones: [...value],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        outlinemilestones: [...value],
+      });
+      //console.log('Media Files: ',value);
+    }
+
     if (name === "outlineduration") {
       basicForm.setFieldsValue({
         outlineduration: [...picklistFields, values],
@@ -345,10 +361,69 @@ const CourseOutlines = ({ course_id }) => {
 
     console.log("Finish:", values);
 
-    /* var data = new FormData();
+    let curOutlineIdExist =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].id : "";
+    //console.log("Current Outline: ", curOutlineIdExist);
+    var data = new FormData();
     var errorList = [];
-    //NLI: Extended Form Values Processing & Filtration
-    !!values.title
+    if (curOutlineIdExist) {
+      console.log("HELLLOOOOO Outline ID");
+    } else {
+      console.log("Empty Baby", course_id);
+
+      //NLI: Extended Form Values Processing & Filtration
+      data.append("courseId", course_id);
+      !!values.outlinedetails.outlinetitle
+        ? data.append("title", values.outlinedetails.outlinetitle)
+        : errorList.push("Missing Outline Title");
+
+      !!values.outlinedetails.outlinedescription
+        ? data.append("description", values.outlinedetails.outlinedescription)
+        : errorList.push("Missing Outline Description");
+
+      !!values.outlinedetails.visibility
+        ? data.append("visibility", values.outlinedetails.visibility)
+        : errorList.push("Missing Outline Visibility");
+
+      !!values.outlinedetails.usergroup
+        ? data.append("userGroupId", values.outlinedetails.usergroup)
+        : errorList.push("Missing Outline User Group");
+
+      !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
+        ? values.outlinefeaturedimage.map((image, index) => {
+            data.append(`featureImage`, image.fileList[0].originFileObj);
+          })
+        : errorList.push("Missing Outline Image");
+      values.outlinefeaturedvideo &&
+        values.outlinefeaturedvideo.length &&
+        values.outlinefeaturedvideo.map((video, index) => {
+          //console.log(image.fileList[0].originFileObj);
+          data.append(`interactiveVideo`, video.fileList[0].originFileObj);
+        });
+
+      !!values.outlineprerequisite && values.outlineprerequisite.length
+        ? values.outlineprerequisite.map((outlineprereq, index) => {
+            data.append(
+              `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
+              outlineprereq.course_id
+            );
+          })
+        : errorList.push("Missing Outline Prerequisite");
+      /*values.outlinedetails && !!values.outlinedetails.outlinetitle
+        ? values.outlinedetails.map((outline, index) => {
+            console.log("Outline Title: ",outline.title);
+             data.append(
+              `relatedCourse[${index}][relatedCourseId]`,
+              relatedcourse.course_id
+            );
+            data.append(
+              `relatedCourse[${index}][isPrerequisite]`,
+              relatedcourse.isreq
+            ); 
+          })
+          console.log("Outline Title: ",outline.title)
+        : errorList.push("Missing Related Course");*/
+      /* !!values.title
       ? data.append("title", values.title)
       : errorList.push("Missing Course Title");
     !!values.description
@@ -385,34 +460,36 @@ const CourseOutlines = ({ course_id }) => {
         //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       });
+      
 
-    //data = JSON.stringify(data);
-    if (errorList.length) {
-      console.log("ERRORS: ", errorList);
-      onFinishModal(errorList);
-    } else {
-      //console.log("NO ERROR, PROCEED WITH SUBMISSION");
-      var config = {
-        method: "post",
-        url: apiBaseUrl + "/courses",
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
+      //data = JSON.stringify(data);
+      if (errorList.length) {
+        console.log("ERRORS: ", errorList);
+        onFinishModal(errorList);
+      } else {
+        //console.log("NO ERROR, PROCEED WITH SUBMISSION");
+        var config = {
+          method: "post",
+          url: apiBaseUrl + "/CourseOutline",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          data: data,
+        };
 
-      axios(config)
-        .then((res) => {
-          console.log("res: ", res.data);
-          onFinishModal("", res.data);
-        })
-        .catch((err) => {
-          //console.log("err: ", err.response.data);
-          errorList.push(err.response.data.message);
-          onFinishModal(errorList, "");
-        });
-    } */
+        axios(config)
+          .then((res) => {
+            console.log("res: ", res.data);
+            onFinishModal("", res.data);
+          })
+          .catch((err) => {
+            //console.log("err: ", err.response.data);
+            errorList.push(err.response.data.message);
+            onFinishModal(errorList, "");
+          });
+      }*/
+    } //End of else curOutlineIdExist
   };
 
   const onFinishModal = (errorList, response) => {
@@ -500,40 +577,57 @@ const CourseOutlines = ({ course_id }) => {
       visibility,
     } = "";
     if (curOutlineId.length) {
-      //console.log(outline)
+      console.log(outline);
       let isSelected = outlineList.filter(
         (selecteOutline) => selecteOutline.id === curOutlineId[0].id
       );
       console.log(isSelected[0]);
-        let prerequisite=[];
-        let currentPrerequisite= isSelected[0].courseOutlinePrerequisite;
-        if (currentPrerequisite.length) {
-          prerequisite = currentPrerequisite.map((c_outlinerequisite, index) => {
-            let getOutline = outlineList.filter((outline)=>c_outlinerequisite.preRequisiteId == outline.id)            
-            let list = {
-              id: c_outlinerequisite.id,
-              title:getOutline[0].title,
-              courseOutlineId: c_outlinerequisite.courseOutlineId,
-              preRequisiteId: c_outlinerequisite.preRequisiteId,
-              isticked: true,
-            };
-            return list;
-          });
-        }
-        let mediaFiles=[];
-        let currentMediaFiles= isSelected[0].courseOutlineMedia;
-        if (currentMediaFiles.length) {
-          mediaFiles = currentMediaFiles.map((c_outlinemediafiles, index) => {
-                      
-            let list = {
-              id: c_outlinemediafiles.id,
-              name:c_outlinemediafiles.fileName,
-              courseOutlineId: c_outlinemediafiles.courseOutlineId,
-              isticked: true,
-            };
-            return list;
-          });
-        }
+      let prerequisite = [];
+      let currentPrerequisite = isSelected[0].courseOutlinePrerequisite;
+      if (currentPrerequisite.length) {
+        prerequisite = currentPrerequisite.map((c_outlinerequisite, index) => {
+          let getOutline = outlineList.filter(
+            (outline) => c_outlinerequisite.preRequisiteId == outline.id
+          );
+          let list = {
+            id: c_outlinerequisite.id,
+            title: getOutline[0].title,
+            courseOutlineId: c_outlinerequisite.courseOutlineId,
+            preRequisiteId: c_outlinerequisite.preRequisiteId,
+            isticked: true,
+          };
+          return list;
+        });
+      }
+      let mediaFiles = [];
+      let currentMediaFiles = isSelected[0].courseOutlineMedia;
+      if (currentMediaFiles.length) {
+        mediaFiles = currentMediaFiles.map((c_outlinemediafiles, index) => {
+          let list = {
+            id: c_outlinemediafiles.id,
+            name: c_outlinemediafiles.fileName,
+            courseOutlineId: c_outlinemediafiles.courseOutlineId,
+            resourceFile: c_outlinemediafiles.resourceFile,
+            isticked: true,
+          };
+          return list;
+        });
+      }
+      let mileStones = [];
+      let currentMileStones = isSelected[0].courseOutlineMilestone;
+      if (currentMileStones.length) {
+        mileStones = currentMileStones.map((c_outlinemilestones, index) => {
+          let list = {
+            id: c_outlinemilestones.id,
+            name: c_outlinemilestones.name,
+            courseOutlineId: c_outlinemilestones.courseOutlineId,
+            lessonCompleted: c_outlinemilestones.lessonCompleted,
+            resourceFile: c_outlinemilestones.resourceFile,
+            isticked: true,
+          };
+          return list;
+        });
+      }
 
       //console.log(outlineItem)
       setdefaultWidgetValues({
@@ -551,7 +645,8 @@ const CourseOutlines = ({ course_id }) => {
         outlinefeaturedvideo: isSelected[0].featureVideo,
         outlineprerequisite: prerequisite,
         outlineduration: isSelected[0].duration,
-        outlinemediafiles:mediaFiles,
+        outlinemediafiles: mediaFiles,
+        outlinemilestones: mileStones,
       });
     } else {
       setdefaultWidgetValues({
@@ -561,7 +656,9 @@ const CourseOutlines = ({ course_id }) => {
         outlinefeaturedvideo: "",
         outlineduration: "",
         outlineprerequisite: [],
-        outlinemediafiles:[],
+        outlinemediafiles: [],
+        outlinemilestones: [],
+
         /* featuredvideo: video,
         relatedcourses: relateds,
         duration: [durationtime], */
@@ -754,19 +851,18 @@ const CourseOutlines = ({ course_id }) => {
                         />
                       </div>
                     </Panel>
-                    {/*<Panel header="Milestones" key="4" className="greyBackground">
+                    {/* <Panel header="Milestones" key="4" className="greyBackground">
                     <div className="outlineWidgetHolder">
-                      <CourseWidgetType
+                      <CourseOutlineMilestones
                         shouldUpdate={(prevValues, curValues) =>
-                          prevValues.picklisttype !== curValues.picklisttype
+                          prevValues.outlinemilestones !== curValues.outlinemilestones
                         }
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
                       />
                       </div>
-                    </Panel>
-                    */}
+                    </Panel>  */}
                     <Panel header="DURATION" key="5" className="greyBackground">
                       <div className="outlineWidgetHolder">
                         <CourseOutlineDuration
