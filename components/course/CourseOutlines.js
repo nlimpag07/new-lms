@@ -294,7 +294,7 @@ const CourseOutlines = ({ course_id }) => {
         });
       }
       //setFeatureMedia({ image: values.name });
-      console.log("Course Outline Featured Image: ",value);
+      console.log("Course Outline Featured Image: ", value);
     }
     if (name === "outlinefeaturedvideo") {
       var value = values.name ? values : "";
@@ -323,19 +323,18 @@ const CourseOutlines = ({ course_id }) => {
       console.log('Media Files: ',values);
     } */
     if (name === "outlinemediafiles") {
-      var value = values.outlinemediafiles ? values : "";
+      var value = values.outlinemedia ? values : "";
       if (value) {
         basicForm.setFieldsValue({
-          outlinemediafiles: [values.outlinemediafiles],
+          outlinemediafiles: [values.outlinemedia],
         });
         setdefaultWidgetValues({
           ...defaultWidgetValues,
-          outlinemediafiles: values.outlinemediafiles,
+          outlinemediafiles: values.outlinemedia,
         });
       }
-      console.log("Course Outline Media File: ",value);
+      console.log("Course Outline Media File: ", value);
     }
-
 
     if (name === "outlinemilestones") {
       var value = values.outlinemilestones
@@ -412,18 +411,18 @@ const CourseOutlines = ({ course_id }) => {
       values.outlinefeaturedvideo &&
         values.outlinefeaturedvideo.length &&
         values.outlinefeaturedvideo.map((video, index) => {
-          console.log('Video:',video);
+          console.log("Video:", video);
           data.append(`interactiveVideo`, video.fileList[0].originFileObj);
         });
 
-      !!values.outlineprerequisite && values.outlineprerequisite.length
-        ? values.outlineprerequisite.map((outlineprereq, index) => {
-            data.append(
-              `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-              outlineprereq.id
-            );
-          })
-        : errorList.push("Missing Outline Prerequisite");
+      values.outlineprerequisite &&
+        values.outlineprerequisite.length &&
+        values.outlineprerequisite.map((outlineprereq, index) => {
+          data.append(
+            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
+            outlineprereq.id
+          );
+        });
 
       /* !!values.outlinemediafiles && values.outlinemediafiles.length
         ? values.outlinemediafiles.map((outlinemediafile, index) => {
@@ -434,9 +433,17 @@ const CourseOutlines = ({ course_id }) => {
             );
           })
         : errorList.push("Missing Outline Media File"); */
-        !!values.outlinemediafiles && values.outlinemediafiles.length
-        ? values.outlinemediafiles.map((media, index) => {
-            data.append(`CourseOutlineMediaFile[${index}]`, media.fileList[0].originFileObj);
+      !!values.outlinemediafiles && values.outlinemediafiles.length
+        ? values.outlinemediafiles.map((media) => {
+            //console.log(media)
+            media.fileList.map((listOfFiles, index) => {
+              //console.log('list of fileList',listOfFiles);
+              data.append(
+                `CourseOutlineMediaFile`,
+                listOfFiles.originFileObj
+              );
+            });
+            //data.append(`CourseOutlineMediaFile[${index}]`, media.fileList[0].originFileObj);
           })
         : errorList.push("Missing Outline Media File");
 

@@ -93,21 +93,27 @@ const CourseOutlineMediaFiles = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
-            //console.log('received picklist value: ', thisPicklist);
+            console.log('received picklist value: ', thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
                   return (
                     <Row className="" gutter={[4, 8]}>
-                      {thisPicklist.map((field, index) => {
+                      {thisPicklist[0].fileList.map((field, index) => {
                         field = {
                           ...field,
                           name: index,
                           key: index,
-                          value: field.fileList[index].name,
+                          value: field.name,
                           id: field.id,
                         };
-                        //console.log('Individual Fields:', field)
+                        /* field = {
+                          ...field,
+                          name: index,
+                          key: index,
+                          value: thisPicklist[index].file.name,
+                        }; */
+                        console.log('Individual Fields:', field)
                         return (
                           <div key={field.key}>
                             <Form.Item
@@ -273,18 +279,18 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     });
   }
   useEffect(() => {
-    setFileList({ fileList: dataList });
+    setFileList({ file:'',fileList:dataList });
   }, []);
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  const handleChange = (info) => {
+  /* const handleChange = (info) => {
     //setLoading(true);
     //console.log(info.file, info.fileList);
     setFileList(info);
-  };
+  }; */
   //console.log(fileList);
   const onRemove = (info) => {
     setFileList("");
@@ -295,7 +301,28 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     return setLoading(true);
     //return false;
   }; */
-  /* const uploadButton = (
+  const handleChange = (info) => {
+    /* setLoading(true);    
+    let thefileList = [...info.fileList];
+    thefileList = thefileList.slice(-1); */
+    setFileList(info);
+    /* if (Array.isArray(thefileList) && thefileList.length) {
+      getBase64(thefileList[0].originFileObj, (imageUrl) => {
+        setImageUrl(imageUrl);
+        setLoading(false);
+      });
+    } else {
+      setFileList("");
+      setImageUrl("");
+      setLoading(false);
+    } */
+  };
+
+  const beforeUpload = () => {
+    setLoading(true);
+    return false;
+  };
+  const uploadButton = (
     <div>
       {loading ? (
         <LoadingOutlined />
@@ -311,36 +338,22 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
         </div>
       )}
     </div>
-  ); */
+  );
   //console.log(loading);
   return (
-    <Form.Item name="outlinemediafiles">
+    <Form.Item name="outlinemedia">
       <Dragger
-        /* {...props} */
         onChange={handleChange}
         multiple={true}
         /* beforeUpload={beforeUpload} */
         fileList={fileList.fileList}
         /* onRemove={onRemove} */
-        progress={{ type: "line", strokeWidth: 2, showInfo: true }}
       >
-        <div>
-          {loading ? (
-            <LoadingOutlined />
-          ) : (
-            <div className="ant-upload-text">
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Please upload an image file only.
-              </p>
-            </div>
-          )}
-        </div>
+        {imageUrl ? (
+          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+        ) : (
+          uploadButton
+        )}
       </Dragger>
     </Form.Item>
   );

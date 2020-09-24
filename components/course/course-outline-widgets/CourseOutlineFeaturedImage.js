@@ -45,10 +45,7 @@ const CourseOutlineFeaturedImage = (props) => {
 
   return (
     <>
-      <Form.Item
-        label={widgetFieldLabels.catname}
-        shouldUpdate={shouldUpdate}
-      >
+      <Form.Item label={widgetFieldLabels.catname} shouldUpdate={shouldUpdate}>
         {({ getFieldValue }) => {
           var thisPicklist = getFieldValue(widgetFieldLabels.catFormName) || [];
           //console.log(thisPicklist)
@@ -57,10 +54,7 @@ const CourseOutlineFeaturedImage = (props) => {
               <Form.List name={widgetFieldLabels.catFormName}>
                 {(fields, { add, remove }) => {
                   return (
-                    <Input.Group
-                      compact
-                      style={{ textAlign: "center" }}
-                    >
+                    <Input.Group compact style={{ textAlign: "center" }}>
                       {fields.map((field, index) => {
                         field = {
                           ...field,
@@ -118,10 +112,7 @@ const CourseOutlineFeaturedImage = (props) => {
               <Form.List name={widgetFieldLabels.catFormName}>
                 {(fields, { add, remove }) => {
                   return (
-                    <Input.Group
-                      compact
-                      style={{ textAlign: "center"}}
-                    >
+                    <Input.Group compact style={{ textAlign: "center" }}>
                       <Form.Item
                         required={false}
                         key={`${widgetFieldLabels.catFormName}-0`}
