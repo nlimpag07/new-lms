@@ -381,40 +381,135 @@ const CourseOutlines = ({ course_id }) => {
     var data = new FormData();
     var errorList = [];
     if (curOutlineIdExist) {
-      console.log("HELLLOOOOO Outline ID");
-    } else {
-      console.log("Empty Baby", course_id);
-
+      //Edit Course Outline
+      //console.log("HELLLOOOOO Outline ID", curOutlineIdExist);
       //NLI: Extended Form Values Processing & Filtration
+      var isNotAllEmpty = [];
       data.append("courseId", course_id);
-      !!values.outlinedetails.outlinetitle
-        ? data.append("title", values.outlinedetails.outlinetitle)
-        : errorList.push("Missing Outline Title");
-
-      !!values.outlinedetails.outlinedescription
-        ? data.append("description", values.outlinedetails.outlinedescription)
-        : errorList.push("Missing Outline Description");
-
-      !!values.outlinedetails.visibility
-        ? data.append("visibility", values.outlinedetails.visibility)
-        : errorList.push("Missing Outline Visibility");
-
-      !!values.outlinedetails.usergroup
-        ? data.append("userGroupId", values.outlinedetails.usergroup)
-        : errorList.push("Missing Outline User Group");
-
-      !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
-        ? values.outlinefeaturedimage.map((image, index) => {
-            data.append(`featureImage`, image.fileList[0].originFileObj);
-          })
-        : errorList.push("Missing Outline Image");
-      values.outlinefeaturedvideo &&
-        values.outlinefeaturedvideo.length &&
+      if (!!values.outlinedetails && values.outlinedetails.length) {
+        /* if (!!values.outlinedetails.outlinetitle) {
+          data.append("title", values.outlinedetails.outlinetitle);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (!!values.outlinedetails.outlinedescription) {
+          data.append("description", values.outlinedetails.outlinedescription);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (!!values.outlinedetails.visibility) {
+          data.append("visibility", values.outlinedetails.visibility);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (!!values.outlinedetails.usergroup) {
+          data.append("userGroupId", values.outlinedetails.usergroup);
+          isNotAllEmpty.push("Not Empty");
+        } */
+        isNotAllEmpty.push("Not Empty");
+      }
+      if (!!values.outlinefeaturedimage && values.outlinefeaturedimage.length) {
+        values.outlinefeaturedimage.map((image, index) => {
+          data.append(`featureImage`, image.fileList[0].originFileObj);
+        });
+        isNotAllEmpty.push("Not Empty");
+      }
+      if (values.outlinefeaturedvideo && values.outlinefeaturedvideo.length) {
         values.outlinefeaturedvideo.map((video, index) => {
-          console.log("Video:", video);
+          //console.log("Video:", video);
           data.append(`interactiveVideo`, video.fileList[0].originFileObj);
         });
+        isNotAllEmpty.push("Not Empty");
+      }
+      if (values.outlineprerequisite && values.outlineprerequisite.length) {
+        values.outlineprerequisite.map((outlineprereq, index) => {
+          data.append(
+            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
+            outlineprereq.id
+          );
+        });
+        isNotAllEmpty.push("Not Empty");
+      }
 
+      if (!!values.outlinemediafiles && values.outlinemediafiles.length) {
+        values.outlinemediafiles.map((media) => {
+          media.fileList.map((listOfFiles, index) => {
+            data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
+          });
+        });
+        isNotAllEmpty.push("Not Empty");
+      }
+
+      if (!!values.outlineduration) {
+        data.append("duration", values.outlineduration);
+        isNotAllEmpty.push("Not Empty");
+      }
+
+      //data = JSON.stringify(data);
+      if (errorList.length) {
+        console.log("ERRORS: ", errorList);
+        onFinishModal(errorList);
+      } else {
+        console.log("IsNotAllEmpty",isNotAllEmpty);
+        if (isNotAllEmpty.length) {
+          var config = {
+            method: "post",
+            url: apiBaseUrl + `/CourseOutline/` + curOutlineIdExist + `/edit`,
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            data: data,
+          };
+
+          axios(config)
+            .then((res) => {
+              console.log("res: ", res.data, curOutlineIdExist);
+              onFinishModal("", res.data, curOutlineIdExist);
+            })
+            .catch((err) => {
+              //console.log("err: ", err.response.data);
+              errorList.push(err.response.data.message);
+              onFinishModal(errorList, "", curOutlineIdExist);
+            });
+        } else {
+          errorList.push("No Update has been made");
+          onFinishModal(errorList);
+        }
+      }
+    } else {
+      //Add Course Outline
+      console.log("Empty Baby", course_id);
+      //NLI: Extended Form Values Processing & Filtration
+      data.append("courseId", course_id);
+      if (!!values.outlinedetails) {
+        !!values.outlinedetails.outlinetitle
+          ? data.append("title", values.outlinedetails.outlinetitle)
+          : errorList.push("Missing Outline Title");
+
+        !!values.outlinedetails.outlinedescription
+          ? data.append("description", values.outlinedetails.outlinedescription)
+          : errorList.push("Missing Outline Description");
+
+        !!values.outlinedetails.visibility
+          ? data.append("visibility", values.outlinedetails.visibility)
+          : errorList.push("Missing Outline Visibility");
+
+        !!values.outlinedetails.usergroup
+          ? data.append("userGroupId", values.outlinedetails.usergroup)
+          : errorList.push("Missing Outline User Group");
+
+        !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
+          ? values.outlinefeaturedimage.map((image, index) => {
+              data.append(`featureImage`, image.fileList[0].originFileObj);
+            })
+          : errorList.push("Missing Outline Image");
+        values.outlinefeaturedvideo &&
+          values.outlinefeaturedvideo.length &&
+          values.outlinefeaturedvideo.map((video, index) => {
+            console.log("Video:", video);
+            data.append(`interactiveVideo`, video.fileList[0].originFileObj);
+          });
+      } else {
+        errorList.push("Missing Outline Details");
+      }
       values.outlineprerequisite &&
         values.outlineprerequisite.length &&
         values.outlineprerequisite.map((outlineprereq, index) => {
@@ -438,10 +533,7 @@ const CourseOutlines = ({ course_id }) => {
             //console.log(media)
             media.fileList.map((listOfFiles, index) => {
               //console.log('list of fileList',listOfFiles);
-              data.append(
-                `CourseOutlineMediaFile`,
-                listOfFiles.originFileObj
-              );
+              data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
             });
             //data.append(`CourseOutlineMediaFile[${index}]`, media.fileList[0].originFileObj);
           })
@@ -450,59 +542,6 @@ const CourseOutlines = ({ course_id }) => {
       !!values.outlineduration
         ? data.append("duration", values.outlineduration)
         : errorList.push("Missing Outline Duration");
-
-      /*values.outlinedetails && !!values.outlinedetails.outlinetitle
-        ? values.outlinedetails.map((outline, index) => {
-            console.log("Outline Title: ",outline.title);
-             data.append(
-              `relatedCourse[${index}][relatedCourseId]`,
-              relatedcourse.course_id
-            );
-            data.append(
-              `relatedCourse[${index}][isPrerequisite]`,
-              relatedcourse.isreq
-            ); 
-          })
-          console.log("Outline Title: ",outline.title)
-        : errorList.push("Missing Related Course");*/
-      /* !!values.title
-      ? data.append("title", values.title)
-      : errorList.push("Missing Course Title");
-    !!values.description
-      ? data.append("description", encodeURI(decodeURI(values.description)))
-      : errorList.push("Missing Course Description");
-    !!values.durationTime
-      ? data.append("durationTime", values.durationTime)
-      : errorList.push("Missing Course Duration Time");
-    !!values.durationType
-      ? data.append("durationType", values.durationType)
-      : errorList.push("Missing Course Duration Type");    
-      
-    
-    !!values.outlineprerequisite && values.outlineprerequisite.length
-      ? values.outlineprerequisite.map((relatedcourse, index) => {
-          data.append(
-            `relatedCourse[${index}][relatedCourseId]`,
-            relatedcourse.course_id
-          );
-          data.append(
-            `relatedCourse[${index}][isPrerequisite]`,
-            relatedcourse.isreq
-          );
-        })
-      : errorList.push("Missing Related Course");
-    !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
-      ? values.outlinefeaturedimage.map((image, index) => {
-          data.append(`featureImage`, image.fileList[0].originFileObj);
-        })
-      : errorList.push("Missing Course Image");
-    values.outlinefeaturedvideo &&
-      values.outlinefeaturedvideo.length &&
-      values.outlinefeaturedvideo.map((video, index) => {
-        //console.log(image.fileList[0].originFileObj);
-        data.append(`featureVideo`, video.fileList[0].originFileObj);
-      });
-      */
 
       //data = JSON.stringify(data);
       if (errorList.length) {
@@ -523,7 +562,7 @@ const CourseOutlines = ({ course_id }) => {
         axios(config)
           .then((res) => {
             console.log("res: ", res.data, course_id);
-            onFinishModal("", res.data);
+            onFinishModal("", res.data, course_id);
           })
           .catch((err) => {
             //console.log("err: ", err.response.data);
