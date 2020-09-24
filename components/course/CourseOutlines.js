@@ -238,7 +238,7 @@ const CourseOutlines = ({ course_id }) => {
       setLoading(false);
     }
     fetchData(config);
-  }, []);
+  }, [loading]);
 
   const showModal = (modaltitle, modalformname, modalbodycontent) => {
     setOutlineActionModal({
@@ -294,7 +294,7 @@ const CourseOutlines = ({ course_id }) => {
         });
       }
       //setFeatureMedia({ image: values.name });
-      //console.log("Course Outline Featured Image: ",value);
+      console.log("Course Outline Featured Image: ",value);
     }
     if (name === "outlinefeaturedvideo") {
       var value = values.name ? values : "";
@@ -307,9 +307,9 @@ const CourseOutlines = ({ course_id }) => {
           outlinefeaturedvideo: values.name,
         });
       }
-      console.log("Uploaded Video: ", value);
+      //console.log("Uploaded Video: ", value);
     }
-    if (name === "outlinemediafiles") {
+    /* if (name === "outlinemediafiles") {
       var value = values.outlinemediafiles
         ? values.outlinemediafiles.fileList.map((mediafile, index) => mediafile)
         : "";
@@ -320,8 +320,23 @@ const CourseOutlines = ({ course_id }) => {
         ...defaultWidgetValues,
         outlinemediafiles: [...value],
       });
-      //console.log('Media Files: ',value);
+      console.log('Media Files: ',values);
+    } */
+    if (name === "outlinemediafiles") {
+      var value = values.outlinemediafiles ? values : "";
+      if (value) {
+        basicForm.setFieldsValue({
+          outlinemediafiles: [values.outlinemediafiles],
+        });
+        setdefaultWidgetValues({
+          ...defaultWidgetValues,
+          outlinemediafiles: values.outlinemediafiles,
+        });
+      }
+      console.log("Course Outline Media File: ",value);
     }
+
+
     if (name === "outlinemilestones") {
       var value = values.outlinemilestones
         ? values.outlinemilestones.fileList.map((mediafile, index) => mediafile)
@@ -397,7 +412,7 @@ const CourseOutlines = ({ course_id }) => {
       values.outlinefeaturedvideo &&
         values.outlinefeaturedvideo.length &&
         values.outlinefeaturedvideo.map((video, index) => {
-          //console.log(image.fileList[0].originFileObj);
+          console.log('Video:',video);
           data.append(`interactiveVideo`, video.fileList[0].originFileObj);
         });
 
@@ -405,10 +420,30 @@ const CourseOutlines = ({ course_id }) => {
         ? values.outlineprerequisite.map((outlineprereq, index) => {
             data.append(
               `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-              outlineprereq.course_id
+              outlineprereq.id
             );
           })
         : errorList.push("Missing Outline Prerequisite");
+
+      /* !!values.outlinemediafiles && values.outlinemediafiles.length
+        ? values.outlinemediafiles.map((outlinemediafile, index) => {
+            //console.log(outlinemediafile.originFileObj)
+            data.append(
+              `CourseOutlineMediaFile[${index}]`,
+              outlinemediafile.originFileObj
+            );
+          })
+        : errorList.push("Missing Outline Media File"); */
+        !!values.outlinemediafiles && values.outlinemediafiles.length
+        ? values.outlinemediafiles.map((media, index) => {
+            data.append(`CourseOutlineMediaFile[${index}]`, media.fileList[0].originFileObj);
+          })
+        : errorList.push("Missing Outline Media File");
+
+      !!values.outlineduration
+        ? data.append("duration", values.outlineduration)
+        : errorList.push("Missing Outline Duration");
+
       /*values.outlinedetails && !!values.outlinedetails.outlinetitle
         ? values.outlinedetails.map((outline, index) => {
             console.log("Outline Title: ",outline.title);
@@ -460,7 +495,7 @@ const CourseOutlines = ({ course_id }) => {
         //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       });
-      
+      */
 
       //data = JSON.stringify(data);
       if (errorList.length) {
@@ -480,19 +515,19 @@ const CourseOutlines = ({ course_id }) => {
 
         axios(config)
           .then((res) => {
-            console.log("res: ", res.data);
+            console.log("res: ", res.data, course_id);
             onFinishModal("", res.data);
           })
           .catch((err) => {
             //console.log("err: ", err.response.data);
             errorList.push(err.response.data.message);
-            onFinishModal(errorList, "");
+            onFinishModal(errorList, "", course_id);
           });
-      }*/
+      }
     } //End of else curOutlineIdExist
   };
 
-  const onFinishModal = (errorList, response) => {
+  const onFinishModal = (errorList, response, course_id) => {
     setSpinner(false);
     var modalWidth = 750;
     var theBody = "";
@@ -530,10 +565,21 @@ const CourseOutlines = ({ course_id }) => {
         onOk: () => {
           console.log("response before redirection:", response);
           visible: false;
-          router.push(
+          /* router.push(
             `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${response.id}/course-outline`
-          );
+            `/${linkUrl}/course/edit/${course_id}/course-outline`
+          ); */
+          setdefaultWidgetValues({
+            outlinedetails: [],
+            outlineprerequisite: [],
+            outlinemediafiles: [],
+            outlinefeaturedimage: [],
+            outlinefeaturedvideo: [],
+            outlineduration: [],
+            outlinemilestones: [],
+          });
+          setcurOutlineId("");
+          setLoading(true);
         },
       });
     }

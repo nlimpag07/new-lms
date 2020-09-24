@@ -104,7 +104,7 @@ const CourseOutlineMediaFiles = (props) => {
                           ...field,
                           name: index,
                           key: index,
-                          value: field.name,
+                          value: field.fileList[index].name,
                           id: field.id,
                         };
                         //console.log('Individual Fields:', field)
@@ -130,6 +130,13 @@ const CourseOutlineMediaFiles = (props) => {
                                   key={field.key}
                                   value={field.value}
                                   readOnly
+                                />
+                                <Input
+                                  type="file"
+                                  placeholder={widgetFieldLabels.catValueLabel}
+                                  size="medium"
+                                  key={`0-${field.key}`}
+                                  hidden
                                 />
                               </Form.Item>
                               {/* {fields.length >= 1 ? (
@@ -192,6 +199,15 @@ const CourseOutlineMediaFiles = (props) => {
                                     value={field.value}
                                     readOnly
                                   />
+                                  <Input
+                                    type="file"
+                                    placeholder={
+                                      widgetFieldLabels.catValueLabel
+                                    }
+                                    size="medium"
+                                    key={`0-${field.key}`}
+                                    hidden
+                                  />
                                 </Form.Item>
                                 {/* {chosenRows.length >= 1 ? (
                                   <MinusCircleOutlined
@@ -237,7 +253,7 @@ const CourseOutlineMediaFiles = (props) => {
 //Image
 const modalFormBody = (allMediaFiles, chosenRows) => {
   //console.log(chosenRows);
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -246,18 +262,18 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     chosenRows.map((chosen, index) => {
       dataList.push({
         uid: index,
-        id: chosen.id,
+        id: chosen.id ? chosen.id : 0,
         title: chosen.name,
         name: chosen.name,
         courseOutlineId: chosen.courseOutlineId,
         isticked: chosen.isticked,
         status: "done",
-        originFileObj: chosen.originFileObj?chosen.originFileObj:'',
+        originFileObj: chosen.originFileObj ? chosen.originFileObj : "",
       });
     });
   }
   useEffect(() => {
-    setFileList(dataList);
+    setFileList({ fileList: dataList });
   }, []);
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -265,9 +281,9 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     reader.readAsDataURL(img);
   }
   const handleChange = (info) => {
-    //setLoading(true);    
+    //setLoading(true);
     //console.log(info.file, info.fileList);
-    setFileList(info.fileList);    
+    setFileList(info);
   };
   //console.log(fileList);
   const onRemove = (info) => {
@@ -304,7 +320,7 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
         onChange={handleChange}
         multiple={true}
         /* beforeUpload={beforeUpload} */
-        fileList={fileList}
+        fileList={fileList.fileList}
         /* onRemove={onRemove} */
         progress={{ type: "line", strokeWidth: 2, showInfo: true }}
       >
