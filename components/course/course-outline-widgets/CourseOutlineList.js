@@ -72,9 +72,18 @@ const CourseOutlineList = (props) => {
     loading,
     setLoading,
   } = props;
-  var [modal2Visible, setModal2Visible] = useState(false);
+
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
+
+ /*  const showModal = (modaltitle, modalbodycontent) => {
+    setOutlineActionModal({
+      visible: true,
+      modalTitle: modaltitle,
+      modalBodyContent: modalbodycontent,
+    });
+  }; */
+
 
   /*  useEffect(() => {
     let theList = outlineList;
@@ -180,16 +189,32 @@ const CourseOutlineList = (props) => {
       data: { id: item.id },
     };
     async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        //setOutlineList(response.data.result);
-        console.log('Response',response.data);
-        setLoading(true);
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutlineList(response.data.result);
+          console.log("Response", response.data);
+          setLoading(true);
+        }
+      } catch (error) {
+        const { response } = error;
+        //const { request, ...errorObject } = response; // take everything but 'request'
+        /* setOutlineActionModal({
+          visible: false,
+          modalTitle: "",
+          modalBodyContent: "",
+        }); */
+        console.log(response.data.message);
+        Modal.error({
+          title: "Unable to Delete",
+          content: response.data.message,
+          centered: true,
+          width: 450,
+        })
       }
       //setLoading(false);
     }
     fetchData(config);
-    
   };
   /*  useEffect(() => {
   }, []); */
@@ -264,21 +289,6 @@ const CourseOutlineList = (props) => {
           </Row>
         </div>
       </motion.div>
-      <Modal
-        title="Publish Properties"
-        centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
-
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
         .CourseOutlineList h1 {

@@ -41,7 +41,6 @@ const CourseOutlinePrerequisite = (props) => {
   //console.log('List: ',outlineList);
   //const [outlineList, setoutlineList] = useState();
   var chosenRows = defaultWidgetValues.outlineprerequisite;
-  console.log(chosenRows)
   /* if(chosenRows.length){
     let choosed = chosenRows.map((chosen,index)=>{
       let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
@@ -241,11 +240,13 @@ const CourseOutlinePrerequisite = (props) => {
 };
 const modalFormBody = (outlineList, chosenRows) => {
   const data = [];
+  
   outlineList.map((outline, index) => {
     data.push({
       key: index,
       id: outline.id,
       title: outline.title,
+      preRequisiteId:outline.id,
     });
   });
 
@@ -281,7 +282,7 @@ const modalFormBody = (outlineList, chosenRows) => {
       let defaultRows = [];
       chosenRows.map((chosen, index) => {
         data.filter((item) => {
-          if (item.id == chosen.id) {
+          if (item.id == chosen.preRequisiteId) {
             defaultRows.push(item);
             defaultKeys.push(item.key);
           }
@@ -319,6 +320,14 @@ const modalFormBody = (outlineList, chosenRows) => {
                     hidden
                   >
                     <Input placeholder="Outline Title" value={field.title} />
+                  </Form.Item>
+                  <Form.Item
+                    name={[field.name, "preRequisiteId"]}
+                    initialValue={field.preRequisiteId}
+                    key={`outline_prereq-${field.key}`}
+                    hidden
+                  >
+                    <Input placeholder="Outline preRequisiteId" value={field.preRequisiteId} />
                   </Form.Item>
                 </div>
               ) : (

@@ -748,7 +748,7 @@ const CourseEdit = ({ course_id }) => {
         };
         return newTags;
       });
-      console.log("submittedTag: ", processPickListTags);
+      //console.log("submittedTag: ", processPickListTags);
       processPickListTags.map((tag, index) => {
         data.append(`courseTag[${index}][id]`, tag.id);
         data.append(`courseTag[${index}][tagId]`, tag.tagId);
@@ -775,8 +775,8 @@ const CourseEdit = ({ course_id }) => {
           tobedeleted.push(delTag);
         }
       });
-      console.log("======================");
-      console.log("tobedeletedTags: ", tobedeleted);
+      //console.log("======================");
+      //console.log("tobedeletedTags: ", tobedeleted);
       tobedeleted.map((tag, index) => {
         data.append(`deleteCourseTag[${index}][id]`, tag.id);
         data.append(`deleteCourseTag[${index}][tagId]`, tag.tagId);
@@ -941,8 +941,8 @@ const CourseEdit = ({ course_id }) => {
     } = "";
 
     if (relatedCourse) {
-      /* console.log("============");
-      console.log(relatedCourse); */
+      /* console.log("============");*/
+      console.log('Related Course:',relatedCourse); 
       relateds = relatedCourse.map((c_related, index) => {
         let list = {
           id: c_related.id,
