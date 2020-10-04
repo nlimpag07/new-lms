@@ -1,16 +1,18 @@
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import Cookies from "js-cookie";
 
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Popconfirm } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 
 const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
 
 const list = {
   visible: {
@@ -62,15 +64,28 @@ const userlist = [
 const CourseOutlineList = (props) => {
   /* userlist = userlist.result; */
   const router = useRouter();
-  const {    
+  const {
     curOutlineId,
     setcurOutlineId,
     outlineList,
+    setOutlineList,
+    loading,
+    setLoading,
   } = props;
-  
-  var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  var [modal2Visible, setModal2Visible] = useState(false);
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
+
+  /*  useEffect(() => {
+    let theList = outlineList;
+    setOutlineList(theList);
+    //console.log("The Outline List",outlineList)
+  }, []); */
+  /* useEffect(() => {
+    let theList = outlineList;
+    setOutlineList(theList);
+    console.log("The Outline List",outlineList)
+  }, [loading]); */
   if (outlineList) {
     outlineList.map((dataItem) => {
       //dataItem.
@@ -82,7 +97,6 @@ const CourseOutlineList = (props) => {
         visibility: dataItem.visibility === 1 ? "Private" : "Public",
       };
       dataList.push(theoutline);
-      //console.log('Data Items: ',outline);
     });
     //console.log('Data List: ',dataList);
   }
@@ -97,7 +111,7 @@ const CourseOutlineList = (props) => {
   });
   //console.log(Data)
 
-  const selectionChange = (event) => {    
+  const selectionChange = (event) => {
     const theData = Data.map((item) => {
       if (item.id === event.dataItem.id) {
         item.selected = !event.dataItem.selected;
@@ -108,7 +122,7 @@ const CourseOutlineList = (props) => {
       return item;
     });
     setData(theData);
-    
+
     let isSelected = theData.filter((newdata) => newdata.selected === true);
     setcurOutlineId(isSelected);
     //console.log("The Data: ", isSelected);
@@ -133,7 +147,7 @@ const CourseOutlineList = (props) => {
       theData[i].selected = select;
     }
     setData(theData);
-    console.log("The RowClick: ", theData);
+    //console.log("The RowClick: ", theData);
   };
 
   /* const headerSelectionChange = (event) => {
@@ -145,12 +159,65 @@ const CourseOutlineList = (props) => {
     setData(theData);
   }; */
 
-  useEffect(() => {
-    /* let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
-    setCourseDetails(theCourse[0]); */
-  }, []);
-
+  const removeSelected = (item) => {
+    //console.log(item.id);
+    //setModal2Visible(true)
+    /* let newDataList = outlineList;   
+    let index = newDataList.findIndex(
+      (p) => p === item || (item.id && p.id === item.id)
+    );
+    if (index >= 0) {
+      newDataList.splice(index, 1);
+    }    
+    setOutlineList(newDataList); */
+    var config = {
+      method: "delete",
+      url: apiBaseUrl + "/CourseOutline/" + item.id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: { id: item.id },
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        //setOutlineList(response.data.result);
+        console.log('Response',response.data);
+        setLoading(true);
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+    
+  };
+  /*  useEffect(() => {
+  }, []); */
+  const ActionRender = (list) => {
+    //console.log(list.dataItem)
+    return (
+      <td>
+        <Popconfirm
+          title="Are you sure？"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => removeSelected(list.dataItem)}
+        >
+          <button
+            className="k-button k-grid-remove-command"
+            //onClick={() => removeSelected(list.dataItem)}
+            /* onClick={() => {
+            removeSelected(list.dataItem);
+             confirm("Confirm deleting: " + list.dataItem.title) &&
+              remove(list.dataItem);
+          }} */
+          >
+            <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
+          </button>
+        </Popconfirm>
+      </td>
+    );
+  };
   return (
     //GridType(gridList)
     <Row className="widget-container">
@@ -223,31 +290,6 @@ const CourseOutlineList = (props) => {
         }
       `}</style>
     </Row>
-  );
-};
-
-const ActionRender = () => {
-  return (
-    <td>
-      {/* <button
-        className="k-primary k-button k-grid-edit-command"
-        onClick={() => {
-          edit(this.props.dataItem);
-        }}
-      >
-        <FontAwesomeIcon icon={["far", `edit`]} size="lg" />
-      </button>
-      &nbsp; */}
-      <button
-        className="k-button k-grid-remove-command"
-        /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
-      >
-        <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
-      </button>
-    </td>
   );
 };
 

@@ -377,8 +377,10 @@ const CourseOutlines = ({ course_id }) => {
 
     let curOutlineIdExist =
       curOutlineId && curOutlineId.length ? curOutlineId[0].id : "";
-    let curOutlineTitle = curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
-    let curOutlineuserGroupId = curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
+    let curOutlineTitle =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
+    let curOutlineuserGroupId =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
     //console.log("Current Outline: ", curOutlineuserGroupId);
     var data = new FormData();
     var errorList = [];
@@ -392,7 +394,7 @@ const CourseOutlines = ({ course_id }) => {
         if (!!values.outlinedetails[0].outlinetitle) {
           data.append("title", values.outlinedetails[0].outlinetitle);
           isNotAllEmpty.push("Not Empty");
-        }else{
+        } else {
           data.append("title", curOutlineTitle);
         }
         if (!!values.outlinedetails[0].description) {
@@ -406,7 +408,7 @@ const CourseOutlines = ({ course_id }) => {
         if (!!values.outlinedetails[0].usergroup) {
           data.append("userGroupId", values.outlinedetails[0].usergroup);
           isNotAllEmpty.push("Not Empty");
-        }else{
+        } else {
           data.append("userGroupId", curOutlineuserGroupId);
         }
         //isNotAllEmpty.push("Not Empty");
@@ -453,7 +455,7 @@ const CourseOutlines = ({ course_id }) => {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
       } else {
-        console.log("IsNotAllEmpty",isNotAllEmpty);
+        console.log("IsNotAllEmpty", isNotAllEmpty);
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
@@ -687,13 +689,18 @@ const CourseOutlines = ({ course_id }) => {
           let getOutline = outlineList.filter(
             (outline) => c_outlinerequisite.preRequisiteId == outline.id
           );
-          let list = {
-            id: c_outlinerequisite.id,
-            title: getOutline[0].title,
-            courseOutlineId: c_outlinerequisite.courseOutlineId,
-            preRequisiteId: c_outlinerequisite.preRequisiteId,
-            isticked: true,
-          };
+          console.log(getOutline);
+          let list;
+          if (getOutline.length) {
+             list = {
+              id: c_outlinerequisite.id,
+              title: getOutline[0].title,
+              courseOutlineId: c_outlinerequisite.courseOutlineId,
+              preRequisiteId: c_outlinerequisite.preRequisiteId,
+              isticked: true,
+            };
+          }
+
           return list;
         });
       }
@@ -846,8 +853,11 @@ const CourseOutlines = ({ course_id }) => {
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
                 <CourseOutlineList
                   outlineList={outlineList}
+                  setOutlineList={setOutlineList}
                   curOutlineId={curOutlineId}
                   setcurOutlineId={setcurOutlineId}
+                  loading={loading}
+                  setLoading={setLoading}
                 />
               </Col>
             </Row>

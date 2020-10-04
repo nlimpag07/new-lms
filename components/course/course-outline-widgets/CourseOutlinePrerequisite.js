@@ -41,7 +41,7 @@ const CourseOutlinePrerequisite = (props) => {
   //console.log('List: ',outlineList);
   //const [outlineList, setoutlineList] = useState();
   var chosenRows = defaultWidgetValues.outlineprerequisite;
-  
+  console.log(chosenRows)
   /* if(chosenRows.length){
     let choosed = chosenRows.map((chosen,index)=>{
       let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
