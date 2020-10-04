@@ -78,6 +78,7 @@ const CourseOutlineList = (props) => {
         id: dataItem.id,
         title: dataItem.title,
         userGroup: dataItem.userGroup.name,
+        userGroupId: dataItem.userGroupId,
         visibility: dataItem.visibility === 1 ? "Private" : "Public",
       };
       dataList.push(theoutline);

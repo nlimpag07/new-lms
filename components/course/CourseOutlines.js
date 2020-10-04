@@ -377,7 +377,9 @@ const CourseOutlines = ({ course_id }) => {
 
     let curOutlineIdExist =
       curOutlineId && curOutlineId.length ? curOutlineId[0].id : "";
-    //console.log("Current Outline: ", curOutlineIdExist);
+    let curOutlineTitle = curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
+    let curOutlineuserGroupId = curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
+    //console.log("Current Outline: ", curOutlineuserGroupId);
     var data = new FormData();
     var errorList = [];
     if (curOutlineIdExist) {
@@ -387,23 +389,27 @@ const CourseOutlines = ({ course_id }) => {
       var isNotAllEmpty = [];
       data.append("courseId", course_id);
       if (!!values.outlinedetails && values.outlinedetails.length) {
-        /* if (!!values.outlinedetails.outlinetitle) {
-          data.append("title", values.outlinedetails.outlinetitle);
+        if (!!values.outlinedetails[0].outlinetitle) {
+          data.append("title", values.outlinedetails[0].outlinetitle);
+          isNotAllEmpty.push("Not Empty");
+        }else{
+          data.append("title", curOutlineTitle);
+        }
+        if (!!values.outlinedetails[0].description) {
+          data.append("description", values.outlinedetails[0].description);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.outlinedetails.outlinedescription) {
-          data.append("description", values.outlinedetails.outlinedescription);
+        if (!!values.outlinedetails[0].visibility) {
+          data.append("visibility", values.outlinedetails[0].visibility);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.outlinedetails.visibility) {
-          data.append("visibility", values.outlinedetails.visibility);
+        if (!!values.outlinedetails[0].usergroup) {
+          data.append("userGroupId", values.outlinedetails[0].usergroup);
           isNotAllEmpty.push("Not Empty");
+        }else{
+          data.append("userGroupId", curOutlineuserGroupId);
         }
-        if (!!values.outlinedetails.usergroup) {
-          data.append("userGroupId", values.outlinedetails.usergroup);
-          isNotAllEmpty.push("Not Empty");
-        } */
-        isNotAllEmpty.push("Not Empty");
+        //isNotAllEmpty.push("Not Empty");
       }
       if (!!values.outlinefeaturedimage && values.outlinefeaturedimage.length) {
         values.outlinefeaturedimage.map((image, index) => {
@@ -450,8 +456,8 @@ const CourseOutlines = ({ course_id }) => {
         console.log("IsNotAllEmpty",isNotAllEmpty);
         if (isNotAllEmpty.length) {
           var config = {
-            method: "post",
-            url: apiBaseUrl + `/CourseOutline/` + curOutlineIdExist + `/edit`,
+            method: "put",
+            url: apiBaseUrl + `/CourseOutline/` + curOutlineIdExist,
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
@@ -671,7 +677,7 @@ const CourseOutlines = ({ course_id }) => {
     if (curOutlineId.length) {
       console.log(outline);
       let isSelected = outlineList.filter(
-        (selecteOutline) => selecteOutline.id === curOutlineId[0].id
+        (selectedOutline) => selectedOutline.id === curOutlineId[0].id
       );
       console.log(isSelected[0]);
       let prerequisite = [];
