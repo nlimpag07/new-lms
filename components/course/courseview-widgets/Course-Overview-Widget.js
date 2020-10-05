@@ -21,7 +21,7 @@ const CourseOverviewWidget = ({ course_details }) => {
   const [modal2Visible, setModal2Visible] = useState("");
   var courseData = ""; */
   const { relatedCourse, description, courseInstructor } = course_details;
-  //console.log(course_details);
+  console.log(course_details);
 
   useEffect(() => {}, []);
 
@@ -80,7 +80,18 @@ const CourseOverviewWidget = ({ course_details }) => {
       <Row className="Course-Tags related-courses">
         <Col xs={24}>
           <h3>THE INSTRUCTOR</h3>
-          {courseInstructor ? courseInstructor : "None"}
+          {courseInstructor.length
+            ? courseInstructor.map((instructor, index) => (
+              <span key={index}>{instructor.user.firstName}{" "}{instructor.user.lastName}{", "}</span>
+                /* <Link
+                  key={index}
+                  href={`${route}`}
+                  as={`/${linkUrl}/${aspath}/${instructor.courseRelated.course.id}`}
+                >
+                  <a>{instructor.user.firstName}{" "}{instructor.user.lastName}{", "}</a>
+                </Link> */
+              ))
+            : "None"}
         </Col>
       </Row>
 

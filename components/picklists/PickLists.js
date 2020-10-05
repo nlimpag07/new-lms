@@ -157,10 +157,7 @@ const PickLists = ({ userlist }) => {
                     as={`/administrator/picklists`}
                   >
                     <a>
-                      <FontAwesomeIcon
-                        icon={["fas", "map-signs"]}
-                        size="3x"
-                      />{" "}
+                      <FontAwesomeIcon icon={["fas", "map-signs"]} size="3x" />{" "}
                       Course Categories
                     </a>
                   </Link>
@@ -203,7 +200,10 @@ const PickLists = ({ userlist }) => {
                     as={`/administrator/picklists`}
                   >
                     <a>
-                      <FontAwesomeIcon icon={["fas", "user-secret"]} size="3x" />{" "}
+                      <FontAwesomeIcon
+                        icon={["fas", "user-secret"]}
+                        size="3x"
+                      />{" "}
                       Roles
                     </a>
                   </Link>
@@ -222,13 +222,12 @@ const PickLists = ({ userlist }) => {
                     </a>
                   </Link>
                 </Col>
-                
               </Row>
             </Panel>
           </Collapse>
         </motion.div>
       </Row>
-      <CourseCircularUi />
+      {/* <CourseCircularUi /> */}
       <Modal
         title="Publish Properties"
         centered

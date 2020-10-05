@@ -135,11 +135,10 @@ const Reports = ({ userlist }) => {
                 </Col>
               </Row>
             </Panel>
-            
           </Collapse>
         </motion.div>
       </Row>
-      <CourseCircularUi />
+      {/* <CourseCircularUi /> */}
       <Modal
         title="Publish Properties"
         centered

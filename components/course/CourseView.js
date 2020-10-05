@@ -129,7 +129,7 @@ const CourseView = ({ course_id }) => {
         axios.get(apiBaseUrl + "/courseoutline/" + course_id, config),
         axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
         axios.get(apiBaseUrl + "/coursecompetencies/" + course_id, config),
-        axios.get(apiBaseUrl + "/enrollment/", config),
+        axios.get(apiBaseUrl + "/enrollment/" + course_id, config),
       ])
       .then(
         axios.spread((courseoutline, courseoutcome, competencies,enrollments) => {
@@ -163,7 +163,7 @@ const CourseView = ({ course_id }) => {
     setLoading(false);
   }, [course_id]);
 
-  let courseDetails = course[0] || "";
+  let courseDetails = course[0] || [];
   let {
     id,
     featureImage,
@@ -323,7 +323,7 @@ const CourseView = ({ course_id }) => {
                 <TabPane tab="OVERVIEW" key="1">
                   <CourseOverviewWidget course_details={courseDetails} />
                 </TabPane>
-                <TabPane tab="COURSE OUTLINE" key="2">
+                 <TabPane tab="COURSE OUTLINE" key="2">
                   <CourseOutlineviewWidget course_outline={course_outline} />
                 </TabPane>
                 <TabPane tab="LEARNING OUTCOMES" key="3">

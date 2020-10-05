@@ -20,7 +20,7 @@ const CourseCompetenciesviewWidget = ({ course_competencies }) => {
     //setListData();
     setLoading(false);
   }, []);
-
+  console.log('ListData',listData);
   return listData ? (
     <div className="tab-content">
       <Row className="Course-Tags">

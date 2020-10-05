@@ -19,7 +19,7 @@ const CourseLearninOutcomesviewWidget = ({ course_outcome }) => {
     //console.log("onChange:", current);
     setCurrent(current);
   };
-
+  course_outcome = course_outcome.result;
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
