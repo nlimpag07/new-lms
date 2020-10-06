@@ -54,14 +54,12 @@ const CourseAssessmentsDetails = (props) => {
     };
     async function fetchData(config) {
       await axios
-        .all([
-          axios.get(apiBaseUrl + "/Settings/usergroup", config),
-        ])
+        .all([axios.get(apiBaseUrl + "/Settings/usergroup", config)])
         .then(
           axios.spread((usergroup) => {
             !usergroup.data.response
               ? setUserGroupList(usergroup.data.result)
-              : setUserGroupList([]);            
+              : setUserGroupList([]);
           })
         )
         .catch((errors) => {
@@ -79,7 +77,7 @@ const CourseAssessmentsDetails = (props) => {
 
     fetchData(config);
   }, []);
-  
+
   const groupOptions = userGroupList.map((usergroup, index) => {
     return (
       <Option key={index} value={usergroup.id}>
