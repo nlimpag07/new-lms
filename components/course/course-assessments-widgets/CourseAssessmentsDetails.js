@@ -1,5 +1,7 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 import {
   Row,
@@ -12,32 +14,87 @@ import {
   Select,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { Plusassessmentd, MinusCircleassessmentd } from "@ant-design/icons";
 /**TextArea declaration */
 const { Option } = Select;
 const { TextArea } = Input;
+
+const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
+
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Outline - Details",
-  catValueLabel: "outlinedetails",
+  catname: "Assessment - Details",
+  catValueLabel: "assessmentdetails",
 };
 
-const CourseOutlineDetails = (props) => {
+const CourseAssessmentsDetails = (props) => {
   const {
     shouldUpdate,
     showModal,
-    outline,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    course_id,
+    allOutlines,
   } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const chosenRows = defaultWidgetValues.outlinedetails;
+  const [userGroupList, setUserGroupList] = useState([]);
+  const chosenRows = defaultWidgetValues.assessmentdetails;
   /* useEffect(() => {
     console.log(chosenRows);
-  }, [outline]); */
+  }, [assessment]); */
   //console.log(chosenRows);
-  //return outline?(title):("Nothing");
-  console.log('Outline',outline);
+  //return assessment?(title):("Nothing");
+  useEffect(() => {
+    var config = {
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      await axios
+        .all([
+          axios.get(apiBaseUrl + "/Settings/usergroup", config),
+        ])
+        .then(
+          axios.spread((usergroup) => {
+            !usergroup.data.response
+              ? setUserGroupList(usergroup.data.result)
+              : setUserGroupList([]);            
+          })
+        )
+        .catch((errors) => {
+          // react on errors.
+          console.error(errors);
+        });
+      /* const response = await axios(config);
+      if (response) {
+        setUserGroupList(response.data.result);
+        console.log(response.data.result);
+      } else {
+      } */
+      //setLoading(false);
+    }
+
+    fetchData(config);
+  }, []);
+  
+  const groupOptions = userGroupList.map((usergroup, index) => {
+    return (
+      <Option key={index} value={usergroup.id}>
+        {usergroup.name}
+      </Option>
+    );
+  });
+
+  const outlineOptions = allOutlines.map((outline, index) => {
+    return (
+      <Option key={index} value={outline.id}>
+        {outline.title}
+      </Option>
+    );
+  });
   return !chosenRows.length ? (
     <>
       <Form.Item
@@ -47,15 +104,41 @@ const CourseOutlineDetails = (props) => {
         shouldUpdate={shouldUpdate}
       >
         <Form.Item
-          label="Outline Title"
-          name={["outlinedetails", "outlinetitle"]}
+          label="Assessment Title"
+          name={["assessmentdetails", "assessmenttitle"]}
         >
-          <Input placeholder="Outline Title" />
+          <Input placeholder="Assessment Title" />
         </Form.Item>
         <Form.Item>
-          <Input.Group compact className="course-outline-details">
+          <Form.Item
+            name={["assessmentdetails", "assessmentTypeId"]}
+            label="Assessment type"
+            noStyle
+          >
+            <Select placeholder="Assessment type" size="medium">
+              <Option value="1">Assignment</Option>
+              <Option value="2">Exam</Option>
+            </Select>
+          </Form.Item>
+        </Form.Item>
+        <Form.Item>
+          <Form.Item
+            name={["assessmentdetails", "courseOutlineId"]}
+            label="Linked Course Outline"
+            noStyle
+          >
+            <Select placeholder="Linked Course Outline" size="medium">
+              {outlineOptions}
+              {/* <Option value="1">Administrator</Option>
+              <Option value="2">Human Resource</Option>
+              <Option value="3">Manager</Option> */}
+            </Select>
+          </Form.Item>
+        </Form.Item>
+        <Form.Item>
+          <Input.Group compact className="course-assessment-details">
             <Form.Item
-              name={["outlinedetails", "usergroup"]}
+              name={["assessmentdetails", "userGroup"]}
               label="User Group"
               noStyle
             >
@@ -64,34 +147,39 @@ const CourseOutlineDetails = (props) => {
                 size="medium"
                 style={{ width: "50%" }}
               >
-                <Option value="1">Administrator</Option>
+                {groupOptions}
+                {/* <Option value="1">Administrator</Option>
                 <Option value="2">Human Resource</Option>
-                <Option value="3">Manager</Option>
+                <Option value="3">Manager</Option> */}
               </Select>
             </Form.Item>
-            <Form.Item name={["outlinedetails", "visibility"]} noStyle>
+            <Form.Item name={["assessmentdetails", "passingGrade"]} noStyle>
               <Select
-                placeholder="Visibility"
+                placeholder="Passing Grade"
                 size="medium"
                 style={{ width: "50%" }}
               >
-                <Option value="0">Public</Option>
-                <Option value="1">Private</Option>
+                <Option value="75">75</Option>
+                <Option value="80">80</Option>
+                <Option value="85">85</Option>
+                <Option value="90">90</Option>
+                <Option value="95">95</Option>
+                <Option value="100">100</Option>
               </Select>
             </Form.Item>
           </Input.Group>
         </Form.Item>
-        <Form.Item name={["outlinedetails", "outlinedescription"]}>
-          <TextArea rows={5} placeholder="Outline Description" />
+        <Form.Item name={["assessmentdetails", "assessmentdescription"]}>
+          <TextArea rows={5} placeholder="assessment Description" />
         </Form.Item>
 
         <style jsx global>{`
-          .course-outline-details .ant-form-item {
+          .course-assessment-details .ant-form-item {
             display: inline-block;
             width: 30%;
             margin: 15px 8px;
           }
-          .course-outline-details .ant-select-selector {
+          .course-assessment-details .ant-select-selector {
             font-weight: normal !important;
             text-transform: Capitalize !important;
           }
@@ -109,7 +197,7 @@ const CourseOutlineDetails = (props) => {
         <Form.List name={widgetFieldLabels.catValueLabel}>
           {(fields, { add, remove }) => {
             return (
-              <>
+              <div className="assessmentWithValue">
                 {chosenRows.map((field, index) => {
                   field = {
                     ...field,
@@ -120,8 +208,8 @@ const CourseOutlineDetails = (props) => {
                   return (
                     <div key={field.key}>
                       <Form.Item
-                        label="Outline Title"
-                        name={[field.name, "outlinetitle"]}
+                        label="assessment Title"
+                        name={[field.name, "assessmenttitle"]}
                         key={`${field.key}-title`}
                       >
                         <Input
@@ -130,7 +218,10 @@ const CourseOutlineDetails = (props) => {
                         />
                       </Form.Item>
                       <Form.Item>
-                        <Input.Group compact className="course-outline-details">
+                        <Input.Group
+                          compact
+                          className="course-assessment-details"
+                        >
                           <Form.Item
                             name={[field.name, "usergroup"]}
                             label="User Group"
@@ -161,64 +252,27 @@ const CourseOutlineDetails = (props) => {
                           </Form.Item>
                         </Input.Group>
                       </Form.Item>
-                      <Form.Item
-                        name={[field.name, "description"]}
-                      >
-                        <TextArea rows={5} placeholder={`${field.description}`} />
+                      <Form.Item name={[field.name, "description"]}>
+                        <TextArea
+                          rows={5}
+                          placeholder={`${field.description}`}
+                        />
                       </Form.Item>
                     </div>
                   );
                 })}
-              </>
+              </div>
             );
           }}
         </Form.List>
       </Form.Item>
-      {/* <Form.Item
-        label="Outline Title"
-        name={["outlinedetails", "outlinetitle"]}
-      >
-        <Input placeholder="Outline Title" value={chosenRows.title} />
-      </Form.Item>
-      <Form.Item>
-        <Input.Group compact className="course-outline-details">
-          <Form.Item name={["outlinedetails", "usergroup"]} label="User Group" noStyle>
-            <Select
-              placeholder="User Group"
-              size="medium"
-              style={{ width: "50%" }}
-            >
-              <Option value="1">1</Option>
-              <Option value="2">2</Option>
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-              <Option value="6">6</Option>
-              <Option value="7">7</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name={["outlinedetails", "visibility"]} noStyle>
-            <Select
-              placeholder="Visibility"
-              size="medium"
-              style={{ width: "50%" }}
-            >
-              <Option value="0">Public</Option>
-              <Option value="1">Private</Option>
-            </Select>
-          </Form.Item>
-        </Input.Group>
-      </Form.Item>
-      <Form.Item name={["outlinedetails", "outlinedescription"]}>
-        <TextArea rows={5} placeholder="Outline Description" />
-      </Form.Item> */}
       <style jsx global>{`
-        .course-outline-details .ant-form-item {
+        .course-assessment-details .ant-form-item {
           display: inline-block;
           width: 30%;
           margin: 15px 8px;
         }
-        .course-outline-details .ant-select-selector {
+        .course-assessment-details .ant-select-selector {
           font-weight: normal !important;
           text-transform: Capitalize !important;
         }
@@ -227,4 +281,4 @@ const CourseOutlineDetails = (props) => {
   );
 };
 
-export default CourseOutlineDetails;
+export default CourseAssessmentsDetails;

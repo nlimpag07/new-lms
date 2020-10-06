@@ -509,7 +509,7 @@ const CourseInstructors = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Add/Edit Course instructor</h3>
+                <h3 className="widget-title">Course instructors</h3>
               </Col>
             </Row>
             <Row

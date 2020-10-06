@@ -140,13 +140,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "outcomeprerequisite" && form.resetFields();
-        modalFormName === "picklistlevel" && form.resetFields();
-        modalFormName === "picklistcategory" && form.resetFields();
-        modalFormName === "picklisttype" && form.resetFields();
-        modalFormName === "picklistlanguage" && form.resetFields();
-        modalFormName === "picklisttags" && form.resetFields();
-        //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
+        modalFormName === "outcomedetails" && form.resetFields();
       },
     };
     width = 750;
@@ -179,17 +173,12 @@ const CourseOutcomes = ({ course_id }) => {
   //const courseId = router.query.manage[1];
   //console.log(course_id);
   const [loading, setLoading] = useState(true);
-  const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [outcomeList, setOutcomeList] = useState("");
   const [outcome, setoutcome] = useState("");
   const [curOutcomeId, setcurOutcomeId] = useState("");
 
   const [spinner, setSpinner] = useState(false);
-  const [dataProcessModal, setDataProcessModal] = useState({
-    isvisible: false,
-    title: "",
-    content: "",
-  });
+ 
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     outcomedetails: [],
   });
@@ -391,7 +380,7 @@ const CourseOutcomes = ({ course_id }) => {
 
         axios(config)
           .then((res) => {
-            console.log("res: ", res.data, course_id);
+            //console.log("res: ", res.data, course_id);
             onFinishModal("", res.data, course_id);
           })
           .catch((err) => {
@@ -593,24 +582,6 @@ const CourseOutcomes = ({ course_id }) => {
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
                         />
-                        {/* <CourseOutcomeFeaturedImage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outcomefeaturedimage !==
-                            curValues.outcomefeaturedimage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseOutcomeFeaturedVideo
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outcomefeaturedvideo !==
-                            curValues.outcomefeaturedvideo
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        /> */}
                       </div>
                     </Panel>
                   </Collapse>

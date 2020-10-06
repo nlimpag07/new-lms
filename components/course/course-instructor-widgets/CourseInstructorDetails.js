@@ -87,9 +87,9 @@ const CourseInstructorDetails = (props) => {
 
     fetchData(config);
   }, []);
-  console.log("Group List:", userGroupList);
+  /* console.log("Group List:", userGroupList);
   console.log("========================");
-  console.log("Instructors List:", allInstructorsList);
+  console.log("Instructors List:", allInstructorsList); */
   const groupOptions = userGroupList.map((usergroup, index) => {
     return (
       <Option key={index} value={usergroup.id}>

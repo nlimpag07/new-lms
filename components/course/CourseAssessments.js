@@ -31,33 +31,23 @@ import {
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  EditOutlined,
-  EllipsisOutlined,
-  EyeOutlined,
-  CloudUploadOutlined,
-  CloudDownloadOutlined,
-  PlusOutlined,
-  MinusCircleOutlined,
-  UploadOutlined,
+  Editassessmentd,
+  Ellipsisassessmentd,
+  Eyeassessmentd,
+  CloudUploadassessmentd,
+  CloudDownloadassessmentd,
+  Plusassessmentd,
+  MinusCircleassessmentd,
+  Uploadassessmentd,
 } from "@ant-design/icons";
-import CourseOutlineList from "./course-outline-widgets/CourseOutlineList";
-import CourseOutlineDetails from "./course-outline-widgets/CourseOutlineDetails";
-import CourseOutlineFeaturedImage from "./course-outline-widgets/CourseOutlineFeaturedImage";
-import CourseOutlineFeaturedVideo from "./course-outline-widgets/CourseOutlineFeaturedVideo";
-import CourseOutlinePrerequisite from "./course-outline-widgets/CourseOutlinePrerequisite";
-import CourseOutlineMediaFiles from "./course-outline-widgets/CourseOutlineMediaFiles";
-import CourseOutlineMilestones from "./course-outline-widgets/CourseOutlineMilestones";
-import CourseOutlineDuration from "./course-outline-widgets/CourseOutlineDuration";
-
-import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
-import CourseWidgetCategory from "./course-general-widgets/CourseWidgetCategory";
-import CourseWidgetType from "./course-general-widgets/CourseWidgetType";
-import CourseWidgetRelatedCourses from "./course-general-widgets/CourseWidgetRelatedCourses";
-import CourseWidgetDuration from "./course-general-widgets/CourseWidgetDuration";
-import CourseWidgetLanguage from "./course-general-widgets/CourseWidgetLanguage";
-import CourseWidgetTags from "./course-general-widgets/CourseWidgetTags";
-import CourseWidgetFeaturedImage from "./course-general-widgets/CourseWidgetFeaturedImage";
-import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeaturedVideo";
+import CourseAssessmentsList from "./course-assessments-widgets/CourseAssessmentsList";
+import CourseAssessmentsDetails from "./course-assessments-widgets/CourseAssessmentsDetails";
+/* import CourseAssessmentsFeaturedImage from "./course-assessment-widgets/CourseAssessmentsFeaturedImage";
+import CourseAssessmentsFeaturedVideo from "./course-assessment-widgets/CourseAssessmentsFeaturedVideo"; */
+import CourseAssessmentsItems from "./course-assessments-widgets/CourseAssessmentsItems";
+/* import CourseAssessmentsMediaFiles from "./course-assessment-widgets/CourseAssessmentsMediaFiles";
+import CourseAssessmentsMilestones from "./course-assessment-widgets/CourseAssessmentsMilestones";
+import CourseAssessmentsDuration from "./course-assessment-widgets/CourseAssessmentsDuration"; */
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -149,7 +139,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "outlineprerequisite" && form.resetFields();
+        modalFormName === "assessmentprerequisite" && form.resetFields();
         modalFormName === "picklistlevel" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
@@ -183,14 +173,14 @@ const ModalForm = ({
   );
 };
 
-const CourseOutlines = ({ course_id }) => {
+const CourseAssessments = ({ course_id }) => {
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
   const [loading, setLoading] = useState(true);
-  const [loadingSpinner, setLoadingSpinner] = useState(false);
-  const [outlineList, setOutlineList] = useState("");
-  const [curOutlineId, setcurOutlineId] = useState("");
+  const [allOutlines, setAllOutlines] = useState("");
+  const [assessmentList, setAssessmentList] = useState("");
+  const [curAssessmentId, setcurAssessmentId] = useState("");
 
   const [spinner, setSpinner] = useState(false);
   const [dataProcessModal, setDataProcessModal] = useState({
@@ -199,15 +189,11 @@ const CourseOutlines = ({ course_id }) => {
     content: "",
   });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
-    outlinedetails: [],
-    outlineprerequisite: [],
-    outlinemediafiles: [],
-    outlinefeaturedimage: [],
-    outlinefeaturedvideo: [],
-    outlineduration: [],
-    outlinemilestones: [],
+    assessmentdetails: [],
+    assessmentitems: [],
+    assessmentduration: [],
   });
-  var [outlineActionModal, setOutlineActionModal] = useState({
+  var [assessmentActionModal, setAssessmentActionModal] = useState({
     StateModal: false,
     modalTitle: "",
     modalFormName: "",
@@ -215,32 +201,70 @@ const CourseOutlines = ({ course_id }) => {
   });
 
   useEffect(() => {
-    var config = {
+    /* var config = {
       method: "get",
-      url: apiBaseUrl + "/CourseOutline/" + course_id,
+      url: apiBaseUrl + "/CourseAssessment/" + course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    }; */
+
+    var config = {
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
     };
+
     async function fetchData(config) {
-      const response = await axios(config);
+      /* const response = await axios(config);
       if (response) {
-        /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setOutlineAllList(response.data); */
-        setOutlineList(response.data.result);
+        
+        setAssessmentList(response.data.result);
         //console.log(response.data.result);
-      } else {
-        /* const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setOutlineAllList(userData); */
-      }
+      } */
+      await axios
+        .all([
+          axios.get(apiBaseUrl + "/CourseOutline/" + course_id, config),
+          axios.get(apiBaseUrl + "/CourseAssessment/" + course_id, config),
+        ])
+        .then(
+          axios.spread((outlineList, allAssessment) => {
+            console.log("Outline List", outlineList.data);
+            console.log("=====================");
+            console.log("allAssessment List", allAssessment.data);
+
+            //check if there is course outline
+            let initOutline = false;
+            if (outlineList.data.result) {
+              setAllOutlines(outlineList.data.result);
+              initOutline = true;
+            } else {
+              setAllOutlines("");
+            }
+            //initOutline is true, check if there's assessments
+            console.log("initOutline", initOutline);
+            if (initOutline) {
+              allAssessment.data.result
+                ? setAssessmentList(allAssessment.data.result)
+                : setAssessmentList([]);
+            } else {
+              setAssessmentList([]);
+            }
+          })
+        )
+        .catch((errors) => {
+          // react on errors.
+          console.error(errors);
+        });
       setLoading(false);
     }
     fetchData(config);
   }, [loading]);
 
   const showModal = (modaltitle, modalformname, modalbodycontent) => {
-    setOutlineActionModal({
+    setAssessmentActionModal({
       StateModal: true,
       modalTitle: modaltitle,
       modalFormName: modalformname,
@@ -249,7 +273,7 @@ const CourseOutlines = ({ course_id }) => {
   };
 
   const hideModal = () => {
-    setOutlineActionModal({
+    setAssessmentActionModal({
       StateModal: false,
       modalTitle: "",
       modalFormName: "",
@@ -261,16 +285,16 @@ const CourseOutlines = ({ course_id }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
 
-    if (name === "outlineprerequisite") {
-      var value = values.outlineprerequisite
-        ? values.outlineprerequisite.map((related, index) => related)
+    if (name === "assessmentprerequisite") {
+      var value = values.assessmentprerequisite
+        ? values.assessmentprerequisite.map((related, index) => related)
         : "";
       basicForm.setFieldsValue({
-        outlineprerequisite: [...value],
+        assessmentprerequisite: [...value],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlineprerequisite: [...value],
+        assessmentprerequisite: [...value],
       });
       /* console.log('combined value', [...picklistFields, ...value]);
       console.log('======================='); */
@@ -281,81 +305,83 @@ const CourseOutlines = ({ course_id }) => {
       });
     }
 
-    if (name === "outlinefeaturedimage") {
+    if (name === "assessmentfeaturedimage") {
       var value = values.name ? values : "";
       if (value) {
         basicForm.setFieldsValue({
-          outlinefeaturedimage: [values.name],
+          assessmentfeaturedimage: [values.name],
         });
         setdefaultWidgetValues({
           ...defaultWidgetValues,
-          outlinefeaturedimage: values.name,
+          assessmentfeaturedimage: values.name,
         });
       }
       //setFeatureMedia({ image: values.name });
-      console.log("Course Outline Featured Image: ", value);
+      //console.log("Course assessment Featured Image: ", value);
     }
-    if (name === "outlinefeaturedvideo") {
+    if (name === "assessmentfeaturedvideo") {
       var value = values.name ? values : "";
       if (value) {
         basicForm.setFieldsValue({
-          outlinefeaturedvideo: [values.name],
+          assessmentfeaturedvideo: [values.name],
         });
         setdefaultWidgetValues({
           ...defaultWidgetValues,
-          outlinefeaturedvideo: values.name,
+          assessmentfeaturedvideo: values.name,
         });
       }
       //console.log("Uploaded Video: ", value);
     }
-    /* if (name === "outlinemediafiles") {
-      var value = values.outlinemediafiles
-        ? values.outlinemediafiles.fileList.map((mediafile, index) => mediafile)
+    /* if (name === "assessmentmediafiles") {
+      var value = values.assessmentmediafiles
+        ? values.assessmentmediafiles.fileList.map((mediafile, index) => mediafile)
         : "";
       basicForm.setFieldsValue({
-        outlinemediafiles: [...value],
+        assessmentmediafiles: [...value],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlinemediafiles: [...value],
+        assessmentmediafiles: [...value],
       });
       console.log('Media Files: ',values);
     } */
-    if (name === "outlinemediafiles") {
-      var value = values.outlinemedia ? values : "";
+    if (name === "assessmentmediafiles") {
+      var value = values.assessmentmedia ? values : "";
       if (value) {
         basicForm.setFieldsValue({
-          outlinemediafiles: [values.outlinemedia],
+          assessmentmediafiles: [values.assessmentmedia],
         });
         setdefaultWidgetValues({
           ...defaultWidgetValues,
-          outlinemediafiles: values.outlinemedia,
+          assessmentmediafiles: values.assessmentmedia,
         });
       }
-      console.log("Course Outline Media File: ", value);
+      console.log("Course assessment Media File: ", value);
     }
 
-    if (name === "outlinemilestones") {
-      var value = values.outlinemilestones
-        ? values.outlinemilestones.fileList.map((mediafile, index) => mediafile)
+    if (name === "assessmentmilestones") {
+      var value = values.assessmentmilestones
+        ? values.assessmentmilestones.fileList.map(
+            (mediafile, index) => mediafile
+          )
         : "";
       basicForm.setFieldsValue({
-        outlinemilestones: [...value],
+        assessmentmilestones: [...value],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlinemilestones: [...value],
+        assessmentmilestones: [...value],
       });
       //console.log('Media Files: ',value);
     }
 
-    if (name === "outlineduration") {
+    if (name === "assessmentduration") {
       basicForm.setFieldsValue({
-        outlineduration: [...picklistFields, values],
+        assessmentduration: [...picklistFields, values],
       });
     }
 
-    setOutlineActionModal({
+    setAssessmentActionModal({
       StateModal: false,
       modalTitle: "",
       modalFormName: "",
@@ -364,7 +390,7 @@ const CourseOutlines = ({ course_id }) => {
   };
 
   const onFinish = (values) => {
-    setOutlineActionModal({
+    setAssessmentActionModal({
       StateModal: false,
       modalTitle: "",
       modalFormName: "",
@@ -374,76 +400,92 @@ const CourseOutlines = ({ course_id }) => {
 
     console.log("Finish:", values);
 
-    let curOutlineIdExist =
-      curOutlineId && curOutlineId.length ? curOutlineId[0].id : "";
-    let curOutlineTitle = curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
-    let curOutlineuserGroupId = curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
-    //console.log("Current Outline: ", curOutlineuserGroupId);
+    let curAssessmentIdExist =
+      curAssessmentId && curAssessmentId.length ? curAssessmentId[0].id : "";
+    let curassessmentTitle =
+      curAssessmentId && curAssessmentId.length ? curAssessmentId[0].title : "";
+    let curassessmentuserGroupId =
+      curAssessmentId && curAssessmentId.length
+        ? curAssessmentId[0].userGroupId
+        : "";
+    //console.log("Current assessment: ", curassessmentuserGroupId);
     var data = new FormData();
     var errorList = [];
-    if (curOutlineIdExist) {
-      //Edit Course Outline
-      //console.log("HELLLOOOOO Outline ID", curOutlineIdExist);
+    if (curAssessmentIdExist) {
+      //Edit Course assessment
+      //console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.append("courseId", course_id);
-      if (!!values.outlinedetails && values.outlinedetails.length) {
-        if (!!values.outlinedetails[0].outlinetitle) {
-          data.append("title", values.outlinedetails[0].outlinetitle);
+      if (!!values.assessmentdetails && values.assessmentdetails.length) {
+        if (!!values.assessmentdetails[0].assessmenttitle) {
+          data.append("title", values.assessmentdetails[0].assessmenttitle);
           isNotAllEmpty.push("Not Empty");
-        }else{
-          data.append("title", curOutlineTitle);
+        } else {
+          data.append("title", curassessmentTitle);
         }
-        if (!!values.outlinedetails[0].description) {
-          data.append("description", values.outlinedetails[0].description);
-          isNotAllEmpty.push("Not Empty");
-        }
-        if (!!values.outlinedetails[0].visibility) {
-          data.append("visibility", values.outlinedetails[0].visibility);
+        if (!!values.assessmentdetails[0].description) {
+          data.append("description", values.assessmentdetails[0].description);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.outlinedetails[0].usergroup) {
-          data.append("userGroupId", values.outlinedetails[0].usergroup);
+        if (!!values.assessmentdetails[0].visibility) {
+          data.append("visibility", values.assessmentdetails[0].visibility);
           isNotAllEmpty.push("Not Empty");
-        }else{
-          data.append("userGroupId", curOutlineuserGroupId);
+        }
+        if (!!values.assessmentdetails[0].usergroup) {
+          data.append("userGroupId", values.assessmentdetails[0].usergroup);
+          isNotAllEmpty.push("Not Empty");
+        } else {
+          data.append("userGroupId", curassessmentuserGroupId);
         }
         //isNotAllEmpty.push("Not Empty");
       }
-      if (!!values.outlinefeaturedimage && values.outlinefeaturedimage.length) {
-        values.outlinefeaturedimage.map((image, index) => {
+      if (
+        !!values.assessmentfeaturedimage &&
+        values.assessmentfeaturedimage.length
+      ) {
+        values.assessmentfeaturedimage.map((image, index) => {
           data.append(`featureImage`, image.fileList[0].originFileObj);
         });
         isNotAllEmpty.push("Not Empty");
       }
-      if (values.outlinefeaturedvideo && values.outlinefeaturedvideo.length) {
-        values.outlinefeaturedvideo.map((video, index) => {
+      if (
+        values.assessmentfeaturedvideo &&
+        values.assessmentfeaturedvideo.length
+      ) {
+        values.assessmentfeaturedvideo.map((video, index) => {
           //console.log("Video:", video);
           data.append(`interactiveVideo`, video.fileList[0].originFileObj);
         });
         isNotAllEmpty.push("Not Empty");
       }
-      if (values.outlineprerequisite && values.outlineprerequisite.length) {
-        values.outlineprerequisite.map((outlineprereq, index) => {
+      if (
+        values.assessmentprerequisite &&
+        values.assessmentprerequisite.length
+      ) {
+        values.assessmentprerequisite.map((assessmentprereq, index) => {
           data.append(
-            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-            outlineprereq.id
+            `CourseAssessmentsItems[${index}][preRequisiteId]`,
+            assessmentprereq.id
           );
         });
         isNotAllEmpty.push("Not Empty");
       }
 
-      if (!!values.outlinemediafiles && values.outlinemediafiles.length) {
-        values.outlinemediafiles.map((media) => {
+      if (!!values.assessmentmediafiles && values.assessmentmediafiles.length) {
+        values.assessmentmediafiles.map((media) => {
           media.fileList.map((listOfFiles, index) => {
-            data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
+            data.append(
+              `CourseAssessmentsMediaFile`,
+              listOfFiles.originFileObj
+            );
           });
         });
         isNotAllEmpty.push("Not Empty");
       }
 
-      if (!!values.outlineduration) {
-        data.append("duration", values.outlineduration);
+      if (!!values.assessmentduration) {
+        data.append("duration", values.assessmentduration);
         isNotAllEmpty.push("Not Empty");
       }
 
@@ -452,11 +494,11 @@ const CourseOutlines = ({ course_id }) => {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
       } else {
-        console.log("IsNotAllEmpty",isNotAllEmpty);
+        console.log("IsNotAllEmpty", isNotAllEmpty);
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
-            url: apiBaseUrl + `/CourseOutline/` + curOutlineIdExist,
+            url: apiBaseUrl + `/CourseAssessments/` + curAssessmentIdExist,
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
@@ -466,13 +508,13 @@ const CourseOutlines = ({ course_id }) => {
 
           axios(config)
             .then((res) => {
-              console.log("res: ", res.data, curOutlineIdExist);
-              onFinishModal("", res.data, curOutlineIdExist);
+              console.log("res: ", res.data, curAssessmentIdExist);
+              onFinishModal("", res.data, curAssessmentIdExist);
             })
             .catch((err) => {
               //console.log("err: ", err.response.data);
               errorList.push(err.response.data.message);
-              onFinishModal(errorList, "", curOutlineIdExist);
+              onFinishModal(errorList, "", curAssessmentIdExist);
             });
         } else {
           errorList.push("No Update has been made");
@@ -480,73 +522,80 @@ const CourseOutlines = ({ course_id }) => {
         }
       }
     } else {
-      //Add Course Outline
+      //Add Course assessment
       console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
       data.append("courseId", course_id);
-      if (!!values.outlinedetails) {
-        !!values.outlinedetails.outlinetitle
-          ? data.append("title", values.outlinedetails.outlinetitle)
-          : errorList.push("Missing Outline Title");
+      if (!!values.assessmentdetails) {
+        !!values.assessmentdetails.assessmenttitle
+          ? data.append("title", values.assessmentdetails.assessmenttitle)
+          : errorList.push("Missing assessment Title");
 
-        !!values.outlinedetails.outlinedescription
-          ? data.append("description", values.outlinedetails.outlinedescription)
-          : errorList.push("Missing Outline Description");
+        !!values.assessmentdetails.assessmentdescription
+          ? data.append(
+              "description",
+              values.assessmentdetails.assessmentdescription
+            )
+          : errorList.push("Missing assessment Description");
 
-        !!values.outlinedetails.visibility
-          ? data.append("visibility", values.outlinedetails.visibility)
-          : errorList.push("Missing Outline Visibility");
+        !!values.assessmentdetails.visibility
+          ? data.append("visibility", values.assessmentdetails.visibility)
+          : errorList.push("Missing assessment Visibility");
 
-        !!values.outlinedetails.usergroup
-          ? data.append("userGroupId", values.outlinedetails.usergroup)
-          : errorList.push("Missing Outline User Group");
+        !!values.assessmentdetails.usergroup
+          ? data.append("userGroupId", values.assessmentdetails.usergroup)
+          : errorList.push("Missing assessment User Group");
 
-        !!values.outlinefeaturedimage && values.outlinefeaturedimage.length
-          ? values.outlinefeaturedimage.map((image, index) => {
+        !!values.assessmentfeaturedimage &&
+        values.assessmentfeaturedimage.length
+          ? values.assessmentfeaturedimage.map((image, index) => {
               data.append(`featureImage`, image.fileList[0].originFileObj);
             })
-          : errorList.push("Missing Outline Image");
-        values.outlinefeaturedvideo &&
-          values.outlinefeaturedvideo.length &&
-          values.outlinefeaturedvideo.map((video, index) => {
+          : errorList.push("Missing assessment Image");
+        values.assessmentfeaturedvideo &&
+          values.assessmentfeaturedvideo.length &&
+          values.assessmentfeaturedvideo.map((video, index) => {
             console.log("Video:", video);
             data.append(`interactiveVideo`, video.fileList[0].originFileObj);
           });
       } else {
-        errorList.push("Missing Outline Details");
+        errorList.push("Missing assessment Details");
       }
-      values.outlineprerequisite &&
-        values.outlineprerequisite.length &&
-        values.outlineprerequisite.map((outlineprereq, index) => {
+      values.assessmentprerequisite &&
+        values.assessmentprerequisite.length &&
+        values.assessmentprerequisite.map((assessmentprereq, index) => {
           data.append(
-            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-            outlineprereq.id
+            `CourseAssessmentsItems[${index}][preRequisiteId]`,
+            assessmentprereq.id
           );
         });
 
-      /* !!values.outlinemediafiles && values.outlinemediafiles.length
-        ? values.outlinemediafiles.map((outlinemediafile, index) => {
-            //console.log(outlinemediafile.originFileObj)
+      /* !!values.assessmentmediafiles && values.assessmentmediafiles.length
+        ? values.assessmentmediafiles.map((assessmentmediafile, index) => {
+            //console.log(assessmentmediafile.originFileObj)
             data.append(
-              `CourseOutlineMediaFile[${index}]`,
-              outlinemediafile.originFileObj
+              `CourseAssessmentsMediaFile[${index}]`,
+              assessmentmediafile.originFileObj
             );
           })
-        : errorList.push("Missing Outline Media File"); */
-      !!values.outlinemediafiles && values.outlinemediafiles.length
-        ? values.outlinemediafiles.map((media) => {
+        : errorList.push("Missing assessment Media File"); */
+      !!values.assessmentmediafiles && values.assessmentmediafiles.length
+        ? values.assessmentmediafiles.map((media) => {
             //console.log(media)
             media.fileList.map((listOfFiles, index) => {
               //console.log('list of fileList',listOfFiles);
-              data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
+              data.append(
+                `CourseAssessmentsMediaFile`,
+                listOfFiles.originFileObj
+              );
             });
-            //data.append(`CourseOutlineMediaFile[${index}]`, media.fileList[0].originFileObj);
+            //data.append(`CourseAssessmentsMediaFile[${index}]`, media.fileList[0].originFileObj);
           })
-        : errorList.push("Missing Outline Media File");
+        : errorList.push("Missing assessment Media File");
 
-      !!values.outlineduration
-        ? data.append("duration", values.outlineduration)
-        : errorList.push("Missing Outline Duration");
+      !!values.assessmentduration
+        ? data.append("duration", values.assessmentduration)
+        : errorList.push("Missing assessment Duration");
 
       //data = JSON.stringify(data);
       if (errorList.length) {
@@ -556,7 +605,7 @@ const CourseOutlines = ({ course_id }) => {
         //console.log("NO ERROR, PROCEED WITH SUBMISSION");
         var config = {
           method: "post",
-          url: apiBaseUrl + "/CourseOutline",
+          url: apiBaseUrl + "/CourseAssessments",
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -575,7 +624,7 @@ const CourseOutlines = ({ course_id }) => {
             onFinishModal(errorList, "", course_id);
           });
       }
-    } //End of else curOutlineIdExist
+    } //End of else curAssessmentIdExist
   };
 
   const onFinishModal = (errorList, response, course_id) => {
@@ -618,18 +667,14 @@ const CourseOutlines = ({ course_id }) => {
           visible: false;
           /* router.push(
             `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-outline`
+            `/${linkUrl}/course/edit/${course_id}/course-assessment`
           ); */
           setdefaultWidgetValues({
-            outlinedetails: [],
-            outlineprerequisite: [],
-            outlinemediafiles: [],
-            outlinefeaturedimage: [],
-            outlinefeaturedvideo: [],
-            outlineduration: [],
-            outlinemilestones: [],
+            assessmentdetails: [],
+            assessmentitems: [],
+            assessmentduration: [],
           });
-          setcurOutlineId("");
+          setcurAssessmentId("");
           setLoading(true);
         },
       });
@@ -645,13 +690,13 @@ const CourseOutlines = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // console.log(curOutlineId)
-  /*console.log(outlineList)  */
+  // console.log(curAssessmentId)
+  /*console.log(assessmentList)  */
   /* let {
     id,
-    courseOutlineMedia,
-    courseOutlineMilestone,
-    courseOutlinePrerequisite,
+    courseAssessmentsMedia,
+    courseAssessmentsMilestone,
+    courseAssessmentsItems,
     description,
     duration,
     featureImage,
@@ -662,9 +707,9 @@ const CourseOutlines = ({ course_id }) => {
   useEffect(() => {
     let {
       id,
-      courseOutlineMedia,
-      courseOutlineMilestone,
-      courseOutlinePrerequisite,
+      courseAssessmentsMedia,
+      courseAssessmentsMilestone,
+      courseAssessmentsItems,
       description,
       duration,
       featureImage,
@@ -673,88 +718,79 @@ const CourseOutlines = ({ course_id }) => {
       userGroupId,
       visibility,
     } = "";
-    if (curOutlineId.length) {
-      
-      let isSelected = outlineList.filter(
-        (selectedOutline) => selectedOutline.id === curOutlineId[0].id
+    if (curAssessmentId.length) {
+      let isSelected = assessmentList.filter(
+        (selectedassessment) => selectedassessment.id === curAssessmentId[0].id
       );
-      console.log(isSelected[0]);
+      console.log("Selected Assessment", isSelected[0]);
       let prerequisite = [];
-      let currentPrerequisite = isSelected[0].courseOutlinePrerequisite;
-      if (currentPrerequisite.length) {        
-        prerequisite = currentPrerequisite.map((c_outlinerequisite, index) => {
-          let getOutline = outlineList.filter(
-            (outline) => c_outlinerequisite.preRequisiteId == outline.id
+      /* let currentAssessmentItem = isSelected[0].courseAssessmentsItem;
+      if (currentAssessmentItem.length) {        
+        prerequisite = currentAssessmentItem.map((c_assessmentItem, index) => {
+          let getassessment = assessmentList.filter(
+            (assessment) => c_assessmentItem.preRequisiteId == assessment.id
           );
           let list = {
-            id: c_outlinerequisite.id,
-            title: getOutline[0].title,
-            courseOutlineId: c_outlinerequisite.courseOutlineId,
-            preRequisiteId: c_outlinerequisite.preRequisiteId,
+            id: c_assessmentItem.id,
+            title: getassessment[0].title,
+            courseAssessmentsId: c_assessmentItem.courseAssessmentsId,
+            preRequisiteId: c_assessmentItem.preRequisiteId,
             isticked: true,
           };
           return list;
         });
-      }
+      } */
       let mediaFiles = [];
-      let currentMediaFiles = isSelected[0].courseOutlineMedia;
+      /* let currentMediaFiles = isSelected[0].courseAssessmentsMedia;
       if (currentMediaFiles.length) {
-        mediaFiles = currentMediaFiles.map((c_outlinemediafiles, index) => {
+        mediaFiles = currentMediaFiles.map((c_assessmentmediafiles, index) => {
           let list = {
-            id: c_outlinemediafiles.id,
-            name: c_outlinemediafiles.fileName,
-            courseOutlineId: c_outlinemediafiles.courseOutlineId,
-            resourceFile: c_outlinemediafiles.resourceFile,
+            id: c_assessmentmediafiles.id,
+            name: c_assessmentmediafiles.fileName,
+            courseAssessmentsId: c_assessmentmediafiles.courseAssessmentsId,
+            resourceFile: c_assessmentmediafiles.resourceFile,
             isticked: true,
           };
           return list;
         });
-      }
+      } */
       let mileStones = [];
-      let currentMileStones = isSelected[0].courseOutlineMilestone;
+      /* let currentMileStones = isSelected[0].courseAssessmentsMilestone;
       if (currentMileStones.length) {
-        mileStones = currentMileStones.map((c_outlinemilestones, index) => {
+        mileStones = currentMileStones.map((c_assessmentmilestones, index) => {
           let list = {
-            id: c_outlinemilestones.id,
-            name: c_outlinemilestones.name,
-            courseOutlineId: c_outlinemilestones.courseOutlineId,
-            lessonCompleted: c_outlinemilestones.lessonCompleted,
-            resourceFile: c_outlinemilestones.resourceFile,
+            id: c_assessmentmilestones.id,
+            name: c_assessmentmilestones.name,
+            courseAssessmentsId: c_assessmentmilestones.courseAssessmentsId,
+            lessonCompleted: c_assessmentmilestones.lessonCompleted,
+            resourceFile: c_assessmentmilestones.resourceFile,
             isticked: true,
           };
           return list;
         });
-      }
+      } */
 
-      //console.log(outlineItem)
+      //console.log(assessmentItem)
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlinedetails: [
+        assessmentdetails: [
           {
             title: isSelected[0].title,
-            description: isSelected[0].description,
-            usergroup: isSelected[0].userGroup.name,
+            usergroup: isSelected[0].userGroup
+              ? isSelected[0].userGroup.name
+              : 0,
             usergroupid: isSelected[0].userGroupId,
-            visibility: isSelected[0].visibility,
           },
         ],
-        outlinefeaturedimage: isSelected[0].featureImage,
-        outlinefeaturedvideo: isSelected[0].featureVideo,
-        outlineprerequisite: prerequisite,
-        outlineduration: isSelected[0].duration,
-        outlinemediafiles: mediaFiles,
-        outlinemilestones: mileStones,
+        assessmentitems: isSelected[0].courseAssessmentItem,
+        assessmentduration: isSelected[0].duration,
       });
     } else {
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        outlinedetails: [],
-        outlinefeaturedimage: "",
-        outlinefeaturedvideo: "",
-        outlineduration: "",
-        outlineprerequisite: [],
-        outlinemediafiles: [],
-        outlinemilestones: [],
+        assessmentdetails: [],
+        assessmentduration: "",
+        assessmentitems: [],
 
         /* featuredvideo: video,
         relatedcourses: relateds,
@@ -806,14 +842,14 @@ const CourseOutlines = ({ course_id }) => {
       relatedcourses: relateds,
       duration: [durationtime],
     }); */
-  }, [curOutlineId]);
+  }, [curAssessmentId]);
   /* console.log(defaultWidgetValues)
-  console.log(outline) */
+  console.log(assessment) */
   const formInitialValues = {
     /* initialValues: {
-      outlinetitle: title,
-      outlinedescription: decodeURI(description),
-      outlineduration: duration,     
+      assessmenttitle: title,
+      assessmentdescription: decodeURI(description),
+      assessmentduration: duration,     
     }, */
   };
   return loading == false ? (
@@ -833,7 +869,7 @@ const CourseOutlines = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Add/Edit Course Outline</h3>
+                <h3 className="widget-title">Course Assessments</h3>
               </Col>
             </Row>
             <Row
@@ -843,11 +879,11 @@ const CourseOutlines = ({ course_id }) => {
             >
               {" "}
               <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseOutlineList
-                  outlineList={outlineList}
-                  setOutlineList={setOutlineList}
-                  curOutlineId={curOutlineId}
-                  setcurOutlineId={setcurOutlineId}
+                <CourseAssessmentsList
+                  assessmentList={assessmentList}
+                  setAssessmentList={setAssessmentList}
+                  curAssessmentId={curAssessmentId}
+                  setcurAssessmentId={setcurAssessmentId}
                   loading={loading}
                   setLoading={setLoading}
                 />
@@ -872,122 +908,87 @@ const CourseOutlines = ({ course_id }) => {
               style={{ padding: "0" }}
             >
               <Col xs={24}>
-                <Form
-                  style={{ width: "100%" }}
-                  name="basicForm"
-                  hideRequiredMark={true}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  {...formInitialValues}
-                >
-                  <Collapse
-                    defaultActiveKey={["1"]}
-                    expandIconPosition={"right"}
+                {allOutlines ? (
+                  <Form
+                    style={{ width: "100%" }}
+                    name="basicForm"
+                    hideRequiredMark={true}
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                    {...formInitialValues}
                   >
-                    <Panel header="Details" key="1" className="greyBackground">
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineDetails
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinedetails !==
-                            curValues.outlinedetails
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseOutlineFeaturedImage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinefeaturedimage !==
-                            curValues.outlinefeaturedimage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseOutlineFeaturedVideo
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinefeaturedvideo !==
-                            curValues.outlinefeaturedvideo
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel
-                      header="Prerequisite"
-                      key="2"
-                      className="greyBackground"
+                    <Collapse
+                      defaultActiveKey={["1"]}
+                      expandIconPosition={"right"}
                     >
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlinePrerequisite
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlineprerequisite !==
-                            curValues.outlineprerequisite
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          outlineList={outlineList}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel
-                      header="Media Files"
-                      key="3"
-                      className="greyBackground"
+                      <Panel
+                        header="Details"
+                        key="1"
+                        className="greyBackground"
+                      >
+                        <div className="assessmentWidgetHolder">
+                          <CourseAssessmentsDetails
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.assessmentdetails !==
+                              curValues.assessmentdetails
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            course_id={course_id}
+                            allOutlines={allOutlines}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel header="Items" key="2" className="greyBackground">
+                        <div className="assessmentWidgetHolder">
+                          <CourseAssessmentsItems
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.assessmentprerequisite !==
+                              curValues.assessmentprerequisite
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            assessmentList={assessmentList}
+                          />
+                        </div>
+                      </Panel>
+                    </Collapse>
+                  </Form>
+                ) : (
+                  <Empty
+                    description={
+                      <span>
+                        No Course Outline detected, Please create on first.
+                      </span>
+                    }
+                  >
+                    <Button
+                      type="primary"
+                      onClick={() =>
+                        router.push(
+                          `/${linkUrl}/course/edit/${course_id}/course-outline`
+                        )
+                      }
                     >
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineMediaFiles
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinemediafiles !==
-                            curValues.outlinemediafiles
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    {/* <Panel header="Milestones" key="4" className="greyBackground">
-                    <div className="outlineWidgetHolder">
-                      <CourseOutlineMilestones
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.outlinemilestones !== curValues.outlinemilestones
-                        }
-                        showModal={showModal}
-                        defaultWidgetValues={defaultWidgetValues}
-                        setdefaultWidgetValues={setdefaultWidgetValues}
-                      />
-                      </div>
-                    </Panel>  */}
-                    <Panel header="DURATION" key="5" className="greyBackground">
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineDuration
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlineduration !==
-                            curValues.outlineduration
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Form>
+                      Create Now
+                    </Button>
+                  </Empty>
+                )}
               </Col>
             </Row>
           </Col>
 
           <ModalForm
-            title={outlineActionModal.modalTitle}
-            modalFormName={outlineActionModal.modalFormName}
-            modalBodyContent={outlineActionModal.modalBodyContent}
-            visible={outlineActionModal.StateModal}
+            title={assessmentActionModal.modalTitle}
+            modalFormName={assessmentActionModal.modalFormName}
+            modalBodyContent={assessmentActionModal.modalBodyContent}
+            visible={assessmentActionModal.StateModal}
             onCancel={hideModal}
-            okText={`${outlineActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
+            okText={`${
+              assessmentActionModal.modalTitle != "Save" ? "Add" : "Ok"
+            }`}
             onFinish={{
               form: "basicForm",
               key: "submit",
@@ -1000,12 +1001,14 @@ const CourseOutlines = ({ course_id }) => {
             spinning={spinner}
             delay={100}
           ></Spin>
-          <RadialUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
+          {allOutlines && (
+            <RadialUI
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
+          )}
           <style jsx global>{`
             .greyBackground .ant-collapse-header {
               background-color: #eeeeee;
@@ -1049,8 +1052,18 @@ const CourseOutlines = ({ course_id }) => {
               z-index: 3;
               padding: 23% 0;
             }
-            .outlineWidgetHolder {
+            .assessmentWidgetHolder {
               padding: 10px 0;
+            }
+            .assessmentWidgetHolder
+              .assessmentWithValue
+              .ant-select-selection-placeholder {
+              opacity: 1 !important;
+              color: #000000 !important;
+            }
+            .assessmentWithValue .ant-input::placeholder {
+              opacity: 1 !important;
+              color: #000000 !important;
             }
           `}</style>
         </Row>
@@ -1063,4 +1076,4 @@ const CourseOutlines = ({ course_id }) => {
   );
 };
 
-export default CourseOutlines;
+export default CourseAssessments;
