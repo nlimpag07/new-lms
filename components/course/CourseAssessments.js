@@ -231,9 +231,9 @@ const CourseAssessments = ({ course_id }) => {
         ])
         .then(
           axios.spread((outlineList, allAssessment) => {
-            console.log("Outline List", outlineList.data);
+            /* console.log("Outline List", outlineList.data);
             console.log("=====================");
-            console.log("allAssessment List", allAssessment.data);
+            console.log("allAssessment List", allAssessment.data); */
 
             //check if there is course outline
             let initOutline = false;
@@ -244,7 +244,7 @@ const CourseAssessments = ({ course_id }) => {
               setAllOutlines("");
             }
             //initOutline is true, check if there's assessments
-            console.log("initOutline", initOutline);
+            //console.log("initOutline", initOutline);
             if (initOutline) {
               allAssessment.data.result
                 ? setAssessmentList(allAssessment.data.result)
@@ -409,14 +409,14 @@ const CourseAssessments = ({ course_id }) => {
         ? curAssessmentId[0].userGroupId
         : "";
     //console.log("Current assessment: ", curassessmentuserGroupId);
-    var data = new FormData();
+    var data = {};
     var errorList = [];
     if (curAssessmentIdExist) {
       //Edit Course assessment
       //console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
-      data.append("courseId", course_id);
+      /* data.append("courseId", course_id);
       if (!!values.assessmentdetails && values.assessmentdetails.length) {
         if (!!values.assessmentdetails[0].assessmenttitle) {
           data.append("title", values.assessmentdetails[0].assessmenttitle);
@@ -487,7 +487,7 @@ const CourseAssessments = ({ course_id }) => {
       if (!!values.assessmentduration) {
         data.append("duration", values.assessmentduration);
         isNotAllEmpty.push("Not Empty");
-      }
+      } */
 
       //data = JSON.stringify(data);
       if (errorList.length) {
@@ -525,79 +525,68 @@ const CourseAssessments = ({ course_id }) => {
       //Add Course assessment
       console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
-      data.append("courseId", course_id);
+      data.courseId = course_id;
       if (!!values.assessmentdetails) {
         !!values.assessmentdetails.assessmenttitle
-          ? data.append("title", values.assessmentdetails.assessmenttitle)
+          ? (data.title = values.assessmentdetails.assessmenttitle)
           : errorList.push("Missing assessment Title");
 
-        !!values.assessmentdetails.assessmentdescription
-          ? data.append(
-              "description",
-              values.assessmentdetails.assessmentdescription
-            )
-          : errorList.push("Missing assessment Description");
+        !!values.assessmentdetails.assessmentTypeId
+          ? (data.assessmentTypeId = values.assessmentdetails.assessmentTypeId)
+          : errorList.push("Missing assessment Type");
+        //isImmediate
+        if (values.assessmentdetails.isImmediate) {
+          //console.log("is Immediate", 1);
+          data.isImmediate = 1;
+        } else {
+          //console.log("is Immediate", 0);
+          data.isImmediate = 0;
 
-        !!values.assessmentdetails.visibility
-          ? data.append("visibility", values.assessmentdetails.visibility)
-          : errorList.push("Missing assessment Visibility");
+          if (
+            values.assessmentdetails.deadlineDate &&
+            values.assessmentdetails.deadlineDate.length
+          ) {
+            data.fromDate = values.assessmentdetails.deadlineDate[0].format(
+              "YYYY-MM-DD"
+            );
 
-        !!values.assessmentdetails.usergroup
-          ? data.append("userGroupId", values.assessmentdetails.usergroup)
+            data.toDate = values.assessmentdetails.deadlineDate[1].format(
+              "YYYY-MM-DD"
+            );
+          } else {
+            errorList.push("Missing deadline Start/End date");
+          }
+        }
+
+        !!values.assessmentdetails.userGroup
+          ? (data.userGroupId = values.assessmentdetails.userGroup)
           : errorList.push("Missing assessment User Group");
 
-        !!values.assessmentfeaturedimage &&
-        values.assessmentfeaturedimage.length
-          ? values.assessmentfeaturedimage.map((image, index) => {
-              data.append(`featureImage`, image.fileList[0].originFileObj);
-            })
-          : errorList.push("Missing assessment Image");
-        values.assessmentfeaturedvideo &&
-          values.assessmentfeaturedvideo.length &&
-          values.assessmentfeaturedvideo.map((video, index) => {
-            console.log("Video:", video);
-            data.append(`interactiveVideo`, video.fileList[0].originFileObj);
-          });
+        !!values.assessmentdetails.courseOutlineId
+          ? (data.courseOutlineId = values.assessmentdetails.courseOutlineId)
+          : errorList.push("Missing assessment Linked Outline");
+
+        !!values.assessmentdetails.passingGrade
+          ? (data.passingGrade = values.assessmentdetails.passingGrade)
+          : errorList.push("Missing assessment Linked Outline");
+
+        if (values.assessmentdetails.attempts) {
+          data.isAttempts = 1;          
+          data.attempts = values.assessmentdetails.attempts;
+          //console.log("attempts", values.assessmentdetails.attempts)
+        } else {
+          data.isAttempts = 0;
+          data.attempts = 0;
+        }
       } else {
         errorList.push("Missing assessment Details");
       }
-      values.assessmentprerequisite &&
-        values.assessmentprerequisite.length &&
-        values.assessmentprerequisite.map((assessmentprereq, index) => {
-          data.append(
-            `CourseAssessmentsItems[${index}][preRequisiteId]`,
-            assessmentprereq.id
-          );
-        });
 
-      /* !!values.assessmentmediafiles && values.assessmentmediafiles.length
-        ? values.assessmentmediafiles.map((assessmentmediafile, index) => {
-            //console.log(assessmentmediafile.originFileObj)
-            data.append(
-              `CourseAssessmentsMediaFile[${index}]`,
-              assessmentmediafile.originFileObj
-            );
-          })
-        : errorList.push("Missing assessment Media File"); */
-      !!values.assessmentmediafiles && values.assessmentmediafiles.length
-        ? values.assessmentmediafiles.map((media) => {
-            //console.log(media)
-            media.fileList.map((listOfFiles, index) => {
-              //console.log('list of fileList',listOfFiles);
-              data.append(
-                `CourseAssessmentsMediaFile`,
-                listOfFiles.originFileObj
-              );
-            });
-            //data.append(`CourseAssessmentsMediaFile[${index}]`, media.fileList[0].originFileObj);
-          })
-        : errorList.push("Missing assessment Media File");
-
-      !!values.assessmentduration
+      /* !!values.assessmentduration
         ? data.append("duration", values.assessmentduration)
-        : errorList.push("Missing assessment Duration");
+        : errorList.push("Missing assessment Duration"); */
 
-      //data = JSON.stringify(data);
+      data = JSON.stringify(data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -605,7 +594,7 @@ const CourseAssessments = ({ course_id }) => {
         //console.log("NO ERROR, PROCEED WITH SUBMISSION");
         var config = {
           method: "post",
-          url: apiBaseUrl + "/CourseAssessments",
+          url: apiBaseUrl + "/CourseAssessment",
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -846,11 +835,16 @@ const CourseAssessments = ({ course_id }) => {
   /* console.log(defaultWidgetValues)
   console.log(assessment) */
   const formInitialValues = {
-    /* initialValues: {
-      assessmenttitle: title,
-      assessmentdescription: decodeURI(description),
-      assessmentduration: duration,     
-    }, */
+    initialValues: {
+      assessmentdetails: {
+        /* assessmenttitle: "HEY NOEL", 
+        userGroup: 1,*/
+        isImmediate: true,
+        attempts: 0,
+      },
+      /*assessmentdescription: decodeURI(description),
+      assessmentduration: duration,  */
+    },
   };
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
@@ -940,7 +934,25 @@ const CourseAssessments = ({ course_id }) => {
                           />
                         </div>
                       </Panel>
-                      <Panel header="Items" key="2" className="greyBackground">
+                      <Panel
+                        header="Assessment Duration"
+                        key="2"
+                        className="greyBackground"
+                      >
+                        <div className="assessmentWidgetHolder">
+                          <CourseAssessmentsItems
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.assessmentprerequisite !==
+                              curValues.assessmentprerequisite
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            assessmentList={assessmentList}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel header="Items" key="3" className="greyBackground">
                         <div className="assessmentWidgetHolder">
                           <CourseAssessmentsItems
                             shouldUpdate={(prevValues, curValues) =>

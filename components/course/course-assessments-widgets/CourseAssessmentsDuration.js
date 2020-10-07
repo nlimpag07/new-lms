@@ -31,11 +31,11 @@ const token = Cookies.get("token");
 
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Assessment - Details",
-  catValueLabel: "assessmentdetails",
+  catname: "Assessment - Duration",
+  catValueLabel: "assessmentduration",
 };
 
-const CourseAssessmentsDetails = (props) => {
+const CourseAssessmentsDuration = (props) => {
   const {
     shouldUpdate,
     showModal,
@@ -129,7 +129,6 @@ const CourseAssessmentsDetails = (props) => {
             <Select placeholder="Assessment type" size="medium">
               <Option value="1">Assignment</Option>
               <Option value="2">Exam</Option>
-              <Option value="3">Quiz</Option>
             </Select>
           </Form.Item>
         </Form.Item>
@@ -196,8 +195,8 @@ const CourseAssessmentsDetails = (props) => {
         </Form.Item>
         {!isImmediateChecked && (
           <Form.Item>
-            <Form.Item name={["assessmentdetails", "deadlineDate"]} noStyle>
-              <RangePicker style={{ width: "60%" }} />
+            <Form.Item name={["assessmentdetails", "deadlineRange"]} noStyle>
+              <RangePicker onChange={onDateChange} style={{ width: "60%" }} />
             </Form.Item>
             <span style={{ fontStyle: "italic", color: "#999999" }}>
               {" "}<InfoCircleFilled /> Set a deadline
@@ -211,7 +210,7 @@ const CourseAssessmentsDetails = (props) => {
           <Form.Item
             name={["assessmentdetails", "attempts"]}            
             noStyle
-          ><InputNumber min={0} max={10} placeholder="Number of Attempts" style={{ width: "50%" }} />            
+          ><Input placeholder="Number of Attempts" style={{ width: "50%" }} />            
           </Form.Item>
           <span style={{ fontStyle: "italic", color: "#999999" }}>
             {" "}<InfoCircleFilled /> 0 for unlimited attempts
@@ -325,4 +324,4 @@ const CourseAssessmentsDetails = (props) => {
   );
 };
 
-export default CourseAssessmentsDetails;
+export default CourseAssessmentsDuration;

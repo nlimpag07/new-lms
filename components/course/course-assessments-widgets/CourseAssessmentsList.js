@@ -76,14 +76,13 @@ const CourseAssessmentsList = (props) => {
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
 
- /*  const showModal = (modaltitle, modalbodycontent) => {
+  /*  const showModal = (modaltitle, modalbodycontent) => {
     setassessmentActionModal({
       visible: true,
       modalTitle: modaltitle,
       modalBodyContent: modalbodycontent,
     });
   }; */
-
 
   /*  useEffect(() => {
     let theList = assessmentList;
@@ -95,7 +94,7 @@ const CourseAssessmentsList = (props) => {
     setAssessmentList(theList);
     console.log("The assessment List",assessmentList)
   }, [loading]); */
-  console.log("The assessment List",assessmentList)
+  //console.log("The assessment List",assessmentList)
   if (assessmentList) {
     assessmentList.map((dataItem) => {
       //dataItem.
@@ -103,10 +102,11 @@ const CourseAssessmentsList = (props) => {
         id: dataItem.id,
         title: dataItem.title,
         toDate: dataItem.toDate,
-        courseAssessmentItem:dataItem.courseAssessmentItem.length,
+        dueDate: dataItem.toDate?dataItem.toDate:"Immediate",
+        courseAssessmentItem: dataItem.courseAssessmentItem.length,
         assessmentType: dataItem.assessmentType.name,
-        assessmentTypeId:dataItem.assessmentTypeId,
-        userGroup: dataItem.userGroup?dataItem.userGroup.name:0,
+        assessmentTypeId: dataItem.assessmentTypeId,
+        userGroup: dataItem.userGroup ? dataItem.userGroup.name : 0,
         userGroupId: dataItem.userGroupId,
         passingGrade: dataItem.passingGrade,
       };
@@ -215,7 +215,7 @@ const CourseAssessmentsList = (props) => {
           content: response.data.message,
           centered: true,
           width: 450,
-        })
+        });
       }
       //setLoading(false);
     }
@@ -280,7 +280,7 @@ const CourseAssessmentsList = (props) => {
                   }
                 />
                 <Column field="title" title="Title" width="300px" />
-                <Column field="toDate" title="Due" />
+                <Column field="dueDate" title="Due" />
                 <Column field="courseAssessmentItem" title="Items" />
                 <Column field="assessmentType" title="Type" />
                 <Column field="userGroup" title="User Group" />
