@@ -71,9 +71,9 @@ const CourseAssessmentsList = (props) => {
     setAssessmentList,
     loading,
     setLoading,
-    resetFields
+    resetFields,
   } = props;
-//console.log(resetFields)
+  //console.log(resetFields)
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
 
@@ -103,7 +103,7 @@ const CourseAssessmentsList = (props) => {
         id: dataItem.id,
         title: dataItem.title,
         toDate: dataItem.toDate,
-        dueDate: dataItem.toDate?dataItem.toDate:"Immediate",
+        dueDate: dataItem.toDate ? dataItem.toDate : "Immediate",
         courseAssessmentItem: dataItem.courseAssessmentItem.length,
         assessmentType: dataItem.assessmentType.name,
         assessmentTypeId: dataItem.assessmentTypeId,
@@ -111,7 +111,14 @@ const CourseAssessmentsList = (props) => {
         userGroupId: dataItem.userGroupId,
         passingGrade: dataItem.passingGrade,
       };
-      dataList.push(theassessment);
+      (dataItem["dueDate"] = dataItem.toDate ? dataItem.toDate : "Immediate"),
+        (dataItem["courseAssessmentItemCount"] =
+          dataItem.courseAssessmentItem.length),
+        (dataItem["assessmentTypeName"] = dataItem.assessmentType.name),
+        (dataItem["userGroupName"] = dataItem.userGroup
+          ? dataItem.userGroup.name
+          : "--"),
+        dataList.push(dataItem);
     });
     //console.log('Data List: ',dataList);
   }
@@ -282,9 +289,9 @@ const CourseAssessmentsList = (props) => {
                 />
                 <Column field="title" title="Title" width="300px" />
                 <Column field="dueDate" title="Due" />
-                <Column field="courseAssessmentItem" title="Items" />
-                <Column field="assessmentType" title="Type" />
-                <Column field="userGroup" title="User Group" />
+                <Column field="courseAssessmentItemCount" title="Items" />
+                <Column field="assessmentTypeName" title="Type" />
+                <Column field="userGroupName" title="User Group" />
                 <Column field="passingGrade" title="Passing Grade" />
                 <Column
                   width="100px"

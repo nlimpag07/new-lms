@@ -42,12 +42,10 @@ import {
 } from "@ant-design/icons";
 import CourseAssessmentsList from "./course-assessments-widgets/CourseAssessmentsList";
 import CourseAssessmentsDetails from "./course-assessments-widgets/CourseAssessmentsDetails";
+import CourseAssessmentsDuration from "./course-assessments-widgets/CourseAssessmentsDuration";
 /* import CourseAssessmentsFeaturedImage from "./course-assessment-widgets/CourseAssessmentsFeaturedImage";
 import CourseAssessmentsFeaturedVideo from "./course-assessment-widgets/CourseAssessmentsFeaturedVideo"; */
 import CourseAssessmentsItems from "./course-assessments-widgets/CourseAssessmentsItems";
-/* import CourseAssessmentsMediaFiles from "./course-assessment-widgets/CourseAssessmentsMediaFiles";
-import CourseAssessmentsMilestones from "./course-assessment-widgets/CourseAssessmentsMilestones";
-import CourseAssessmentsDuration from "./course-assessment-widgets/CourseAssessmentsDuration"; */
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -733,7 +731,7 @@ const CourseAssessments = ({ course_id }) => {
       let isSelected = assessmentList.filter(
         (selectedassessment) => selectedassessment.id === curAssessmentId[0].id
       );
-      //console.log("Selected Assessment", isSelected[0]);
+      console.log("Selected Assessment", isSelected[0]);
       let prerequisite = [];
       /* let currentAssessmentItem = isSelected[0].courseAssessmentsItem;
       if (currentAssessmentItem.length) {        
@@ -831,7 +829,7 @@ const CourseAssessments = ({ course_id }) => {
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         assessmentdetails: [],
-        assessmentduration: "",
+        assessmentduration: [],
         assessmentitems: [],
 
         /* featuredvideo: video,
@@ -995,7 +993,7 @@ const CourseAssessments = ({ course_id }) => {
                         className="greyBackground"
                       >
                         <div className="assessmentWidgetHolder">
-                          <CourseAssessmentsItems
+                          <CourseAssessmentsDuration
                             shouldUpdate={(prevValues, curValues) =>
                               prevValues.assessmentprerequisite !==
                               curValues.assessmentprerequisite
