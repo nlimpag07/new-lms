@@ -1052,6 +1052,16 @@ const CourseOutlines = ({ course_id }) => {
             .outlineWidgetHolder {
               padding: 10px 0;
             }
+            .outlineWidgetHolder
+              .outlineWithValue
+              .ant-select-selection-placeholder {
+              opacity: 1 !important;
+              color: #000000 !important;
+            }
+            .outlineWithValue .ant-input::placeholder {
+              opacity: 1 !important;
+              color: #000000 !important;
+            }
           `}</style>
         </Row>
       </Form.Provider>

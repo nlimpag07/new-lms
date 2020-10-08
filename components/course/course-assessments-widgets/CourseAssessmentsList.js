@@ -71,8 +71,9 @@ const CourseAssessmentsList = (props) => {
     setAssessmentList,
     loading,
     setLoading,
+    resetFields
   } = props;
-
+//console.log(resetFields)
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
 

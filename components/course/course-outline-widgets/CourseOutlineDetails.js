@@ -106,10 +106,8 @@ const CourseOutlineDetails = (props) => {
         allowClear
         shouldUpdate={shouldUpdate}
       >
-        <Form.List name={widgetFieldLabels.catValueLabel}>
-          {(fields, { add, remove }) => {
-            return (
-              <>
+        
+              <div className="outlineWithValue">
                 {chosenRows.map((field, index) => {
                   field = {
                     ...field,
@@ -169,10 +167,7 @@ const CourseOutlineDetails = (props) => {
                     </div>
                   );
                 })}
-              </>
-            );
-          }}
-        </Form.List>
+              </div>
       </Form.Item>
       {/* <Form.Item
         label="Outline Title"

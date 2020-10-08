@@ -43,12 +43,13 @@ const CourseAssessmentsDetails = (props) => {
     setdefaultWidgetValues,
     course_id,
     allOutlines,
+    userGroupList,
   } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [userGroupList, setUserGroupList] = useState([]);
+  //const [userGroupList, setUserGroupList] = useState([]);
   const chosenRows = defaultWidgetValues.assessmentdetails;
-  const [isImmediateChecked, setisImmediateChecked] = useState(true);
-  useEffect(() => {
+  const [isImmediateChecked, setisImmediateChecked] = useState(false);
+  /* useEffect(() => {
     var config = {
       headers: {
         Authorization: "Bearer " + token,
@@ -69,17 +70,16 @@ const CourseAssessmentsDetails = (props) => {
           // react on errors.
           console.error(errors);
         });
-      /* const response = await axios(config);
-      if (response) {
-        setUserGroupList(response.data.result);
-        console.log(response.data.result);
-      } else {
-      } */
-      //setLoading(false);
+      
     }
 
     fetchData(config);
-  }, []);
+  }, []); */
+
+  useEffect(() => {
+    //chosenRows.length && console.log("isImmediate",chosenRows[0].isImmediate)
+    chosenRows.length? setisImmediateChecked(chosenRows[0].isImmediate):setisImmediateChecked(false);
+  }, [chosenRows]);
 
   const groupOptions = userGroupList.map((usergroup, index) => {
     return (
@@ -97,15 +97,18 @@ const CourseAssessmentsDetails = (props) => {
     );
   });
   function immediateOnChange(e) {
+    //setisImmediateChecked(!e.target.checked);
     setisImmediateChecked(e.target.checked);
     //console.log(`checked = ${e.target.checked}`);
   }
   const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
+    /*  console.log(date, dateString);
     console.log("startDate", dateString[0]);
     console.log("===================");
-    console.log("endDate", dateString[1]);
+    console.log("endDate", dateString[1]); */
   };
+  //console.log("Chosen Rows", chosenRows);
+  const dateFormat = 'YYYY-MM-DD';
   return !chosenRows.length ? (
     <>
       <Form.Item
@@ -141,9 +144,6 @@ const CourseAssessmentsDetails = (props) => {
           >
             <Select placeholder="Linked Course Outline" size="medium">
               {outlineOptions}
-              {/* <Option value="1">Administrator</Option>
-              <Option value="2">Human Resource</Option>
-              <Option value="3">Manager</Option> */}
             </Select>
           </Form.Item>
         </Form.Item>
@@ -160,9 +160,6 @@ const CourseAssessmentsDetails = (props) => {
                 style={{ width: "50%" }}
               >
                 {groupOptions}
-                {/* <Option value="1">Administrator</Option>
-                <Option value="2">Human Resource</Option>
-                <Option value="3">Manager</Option> */}
               </Select>
             </Form.Item>
             <Form.Item name={["assessmentdetails", "passingGrade"]} noStyle>
@@ -185,36 +182,44 @@ const CourseAssessmentsDetails = (props) => {
           Assessment Completion
         </Divider>
         <Form.Item style={{ marginBottom: "10px" }}>
-          <Form.Item name={["assessmentdetails", "isImmediate"]} noStyle valuePropName="checked">
-            <Checkbox onChange={immediateOnChange}>
-              Immediate
-            </Checkbox>
+          <Form.Item
+            name={["assessmentdetails", "isImmediate"]}
+            noStyle
+            valuePropName="checked"
+          >
+            <Checkbox onChange={immediateOnChange}>Immediate</Checkbox>
           </Form.Item>
           <span style={{ fontStyle: "italic", color: "#999999" }}>
-            {" "}<InfoCircleFilled /> needs to be completed right after the course
+            {" "}
+            <InfoCircleFilled /> needs to be completed right after the course
           </span>
         </Form.Item>
         {!isImmediateChecked && (
           <Form.Item>
             <Form.Item name={["assessmentdetails", "deadlineDate"]} noStyle>
-              <RangePicker style={{ width: "60%" }} />
+              <RangePicker format={dateFormat} style={{ width: "60%" }} />
             </Form.Item>
             <span style={{ fontStyle: "italic", color: "#999999" }}>
-              {" "}<InfoCircleFilled /> Set a deadline
+              {" "}
+              <InfoCircleFilled /> Set a deadline
             </span>
           </Form.Item>
         )}
-         <Divider orientation="left" plain style={{ fontWeight: "500" }}>
+        <Divider orientation="left" plain style={{ fontWeight: "500" }}>
           Assessment Retakes
         </Divider>
-        <Form.Item style={{ marginBottom: "10px" }}>          
-          <Form.Item
-            name={["assessmentdetails", "attempts"]}            
-            noStyle
-          ><InputNumber min={0} max={10} placeholder="Number of Attempts" style={{ width: "50%" }} />            
+        <Form.Item style={{ marginBottom: "10px" }}>
+          <Form.Item name={["assessmentdetails", "attempts"]} noStyle>
+            <InputNumber
+              min={0}
+              max={10}
+              placeholder="Number of Attempts"
+              style={{ width: "50%" }}
+            />
           </Form.Item>
           <span style={{ fontStyle: "italic", color: "#999999" }}>
-            {" "}<InfoCircleFilled /> 0 for unlimited attempts
+            {" "}
+            <InfoCircleFilled /> 0 for unlimited attempts
           </span>
         </Form.Item>
         <style jsx global>{`
@@ -238,77 +243,136 @@ const CourseAssessmentsDetails = (props) => {
         allowClear
         shouldUpdate={shouldUpdate}
       >
-        <Form.List name={widgetFieldLabels.catValueLabel}>
-          {(fields, { add, remove }) => {
+        <div className="assessmentWithValue">
+          {chosenRows.map((field, index) => {
+            field = {
+              ...field,
+              name: index,
+              key: index,
+            };
+            //console.log("Individual Fields:", field);
             return (
-              <div className="assessmentWithValue">
-                {chosenRows.map((field, index) => {
-                  field = {
-                    ...field,
-                    name: index,
-                    key: index,
-                  };
-                  //console.log("Individual Fields:", field);
-                  return (
-                    <div key={field.key}>
-                      <Form.Item
-                        label="assessment Title"
-                        name={[field.name, "assessmenttitle"]}
-                        key={`${field.key}-title`}
+              <div key={field.key}>
+                <Form.Item
+                  label="Assessment Title"
+                  name={["assessmentdetails", "assessmenttitle"]}
+                  key={`${field.key}-title`}
+                >
+                  <Input placeholder={field.title} />
+                </Form.Item>
+                <Form.Item>
+                  <Form.Item
+                    name={["assessmentdetails", "assessmentTypeId"]}
+                    label="Assessment type"
+                    noStyle
+                  >
+                    <Select
+                      size="medium"
+                      placeholder={field.assessmentTypeName}
+                    >
+                      <Option value="1">Assignment</Option>
+                      <Option value="2">Exam</Option>
+                      <Option value="3">Quiz</Option>
+                    </Select>
+                  </Form.Item>
+                </Form.Item>
+                <Form.Item>
+                  <Form.Item
+                    name={["assessmentdetails", "courseOutlineId"]}
+                    label="Linked Course Outline"
+                    noStyle
+                  >
+                    <Select placeholder={field.courseOutlineName} size="medium">
+                      {outlineOptions}
+                    </Select>
+                  </Form.Item>
+                </Form.Item>
+                <Form.Item>
+                  <Input.Group compact className="course-assessment-details">
+                    <Form.Item
+                      name={["assessmentdetails", "userGroup"]}
+                      label="User Group"
+                      noStyle
+                    >
+                      <Select
+                        placeholder={field.userGroup}
+                        size="medium"
+                        style={{ width: "50%" }}
                       >
-                        <Input
-                          placeholder={field.title}
-                          //defaultValue={field.title}
-                        />
-                      </Form.Item>
-                      <Form.Item>
-                        <Input.Group
-                          compact
-                          className="course-assessment-details"
-                        >
-                          <Form.Item
-                            name={[field.name, "usergroup"]}
-                            label="User Group"
-                            noStyle
-                          >
-                            <Select
-                              placeholder={`${field.usergroup}`}
-                              size="medium"
-                              style={{ width: "50%" }}
-                              //defaultActiveFirstOption={`${field.usergroupid}`}
-                            >
-                              <Option value="1">Administrator</Option>
-                              <Option value="2">Human Resource</Option>
-                              <Option value="3">Manager</Option>
-                            </Select>
-                          </Form.Item>
-                          <Form.Item name={[field.name, "visibility"]} noStyle>
-                            <Select
-                              placeholder={`${
-                                field.visibility == 1 ? "Private" : "Public"
-                              }`}
-                              size="medium"
-                              style={{ width: "50%" }}
-                            >
-                              <Option value="0">Public</Option>
-                              <Option value="1">Private</Option>
-                            </Select>
-                          </Form.Item>
-                        </Input.Group>
-                      </Form.Item>
-                      <Form.Item name={[field.name, "description"]}>
-                        <TextArea
-                          rows={5}
-                          placeholder={`${field.description}`}
-                        />
-                      </Form.Item>
-                    </div>
-                  );
-                })}
+                        {groupOptions}
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name={["assessmentdetails", "passingGrade"]}
+                      noStyle
+                    >
+                      <Select
+                        placeholder={`${field.passingGrade} %`}
+                        size="medium"
+                        style={{ width: "50%" }}
+                      >
+                        <Option value="75">75</Option>
+                        <Option value="80">80</Option>
+                        <Option value="85">85</Option>
+                        <Option value="90">90</Option>
+                        <Option value="95">95</Option>
+                        <Option value="100">100</Option>
+                      </Select>
+                    </Form.Item>
+                  </Input.Group>
+                </Form.Item>
+                <Divider orientation="left" plain style={{ fontWeight: "500" }}>
+                  Assessment Completion
+                </Divider>
+                <Form.Item style={{ marginBottom: "10px" }}>
+                  <Form.Item
+                    name={["assessmentdetails", "isImmediate"]}
+                    noStyle
+                    valuePropName={isImmediateChecked}
+                  >
+                    <Checkbox checked={isImmediateChecked} onChange={immediateOnChange}>Immediate</Checkbox>
+                  </Form.Item>
+                  <span style={{ fontStyle: "italic", color: "#999999" }}>
+                    {" "}
+                    <InfoCircleFilled /> needs to be completed right after the
+                    course
+                  </span>
+                </Form.Item>
+                {!isImmediateChecked && (
+                  <Form.Item>
+                    <Form.Item
+                      name={["assessmentdetails", "deadlineDate"]}
+                      noStyle
+                    >
+                      <RangePicker format={dateFormat} placeholder={[field.fromDate, field.toDate]} style={{ width: "60%" }} />
+                    </Form.Item>
+                    <span style={{ fontStyle: "italic", color: "#999999" }}>
+                      {" "}
+                      <InfoCircleFilled /> Set a deadline
+                    </span>
+                  </Form.Item>
+                )}
+                <Divider orientation="left" plain style={{ fontWeight: "500" }}>
+                  Assessment Retakes
+                </Divider>
+                <Form.Item style={{ marginBottom: "10px" }}>
+                  <Form.Item name={["assessmentdetails", "attempts"]} noStyle>
+                    <InputNumber
+                      min={0}
+                      max={10}
+                      placeholder={field.attempts}
+                      style={{ width: "50%" }}
+                    />
+                  </Form.Item>
+                  <span style={{ fontStyle: "italic", color: "#999999" }}>
+                    {" "}
+                    <InfoCircleFilled /> 0 for unlimited attempts
+                  </span>
+                </Form.Item>
               </div>
             );
-          }}
-        </Form.List>
+          })}
+        </div>
       </Form.Item>
       <style jsx global>{`
         .course-assessment-details .ant-form-item {

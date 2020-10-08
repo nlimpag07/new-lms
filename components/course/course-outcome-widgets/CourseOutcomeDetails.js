@@ -107,9 +107,7 @@ const CourseOutcomeDetails = (props) => {
         shouldUpdate={shouldUpdate}
         
       >
-        <Form.List name={widgetFieldLabels.catValueLabel}>
-          {(fields, { add, remove }) => {
-            return (
+        
               <>
                 {chosenRows.map((field, index) => {
                   field = {
@@ -171,48 +169,8 @@ const CourseOutcomeDetails = (props) => {
                   );
                 })}
               </>
-            );
-          }}
-        </Form.List>
       </Form.Item>
-      {/* <Form.Item
-        label="Outcome Title"
-        name={["outcomedetails", "outcometitle"]}
-      >
-        <Input placeholder="Outcome Title" value={chosenRows.title} />
-      </Form.Item>
-      <Form.Item>
-        <Input.Group compact className="course-outcome-details">
-          <Form.Item name={["outcomedetails", "usergroup"]} label="User Group" noStyle>
-            <Select
-              placeholder="User Group"
-              size="medium"
-              style={{ width: "50%" }}
-            >
-              <Option value="1">1</Option>
-              <Option value="2">2</Option>
-              <Option value="3">3</Option>
-              <Option value="4">4</Option>
-              <Option value="5">5</Option>
-              <Option value="6">6</Option>
-              <Option value="7">7</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name={["outcomedetails", "visibility"]} noStyle>
-            <Select
-              placeholder="Visibility"
-              size="medium"
-              style={{ width: "50%" }}
-            >
-              <Option value="0">Public</Option>
-              <Option value="1">Private</Option>
-            </Select>
-          </Form.Item>
-        </Input.Group>
-      </Form.Item>
-      <Form.Item name={["outcomedetails", "outcomedescription"]}>
-        <TextArea rows={5} placeholder="Outcome Description" />
-      </Form.Item> */}
+      
       <style jsx global>{`
         .course-outcome-details .ant-form-item {
           display: inline-block;

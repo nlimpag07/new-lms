@@ -179,7 +179,8 @@ const CourseAssessments = ({ course_id }) => {
   //console.log(course_id);
   const [loading, setLoading] = useState(true);
   const [allOutlines, setAllOutlines] = useState("");
-  const [assessmentList, setAssessmentList] = useState("");
+  const [userGroupList, setUserGroupList] = useState([]);
+  const [assessmentList, setAssessmentList] = useState([]);
   const [curAssessmentId, setcurAssessmentId] = useState("");
 
   const [spinner, setSpinner] = useState(false);
@@ -228,13 +229,10 @@ const CourseAssessments = ({ course_id }) => {
         .all([
           axios.get(apiBaseUrl + "/CourseOutline/" + course_id, config),
           axios.get(apiBaseUrl + "/CourseAssessment/" + course_id, config),
+          axios.get(apiBaseUrl + "/Settings/usergroup", config),
         ])
         .then(
-          axios.spread((outlineList, allAssessment) => {
-            /* console.log("Outline List", outlineList.data);
-            console.log("=====================");
-            console.log("allAssessment List", allAssessment.data); */
-
+          axios.spread((outlineList, allAssessment, allUserGroup) => {
             //check if there is course outline
             let initOutline = false;
             if (outlineList.data.result) {
@@ -252,6 +250,11 @@ const CourseAssessments = ({ course_id }) => {
             } else {
               setAssessmentList([]);
             }
+
+            //get userGroupList
+            allUserGroup.data.result
+              ? setUserGroupList(allUserGroup.data.result)
+              : setUserGroupList([]);
           })
         )
         .catch((errors) => {
@@ -408,16 +411,34 @@ const CourseAssessments = ({ course_id }) => {
       curAssessmentId && curAssessmentId.length
         ? curAssessmentId[0].userGroupId
         : "";
-    //console.log("Current assessment: ", curassessmentuserGroupId);
+    console.log("Current assessment: ", curAssessmentId);
     var data = {};
     var errorList = [];
     if (curAssessmentIdExist) {
       //Edit Course assessment
-      //console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
+      console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
-      /* data.append("courseId", course_id);
-      if (!!values.assessmentdetails && values.assessmentdetails.length) {
+      data.courseId = course_id;
+      if (!!values.assessmentdetails) {
+        //console.log("assessment Details Present")
+        if (!!values.assessmentdetails.assessmenttitle) {
+          data.title=values.assessmentdetails.assessmenttitle;
+          isNotAllEmpty.push("Not Empty");
+        } else {
+          data.title=curassessmentTitle;
+        }
+        if (!!values.assessmentdetails.assessmenttitle) {
+          data.title=values.assessmentdetails.assessmenttitle;
+          isNotAllEmpty.push("Not Empty");
+        } else {
+          data.title=curassessmentTitle;
+        }
+        !!values.assessmentdetails.assessmentTypeId
+          ? (data.assessmentTypeId = values.assessmentdetails.assessmentTypeId)
+          : errorList.push("Missing assessment Type");
+      }
+      /*if (!!values.assessmentdetails && values.assessmentdetails.length) {
         if (!!values.assessmentdetails[0].assessmenttitle) {
           data.append("title", values.assessmentdetails[0].assessmenttitle);
           isNotAllEmpty.push("Not Empty");
@@ -489,7 +510,8 @@ const CourseAssessments = ({ course_id }) => {
         isNotAllEmpty.push("Not Empty");
       } */
 
-      //data = JSON.stringify(data);
+      data = JSON.stringify(data);
+      console.log('Stringify Data: ', data)
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -568,10 +590,10 @@ const CourseAssessments = ({ course_id }) => {
 
         !!values.assessmentdetails.passingGrade
           ? (data.passingGrade = values.assessmentdetails.passingGrade)
-          : errorList.push("Missing assessment Linked Outline");
+          : errorList.push("Missing assessment Passing Grade");
 
         if (values.assessmentdetails.attempts) {
-          data.isAttempts = 1;          
+          data.isAttempts = 1;
           data.attempts = values.assessmentdetails.attempts;
           //console.log("attempts", values.assessmentdetails.attempts)
         } else {
@@ -711,7 +733,7 @@ const CourseAssessments = ({ course_id }) => {
       let isSelected = assessmentList.filter(
         (selectedassessment) => selectedassessment.id === curAssessmentId[0].id
       );
-      console.log("Selected Assessment", isSelected[0]);
+      //console.log("Selected Assessment", isSelected[0]);
       let prerequisite = [];
       /* let currentAssessmentItem = isSelected[0].courseAssessmentsItem;
       if (currentAssessmentItem.length) {        
@@ -759,16 +781,47 @@ const CourseAssessments = ({ course_id }) => {
         });
       } */
 
-      //console.log(assessmentItem)
+      var theOutlineName = "";
+      let currentOutlineId = isSelected[0].courseOutlineId;
+      if (currentOutlineId) {
+        let getOutline = allOutlines.filter(
+          (outline) => outline.id == currentOutlineId
+        );
+        if (getOutline.length)
+          theOutlineName = getOutline[0].title ? getOutline[0].title : null;
+      }
+      var theGroupName = "";
+      let currentGroupId = isSelected[0].userGroupId;
+      if (currentGroupId) {
+        let getGroup = userGroupList.filter(
+          (usergroup) => usergroup.id == currentGroupId
+        );
+        if (getGroup.length)
+          theGroupName = getGroup[0].name ? getGroup[0].name : null;
+      }
+      //console.log("Group Name:", theGroupName);
+
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         assessmentdetails: [
           {
+            id: isSelected[0].id,
             title: isSelected[0].title,
-            usergroup: isSelected[0].userGroup
-              ? isSelected[0].userGroup.name
-              : 0,
-            usergroupid: isSelected[0].userGroupId,
+            assessmentTypeName: isSelected[0].assessmentType.name,
+            assessmentTypeId: isSelected[0].assessmentTypeId,
+            courseOutlineName: theOutlineName,
+            courseOutlineId: isSelected[0].courseOutlineId,
+            userGroup: theGroupName,
+            userGroupId: isSelected[0].userGroupId,
+            passingGrade: isSelected[0].passingGrade,
+            isImmediate: isSelected[0].isImmediate ? true : false,
+            fromDate: isSelected[0].fromDate,
+            toDate: isSelected[0].toDate,
+            isAttempts: isSelected[0].isAttempts,
+            attempts: isSelected[0].attempts,
+            basedType: isSelected[0].basedType,
+            isShuffle: isSelected[0].isShuffle,
+            courseAssessmentItem: isSelected[0].courseAssessmentItem,
           },
         ],
         assessmentitems: isSelected[0].courseAssessmentItem,
@@ -835,17 +888,18 @@ const CourseAssessments = ({ course_id }) => {
   /* console.log(defaultWidgetValues)
   console.log(assessment) */
   const formInitialValues = {
-    initialValues: {
+    /* initialValues: {
       assessmentdetails: {
-        /* assessmenttitle: "HEY NOEL", 
-        userGroup: 1,*/
+        //assessmenttitle: "HEY NOEL", 
+        //userGroup: 1,
         isImmediate: true,
         attempts: 0,
       },
-      /*assessmentdescription: decodeURI(description),
-      assessmentduration: duration,  */
-    },
+      //assessmentdescription: decodeURI(description),
+      //assessmentduration: duration,
+    }, */
   };
+
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
@@ -931,6 +985,7 @@ const CourseAssessments = ({ course_id }) => {
                             setdefaultWidgetValues={setdefaultWidgetValues}
                             course_id={course_id}
                             allOutlines={allOutlines}
+                            userGroupList={userGroupList}
                           />
                         </div>
                       </Panel>
@@ -1074,6 +1129,10 @@ const CourseAssessments = ({ course_id }) => {
               color: #000000 !important;
             }
             .assessmentWithValue .ant-input::placeholder {
+              opacity: 1 !important;
+              color: #000000 !important;
+            }
+            .assessmentWithValue .ant-picker-input input::placeholder, .assessmentWithValue .ant-input-number input::placeholder {
               opacity: 1 !important;
               color: #000000 !important;
             }
