@@ -111,7 +111,7 @@ const LearnersCourseList = (props) => {
     }
     fetchData(config); */
   }, []);
-console.log(courseAllList)
+//console.log(courseAllList)
   return (
     <Row
       className="widget-container"

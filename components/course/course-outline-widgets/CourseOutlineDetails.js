@@ -37,7 +37,7 @@ const CourseOutlineDetails = (props) => {
   }, [outline]); */
   //console.log(chosenRows);
   //return outline?(title):("Nothing");
-  console.log('Outline',outline);
+  //console.log('Outline',outline);
   return !chosenRows.length ? (
     <>
       <Form.Item

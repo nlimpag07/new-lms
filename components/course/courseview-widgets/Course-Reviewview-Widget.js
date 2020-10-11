@@ -17,7 +17,7 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
   const [list, setList] = useState("");
   const [count, setCount] = useState(5);
   const loadMore =
-    !initLoading && !loading && data.length ? (
+    !initLoading && !loading && data.length > 3 ? (
       <div
         style={{
           textAlign: "center",
