@@ -10,12 +10,15 @@ import {
   Form,
   Collapse,
   Table,
+  Select,
+  Checkbox,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   PlusOutlined,
   MinusCircleOutlined,
   CloseOutlined,
+  InfoCircleFilled,
 } from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
@@ -27,6 +30,7 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 /**TextArea declaration */
+const { Option } = Select;
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
@@ -293,54 +297,57 @@ const modalFormBody = (assItemList, chosenRows) => {
     }
   }, []);
   return (
-    <Form.List name="assessment_items">
-      {(fields, { add, remove }) => {
-        return (
-          <div>
-            {selectedRows.map((field, index) => {
-              field = {
-                ...field,
-                name: index,
-              };
-              return field ? (
-                <div key={index}>
-                  <Form.Item
-                    name={[field.name, "id"]}
-                    initialValue={field.id}
-                    key={`outline_id-${field.key}`}
-                    
-                  >
-                    <Input placeholder="Outline ID" value={field.id} />
-                  </Form.Item>
-                  <Form.Item
-                    name={[field.name, "title"]}
-                    initialValue={field.title}
-                    key={`outline-${field.key}`}
-                    
-                  >
-                    <Input placeholder="Outline Title" value={field.title} />
-                  </Form.Item>
-                  <Form.Item
-                    name={[field.name, "preRequisiteId"]}
-                    initialValue={field.preRequisiteId}
-                    key={`outline_prereq-${field.key}`}
-                    
-                  >
-                    <Input
-                      placeholder="Outline preRequisiteId"
-                      value={field.preRequisiteId}
-                    />
-                  </Form.Item>
-                </div>
-              ) : (
-                <div>Sorry... There is no data at the moment.</div>
-              );
-            })}
+    <Form.Item>
+      <Form.Item
+        name={["assessment_items", "question"]}
+        label="Question"
+        rules={[
+          {
+            required: true,
+            message: "Please input your question!",
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name={["assessment_items", "question_duration"]}
+        label="Duration"
+        rules={[
+          {
+            required: true,
+            message: "Please input duration!",
+          },
+        ]}
+      >
+        <InputNumber />
+      </Form.Item>
+      <Form.Item label="Type">
+        <Input.Group compact>
+          <Form.Item
+            name={["assessment_items", "question_type"]}
+            label="Type"
+            noStyle
+          >
+            <Select placeholder="Question Type" size="medium" style={{ width: "70%",marginRight:"10px" }}>
+              <Option value="1">Essay</Option>
+              <Option value="2">Multiple Choice</Option>
+              <Option value="3">True / False</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <Form.Item
+              name={["assessment_items", "isShuffleChoices"]}
+              noStyle
+              valuePropName="checked"
+            >
+              <Checkbox>Shuffle Choices</Checkbox>
+            </Form.Item>
             
-          </div>
-        );
-      }}
-    </Form.List>
+          </Form.Item>
+        </Input.Group>
+      </Form.Item>
+    </Form.Item>
   );
 };
 export default CourseAssessmentsItems;

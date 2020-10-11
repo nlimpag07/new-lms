@@ -48,7 +48,7 @@ const CourseAssessmentsDuration = (props) => {
     //console.log(`checked = ${e.target.checked}`);
   }
   //console.log("Duration",chosenRows[0].basedType);
-  console.log("based",isDurationBased);
+  //console.log("based",isDurationBased);
 
   return !chosenRows.length ? (
     <>
