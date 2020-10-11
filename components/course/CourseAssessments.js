@@ -137,7 +137,7 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "assessmentprerequisite" && form.resetFields();
+        modalFormName === "assessmentduration" && form.resetFields();
         modalFormName === "picklistlevel" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
@@ -180,6 +180,7 @@ const CourseAssessments = ({ course_id }) => {
   const [userGroupList, setUserGroupList] = useState([]);
   const [assessmentList, setAssessmentList] = useState([]);
   const [curAssessmentId, setcurAssessmentId] = useState("");
+  const [assessBaseType, setAssessBaseType] = useState("");
 
   const [spinner, setSpinner] = useState(false);
   const [dataProcessModal, setDataProcessModal] = useState({
@@ -190,6 +191,7 @@ const CourseAssessments = ({ course_id }) => {
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     assessmentdetails: [],
     assessmentitems: [],
+    assessmentConstItems: [],
     assessmentduration: [],
   });
   var [assessmentActionModal, setAssessmentActionModal] = useState({
@@ -286,99 +288,30 @@ const CourseAssessments = ({ course_id }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
 
-    if (name === "assessmentprerequisite") {
-      var value = values.assessmentprerequisite
-        ? values.assessmentprerequisite.map((related, index) => related)
+    if (name === "assessmentduration") {
+      var value = values.assessmentduration
+        ? values.assessmentduration.map((related, index) => related)
         : "";
       basicForm.setFieldsValue({
-        assessmentprerequisite: [...value],
+        assessmentduration: [...value],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        assessmentprerequisite: [...value],
+        assessmentduration: [...value],
       });
       /* console.log('combined value', [...picklistFields, ...value]);
       console.log('======================='); */
     }
-    if (name === "picklistduration") {
+    /* if (name === "picklistduration") {
       basicForm.setFieldsValue({
         picklistduration: [...picklistFields, values],
       });
-    }
-
-    if (name === "assessmentfeaturedimage") {
-      var value = values.name ? values : "";
-      if (value) {
-        basicForm.setFieldsValue({
-          assessmentfeaturedimage: [values.name],
-        });
-        setdefaultWidgetValues({
-          ...defaultWidgetValues,
-          assessmentfeaturedimage: values.name,
-        });
-      }
-      //setFeatureMedia({ image: values.name });
-      //console.log("Course assessment Featured Image: ", value);
-    }
-    if (name === "assessmentfeaturedvideo") {
-      var value = values.name ? values : "";
-      if (value) {
-        basicForm.setFieldsValue({
-          assessmentfeaturedvideo: [values.name],
-        });
-        setdefaultWidgetValues({
-          ...defaultWidgetValues,
-          assessmentfeaturedvideo: values.name,
-        });
-      }
-      //console.log("Uploaded Video: ", value);
-    }
-    /* if (name === "assessmentmediafiles") {
-      var value = values.assessmentmediafiles
-        ? values.assessmentmediafiles.fileList.map((mediafile, index) => mediafile)
-        : "";
-      basicForm.setFieldsValue({
-        assessmentmediafiles: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        assessmentmediafiles: [...value],
-      });
-      console.log('Media Files: ',values);
     } */
-    if (name === "assessmentmediafiles") {
-      var value = values.assessmentmedia ? values : "";
-      if (value) {
-        basicForm.setFieldsValue({
-          assessmentmediafiles: [values.assessmentmedia],
-        });
-        setdefaultWidgetValues({
-          ...defaultWidgetValues,
-          assessmentmediafiles: values.assessmentmedia,
-        });
-      }
-      console.log("Course assessment Media File: ", value);
-    }
 
-    if (name === "assessmentmilestones") {
-      var value = values.assessmentmilestones
-        ? values.assessmentmilestones.fileList.map(
-            (mediafile, index) => mediafile
-          )
-        : "";
+    if (name === "assessmentitems") {
+      console.log("Items: ", values);
       basicForm.setFieldsValue({
-        assessmentmilestones: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        assessmentmilestones: [...value],
-      });
-      //console.log('Media Files: ',value);
-    }
-
-    if (name === "assessmentduration") {
-      basicForm.setFieldsValue({
-        assessmentduration: [...picklistFields, values],
+        assessmentitems: [...picklistFields, values],
       });
     }
 
@@ -409,6 +342,19 @@ const CourseAssessments = ({ course_id }) => {
       curAssessmentId && curAssessmentId.length
         ? curAssessmentId[0].userGroupId
         : "";
+    let curassessmentTypeId =
+      curAssessmentId && curAssessmentId.length
+        ? curAssessmentId[0].assessmentTypeId
+        : "";
+    let curCourseOutlineId =
+      curAssessmentId && curAssessmentId.length
+        ? curAssessmentId[0].courseOutlineId
+        : "";
+    let curUserGroupId =
+      curAssessmentId && curAssessmentId.length
+        ? curAssessmentId[0].userGroupId
+        : "";
+
     console.log("Current assessment: ", curAssessmentId);
     var data = {};
     var errorList = [];
@@ -421,95 +367,76 @@ const CourseAssessments = ({ course_id }) => {
       if (!!values.assessmentdetails) {
         //console.log("assessment Details Present")
         if (!!values.assessmentdetails.assessmenttitle) {
-          data.title=values.assessmentdetails.assessmenttitle;
+          data.title = values.assessmentdetails.assessmenttitle;
           isNotAllEmpty.push("Not Empty");
         } else {
-          data.title=curassessmentTitle;
+          data.title = curassessmentTitle;
         }
-        if (!!values.assessmentdetails.assessmenttitle) {
-          data.title=values.assessmentdetails.assessmenttitle;
+        if (!!values.assessmentdetails.assessmentTypeId) {
+          data.assessmentTypeId = values.assessmentdetails.assessmentTypeId;
           isNotAllEmpty.push("Not Empty");
         } else {
-          data.title=curassessmentTitle;
+          data.assessmentTypeId = curassessmentTypeId;
         }
-        !!values.assessmentdetails.assessmentTypeId
-          ? (data.assessmentTypeId = values.assessmentdetails.assessmentTypeId)
-          : errorList.push("Missing assessment Type");
-      }
-      /*if (!!values.assessmentdetails && values.assessmentdetails.length) {
-        if (!!values.assessmentdetails[0].assessmenttitle) {
-          data.append("title", values.assessmentdetails[0].assessmenttitle);
+        if (!!values.assessmentdetails.courseOutlineId) {
+          data.courseOutlineId = values.assessmentdetails.courseOutlineId;
           isNotAllEmpty.push("Not Empty");
         } else {
-          data.append("title", curassessmentTitle);
+          data.courseOutlineId = curCourseOutlineId;
         }
-        if (!!values.assessmentdetails[0].description) {
-          data.append("description", values.assessmentdetails[0].description);
-          isNotAllEmpty.push("Not Empty");
-        }
-        if (!!values.assessmentdetails[0].visibility) {
-          data.append("visibility", values.assessmentdetails[0].visibility);
-          isNotAllEmpty.push("Not Empty");
-        }
-        if (!!values.assessmentdetails[0].usergroup) {
-          data.append("userGroupId", values.assessmentdetails[0].usergroup);
+        if (!!values.assessmentdetails.userGroupId) {
+          data.userGroupId = values.assessmentdetails.userGroupId;
           isNotAllEmpty.push("Not Empty");
         } else {
-          data.append("userGroupId", curassessmentuserGroupId);
+          data.userGroupId = curUserGroupId;
         }
-        //isNotAllEmpty.push("Not Empty");
-      }
-      if (
-        !!values.assessmentfeaturedimage &&
-        values.assessmentfeaturedimage.length
-      ) {
-        values.assessmentfeaturedimage.map((image, index) => {
-          data.append(`featureImage`, image.fileList[0].originFileObj);
-        });
-        isNotAllEmpty.push("Not Empty");
-      }
-      if (
-        values.assessmentfeaturedvideo &&
-        values.assessmentfeaturedvideo.length
-      ) {
-        values.assessmentfeaturedvideo.map((video, index) => {
-          //console.log("Video:", video);
-          data.append(`interactiveVideo`, video.fileList[0].originFileObj);
-        });
-        isNotAllEmpty.push("Not Empty");
-      }
-      if (
-        values.assessmentprerequisite &&
-        values.assessmentprerequisite.length
-      ) {
-        values.assessmentprerequisite.map((assessmentprereq, index) => {
-          data.append(
-            `CourseAssessmentsItems[${index}][preRequisiteId]`,
-            assessmentprereq.id
-          );
-        });
-        isNotAllEmpty.push("Not Empty");
-      }
+        if (!!values.assessmentdetails.passingGrade) {
+          data.passingGrade = values.assessmentdetails.passingGrade;
+          isNotAllEmpty.push("Not Empty");
+        }
 
-      if (!!values.assessmentmediafiles && values.assessmentmediafiles.length) {
-        values.assessmentmediafiles.map((media) => {
-          media.fileList.map((listOfFiles, index) => {
-            data.append(
-              `CourseAssessmentsMediaFile`,
-              listOfFiles.originFileObj
+        //isImmediate
+        if (values.assessmentdetails.isImmediate) {
+          //console.log("is Immediate", 1);
+          data.isImmediate = 1;
+          isNotAllEmpty.push("Not Empty");
+        } else {
+          //console.log("is Immediate", 0);
+          data.isImmediate = 0;
+
+          if (
+            values.assessmentdetails.deadlineDate &&
+            values.assessmentdetails.deadlineDate.length
+          ) {
+            data.fromDate = values.assessmentdetails.deadlineDate[0].format(
+              "YYYY-MM-DD"
             );
-          });
-        });
-        isNotAllEmpty.push("Not Empty");
+
+            data.toDate = values.assessmentdetails.deadlineDate[1].format(
+              "YYYY-MM-DD"
+            );
+            isNotAllEmpty.push("Not Empty");
+          }
+        }
+
+        if (values.assessmentdetails.attempts) {
+          data.isAttempts = 1;
+          data.attempts = values.assessmentdetails.attempts;
+          isNotAllEmpty.push("Not Empty");
+          //console.log("attempts", values.assessmentdetails.attempts)
+        } else {
+          data.isAttempts = 0;
+          data.attempts = 0;
+        }
       }
 
-      if (!!values.assessmentduration) {
+      /*if (!!values.assessmentduration) {
         data.append("duration", values.assessmentduration);
         isNotAllEmpty.push("Not Empty");
       } */
 
       data = JSON.stringify(data);
-      console.log('Stringify Data: ', data)
+      console.log("Stringify Data: ", data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -518,7 +445,7 @@ const CourseAssessments = ({ course_id }) => {
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
-            url: apiBaseUrl + `/CourseAssessments/` + curAssessmentIdExist,
+            url: apiBaseUrl + `/CourseAssessment/` + curAssessmentIdExist,
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
@@ -681,6 +608,7 @@ const CourseAssessments = ({ course_id }) => {
           setdefaultWidgetValues({
             assessmentdetails: [],
             assessmentitems: [],
+            assessmentConstItems: [],
             assessmentduration: [],
           });
           setcurAssessmentId("");
@@ -823,7 +751,13 @@ const CourseAssessments = ({ course_id }) => {
           },
         ],
         assessmentitems: isSelected[0].courseAssessmentItem,
-        assessmentduration: isSelected[0].duration,
+        assessmentConstItems: isSelected[0].courseAssessmentItem,
+        assessmentduration: [
+          {
+            basedType: isSelected[0].basedType,
+            examDuration: isSelected[0].duration ? isSelected[0].duration : 0,
+          },
+        ],
       });
     } else {
       setdefaultWidgetValues({
@@ -831,6 +765,7 @@ const CourseAssessments = ({ course_id }) => {
         assessmentdetails: [],
         assessmentduration: [],
         assessmentitems: [],
+        assessmentConstItems: [],
 
         /* featuredvideo: video,
         relatedcourses: relateds,
@@ -885,6 +820,7 @@ const CourseAssessments = ({ course_id }) => {
   }, [curAssessmentId]);
   /* console.log(defaultWidgetValues)
   console.log(assessment) */
+
   const formInitialValues = {
     /* initialValues: {
       assessmentdetails: {
@@ -995,13 +931,14 @@ const CourseAssessments = ({ course_id }) => {
                         <div className="assessmentWidgetHolder">
                           <CourseAssessmentsDuration
                             shouldUpdate={(prevValues, curValues) =>
-                              prevValues.assessmentprerequisite !==
-                              curValues.assessmentprerequisite
+                              prevValues.assessmentduration !==
+                              curValues.assessmentduration
                             }
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}
                             setdefaultWidgetValues={setdefaultWidgetValues}
                             assessmentList={assessmentList}
+                            setAssessBaseType={setAssessBaseType}
                           />
                         </div>
                       </Panel>
@@ -1009,13 +946,14 @@ const CourseAssessments = ({ course_id }) => {
                         <div className="assessmentWidgetHolder">
                           <CourseAssessmentsItems
                             shouldUpdate={(prevValues, curValues) =>
-                              prevValues.assessmentprerequisite !==
-                              curValues.assessmentprerequisite
+                              prevValues.assessmentitems !==
+                              curValues.assessmentitems
                             }
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}
                             setdefaultWidgetValues={setdefaultWidgetValues}
                             assessmentList={assessmentList}
+                            assessBaseType={assessBaseType}
                           />
                         </div>
                       </Panel>
@@ -1130,7 +1068,8 @@ const CourseAssessments = ({ course_id }) => {
               opacity: 1 !important;
               color: #000000 !important;
             }
-            .assessmentWithValue .ant-picker-input input::placeholder, .assessmentWithValue .ant-input-number input::placeholder {
+            .assessmentWithValue .ant-picker-input input::placeholder,
+            .assessmentWithValue .ant-input-number input::placeholder {
               opacity: 1 !important;
               color: #000000 !important;
             }

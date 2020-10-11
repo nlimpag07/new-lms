@@ -12,7 +12,11 @@ import {
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -26,8 +30,8 @@ const linkUrl = Cookies.get("usertype");
 const { TextArea } = Input;
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Outline - Prerequisite",
-  catValueLabel: "outlineprerequisite",
+  catname: "Assessment - Items",
+  catValueLabel: "assessmentitems",
 };
 
 const CourseAssessmentsItems = (props) => {
@@ -36,20 +40,20 @@ const CourseAssessmentsItems = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
-    outlineList,
+    assessBaseType,
   } = props;
-  //console.log('List: ',outlineList);
-  //const [outlineList, setoutlineList] = useState();
-  var chosenRows = defaultWidgetValues.outlineprerequisite;
+  //console.log("Base Type: ", assessBaseType);
+  var assItemList = defaultWidgetValues.assessmentConstItems;
+  var chosenRows = defaultWidgetValues.assessmentitems;
   /* if(chosenRows.length){
     let choosed = chosenRows.map((chosen,index)=>{
-      let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
+      let newOutline = assItemList.filter((outline)=>chosen.preRequisiteId == outline.id)
       chosen['title']= newOutline[0].title;
       return chosen;
     })
     chosenRows = choosed;
   } */
-  //console.log(chosenRows)
+  //console.log(chosenRows);
   /* useEffect(() => {
     var data = JSON.stringify({});
     var config = {
@@ -64,7 +68,7 @@ const CourseAssessmentsItems = (props) => {
     async function fetchData(config) {
       const response = await axios(config);
       if (response) {
-        setoutlineList(response.data.result);
+        setassItemList(response.data.result);
         //console.log(response.data)
       } else {
         console.log(
@@ -79,7 +83,7 @@ const CourseAssessmentsItems = (props) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
-      outlineprerequisite: newValues,
+      assessmentitems: newValues,
     });
   };
 
@@ -167,7 +171,7 @@ const CourseAssessmentsItems = (props) => {
                             ...field,
                             name: index,
                             key: index,
-                            value: field.title,
+                            value: field.name,
                           };
                           //console.log("Individual Fields:", field);
                           return (
@@ -194,8 +198,8 @@ const CourseAssessmentsItems = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {/* {chosenRows.length >= 1 ? (
-                                  <MinusCircleOutlined
+                                {chosenRows.length >= 1 ? (
+                                  <CloseOutlined
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
                                     key={`del-${field.key}`}
@@ -204,7 +208,7 @@ const CourseAssessmentsItems = (props) => {
                                       onRemove(field.id);
                                     }}
                                   />
-                                ) : null} */}
+                                ) : null}
                               </Form.Item>
                             </div>
                           );
@@ -218,30 +222,25 @@ const CourseAssessmentsItems = (props) => {
           }
         }}
       </Form.Item>
-      {outlineList ? (
-        <span>
-          <PlusOutlined
-            onClick={() =>
-              showModal(
-                widgetFieldLabels.catname,
-                widgetFieldLabels.catValueLabel,
-                () => modalFormBody(outlineList, chosenRows)
-              )
-            }
-          />
-        </span>
-      ) : (
-        <span>There is no course outline added yet.</span>
-      )}
-
+      <span>
+        <PlusOutlined
+          onClick={() =>
+            showModal(
+              widgetFieldLabels.catname,
+              widgetFieldLabels.catValueLabel,
+              () => modalFormBody(assItemList, chosenRows)
+            )
+          }
+        />
+      </span>
       <style jsx global>{``}</style>
     </>
   );
 };
-const modalFormBody = (outlineList, chosenRows) => {
+const modalFormBody = (assItemList, chosenRows) => {
   const data = [];
 
-  outlineList.map((outline, index) => {
+  assItemList.map((outline, index) => {
     data.push({
       key: index,
       id: outline.id,
@@ -294,7 +293,7 @@ const modalFormBody = (outlineList, chosenRows) => {
     }
   }, []);
   return (
-    <Form.List name="outlineprerequisite">
+    <Form.List name="assessment_items">
       {(fields, { add, remove }) => {
         return (
           <div>
@@ -309,7 +308,7 @@ const modalFormBody = (outlineList, chosenRows) => {
                     name={[field.name, "id"]}
                     initialValue={field.id}
                     key={`outline_id-${field.key}`}
-                    hidden
+                    
                   >
                     <Input placeholder="Outline ID" value={field.id} />
                   </Form.Item>
@@ -317,7 +316,7 @@ const modalFormBody = (outlineList, chosenRows) => {
                     name={[field.name, "title"]}
                     initialValue={field.title}
                     key={`outline-${field.key}`}
-                    hidden
+                    
                   >
                     <Input placeholder="Outline Title" value={field.title} />
                   </Form.Item>
@@ -325,7 +324,7 @@ const modalFormBody = (outlineList, chosenRows) => {
                     name={[field.name, "preRequisiteId"]}
                     initialValue={field.preRequisiteId}
                     key={`outline_prereq-${field.key}`}
-                    hidden
+                    
                   >
                     <Input
                       placeholder="Outline preRequisiteId"
@@ -337,12 +336,7 @@ const modalFormBody = (outlineList, chosenRows) => {
                 <div>Sorry... There is no data at the moment.</div>
               );
             })}
-
-            <Table
-              rowSelection={rowSelection}
-              columns={columns}
-              dataSource={data}
-            />
+            
           </div>
         );
       }}

@@ -24,22 +24,32 @@ const CourseAssessmentsDuration = (props) => {
     setdefaultWidgetValues,
     course_id,
     allOutlines,
+    setAssessBaseType,
   } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [userGroupList, setUserGroupList] = useState([]);
   const chosenRows = defaultWidgetValues.assessmentduration;
   const [isDurationBased, setisDurationBased] = useState(0);
-  useEffect(() => {}, []);
+  
+  useEffect(() => {
+    
+   
+    chosenRows.length? setisDurationBased(chosenRows[0].basedType):setisDurationBased(0);
+  }, [chosenRows]);
 
   function immediateOnChange(e) {
     //setisImmediateChecked(!e.target.checked);
     setisDurationBased(e.target.value);
-    setdefaultWidgetValues({
+    setAssessBaseType(e.target.value);
+    /* setdefaultWidgetValues({
       ...defaultWidgetValues,
       assessmentduration: [{ basedType: e.target.value }],
-    });
+    }); */
     //console.log(`checked = ${e.target.checked}`);
   }
+  //console.log("Duration",chosenRows[0].basedType);
+  console.log("based",isDurationBased);
+
   return !chosenRows.length ? (
     <>
       <Form.Item
@@ -52,8 +62,9 @@ const CourseAssessmentsDuration = (props) => {
           label="Duration Type"
           name={["assessmentduration", "basedType"]}
           style={{ marginBottom: "10px" }}
+          valuePropName={isDurationBased}
         >
-          <Radio.Group onChange={immediateOnChange} value={isDurationBased}>
+          <Radio.Group onChange={immediateOnChange} value={isDurationBased} >
             <Radio value={0}>No Limit</Radio>
             <Radio value={1}>Exam-based</Radio>
             <Radio value={2}>Question-based</Radio>
@@ -90,17 +101,52 @@ const CourseAssessmentsDuration = (props) => {
     </>
   ) : (
     <>
-      <style jsx global>{`
-        .course-assessment-details .ant-form-item {
-          display: inline-block;
-          width: 30%;
-          margin: 15px 8px;
-        }
-        .course-assessment-details .ant-select-selector {
-          font-weight: normal !important;
-          text-transform: Capitalize !important;
-        }
-      `}</style>
+      <Form.Item
+        label={widgetFieldLabels.catname}
+        noStyle
+        allowClear
+        shouldUpdate={shouldUpdate}
+      >
+        <Form.Item
+          label="Duration Type"
+          name={["assessmentduration", "basedType"]}
+          style={{ marginBottom: "10px" }}
+          valuePropName={isDurationBased}
+        >
+          <Radio.Group onChange={immediateOnChange} value={isDurationBased} >
+            <Radio value={0}>No Limit</Radio>
+            <Radio value={1}>Exam-based</Radio>
+            <Radio value={2}>Question-based</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {isDurationBased === 1 && (
+          <Form.Item style={{ marginBottom: "10px" }}>
+            <Form.Item name={["assessmentduration", "examDuration"]} noStyle>
+              <InputNumber
+                min={0}
+                max={500}
+                placeholder="Exam Duration (Minutes)"
+                style={{ width: "50%" }}
+              />
+            </Form.Item>
+            <span style={{ fontStyle: "italic", color: "#999999" }}>
+              {" "}
+              <InfoCircleFilled /> (Mins) Assessment Time Limit
+            </span>
+          </Form.Item>
+        )}
+        <style jsx global>{`
+          .course-assessment-details .ant-form-item {
+            display: inline-block;
+            width: 30%;
+            margin: 15px 8px;
+          }
+          .course-assessment-details .ant-select-selector {
+            font-weight: normal !important;
+            text-transform: Capitalize !important;
+          }
+        `}</style>
+      </Form.Item>
     </>
   );
 };
