@@ -38,12 +38,16 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
-const LearnerIndex = () => {
+const LearnerIndex = (props) => {
   //console.log(courselist);
+  const { courselist } = props;
+  
   const [curGridStyle, setCurGridStyle] = useState("grid");
   const {courseAllList, setCourseAllList } = useCourseList();
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
- 
+  useEffect(() => {
+    setCourseAllList(courselist);
+  }, []);
   //console.log(courseAllList);
   useEffect(() => {
     
@@ -84,5 +88,34 @@ const LearnerIndex = () => {
     </MainThemeLayout>
   );
 };
+/* LearnerIndex.getInitialProps = async (ctx) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = null;
+  var userData;
+  var res;
+  const request = ctx.req;
+  if (request) {
+    request.cookies = cookie.parse(request.headers.cookie || "");
+    token = request.cookies.token;
+    //res = null;
+  } else {
+    userData = JSON.parse(localStorage.getItem("userDetails"));
+    token = userData.token;
+  }
 
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/courses",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const result = await axios(config);
+  res = result.data;
+  const data = res;
+  //console.log(data);
+  return { courselist: res };
+}; */
 export default withAuth(LearnerIndex);

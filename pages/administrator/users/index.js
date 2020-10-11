@@ -69,19 +69,19 @@ Users.getInitialProps = async (ctx) => {
     token = userData.token;
   }
 
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/users",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/users",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
 
-    const result = await axios(config);
-    res = result.data;
+  const result = await axios(config);
+  res = result.data;
   const data = res;
-  //console.log(data);
+  //console.log("Logged from User",data);
   return { userslist: data, token: token, apiBaseUrl: apiBaseUrl };
 };
 

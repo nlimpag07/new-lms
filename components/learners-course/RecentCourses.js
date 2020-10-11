@@ -72,6 +72,8 @@ const RecentCourses = ({ RecentCoursesList }) => {
     } else {
       const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
       setMyRecentCourses(allCourses.result.filter((getCourse) => getCourse.isPublished == 1));
+      //console.log(courseAllList)
+
     }
     /* var data = JSON.stringify({});
     var config = {
@@ -284,7 +286,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   <a>
                     <img
                       alt={`${course.title}`}
-                      src={`${apidirectoryUrl}/${course.featureImage}`}
+                      src={`${apidirectoryUrl}/Images/Course/${course.featureImage}`}
                     />
                   </a>
                 </Link>

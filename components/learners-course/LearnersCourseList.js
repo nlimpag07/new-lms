@@ -517,7 +517,7 @@ const GridType = (
               cover={
                 <img
                   alt="example"
-                  src={`${apidirectoryUrl}/${course.featureImage}`}
+                  src={`${apidirectoryUrl}/Images/course/${course.featureImage}`}
                 />
               }
               actions={
