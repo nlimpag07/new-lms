@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const CourseCompetenciesviewWidget = ({ course_competencies }) => {
   const [loading, setLoading] = useState(true);
-  console.log(course_competencies);
+  //console.log(course_competencies);
   const listData = course_competencies
     ? course_competencies.result.map((competency, index) => ({
         title: <button>{competency.title}</button>,
@@ -20,7 +20,7 @@ const CourseCompetenciesviewWidget = ({ course_competencies }) => {
     //setListData();
     setLoading(false);
   }, []);
-  console.log('ListData',listData);
+  //console.log('ListData',listData);
   return listData ? (
     <div className="tab-content">
       <Row className="Course-Tags">

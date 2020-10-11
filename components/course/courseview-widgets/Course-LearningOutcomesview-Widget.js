@@ -19,7 +19,7 @@ const CourseLearninOutcomesviewWidget = ({ course_outcome }) => {
     //console.log("onChange:", current);
     setCurrent(current);
   };
-  course_outcome = course_outcome.result;
+  console.log('Outcome: ',course_outcome)
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
@@ -65,8 +65,8 @@ const CourseLearninOutcomesviewWidget = ({ course_outcome }) => {
 };
 
 const OutComePanels = (courseoutcome,loading) => {
-  return courseoutcome.length ? (
-    courseoutcome.map((outcome,index) => (
+  return courseoutcome ? (
+    courseoutcome.result.map((outcome,index) => (
       <Timeline.Item color="orange" key={index}>
         <Collapse
           defaultActiveKey={outcome.id}

@@ -28,7 +28,6 @@ import SocialMedia from "../../components/social-media/SocialMedia";
 import cookie from "cookie";
 import { useCourseList } from "../../providers/CourseProvider";
 
-
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -46,11 +45,10 @@ const LearnerIndex = (props) => {
   const {courseAllList, setCourseAllList } = useCourseList();
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
   useEffect(() => {
-    setCourseAllList(courselist);
+    //setCourseAllList(courselist);
   }, []);
   //console.log(courseAllList);
-  useEffect(() => {
-    
+  useEffect(() => {    
   }, []);
 
   return (

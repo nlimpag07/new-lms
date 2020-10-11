@@ -77,7 +77,14 @@ const LearnersCourseList = (props) => {
   );
 
   useEffect(() => {
-    var data = JSON.stringify({});
+    if (!courseAllList) {
+      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
+      setCourseAllList(
+        courselist
+      );
+    }
+
+    /* var data = JSON.stringify({});
     var config = {
       method: "get",
       url: apiBaseUrl + "/courses",
@@ -92,18 +99,19 @@ const LearnersCourseList = (props) => {
       if (response) {
         localStorage.setItem("courseAllList", JSON.stringify(response.data));
         setCourseAllList(
-          response.data /* .filter((getCourse) => getCourse.isPublished == 1) */
+          response.data
         );
         //console.log(response.data);
       } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
+        const courselist = JSON.parse(localStorage.getItem("courseAllList"));
         setCourseAllList(
-          userData /* .filter((getCourse) => getCourse.isPublished == 1) */
+          courselist
         );
       }
     }
-    fetchData(config);
+    fetchData(config); */
   }, []);
+console.log(courseAllList)
   return (
     <Row
       className="widget-container"
@@ -123,7 +131,7 @@ const LearnersCourseList = (props) => {
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
             <span>
-              {courseAllList.length ? courseAllList.length : 0} Results
+              {courseAllList ? courseAllList.totalRecords : 0} Results
             </span>{" "}
             <button
               className="switch-grid"
@@ -454,7 +462,7 @@ const GridType = (
   setCourseDrawerDetails,
   router
 ) => {
-  courses = courses.result;
+  courses = courses?courses.result:null;
   //console.log(router);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";

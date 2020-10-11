@@ -280,8 +280,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
               style={{ width: "auto" }}
               cover={
                 <Link
-                  href={`/${linkUrl}/[course]/[...manage]`}
-                  as={`/${linkUrl}/course/view/${course.id}`}
+                  href={`/${linkUrl}/[course-catalogue]/[...manage]`}
+                  as={`/${linkUrl}/course-catalogue/view/${course.id}`}
                 >
                   <a>
                     <img
@@ -319,8 +319,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/${linkUrl}/[course]/[...manage]`,
-                        `/${linkUrl}/course/edit/${course.id}`
+                        `/${linkUrl}/[course-catalogue]/[...manage]`,
+                        `/${linkUrl}/course-catalogue/edit/${course.id}`
                       )
                     }
                   >
@@ -332,8 +332,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                     className="class-icon-holder"
                     onClick={() =>
                       router.push(
-                        `/${linkUrl}/[course]/[...manage]`,
-                        `/${linkUrl}/course/view/${course.id}`
+                        `/${linkUrl}/[course-catalogue]/[...manage]`,
+                        `/${linkUrl}/course-catalogue/view/${course.id}`
                       )
                     }
                   >
@@ -348,8 +348,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
               <Meta
                 title={
                   <Link
-                    href={`/${linkUrl}/[course]/[...manage]`}
-                    as={`/${linkUrl}/course/view/${course.id}`}
+                    href={`/${linkUrl}/[course-catalogue]/[...manage]`}
+                    as={`/${linkUrl}/course-catalogue/view/${course.id}`}
                   >
                     <a>{course.title}</a>
                   </Link>

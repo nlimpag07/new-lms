@@ -108,13 +108,12 @@ const CourseView = ({ course_id }) => {
   const [course_enrollments, setCourse_enrollments] = useState("");
   const [course_reviews, setCourse_reviews] = useState("");
 
-
-
-
   useEffect(() => {
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    setCourse(allCourse.result.filter((getCourse) => getCourse.id == course_id));
+    setCourse(
+      allCourse.result.filter((getCourse) => getCourse.id == course_id)
+    );
 
     var config = {
       /* method: "get",
@@ -132,16 +131,27 @@ const CourseView = ({ course_id }) => {
         axios.get(apiBaseUrl + "/enrollment/" + course_id, config),
       ])
       .then(
-        axios.spread((courseoutline, courseoutcome, competencies,enrollments) => {
-          //console.log(competencies.data.response)
-          !courseoutline.data.response?setCourse_outline(courseoutline.data):setCourse_outline(null);
-          !courseoutcome.data.response?setCourse_outcome(courseoutcome.data):setCourse_outcome(null);
-          !competencies.data.response?setCourse_competencies(competencies.data):setCourse_competencies(null);
-          !enrollments.data.response?setCourse_enrollments(enrollments.data):setCourse_enrollments(null);
-          !enrollments.data.response?setCourse_reviews(enrollments.data):setCourse_reviews(null);
-
-
-        })
+        axios.spread(
+          (courseoutline, courseoutcome, competencies, enrollments) => {
+            /* console.log('Course Outline: ',!!courseoutline.data.response)
+            console.log('Course Outline: ',courseoutline.data.result) */
+            courseoutline.data.result
+              ? setCourse_outline(courseoutline.data)
+              : setCourse_outline(null);
+            courseoutcome.data.result
+              ? setCourse_outcome(courseoutcome.data)
+              : setCourse_outcome(null);
+            competencies.data.result
+              ? setCourse_competencies(competencies.data)
+              : setCourse_competencies(null);
+            enrollments.data.result
+              ? setCourse_enrollments(enrollments.data)
+              : setCourse_enrollments(null);
+            enrollments.data.result
+              ? setCourse_reviews(enrollments.data)
+              : setCourse_reviews(null);
+          }
+        )
       )
       .catch((errors) => {
         // react on errors.
@@ -323,7 +333,7 @@ const CourseView = ({ course_id }) => {
                 <TabPane tab="OVERVIEW" key="1">
                   <CourseOverviewWidget course_details={courseDetails} />
                 </TabPane>
-                 <TabPane tab="COURSE OUTLINE" key="2">
+                <TabPane tab="COURSE OUTLINE" key="2">
                   <CourseOutlineviewWidget course_outline={course_outline} />
                 </TabPane>
                 <TabPane tab="LEARNING OUTCOMES" key="3">
@@ -336,11 +346,19 @@ const CourseView = ({ course_id }) => {
                     course_competencies={course_competencies}
                   />
                 </TabPane>
-                <TabPane tab="ENROLLMENTS" key="5">
-                  <CourseEnrollmentsviewWidget course_id={course_id} course_enrollments = {course_enrollments} />
-                </TabPane>
+                {linkUrl != "learner" && (
+                  <TabPane tab="ENROLLMENTS" key="5">
+                    <CourseEnrollmentsviewWidget
+                      course_id={course_id}
+                      course_enrollments={course_enrollments}
+                    />
+                  </TabPane>
+                )}
                 <TabPane tab="REVIEWS" key="6">
-                  <CourseReviewViewWidget course_id={course_id} course_reviews = {course_reviews} />
+                  <CourseReviewViewWidget
+                    course_id={course_id}
+                    course_reviews={course_reviews}
+                  />
                 </TabPane>
               </Tabs>
             </Col>

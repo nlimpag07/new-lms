@@ -57,7 +57,7 @@ export const CourseListProvider = ({ children, courselist }) => {
         if (response) {
           localStorage.setItem("courseAllList", JSON.stringify(response.data));
           setCourseAllList(response.data);
-          console.log(response.data)
+          //console.log(response.data)
         } else {
           const userData = JSON.parse(localStorage.getItem("courseAllList"));
           setCourseAllList(userData);

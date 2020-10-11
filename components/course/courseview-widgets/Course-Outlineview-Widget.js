@@ -19,7 +19,7 @@ const CourseOutlineviewWidget = ({ course_outline }) => {
     //console.log("onChange:", current);
     setCurrent(current);
   };
- course_outline = course_outline.result;
+ 
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
@@ -112,10 +112,10 @@ const CourseOutlineviewWidget = ({ course_outline }) => {
   );
 };
 
-const OutlinePanels = (courseoutline, loading) => {
-  //console.log(courseoutline)
-  return courseoutline.length ? (
-    courseoutline.map((outline, index) => (
+const OutlinePanels = (course_outline, loading) => {
+  //console.log('Course Outline: ',course_outline)
+  return course_outline ? (
+    course_outline.result.map((outline, index) => (
       <Timeline.Item color="orange" key={index}>
         <Collapse
           defaultActiveKey={outline.id}
