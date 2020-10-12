@@ -47,7 +47,7 @@ const CourseAssessmentsDuration = (props) => {
     }); */
     //console.log(`checked = ${e.target.checked}`);
   }
-  //console.log("Duration",chosenRows[0].basedType);
+  //console.log("Duration Chosen Rows",chosenRows[0]);
   //console.log("based",isDurationBased);
 
   return !chosenRows.length ? (
@@ -121,12 +121,13 @@ const CourseAssessmentsDuration = (props) => {
         </Form.Item>
         {isDurationBased === 1 && (
           <Form.Item style={{ marginBottom: "10px" }}>
-            <Form.Item name={["assessmentduration", "examDuration"]} noStyle>
+            <Form.Item name={["assessmentduration", "examDuration"]} noStyle valuePropName={chosenRows[0].examDuration}>
               <InputNumber
                 min={0}
                 max={500}
-                placeholder="Exam Duration (Minutes)"
+                placeholder={chosenRows[0].examDuration?chosenRows[0].examDuration:"Exam Duration (Minutes)"}
                 style={{ width: "50%" }}
+                //value={chosenRows[0].examDuration}
               />
             </Form.Item>
             <span style={{ fontStyle: "italic", color: "#999999" }}>

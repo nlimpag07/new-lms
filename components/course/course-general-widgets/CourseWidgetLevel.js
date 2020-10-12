@@ -262,7 +262,7 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
     setSelectedRowKeys(selectedRowKeys);
     let rowData = selectedRows.map((entry, index) => {
       entry.isticked = true;
-      return entry;
+      return entry; 
     });
     setSelectedRows(rowData);
     //setSelectedRows(selectedRows);

@@ -9,7 +9,7 @@ import {
   InputNumber,
   Form,
   Collapse,
-  Table,
+  Radio,
   Select,
   Checkbox,
 } from "antd";
@@ -83,8 +83,9 @@ const CourseAssessmentsItems = (props) => {
     fetchData(config);
   }, []); */
 
-  const onRemove = (id) => {
-    let newValues = chosenRows.filter((value) => value.id !== id);
+  const onRemove = (name) => {
+    let newValues = chosenRows.filter((value) => value.question_name !== name);
+    console.log("NewValues:", newValues);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
       assessmentitems: newValues,
@@ -113,7 +114,7 @@ const CourseAssessmentsItems = (props) => {
                           ...field,
                           name: index,
                           key: index,
-                          value: field.title,
+                          value: field.question_name,
                           id: field.id,
                         };
                         //console.log('Individual Fields:', field)
@@ -141,17 +142,17 @@ const CourseAssessmentsItems = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {/* {fields.length >= 1 ? (
+                              {fields.length >= 1 ? (
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
                                   key={`del-${field.key}`}
                                   onClick={() => {
                                     remove(field.name);
-                                    onRemove(field.id);
+                                    onRemove(field.question_name);
                                   }}
                                 />
-                              ) : null} */}
+                              ) : null}
                             </Form.Item>
                           </div>
                         );
@@ -177,7 +178,7 @@ const CourseAssessmentsItems = (props) => {
                             key: index,
                             value: field.name,
                           };
-                          //console.log("Individual Fields:", field);
+                          console.log("ChosenRows Individual Fields:", field);
                           return (
                             <div key={field.key}>
                               <Form.Item
@@ -209,7 +210,7 @@ const CourseAssessmentsItems = (props) => {
                                     key={`del-${field.key}`}
                                     onClick={() => {
                                       remove(field.name);
-                                      onRemove(field.id);
+                                      onRemove(field.question_name);
                                     }}
                                   />
                                 ) : null}
@@ -232,7 +233,7 @@ const CourseAssessmentsItems = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(assItemList, chosenRows)
+              () => modalFormBody(assItemList, chosenRows, assessBaseType)
             )
           }
         />
@@ -241,65 +242,49 @@ const CourseAssessmentsItems = (props) => {
     </>
   );
 };
-const modalFormBody = (assItemList, chosenRows) => {
+const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
   const data = [];
-
-  assItemList.map((outline, index) => {
-    data.push({
-      key: index,
-      id: outline.id,
-      title: outline.title,
-      preRequisiteId: outline.id,
-    });
-  });
-
-  const [selectedRows, setSelectedRows] = useState([]);
+  //console.log('chosenRows on Modal',chosenRows)
+  var last = chosenRows.length ? chosenRows[chosenRows.length - 1].id : 0;
+  last = last ? last : 0;
+  const [questionType, setquestionType] = useState(0);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [fileList, seFileList] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();
-  const columns = [
-    {
-      title: "Prerequisite",
-      dataIndex: "title",
-    },
-    /*  {
-      title: "Pre-requisite",
-      dataIndex: "isreq",
-    }, */
-  ];
 
-  const onSelectChange = (selectedRowKeys, selectedRows) => {
-    setSelectedRowKeys(selectedRowKeys);
-    setSelectedRows(selectedRows);
-    console.log(selectedRows);
+  useEffect(() => {}, []);
+
+  const questionTypeOnChange = (value) => {
+    console.log("Selected Value: ", value);
+    setquestionType(value);
   };
-  const rowSelection = {
-    selectedRowKeys,
-    selectedRows,
-    onChange: onSelectChange,
-  };
-  useEffect(() => {
-    if (chosenRows.length) {
-      let defaultKeys = [];
-      let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.preRequisiteId) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
-          }
-        });
-      });
-      //console.log(thekeys)
-      setSelectedRowKeys(defaultKeys);
-      setSelectedRows(defaultRows);
-    }
-  }, []);
   return (
-    <Form.Item>
+    <Form.Item style={{ marginBottom: "0px" }}>
+      <Form.Item name={["assessmentitems", "id"]} initialValue={last} hidden>
+        <Input value={last} />
+      </Form.Item>
       <Form.Item
-        name={["assessment_items", "question"]}
+        name={["assessmentitems", "assessmentItemTypeId"]}
+        label="Question Type"
+        rules={[
+          {
+            required: true,
+            message: "Please Select Question Type!",
+          },
+        ]}
+      >
+        <Select
+          placeholder="Select a Question Type"
+          size="medium"
+          style={{ marginBottom: "0px" }}
+          value={questionType}
+          onChange={questionTypeOnChange}
+        >
+          <Option value={1}>Essay</Option>
+          <Option value={2}>Multiple Choice</Option>
+          <Option value={3}>True / False</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        name={["assessmentitems", "name"]}
         label="Question"
         rules={[
           {
@@ -310,43 +295,115 @@ const modalFormBody = (assItemList, chosenRows) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name={["assessment_items", "question_duration"]}
-        label="Duration"
-        rules={[
-          {
-            required: true,
-            message: "Please input duration!",
-          },
-        ]}
-      >
-        <InputNumber />
-      </Form.Item>
-      <Form.Item label="Type">
-        <Input.Group compact>
-          <Form.Item
-            name={["assessment_items", "question_type"]}
-            label="Type"
-            noStyle
-          >
-            <Select placeholder="Question Type" size="medium" style={{ width: "70%",marginRight:"10px" }}>
-              <Option value="1">Essay</Option>
-              <Option value="2">Multiple Choice</Option>
-              <Option value="3">True / False</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
+      {/* //If Essay, Display required length */}
+      {questionType === 1 && (
+        <Form.Item label="Required Length">
+          <Input.Group compact>
             <Form.Item
-              name={["assessment_items", "isShuffleChoices"]}
+              name={["assessmentitems", "minLength"]}
               noStyle
-              valuePropName="checked"
+              rules={[
+                {
+                  required: true,
+                  message: "Required",
+                },
+              ]}
             >
-              <Checkbox>Shuffle Choices</Checkbox>
+              <InputNumber placeholder="Min" />
+            </Form.Item>{" "}
+            <Form.Item
+              name={["assessmentitems", "maxLength"]}
+              noStyle
+              rules={[
+                {
+                  required: true,
+                  message: "Required",
+                },
+              ]}
+            >
+              <InputNumber placeholder="Max" />
             </Form.Item>
-            
+          </Input.Group>
+        </Form.Item>
+      )}
+
+      {/* //If Multiple Choice -Shuffle choices option */}
+      {questionType === 2 && (
+        <Form.Item label="Choices:">
+          <Form.Item
+            name={["assessmentitems", "courseAssessmentItemChoices", "choice1"]}
+            noStyle
+            key={1}
+          >
+            <Input placeholder="choice 1" />
           </Form.Item>
-        </Input.Group>
-      </Form.Item>
+          <Form.Item
+            name={["assessmentitems", "courseAssessmentItemChoices", "choice2"]}
+            noStyle
+            key={2}
+          >
+            <Input placeholder="choice 2" />
+          </Form.Item>
+          <Form.Item
+            name={["assessmentitems", "courseAssessmentItemChoices", "choice3"]}
+            noStyle
+            key={3}
+          >
+            <Input placeholder="choice 3" />
+          </Form.Item>
+        </Form.Item>
+      )}
+      {questionType === 2 && (
+        <Form.Item>
+          <Form.Item
+            name={["assessmentitems", "isShuffle"]}
+            noStyle
+            valuePropName="checked"
+          >
+            <Checkbox>Shuffle Choices (optional)</Checkbox>
+          </Form.Item>
+        </Form.Item>
+      )}
+      {/* //If True / False, Display choices */}
+      {questionType === 3 && (
+        <Form.Item label="Choices">
+          <Form.Item
+            name={["assessmentitems", "isTrue"]}
+            noStyle
+            rules={[
+              {
+                required: true,
+                message: "Required",
+              },
+            ]}
+          >
+            <Radio.Group optionType="button" buttonStyle="solid">
+              <Radio.Button value="True">True</Radio.Button>
+              <Radio.Button value="False">False</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <span style={{ fontStyle: "italic", color: "#999999" }}>
+            {" "}
+            <InfoCircleFilled /> Select the correct answer.
+          </span>
+        </Form.Item>
+      )}
+
+      {/* //Duration Display */}
+      {assessBaseType === 2 && (
+        <Form.Item
+          name={["assessmentitems", "duration"]}
+          label="Duration (Secs)"
+          rules={[
+            {
+              required: true,
+              message: "Please input duration!",
+            },
+          ]}
+        >
+          <InputNumber placeholder="Seconds" />
+        </Form.Item>
+      )}
     </Form.Item>
   );
 };

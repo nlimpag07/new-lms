@@ -137,8 +137,8 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        modalFormName === "assessmentduration" && form.resetFields();
-        modalFormName === "picklistlevel" && form.resetFields();
+        //modalFormName === "assessmentduration" && form.resetFields();
+        //modalFormName === "assessmentitems" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
@@ -310,8 +310,23 @@ const CourseAssessments = ({ course_id }) => {
 
     if (name === "assessmentitems") {
       console.log("Items: ", values);
+      console.log("================");
+      console.log("CUrrent Default AssessmentItems:",defaultWidgetValues.assessmentitems);
+      console.log("================");
+      console.log("CUrrent picklistFields:",...picklistFields);
+
+      /* var value = values.assessment_items
+        ? values.assessment_items.map((item, index) => item)
+        : ""; */
       basicForm.setFieldsValue({
-        assessmentitems: [...picklistFields, values],
+        assessmentitems: [...defaultWidgetValues.assessmentitems, values.assessmentitems],
+      });
+      setdefaultWidgetValues({
+        ...defaultWidgetValues,
+        assessmentitems: [
+          ...defaultWidgetValues.assessmentitems,
+          values.assessmentitems,
+        ],
       });
     }
 
@@ -430,10 +445,18 @@ const CourseAssessments = ({ course_id }) => {
         }
       }
 
-      /*if (!!values.assessmentduration) {
-        data.append("duration", values.assessmentduration);
-        isNotAllEmpty.push("Not Empty");
-      } */
+      if (!!values.assessmentduration) {
+        if (!!values.assessmentduration.basedType) {
+          data.basedType = values.assessmentduration.basedType.target.value;
+          isNotAllEmpty.push("Not Empty");
+        }
+
+        if (data.basedType == 1) {
+          !!values.assessmentduration.examDuration
+            ? (data.duration = values.assessmentduration.examDuration)
+            : errorList.push("Missing assessment Time Limit");
+        }
+      }
 
       data = JSON.stringify(data);
       console.log("Stringify Data: ", data);
@@ -529,11 +552,39 @@ const CourseAssessments = ({ course_id }) => {
         errorList.push("Missing assessment Details");
       }
 
-      /* !!values.assessmentduration
-        ? data.append("duration", values.assessmentduration)
-        : errorList.push("Missing assessment Duration"); */
+      if (!!values.assessmentduration) {
+        !!values.assessmentduration.basedType
+          ? (data.basedType = values.assessmentduration.basedType.target.value)
+          : (data.basedType = 0);
+
+        if (data.basedType == 1) {
+          !!values.assessmentduration.examDuration
+            ? (data.duration = values.assessmentduration.examDuration)
+            : errorList.push("Missing assessment Time Limit");
+        }
+      } else {
+        errorList.push("Missing assessment Duration");
+      }
+
+      //AssessmentItems validation
+      if (!!values.assessmentitems && values.assessmentitems.length) {
+
+        values.assessmentitems.map((items, index) => {
+          let theItem = {
+            id:items.id,
+            name:items.question_name
+          }
+          //console.log("For Submission assessmentitems: ",items)
+          data.courseAssessmentItem=theItem;
+        });
+        
+      } else {
+        errorList.push("Missing assessment Items");
+      }
+
 
       data = JSON.stringify(data);
+      console.log("Stringify Data: ", data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -611,6 +662,7 @@ const CourseAssessments = ({ course_id }) => {
             assessmentConstItems: [],
             assessmentduration: [],
           });
+          setAssessBaseType("");
           setcurAssessmentId("");
           setLoading(true);
         },
@@ -726,7 +778,7 @@ const CourseAssessments = ({ course_id }) => {
           theGroupName = getGroup[0].name ? getGroup[0].name : null;
       }
       //console.log("Group Name:", theGroupName);
-
+      setAssessBaseType(isSelected[0].basedType);
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         assessmentdetails: [
@@ -760,6 +812,7 @@ const CourseAssessments = ({ course_id }) => {
         ],
       });
     } else {
+      setAssessBaseType('');
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         assessmentdetails: [],
