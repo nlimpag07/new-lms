@@ -120,7 +120,7 @@ const CourseOutcomeDetails = (props) => {
                     <div key={field.key}>
                       <Form.Item
                         label="Outcome Title"
-                        name={[field.name, "outcometitle"]}
+                        name={["outcomedetails", "outcometitle"]}
                         key={`${field.key}-title`}
                       >
                         <Input
@@ -131,7 +131,7 @@ const CourseOutcomeDetails = (props) => {
                       <Form.Item>
                         <Input.Group compact className="course-outcome-details">
                           <Form.Item
-                            name={[field.name, "usergroup"]}
+                            name={["outcomedetails", "usergroup"]}
                             label="User Group"
                             noStyle
                           >
@@ -146,7 +146,7 @@ const CourseOutcomeDetails = (props) => {
                               <Option value="3">Manager</Option>
                             </Select>
                           </Form.Item>
-                          <Form.Item name={[field.name, "visibility"]} noStyle>
+                          <Form.Item name={["outcomedetails", "visibility"]} noStyle>
                             <Select
                               placeholder={`${
                                 field.visibility == 1 ? "Private" : "Public"
@@ -161,7 +161,7 @@ const CourseOutcomeDetails = (props) => {
                         </Input.Group>
                       </Form.Item>
                       <Form.Item
-                        name={[field.name, "description"]}
+                        name={["outcomedetails", "description"]}
                       >
                         <TextArea rows={5} placeholder={`${field.description}`} />
                       </Form.Item>

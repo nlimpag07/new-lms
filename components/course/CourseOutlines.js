@@ -387,23 +387,23 @@ const CourseOutlines = ({ course_id }) => {
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.append("courseId", course_id);
-      if (!!values.outlinedetails && values.outlinedetails.length) {
-        if (!!values.outlinedetails[0].outlinetitle) {
-          data.append("title", values.outlinedetails[0].outlinetitle);
+      if (!!values.outlinedetails) {
+        if (!!values.outlinedetails.outlinetitle) {
+          data.append("title", values.outlinedetails.outlinetitle);
           isNotAllEmpty.push("Not Empty");
         }else{
           data.append("title", curOutlineTitle);
         }
-        if (!!values.outlinedetails[0].description) {
-          data.append("description", values.outlinedetails[0].description);
+        if (!!values.outlinedetails.description) {
+          data.append("description", values.outlinedetails.description);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.outlinedetails[0].visibility) {
-          data.append("visibility", values.outlinedetails[0].visibility);
+        if (!!values.outlinedetails.visibility) {
+          data.append("visibility", values.outlinedetails.visibility);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.outlinedetails[0].usergroup) {
-          data.append("userGroupId", values.outlinedetails[0].usergroup);
+        if (!!values.outlinedetails.usergroup) {
+          data.append("userGroupId", values.outlinedetails.usergroup);
           isNotAllEmpty.push("Not Empty");
         }else{
           data.append("userGroupId", curOutlineuserGroupId);

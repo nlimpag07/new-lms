@@ -119,7 +119,7 @@ const CourseOutlineDetails = (props) => {
                     <div key={field.key}>
                       <Form.Item
                         label="Outline Title"
-                        name={[field.name, "outlinetitle"]}
+                        name={["outlinedetails", "outlinetitle"]}
                         key={`${field.key}-title`}
                       >
                         <Input
@@ -130,7 +130,7 @@ const CourseOutlineDetails = (props) => {
                       <Form.Item>
                         <Input.Group compact className="course-outline-details">
                           <Form.Item
-                            name={[field.name, "usergroup"]}
+                            name={["outlinedetails", "usergroup"]}
                             label="User Group"
                             noStyle
                           >
@@ -145,7 +145,7 @@ const CourseOutlineDetails = (props) => {
                               <Option value="3">Manager</Option>
                             </Select>
                           </Form.Item>
-                          <Form.Item name={[field.name, "visibility"]} noStyle>
+                          <Form.Item name={["outlinedetails", "visibility"]} noStyle>
                             <Select
                               placeholder={`${
                                 field.visibility == 1 ? "Private" : "Public"
@@ -160,7 +160,7 @@ const CourseOutlineDetails = (props) => {
                         </Input.Group>
                       </Form.Item>
                       <Form.Item
-                        name={[field.name, "description"]}
+                        name={["outlinedetails", "description"]}
                       >
                         <TextArea rows={5} placeholder={`${field.description}`} />
                       </Form.Item>

@@ -275,27 +275,27 @@ const CourseOutcomes = ({ course_id }) => {
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.courseId = course_id;
-      if (!!values.outcomedetails && values.outcomedetails.length) {
-        if (!!values.outcomedetails[0].outcometitle) {
-          data.title = values.outcomedetails[0].outcometitle;
+      if (!!values.outcomedetails) {
+        if (!!values.outcomedetails.outcometitle) {
+          data.title = values.outcomedetails.outcometitle;
           isNotAllEmpty.push("Not Empty");
         } else {
           data.title = curoutcomeTitle;
         }
-        if (!!values.outcomedetails[0].description) {
-          data.description = values.outcomedetails[0].description;
+        if (!!values.outcomedetails.description) {
+          data.description = values.outcomedetails.description;
           isNotAllEmpty.push("Not Empty");
         } else {
           data.description = curoutcomedescription;
         }
-        if (!!values.outcomedetails[0].visibility) {
-          data.visibility = values.outcomedetails[0].visibility;
+        if (!!values.outcomedetails.visibility) {
+          data.visibility = values.outcomedetails.visibility;
           isNotAllEmpty.push("Not Empty");
         } else {
           data.visibility = curoutcomevisibility;
         }
-        if (!!values.outcomedetails[0].usergroup) {
-          data.userGroupId = values.outcomedetails[0].usergroup;
+        if (!!values.outcomedetails.usergroup) {
+          data.userGroupId = values.outcomedetails.usergroup;
           isNotAllEmpty.push("Not Empty");
         } else {
           data.userGroupId = curoutcomeuserGroupId;
