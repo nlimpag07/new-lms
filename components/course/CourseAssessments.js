@@ -311,15 +311,21 @@ const CourseAssessments = ({ course_id }) => {
     if (name === "assessmentitems") {
       console.log("Items: ", values);
       console.log("================");
-      console.log("CUrrent Default AssessmentItems:",defaultWidgetValues.assessmentitems);
+      console.log(
+        "CUrrent Default AssessmentItems:",
+        defaultWidgetValues.assessmentitems
+      );
       console.log("================");
-      console.log("CUrrent picklistFields:",...picklistFields);
+      console.log("CUrrent picklistFields:", ...picklistFields);
 
       /* var value = values.assessment_items
         ? values.assessment_items.map((item, index) => item)
         : ""; */
       basicForm.setFieldsValue({
-        assessmentitems: [...defaultWidgetValues.assessmentitems, values.assessmentitems],
+        assessmentitems: [
+          ...defaultWidgetValues.assessmentitems,
+          values.assessmentitems,
+        ],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
@@ -369,6 +375,10 @@ const CourseAssessments = ({ course_id }) => {
       curAssessmentId && curAssessmentId.length
         ? curAssessmentId[0].userGroupId
         : "";
+    let curAttempts =
+      curAssessmentId && curAssessmentId.length
+        ? curAssessmentId[0].attempts
+        : "";
 
     console.log("Current assessment: ", curAssessmentId);
     var data = {};
@@ -379,6 +389,7 @@ const CourseAssessments = ({ course_id }) => {
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.courseId = course_id;
+      data.id = curAssessmentIdExist;
       if (!!values.assessmentdetails) {
         //console.log("assessment Details Present")
         if (!!values.assessmentdetails.assessmenttitle) {
@@ -433,16 +444,30 @@ const CourseAssessments = ({ course_id }) => {
             isNotAllEmpty.push("Not Empty");
           }
         }
-
-        if (values.assessmentdetails.attempts) {
-          data.isAttempts = 1;
-          data.attempts = values.assessmentdetails.attempts;
+        //If not undefined/null/0
+        if (
+          values.assessmentdetails.attempts != null &&
+          curAttempts != values.assessmentdetails.attempts
+        ) {
+          if (values.assessmentdetails.attempts > 0) {
+            data.isAttemptRequest='update';
+            data.isAttempts = 1;
+            data.attempts = values.assessmentdetails.attempts;
+          } else {
+            data.isAttemptRequest='update';
+            data.isAttempts = 0;
+            data.attempts = 0;
+          }
           isNotAllEmpty.push("Not Empty");
-          //console.log("attempts", values.assessmentdetails.attempts)
-        } else {
+          /* data.isAttempts = 1;
+          data.attempts = values.assessmentdetails.attempts;
+          isNotAllEmpty.push("Not Empty"); */
+          //console.log("attempts", values.assessmentdetails.attempts);
+        }
+        /*  else {
           data.isAttempts = 0;
           data.attempts = 0;
-        }
+        } */
       }
 
       if (!!values.assessmentduration) {
@@ -455,11 +480,31 @@ const CourseAssessments = ({ course_id }) => {
           !!values.assessmentduration.examDuration
             ? (data.duration = values.assessmentduration.examDuration)
             : errorList.push("Missing assessment Time Limit");
+        } else {
+          data.duration = 0;
         }
       }
 
+      //AssessmentItems validation
+      if (!!values.assessmentitems && values.assessmentitems.length) {
+        let courseAssessmentItem = values.assessmentitems.map(
+          (items, index) => {
+            if (items.isTrue) {
+              let newTrue = items.isTrue === "True" ? 1 : 0;
+              items.isTrue = newTrue;
+              items.isFalse = newTrue ? 0 : 1;
+            }
+
+            //console.log("For Submission assessmentitems: ",items)
+            return items;
+          }
+        );
+        data.courseAssessmentItem = courseAssessmentItem;
+        isNotAllEmpty.push("Not Empty");
+      }
+
       data = JSON.stringify(data);
-      console.log("Stringify Data: ", data);
+      console.log("Edit Stringify Data: ", data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -561,6 +606,8 @@ const CourseAssessments = ({ course_id }) => {
           !!values.assessmentduration.examDuration
             ? (data.duration = values.assessmentduration.examDuration)
             : errorList.push("Missing assessment Time Limit");
+        } else {
+          data.duration = 0;
         }
       } else {
         errorList.push("Missing assessment Duration");
@@ -568,20 +615,22 @@ const CourseAssessments = ({ course_id }) => {
 
       //AssessmentItems validation
       if (!!values.assessmentitems && values.assessmentitems.length) {
+        let courseAssessmentItem = values.assessmentitems.map(
+          (items, index) => {
+            if (items.isTrue) {
+              let newTrue = items.isTrue === "True" ? 1 : 0;
+              items.isTrue = newTrue;
+              items.isFalse = newTrue ? 0 : 1;
+            }
 
-        values.assessmentitems.map((items, index) => {
-          let theItem = {
-            id:items.id,
-            name:items.question_name
+            //console.log("For Submission assessmentitems: ",items)
+            return items;
           }
-          //console.log("For Submission assessmentitems: ",items)
-          data.courseAssessmentItem=theItem;
-        });
-        
+        );
+        data.courseAssessmentItem = courseAssessmentItem;
       } else {
         errorList.push("Missing assessment Items");
       }
-
 
       data = JSON.stringify(data);
       console.log("Stringify Data: ", data);
@@ -812,7 +861,7 @@ const CourseAssessments = ({ course_id }) => {
         ],
       });
     } else {
-      setAssessBaseType('');
+      setAssessBaseType("");
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         assessmentdetails: [],

@@ -48,7 +48,10 @@ const CourseAssessmentsDetails = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   //const [userGroupList, setUserGroupList] = useState([]);
   const chosenRows = defaultWidgetValues.assessmentdetails;
-  const [isImmediateChecked, setisImmediateChecked] = useState(false);
+  let theImmediate =
+    chosenRows && chosenRows.length ? chosenRows[0].isImmediate : false;
+  const [isImmediateChecked, setisImmediateChecked] = useState(theImmediate);
+
   /* useEffect(() => {
     var config = {
       headers: {
@@ -78,7 +81,9 @@ const CourseAssessmentsDetails = (props) => {
 
   useEffect(() => {
     //chosenRows.length && console.log("isImmediate",chosenRows[0].isImmediate)
-    chosenRows.length? setisImmediateChecked(chosenRows[0].isImmediate):setisImmediateChecked(false);
+    chosenRows.length
+      ? setisImmediateChecked(chosenRows[0].isImmediate)
+      : setisImmediateChecked(false);
   }, [chosenRows]);
 
   const groupOptions = userGroupList.map((usergroup, index) => {
@@ -108,7 +113,8 @@ const CourseAssessmentsDetails = (props) => {
     console.log("endDate", dateString[1]); */
   };
   //console.log("Chosen Rows", chosenRows);
-  const dateFormat = 'YYYY-MM-DD';
+  //console.log(isImmediateChecked)
+  const dateFormat = "YYYY-MM-DD";
   return !chosenRows.length ? (
     <>
       <Form.Item
@@ -328,9 +334,16 @@ const CourseAssessmentsDetails = (props) => {
                   <Form.Item
                     name={["assessmentdetails", "isImmediate"]}
                     noStyle
-                    valuePropName={isImmediateChecked}
+                    valuePropName={chosenRows[0].isImmediate==true && isImmediateChecked?isImmediateChecked:"checked"}
+                    //valuePropName="checked"
                   >
-                    <Checkbox checked={isImmediateChecked} onChange={immediateOnChange}>Immediate</Checkbox>
+                    <Checkbox
+                      /* value={isImmediateChecked}*/
+                      checked={isImmediateChecked} 
+                      onChange={immediateOnChange}
+                    >
+                      Immediate
+                    </Checkbox>
                   </Form.Item>
                   <span style={{ fontStyle: "italic", color: "#999999" }}>
                     {" "}
@@ -344,7 +357,11 @@ const CourseAssessmentsDetails = (props) => {
                       name={["assessmentdetails", "deadlineDate"]}
                       noStyle
                     >
-                      <RangePicker format={dateFormat} placeholder={[field.fromDate, field.toDate]} style={{ width: "60%" }} />
+                      <RangePicker
+                        format={dateFormat}
+                        placeholder={[field.fromDate, field.toDate]}
+                        style={{ width: "60%" }}
+                      />
                     </Form.Item>
                     <span style={{ fontStyle: "italic", color: "#999999" }}>
                       {" "}

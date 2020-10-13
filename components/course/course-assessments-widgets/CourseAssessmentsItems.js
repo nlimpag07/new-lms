@@ -57,7 +57,7 @@ const CourseAssessmentsItems = (props) => {
     })
     chosenRows = choosed;
   } */
-  //console.log(chosenRows);
+  console.log('Chosen Rows',chosenRows);
   /* useEffect(() => {
     var data = JSON.stringify({});
     var config = {
@@ -84,7 +84,7 @@ const CourseAssessmentsItems = (props) => {
   }, []); */
 
   const onRemove = (name) => {
-    let newValues = chosenRows.filter((value) => value.question_name !== name);
+    let newValues = chosenRows.filter((value) => value.name !== name);
     console.log("NewValues:", newValues);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
@@ -111,10 +111,9 @@ const CourseAssessmentsItems = (props) => {
                     <Row className="" gutter={[4, 8]}>
                       {thisPicklist.map((field, index) => {
                         field = {
-                          ...field,
-                          name: index,
+                          ...field,                          
                           key: index,
-                          value: field.question_name,
+                          value: field.name,
                           id: field.id,
                         };
                         //console.log('Individual Fields:', field)
@@ -149,7 +148,7 @@ const CourseAssessmentsItems = (props) => {
                                   key={`del-${field.key}`}
                                   onClick={() => {
                                     remove(field.name);
-                                    onRemove(field.question_name);
+                                    onRemove(field.value);
                                   }}
                                 />
                               ) : null}
@@ -174,11 +173,10 @@ const CourseAssessmentsItems = (props) => {
                         {chosenRows.map((field, index) => {
                           field = {
                             ...field,
-                            name: index,
                             key: index,
                             value: field.name,
                           };
-                          console.log("ChosenRows Individual Fields:", field);
+                          //console.log("ChosenRows Individual Fields:", field);
                           return (
                             <div key={field.key}>
                               <Form.Item
@@ -210,7 +208,7 @@ const CourseAssessmentsItems = (props) => {
                                     key={`del-${field.key}`}
                                     onClick={() => {
                                       remove(field.name);
-                                      onRemove(field.question_name);
+                                      onRemove(field.value);
                                     }}
                                   />
                                 ) : null}
@@ -245,7 +243,7 @@ const CourseAssessmentsItems = (props) => {
 const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
   const data = [];
   //console.log('chosenRows on Modal',chosenRows)
-  var last = chosenRows.length ? chosenRows[chosenRows.length - 1].id : 0;
+  var last = chosenRows.length ? chosenRows[chosenRows.length - 1].id+1 : 0;
   last = last ? last : 0;
   const [questionType, setquestionType] = useState(0);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
