@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
+
+import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -1107,7 +1108,7 @@ const CourseAssessments = ({ course_id }) => {
             delay={100}
           ></Spin>
           {allOutlines && (
-            <RadialUI
+            <SaveUI
               listMenu={menulists}
               position="bottom-right"
               iconColor="#8998BA"

@@ -39,7 +39,7 @@
     "framer-motion": "^1.11.1",
     "hammerjs": "^2.0.8",
     "js-cookie": "^2.2.1",
-    "next": "9.5.0",
+    "next": "9.5.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-player": "^2.6.0",

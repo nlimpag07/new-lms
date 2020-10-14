@@ -184,7 +184,9 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
 
   const handleAnchorClick = (e) => {
     e.preventDefault();
-    setIsRadial({ isRadial: "open" });
+    var callback: any = props.listMenu;
+    props.toggleModal(callback[0].callback)
+    //setIsRadial({ isRadial: "close" });
   };
 
   return (
@@ -199,7 +201,7 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
           props.position || "bottom-right"
         }-aligned`}
       >
-        <i className="ams-radial-menu"></i>
+        <i className="ams-floppy-disk"></i>
       </a>
       <style jsx global>{``}</style>
     </RadialMenuStyled>
