@@ -27,6 +27,9 @@ const CourseAssessments = dynamic(() =>
 const CourseCompetencies = dynamic(() =>
   import("../../../components/course/CourseCompetencies")
 );
+const CoursePostEvaluations = dynamic(() =>
+  import("../../../components/course/CoursePostEvaluations")
+);
 const CourseView = dynamic(() =>
   import("../../../components/course/CourseView")
 );
@@ -166,7 +169,7 @@ const CourseManagement = (props) => {
       (theContent = <CourseCompetencies course_id={thePage[1]} />); // Editing the course 
     thePage[0] == "edit" &&
       thePage[2] == "evaluations" &&
-      (theContent = "HELLO View Edit post-evaluation"); // Editing the course
+      (theContent = <CoursePostEvaluations course_id={thePage[1]} />); // Editing the course 
   } else {
     return <Error statusCode={404} />;
   }
