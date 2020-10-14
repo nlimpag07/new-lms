@@ -173,7 +173,7 @@ const CourseCompetenciesList = (props) => {
         const response = await axios(config);
         if (response) {
           //setCompetencyList(response.data.result);
-          console.log("Response", response.data);
+          //console.log("Response", response.data);
           setLoading(true);
         }
       } catch (error) {

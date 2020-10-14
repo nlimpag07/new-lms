@@ -184,7 +184,6 @@ const CourseCompetencies = ({ course_id }) => {
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     competencydetails: [],
     competencycertificates: [],
-    competencyduration: [],
     competencymetrics: [],
   });
   var [competencyActionModal, setCompetencyActionModal] = useState({
@@ -235,26 +234,7 @@ const CourseCompetencies = ({ course_id }) => {
   const onFormFinishProcess = (name, { values, forms }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
-
-    if (name === "competencyprerequisite") {
-      var value = values.competencyprerequisite
-        ? values.competencyprerequisite.map((related, index) => related)
-        : "";
-      basicForm.setFieldsValue({
-        competencyprerequisite: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        competencyprerequisite: [...value],
-      });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
-    }
-    if (name === "picklistduration") {
-      basicForm.setFieldsValue({
-        picklistduration: [...picklistFields, values],
-      });
-    }
+       
 
     if (name === "competencycertificates") {
       var value = values.name ? values : "";
@@ -270,55 +250,11 @@ const CourseCompetencies = ({ course_id }) => {
       //setFeatureMedia({ image: values.name });
       console.log("competencycertificates Image: ", value);
     }
-    if (name === "competencyfeaturedvideo") {
-      var value = values.name ? values : "";
-      if (value) {
-        basicForm.setFieldsValue({
-          competencyfeaturedvideo: [values.name],
-        });
-        setdefaultWidgetValues({
-          ...defaultWidgetValues,
-          competencyfeaturedvideo: values.name,
-        });
-      }
-      //console.log("Uploaded Video: ", value);
-    }
+    
 
-    if (name === "competencycertificates") {
-      var value = values.competencymedia ? values : "";
-      if (value) {
-        basicForm.setFieldsValue({
-          competencycertificates: [values.competencymedia],
-        });
-        setdefaultWidgetValues({
-          ...defaultWidgetValues,
-          competencycertificates: values.competencymedia,
-        });
-      }
-      console.log("Course Competency Media File: ", value);
-    }
+    
 
-    if (name === "competencymilestones") {
-      var value = values.competencymilestones
-        ? values.competencymilestones.fileList.map(
-            (mediafile, index) => mediafile
-          )
-        : "";
-      basicForm.setFieldsValue({
-        competencymilestones: [...value],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        competencymilestones: [...value],
-      });
-      //console.log('Media Files: ',value);
-    }
-
-    if (name === "competencyduration") {
-      basicForm.setFieldsValue({
-        competencyduration: [...picklistFields, values],
-      });
-    }
+    
 
     setCompetencyActionModal({
       StateModal: false,
@@ -337,7 +273,7 @@ const CourseCompetencies = ({ course_id }) => {
     });
     setSpinner(true);
 
-    console.log("Finish:", values);
+    //console.log("Finish:", values);
 
     let curCompetencyIdExist =
       curCompetencyId && curCompetencyId.length ? curCompetencyId[0].id : "";
@@ -356,22 +292,19 @@ const CourseCompetencies = ({ course_id }) => {
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.append("courseId", course_id);
-      if (!!values.competencydetails) {
-        if (!!values.competencydetails.outlinetitle) {
-          data.append("title", values.competencydetails.outlinetitle);
+      data.append("id", curCompetencyIdExist);
+      if (values.competencydetails) {
+        if (values.competencydetails.title) {
+          data.append("title", values.competencydetails.title);
           isNotAllEmpty.push("Not Empty");
         } else {
           data.append("title", curCompetencyTitle);
         }
-        if (!!values.competencydetails.description) {
+        if (values.competencydetails.description) {
           data.append("description", values.competencydetails.description);
           isNotAllEmpty.push("Not Empty");
         }
-        if (!!values.competencydetails.visibility) {
-          data.append("visibility", values.competencydetails.visibility);
-          isNotAllEmpty.push("Not Empty");
-        }
-        if (!!values.competencydetails.usergroup) {
+        if (values.competencydetails.usergroup) {
           data.append("userGroupId", values.competencydetails.usergroup);
           isNotAllEmpty.push("Not Empty");
         } else {
@@ -380,29 +313,41 @@ const CourseCompetencies = ({ course_id }) => {
         //isNotAllEmpty.push("Not Empty");
       }
 
-      if (
-        !!values.competencycertificates &&
+      if (values.competencymetrics) {
+        if (values.competencymetrics.assessmentsSubmitted) {
+          data.append("assessmentsSubmitted", values.competencymetrics.assessmentsSubmitted);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (values.competencymetrics.lessonCompleted) {
+          data.append("lessonCompleted", values.competencymetrics.lessonCompleted);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (values.competencymetrics.milestonesReached) {
+          data.append("milestonesReached", values.competencymetrics.milestonesReached);
+          isNotAllEmpty.push("Not Empty");
+        }
+        if (values.competencymetrics.final) {
+          data.append("final", values.competencymetrics.final);
+          isNotAllEmpty.push("Not Empty");
+        }
+      }
+
+      if (values.competencycertificates &&
         values.competencycertificates.length
       ) {
         values.competencycertificates.map((media) => {
-          media.fileList.map((listOfFiles, index) => {
-            data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
-          });
+          data.append(`files`, media.fileList[0].originFileObj);
+          //console.log(media)
         });
         isNotAllEmpty.push("Not Empty");
-      }
-
-      if (!!values.competencyduration) {
-        data.append("duration", values.competencyduration);
-        isNotAllEmpty.push("Not Empty");
-      }
+      }      
 
       //data = JSON.stringify(data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
       } else {
-        console.log("IsNotAllEmpty", isNotAllEmpty);
+        //console.log("IsNotAllEmpty", isNotAllEmpty);
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
@@ -416,7 +361,7 @@ const CourseCompetencies = ({ course_id }) => {
 
           axios(config)
             .then((res) => {
-              console.log("res: ", res.data, curCompetencyIdExist);
+              //console.log("res: ", res.data, curCompetencyIdExist);
               onFinishModal("", res.data, curCompetencyIdExist);
             })
             .catch((err) => {
@@ -431,18 +376,18 @@ const CourseCompetencies = ({ course_id }) => {
       }
     } else {
       //Add Course Outline
-      console.log("Empty Baby", course_id);
+      //console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
       data.append("courseId", course_id);
       if (!!values.competencydetails) {
-        !!values.competencydetails.competencytitle
-          ? data.append("title", values.competencydetails.competencytitle)
+        !!values.competencydetails.title
+          ? data.append("title", values.competencydetails.title)
           : errorList.push("Missing Competency Title");
 
-        !!values.competencydetails.competencydescription
+        !!values.competencydetails.description
           ? data.append(
               "description",
-              values.competencydetails.competencydescription
+              values.competencydetails.description
             )
           : errorList.push("Missing Competency Description");
 
@@ -566,7 +511,7 @@ const CourseCompetencies = ({ course_id }) => {
           setdefaultWidgetValues({
             competencydetails: [],
             competencycertificates: [],
-            competencyduration: [],
+            competencymetrics: [],
           });
           setcurCompetencyId("");
           setLoading(true);
@@ -642,8 +587,7 @@ const CourseCompetencies = ({ course_id }) => {
   const formInitialValues = {
     /* initialValues: {
       outlinetitle: title,
-      outlinedescription: decodeURI(description),
-      competencyduration: duration,     
+      outlinedescription: decodeURI(description),  
     }, */
   };
   return loading == false ? (
@@ -731,8 +675,8 @@ const CourseCompetencies = ({ course_id }) => {
                       <div className="competencyWidgetHolder">
                         <CourseCompetenciesMetrics
                           shouldUpdate={(prevValues, curValues) =>
-                            prevValues.competencyduration !==
-                            curValues.competencyduration
+                            prevValues.competencymetrics !==
+                            curValues.competencymetrics
                           }
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}

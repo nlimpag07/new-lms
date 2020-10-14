@@ -48,7 +48,7 @@ const CourseCompetenciesDetails = (props) => {
       >
         <Form.Item
           label="Competency Title"
-          name={["competencydetails", "competencytitle"]}
+          name={["competencydetails", "title"]}
         >
           <Input placeholder="Competency Title" />
         </Form.Item>
@@ -65,7 +65,7 @@ const CourseCompetenciesDetails = (props) => {
             </Select>
           </Form.Item>
         </Form.Item>
-        <Form.Item name={["competencydetails", "competencydescription"]}>
+        <Form.Item name={["competencydetails", "description"]}>
           <TextArea rows={5} placeholder="Description" />
         </Form.Item>
 
@@ -102,7 +102,7 @@ const CourseCompetenciesDetails = (props) => {
               <div key={field.key}>
                 <Form.Item
                   label="Competency Title"
-                  name={["competencydetails", "competencytitle"]}
+                  name={["competencydetails", "title"]}
                   key={`${field.key}-title`}
                 >
                   <Input
