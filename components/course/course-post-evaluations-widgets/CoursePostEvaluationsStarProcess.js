@@ -60,7 +60,7 @@ const CoursePostEvaluationsStarProcess = (props) => {
         <Form.Item name={["evaluationvalues", "maxValue"]} noStyle>
           <InputNumber
             min={1}
-            max={10}
+            max={5}
             onChange={onStarRating}
             placeholder="Max. Value"
           />

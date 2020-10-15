@@ -38,7 +38,7 @@ const CoursePostEvaluationsPreview = (props) => {
     let newStarValue = starRating;
     setNewStarValue(starRating)
   }, [starRating]);
-  console.log("Preview: ", starRating);
+  //console.log("Preview: ", starRating);
 
   return (
     <>

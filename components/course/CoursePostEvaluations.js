@@ -265,52 +265,15 @@ const CoursePostEvaluations = ({ course_id }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
 
-    if (name === "evaluationduration") {
-      var value = values.evaluationduration
-        ? values.evaluationduration.map((related, index) => related)
-        : "";
+    if (name === "evaluationvalues") {
       basicForm.setFieldsValue({
-        evaluationduration: [...value],
+        evaluationvalues: [...picklistFields, values],
       });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
-        evaluationduration: [...value],
+        evaluationvalues: [...defaultWidgetValues.evaluationvalues, values],
       });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
-    }
-    /* if (name === "picklistduration") {
-      basicForm.setFieldsValue({
-        picklistduration: [...picklistFields, values],
-      });
-    } */
-
-    if (name === "evaluationitems") {
-      console.log("Items: ", values);
-      console.log("================");
-      console.log(
-        "CUrrent Default AssessmentItems:",
-        defaultWidgetValues.evaluationitems
-      );
-      console.log("================");
-      console.log("CUrrent picklistFields:", ...picklistFields);
-
-      /* var value = values.assessment_items
-        ? values.assessment_items.map((item, index) => item)
-        : ""; */
-      basicForm.setFieldsValue({
-        evaluationitems: [
-          ...defaultWidgetValues.evaluationitems,
-          values.evaluationitems,
-        ],
-      });
-      setdefaultWidgetValues({
-        ...defaultWidgetValues,
-        evaluationitems: [
-          ...defaultWidgetValues.evaluationitems,
-          values.evaluationitems,
-        ],
-      });
+      //console.log("Values", values);
     }
 
     setEvaluationActionModal({
@@ -334,152 +297,100 @@ const CoursePostEvaluations = ({ course_id }) => {
 
     let curEvaluationIdExist =
       curEvaluationId && curEvaluationId.length ? curEvaluationId[0].id : "";
-    let curassessmentTitle =
+    let cur_evaluationTitle =
       curEvaluationId && curEvaluationId.length ? curEvaluationId[0].title : "";
-    let curassessmentuserGroupId =
+    let curevaluationTypeId =
       curEvaluationId && curEvaluationId.length
-        ? curEvaluationId[0].userGroupId
+        ? curEvaluationId[0].evaluationTypeId
         : "";
-    let curassessmentTypeId =
+    let curevaluationActionId =
       curEvaluationId && curEvaluationId.length
-        ? curEvaluationId[0].assessmentTypeId
-        : "";
-    let curCourseOutlineId =
-      curEvaluationId && curEvaluationId.length
-        ? curEvaluationId[0].courseOutlineId
+        ? curEvaluationId[0].evaluationActionId
         : "";
     let curUserGroupId =
       curEvaluationId && curEvaluationId.length
         ? curEvaluationId[0].userGroupId
         : "";
-    let curAttempts =
+    let curisRequired =
       curEvaluationId && curEvaluationId.length
-        ? curEvaluationId[0].attempts
+        ? curEvaluationId[0].isRequired
         : "";
 
-    console.log("Current assessment: ", curEvaluationId);
+    console.log("Current Evaluation: ", curEvaluationId);
     var data = {};
     var errorList = [];
     if (curEvaluationIdExist) {
       //Edit Course assessment
-      console.log("HELLLOOOOO assessment ID", curEvaluationIdExist);
+      console.log("HELLLOOOOO Evaluation ID", curEvaluationIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.courseId = course_id;
       data.id = curEvaluationIdExist;
+      var evaluationTypeId = 0;
       if (!!values.evaluationdetails) {
-        //console.log("assessment Details Present")
-        if (!!values.evaluationdetails.assessmenttitle) {
-          data.title = values.evaluationdetails.assessmenttitle;
+        if (!!values.evaluationdetails.title) {
+          data.title = values.evaluationdetails.title;
           isNotAllEmpty.push("Not Empty");
         } else {
-          data.title = curassessmentTitle;
-        }
-        if (!!values.evaluationdetails.assessmentTypeId) {
-          data.assessmentTypeId = values.evaluationdetails.assessmentTypeId;
-          isNotAllEmpty.push("Not Empty");
-        } else {
-          data.assessmentTypeId = curassessmentTypeId;
-        }
-        if (!!values.evaluationdetails.courseOutlineId) {
-          data.courseOutlineId = values.evaluationdetails.courseOutlineId;
-          isNotAllEmpty.push("Not Empty");
-        } else {
-          data.courseOutlineId = curCourseOutlineId;
-        }
-        if (!!values.evaluationdetails.userGroupId) {
-          data.userGroupId = values.evaluationdetails.userGroupId;
-          isNotAllEmpty.push("Not Empty");
-        } else {
-          data.userGroupId = curUserGroupId;
-        }
-        if (!!values.evaluationdetails.passingGrade) {
-          data.passingGrade = values.evaluationdetails.passingGrade;
-          isNotAllEmpty.push("Not Empty");
+          data.title = cur_evaluationTitle;
         }
 
-        //isImmediate
-        if (values.evaluationdetails.isImmediate) {
-          //console.log("is Immediate", 1);
-          data.isImmediate = 1;
+        if (!!values.evaluationdetails.userGroup) {
+          data.userGroupId = values.evaluationdetails.userGroup;
           isNotAllEmpty.push("Not Empty");
         } else {
           //console.log("is Immediate", 0);
-          data.isImmediate = 0;
+          data.userGroupId = curUserGroupId;
+        }
 
-          if (
-            values.evaluationdetails.deadlineDate &&
-            values.evaluationdetails.deadlineDate.length
-          ) {
-            data.fromDate = values.evaluationdetails.deadlineDate[0].format(
-              "YYYY-MM-DD"
-            );
+        if (!!values.evaluationdetails.evaluationTypeId) {
+          data.evaluationTypeId = values.evaluationdetails.evaluationTypeId;
+          data.evaluationActionId = values.evaluationdetails.evaluationTypeId;
+          evaluationTypeId = values.evaluationdetails.evaluationTypeId;
+          isNotAllEmpty.push("Not Empty");
+        } else {
+          data.evaluationTypeId = curevaluationTypeId;
+          data.evaluationActionId = curevaluationActionId;
+          evaluationTypeId = curevaluationTypeId;
+        }
+        //isRequired
+        if (values.evaluationdetails.isRequired) {
+          //console.log("is Immediate", 1);
+          data.isRequired = 1;
+        } else {
+          //console.log("is Immediate", 0);
+          data.isRequired = 0;
+        }
+      }
 
-            data.toDate = values.evaluationdetails.deadlineDate[1].format(
-              "YYYY-MM-DD"
+      if (!!values.evaluationvalues) {
+        if (evaluationTypeId == 1) {
+          if (values.evaluationvalues.minValue) {
+            data.minValue = values.evaluationvalues.minValue;
+            isNotAllEmpty.push("Not Empty");
+          }
+
+          if (values.evaluationvalues.maxValue) {
+            data.maxValue = values.evaluationvalues.maxValue;
+            isNotAllEmpty.push("Not Empty");
+          }
+        } else if (evaluationTypeId == 2) {
+          if (values.evaluationvalues.length) {
+            data.courseEvaluationValues = values.evaluationvalues.map(
+              (value, index) => {
+                return { name: value.optionname };
+              }
             );
             isNotAllEmpty.push("Not Empty");
           }
-        }
-        //If not undefined/null/0
-        if (
-          values.evaluationdetails.attempts != null &&
-          curAttempts != values.evaluationdetails.attempts
-        ) {
-          if (values.evaluationdetails.attempts > 0) {
-            data.isAttemptRequest = "update";
-            data.isAttempts = 1;
-            data.attempts = values.evaluationdetails.attempts;
-          } else {
-            data.isAttemptRequest = "update";
-            data.isAttempts = 0;
-            data.attempts = 0;
-          }
-          isNotAllEmpty.push("Not Empty");
-          /* data.isAttempts = 1;
-          data.attempts = values.evaluationdetails.attempts;
-          isNotAllEmpty.push("Not Empty"); */
-          //console.log("attempts", values.evaluationdetails.attempts);
-        }
-        /*  else {
-          data.isAttempts = 0;
-          data.attempts = 0;
-        } */
-      }
 
-      if (!!values.evaluationduration) {
-        if (!!values.evaluationduration.basedType) {
-          data.basedType = values.evaluationduration.basedType.target.value;
-          isNotAllEmpty.push("Not Empty");
-        }
-
-        if (data.basedType == 1) {
-          !!values.evaluationduration.examDuration
-            ? (data.duration = values.evaluationduration.examDuration)
-            : errorList.push("Missing assessment Time Limit");
-        } else {
-          data.duration = 0;
+          //console.log("The Values: ",thevalues)
+        } else if (evaluationTypeId === 3) {
+          /* data.minValue = values.evaluationdetails.minValue?values.evaluationdetails.minValue:0;*/
         }
       }
 
-      //AssessmentItems validation
-      if (!!values.evaluationitems && values.evaluationitems.length) {
-        let courseAssessmentItem = values.evaluationitems.map(
-          (items, index) => {
-            if (items.isTrue) {
-              let newTrue = items.isTrue === "True" ? 1 : 0;
-              items.isTrue = newTrue;
-              items.isFalse = newTrue ? 0 : 1;
-            }
-
-            //console.log("For Submission evaluationitems: ",items)
-            return items;
-          }
-        );
-        data.courseAssessmentItem = courseAssessmentItem;
-        isNotAllEmpty.push("Not Empty");
-      }
-
+      // isNotAllEmpty.push("Not Empty");
       data = JSON.stringify(data);
       console.log("Edit Stringify Data: ", data);
       if (errorList.length) {
@@ -490,7 +401,7 @@ const CoursePostEvaluations = ({ course_id }) => {
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
-            url: apiBaseUrl + `/CourseAssessment/` + curEvaluationIdExist,
+            url: apiBaseUrl + `/CourseEvaluation/` + curEvaluationIdExist,
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",
@@ -518,95 +429,58 @@ const CoursePostEvaluations = ({ course_id }) => {
       console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
       data.courseId = course_id;
+      var evaluationTypeId = 0;
       if (!!values.evaluationdetails) {
-        !!values.evaluationdetails.assessmenttitle
-          ? (data.title = values.evaluationdetails.assessmenttitle)
-          : errorList.push("Missing assessment Title");
+        !!values.evaluationdetails.title
+          ? (data.title = values.evaluationdetails.title)
+          : errorList.push("Missing Evaluation Title");
 
-        !!values.evaluationdetails.assessmentTypeId
-          ? (data.assessmentTypeId = values.evaluationdetails.assessmentTypeId)
-          : errorList.push("Missing assessment Type");
+        if (!!values.evaluationdetails.evaluationTypeId) {
+          data.evaluationTypeId = values.evaluationdetails.evaluationTypeId;
+          data.evaluationActionId = values.evaluationdetails.evaluationTypeId;
+          evaluationTypeId = values.evaluationdetails.evaluationTypeId;
+        } else {
+          errorList.push("Missing Evaluation Type");
+        }
+        /* !!values.evaluationdetails.assessmentTypeId
+          ? (data.evaluationTypeId = values.evaluationdetails.evaluationTypeId)
+          : errorList.push("Missing Evaluation Type"); */
         //isImmediate
-        if (values.evaluationdetails.isImmediate) {
+        if (values.evaluationdetails.isRequired) {
           //console.log("is Immediate", 1);
-          data.isImmediate = 1;
+          data.isRequired = 1;
         } else {
           //console.log("is Immediate", 0);
-          data.isImmediate = 0;
-
-          if (
-            values.evaluationdetails.deadlineDate &&
-            values.evaluationdetails.deadlineDate.length
-          ) {
-            data.fromDate = values.evaluationdetails.deadlineDate[0].format(
-              "YYYY-MM-DD"
-            );
-
-            data.toDate = values.evaluationdetails.deadlineDate[1].format(
-              "YYYY-MM-DD"
-            );
-          } else {
-            errorList.push("Missing deadline Start/End date");
-          }
+          data.isRequired = 0;
         }
 
         !!values.evaluationdetails.userGroup
           ? (data.userGroupId = values.evaluationdetails.userGroup)
-          : errorList.push("Missing assessment User Group");
-
-        !!values.evaluationdetails.courseOutlineId
-          ? (data.courseOutlineId = values.evaluationdetails.courseOutlineId)
-          : errorList.push("Missing assessment Linked Outline");
-
-        !!values.evaluationdetails.passingGrade
-          ? (data.passingGrade = values.evaluationdetails.passingGrade)
-          : errorList.push("Missing assessment Passing Grade");
-
-        if (values.evaluationdetails.attempts) {
-          data.isAttempts = 1;
-          data.attempts = values.evaluationdetails.attempts;
-          //console.log("attempts", values.evaluationdetails.attempts)
-        } else {
-          data.isAttempts = 0;
-          data.attempts = 0;
-        }
+          : errorList.push("Missing Evaluation User Group");
       } else {
         errorList.push("Missing assessment Details");
       }
 
-      if (!!values.evaluationduration) {
-        !!values.evaluationduration.basedType
-          ? (data.basedType = values.evaluationduration.basedType.target.value)
-          : (data.basedType = 0);
-
-        if (data.basedType == 1) {
-          !!values.evaluationduration.examDuration
-            ? (data.duration = values.evaluationduration.examDuration)
-            : errorList.push("Missing assessment Time Limit");
-        } else {
-          data.duration = 0;
+      if (!!values.evaluationvalues) {
+        if (evaluationTypeId == 1) {
+          data.minValue = values.evaluationvalues.minValue
+            ? values.evaluationvalues.minValue
+            : 0;
+          data.maxValue = values.evaluationvalues.maxValue
+            ? values.evaluationvalues.maxValue
+            : 0;
+        } else if (evaluationTypeId == 2) {
+          data.courseEvaluationValues = values.evaluationvalues.map(
+            (value, index) => {
+              return { name: value.optionname };
+            }
+          );
+          //console.log("The Values: ",thevalues)
+        } else if (evaluationTypeId === 3) {
+          /* data.minValue = values.evaluationdetails.minValue?values.evaluationdetails.minValue:0;*/
         }
       } else {
         errorList.push("Missing assessment Duration");
-      }
-
-      //AssessmentItems validation
-      if (!!values.evaluationitems && values.evaluationitems.length) {
-        let courseAssessmentItem = values.evaluationitems.map(
-          (items, index) => {
-            if (items.isTrue) {
-              let newTrue = items.isTrue === "True" ? 1 : 0;
-              items.isTrue = newTrue;
-              items.isFalse = newTrue ? 0 : 1;
-            }
-
-            //console.log("For Submission evaluationitems: ",items)
-            return items;
-          }
-        );
-        data.courseAssessmentItem = courseAssessmentItem;
-      } else {
-        errorList.push("Missing assessment Items");
       }
 
       data = JSON.stringify(data);
@@ -618,7 +492,7 @@ const CoursePostEvaluations = ({ course_id }) => {
         //console.log("NO ERROR, PROCEED WITH SUBMISSION");
         var config = {
           method: "post",
-          url: apiBaseUrl + "/CourseAssessment",
+          url: apiBaseUrl + "/CourseEvaluation",
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
@@ -765,25 +639,55 @@ const CoursePostEvaluations = ({ course_id }) => {
           theGroupName = getGroup[0].name ? getGroup[0].name : null;
       } */
       //console.log("Group Name:", theGroupName);
+
+      //checking evaluationTypeId and assign evaluationData
+      let currentEvaluationValue = "";
+      //console.log("Selected TypeID", isSelected[0].evaluationTypeId);
+      if (isSelected[0].evaluationTypeId === 1) {
+        //Rating
+        currentEvaluationValue = [
+          {
+            minValue: isSelected[0].minValue,
+            maxValue: isSelected[0].maxValue,
+          },
+        ];
+      } else if (isSelected[0].evaluationTypeId === 2) {
+        //Single Question
+
+        //currentEvaluationValue = isSelected[0].courseEvaluationValues;
+        let questionValues = isSelected[0].courseEvaluationValues.map(
+          (eval_value, index) => {
+            let list = {
+              id: eval_value.id,
+              optionname: eval_value.name,
+              courseEvaluationId: eval_value.courseEvaluationId,
+            };
+            return list;
+          }
+        );
+        currentEvaluationValue = questionValues;
+        //console.log("For ChosenRows", questionValues);
+      } else if (isSelected[0].evaluationTypeId === 3) {
+        //Comment
+        currentEvaluationValue = "";
+      }
+
       setEvaluationType(isSelected[0].evaluationTypeId);
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         evaluationdetails: [
           {
             title: isSelected[0].title,
-            description: isSelected[0].description,
-            usergroup: isSelected[0].userGroup.name,
+            usergroup: isSelected[0].userGroup.name
+              ? isSelected[0].userGroup.name
+              : "None",
             usergroupid: isSelected[0].userGroupId,
+            evaluationTypeId: isSelected[0].evaluationTypeId,
+            evaluationTypeName: isSelected[0].evaluationTypeName,
+            isRequired: isSelected[0].isRequired,
           },
         ],
-        evaluationvalues: [
-          {
-            lessonCompleted: isSelected[0].lessonCompleted,
-            milestonesReached: isSelected[0].milestonesReached,
-            assessmentsSubmitted: isSelected[0].assessmentsSubmitted,
-            final: isSelected[0].final,
-          },
-        ],
+        evaluationvalues: currentEvaluationValue,
       });
     } else {
       setEvaluationType("");
@@ -911,7 +815,19 @@ const CoursePostEvaluations = ({ course_id }) => {
                             ),
                             2: (
                               <>
-                                <div>Single Question Component here</div>
+                                <CoursePostEvaluationsValues
+                                  shouldUpdate={(prevValues, curValues) =>
+                                    prevValues.evaluationvalues !==
+                                    curValues.evaluationvalues
+                                  }
+                                  showModal={showModal}
+                                  defaultWidgetValues={defaultWidgetValues}
+                                  setdefaultWidgetValues={
+                                    setdefaultWidgetValues
+                                  }
+                                  evaluationList={evaluationList}
+                                  evaluationType={evaluationType}
+                                />
                               </>
                             ),
                             3: (
@@ -924,10 +840,10 @@ const CoursePostEvaluations = ({ course_id }) => {
                           )}
                         </div>
 
-                        {/* <CoursePostEvaluationsValues
+                        {/*  <CoursePostEvaluationsValues
                             shouldUpdate={(prevValues, curValues) =>
-                              prevValues.evaluationitems !==
-                              curValues.evaluationitems
+                              prevValues.evaluationvalues !==
+                              curValues.evaluationvalues
                             }
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}

@@ -52,7 +52,7 @@ const CoursePostEvaluationsList = (props) => {
   //console.log(resetFields)
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
-  console.log(evaluationList);
+  //console.log(evaluationList);
   if (evaluationList) {
     evaluationList.map((dataItem) => {
       //dataItem.

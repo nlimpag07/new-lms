@@ -49,44 +49,17 @@ const CoursePostEvaluationsDetails = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   //const [userGroupList, setUserGroupList] = useState([]);
   const chosenRows = defaultWidgetValues.evaluationdetails;
-  let theImmediate =
-    chosenRows && chosenRows.length ? chosenRows[0].isImmediate : false;
-  const [isImmediateChecked, setisImmediateChecked] = useState(theImmediate);
-
-  /* useEffect(() => {
-    var config = {
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      await axios
-        .all([axios.get(apiBaseUrl + "/Settings/usergroup", config)])
-        .then(
-          axios.spread((usergroup) => {
-            !usergroup.data.response
-              ? setUserGroupList(usergroup.data.result)
-              : setUserGroupList([]);
-          })
-        )
-        .catch((errors) => {
-          // react on errors.
-          console.error(errors);
-        });
-      
-    }
-
-    fetchData(config);
-  }, []); */
-
+  let theRequired =
+    chosenRows && chosenRows.length && chosenRows[0].isRequired == 1
+      ? true
+      : false;
+  const [isRequiredChecked, setisRequiredChecked] = useState(theRequired);
   useEffect(() => {
-    //chosenRows.length && console.log("isImmediate",chosenRows[0].isImmediate)
+    //chosenRows.length && console.log("isRequired",chosenRows[0].isRequired)
     chosenRows.length
-      ? setisImmediateChecked(chosenRows[0].isImmediate)
-      : setisImmediateChecked(false);
+      ? setisRequiredChecked(chosenRows[0].isRequired)
+      : setisRequiredChecked(false);
   }, [chosenRows]);
-
   const groupOptions = userGroupList.map((usergroup, index) => {
     return (
       <Option key={index} value={usergroup.id}>
@@ -109,20 +82,15 @@ const CoursePostEvaluationsDetails = (props) => {
   });
 
   function immediateOnChange(e) {
-    //setisImmediateChecked(!e.target.checked);
-    //setisImmediateChecked(e.target.checked);
-    //console.log(`checked = ${e}`);
-    setEvaluationType(e)
+    setEvaluationType(e);
   }
-  const onDateChange = (date, dateString) => {
-    /*  console.log(date, dateString);
-    console.log("startDate", dateString[0]);
-    console.log("===================");
-    console.log("endDate", dateString[1]); */
-  };
+  function requiredOnChange(e) {
+    setisRequiredChecked(e.target.checked);
+  }
+
   //console.log("Chosen Rows", chosenRows);
-  //console.log(isImmediateChecked)
-  const dateFormat = "YYYY-MM-DD";
+  //console.log(isRequiredChecked)
+ 
   return !chosenRows.length ? (
     <>
       <Form.Item
@@ -217,7 +185,12 @@ const CoursePostEvaluationsDetails = (props) => {
                     label="User Group"
                     noStyle
                   >
-                    <Select placeholder="User Group" size="medium">
+                    <Select
+                      placeholder={
+                        field.usergroup ? field.usergroup : "User Group"
+                      }
+                      size="medium"
+                    >
                       {groupOptions}
                     </Select>
                   </Form.Item>
@@ -229,7 +202,11 @@ const CoursePostEvaluationsDetails = (props) => {
                     noStyle
                   >
                     <Select
-                      placeholder="Evaluation Type"
+                      placeholder={
+                        field.evaluationTypeName
+                          ? field.evaluationTypeName
+                          : "Evaluation Type"
+                      }
                       size="medium"
                       /* style={{ width: "50%" }} */
                     >
@@ -241,9 +218,19 @@ const CoursePostEvaluationsDetails = (props) => {
                 <Form.Item
                   name={["evaluationdetails", "isRequired"]}
                   noStyle
-                  valuePropName="checked"
+                  //valuePropName="checked"
+                  valuePropName={
+                    chosenRows[0].isRequired == 1 && isRequiredChecked
+                      ? isRequiredChecked
+                      : "checked"
+                  }
                 >
-                  <Checkbox onChange={immediateOnChange}>Required</Checkbox>
+                  <Checkbox
+                    checked={isRequiredChecked}
+                    onChange={requiredOnChange}
+                  >
+                    Required
+                  </Checkbox>
                 </Form.Item>
               </div>
             );

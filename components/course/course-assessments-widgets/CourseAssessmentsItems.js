@@ -147,7 +147,7 @@ const CourseAssessmentsItems = (props) => {
                                   style={{ margin: "0 8px" }}
                                   key={`del-${field.key}`}
                                   onClick={() => {
-                                    remove(field.name);
+                                    remove(field.key);
                                     onRemove(field.value);
                                   }}
                                 />
@@ -207,7 +207,7 @@ const CourseAssessmentsItems = (props) => {
                                     style={{ margin: "0 8px" }}
                                     key={`del-${field.key}`}
                                     onClick={() => {
-                                      remove(field.name);
+                                      remove(field.key);
                                       onRemove(field.value);
                                     }}
                                   />
