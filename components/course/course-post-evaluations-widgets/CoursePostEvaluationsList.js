@@ -157,7 +157,7 @@ const CoursePostEvaluationsList = (props) => {
     setEvaluationList(newDataList); */
     var config = {
       method: "delete",
-      url: apiBaseUrl + "/CourseAssessment/" + item.id,
+      url: apiBaseUrl + "/CourseEvaluation/" + item.id,
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

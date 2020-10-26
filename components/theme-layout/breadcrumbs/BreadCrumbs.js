@@ -53,7 +53,8 @@ const BreadCrumbs = () => {
         );
 
       case 4:
-        return (
+        return (null);
+        /* return (
           <Breadcrumb.Item key={index}>
             <a
               href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}`}
@@ -61,7 +62,7 @@ const BreadCrumbs = () => {
               {path}
             </a>
           </Breadcrumb.Item>
-        );
+        ); 
         console.log(
           "/",
           pathname[1],
@@ -73,7 +74,7 @@ const BreadCrumbs = () => {
           path,
           " ---",
           index
-        );
+        );*/
 
       case 5:
         return (

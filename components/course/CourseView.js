@@ -243,7 +243,12 @@ const CourseView = ({ course_id }) => {
       avatar: <FontAwesomeIcon icon={["fas", "star"]} size="3x" />,
     },
   ];
-
+  function onShareClick(e) {
+    e.preventDefault();
+    var copyText = document.getElementById("shareCourse").innerText;
+    //copyText.select();
+    console.log("The text:", copyText);
+  }
   return course.length ? (
     <Row
       className="widget-container Course-View"
@@ -310,7 +315,11 @@ const CourseView = ({ course_id }) => {
                 <Col xs={24}>
                   <h3>SHARE</h3>
                   {
-                    <button className="tag-button">{`${homeUrl}/course/view/${id}`}</button>
+                    <button
+                      onClick={onShareClick}
+                      id="shareCourse"
+                      className="tag-button"
+                    >{`${homeUrl}/course/view/${id}`}</button>
                   }
                 </Col>
               </Row>
