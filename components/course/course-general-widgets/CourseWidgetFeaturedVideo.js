@@ -11,6 +11,7 @@ import {
   Collapse,
   Button,
   Upload,
+  message
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -170,42 +171,50 @@ const CourseWidgetFeaturedVideo = (props) => {
   );
 };
 const modalFormBody = () => {
-  const [fileList, seFileList] = useState("");
+  const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
+    reader.readAsDataURL(img);    
+    //console.log(reader)
   }
   const handleChange = (info) => {
-    setLoading(true);
-    //console.log("set Loading to True");
-
+    setLoading(true);   
+    
+    setFileList(info.fileList.filter(file => !!file.status));
+    //setFileList(info);
+    info.fileList = info.fileList.filter(file => !!file.status)
     let fileList = [...info.fileList];
-    fileList = fileList.slice(-1);
-    seFileList(info);
+    fileList = fileList.slice(-1);    
     if (Array.isArray(fileList) && fileList.length) {
       getBase64(fileList[0].originFileObj, (imageUrl) => {
-        setImageUrl(imageUrl);
+        setImageUrl(imageUrl);        
         setLoading(false);
       });
     } else {
-      seFileList("");
+      setFileList("");
       setImageUrl("");
       setLoading(false);
     }
   };
   const onRemove = (info) => {
-    seFileList("");
+    setFileList("");
     setImageUrl("");
     setLoading(false);
   };
-  const beforeUpload = () => {
+  const beforeUpload = (file) => {
     setLoading(true);
-    return false;
+    if (file.type !== 'video/mp4') {
+      message.error(`${file.name} is not a mp4 file`);
+    }
+    return file.type === 'video/mp4';
+    
+    //return false;
   };
+  //console.log("fileList:",fileList);
   const uploadButton = (
     <div>
       {loading ? (
@@ -235,7 +244,7 @@ const modalFormBody = () => {
         onRemove={onRemove}
       >
         {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+          <video controls src={imageUrl} alt="avatar" style={{ width: "100%" }} />
         ) : (
           uploadButton
         )}

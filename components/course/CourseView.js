@@ -190,7 +190,7 @@ const CourseView = ({ course_id }) => {
     relatedCourse,
   } = courseDetails;
   featureImage = `${apidirectoryUrl}/Images/Course/${featureImage}`;
-  featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}.mp4`;
+  featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
 
   let lessons = courseOutline ? courseOutline.length : 0;
   const listData = [
