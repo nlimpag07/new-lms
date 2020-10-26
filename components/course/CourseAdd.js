@@ -593,7 +593,7 @@ const CourseAdd = () => {
             >
               <Row className="widget-header-row" justify="start">
                 <Col xs={24}>
-                  <h3 className="widget-title">Draft Status here</h3>
+                  <h3 className="widget-title"><i>Course status reflects after submission</i></h3>
                 </Col>
               </Row>
               <Row
@@ -777,6 +777,9 @@ const CourseAdd = () => {
                 color: #e69138;
                 margin-bottom: 0;
                 text-transform: uppercase;
+              }
+              .cm-main-right .widget-title{
+                text-transform: initial;
               }
               .widget-holder-col .widget-header-row {
                 padding: 5px 0;

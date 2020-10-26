@@ -11,7 +11,7 @@ import {
   Collapse,
   Button,
   Upload,
-  message
+  Alert,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -39,7 +39,9 @@ const CourseWidgetFeaturedVideo = (props) => {
     defaultWidgetValues,
     setdefaultWidgetValues,
   } = props;
-  var featured_video = defaultWidgetValues.featuredvideo?defaultWidgetValues.featuredvideo:'';
+  var featured_video = defaultWidgetValues.featuredvideo
+    ? defaultWidgetValues.featuredvideo
+    : "";
 
   return (
     <>
@@ -174,24 +176,26 @@ const modalFormBody = () => {
   const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alertMessage, setalertMessage] = useState("");
 
   function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);    
+    reader.readAsDataURL(img);
     //console.log(reader)
   }
   const handleChange = (info) => {
-    setLoading(true);   
-    
-    setFileList(info.fileList.filter(file => !!file.status));
+    setLoading(true);
+
+    setFileList(info.fileList.filter((file) => !!file.status));
     //setFileList(info);
-    info.fileList = info.fileList.filter(file => !!file.status)
+    info.fileList = info.fileList.filter((file) => !!file.status);
     let fileList = [...info.fileList];
-    fileList = fileList.slice(-1);    
+    fileList = fileList.slice(-1);
     if (Array.isArray(fileList) && fileList.length) {
       getBase64(fileList[0].originFileObj, (imageUrl) => {
-        setImageUrl(imageUrl);        
+        setImageUrl(imageUrl);
+        setalertMessage("");
         setLoading(false);
       });
     } else {
@@ -207,11 +211,11 @@ const modalFormBody = () => {
   };
   const beforeUpload = (file) => {
     setLoading(true);
-    if (file.type !== 'video/mp4') {
-      message.error(`${file.name} is not a mp4 file`);
+    if (file.type !== "video/mp4") {
+      setalertMessage(`${file.name} is not a mp4 file`);
     }
-    return file.type === 'video/mp4';
-    
+    return file.type === "video/mp4";
+
     //return false;
   };
   //console.log("fileList:",fileList);
@@ -235,27 +239,35 @@ const modalFormBody = () => {
     </div>
   );
   return (
-    <Form.Item name="name">
-      <Dragger
-        onChange={handleChange}
-        multiple={false}
-        beforeUpload={beforeUpload}
-        fileList={fileList.fileList}
-        onRemove={onRemove}
-      >
-        {imageUrl ? (
-          <video controls src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
-      </Dragger>
-      {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
+    <>
+      {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
+      <Form.Item name="name">
+        <Dragger
+          onChange={handleChange}
+          multiple={false}
+          beforeUpload={beforeUpload}
+          fileList={fileList.fileList}
+          onRemove={onRemove}
+        >
+          {imageUrl ? (
+            <video
+              controls
+              src={imageUrl}
+              alt="avatar"
+              style={{ width: "100%" }}
+            />
+          ) : (
+            uploadButton
+          )}
+        </Dragger>
+        {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
         <Button>
           <UploadOutlined /> Upload
         </Button>
       </Upload> */}
-      {/* <Input type="file" onChange={handleChange} /> */}
-    </Form.Item>
+        {/* <Input type="file" onChange={handleChange} /> */}
+      </Form.Item>
+    </>
   );
 };
 export default CourseWidgetFeaturedVideo;

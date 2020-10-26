@@ -361,3 +361,7 @@ a.ellipsis i {
   align-items: center;
   justify-content: center;
 }
+.cm-main-right .widget-title {
+  text-transform: initial !important;
+  font-style:italic;
+}

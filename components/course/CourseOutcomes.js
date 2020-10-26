@@ -42,6 +42,8 @@ import {
 } from "@ant-design/icons";
 import CourseOutcomeList from "./course-outcome-widgets/CourseOutcomeList";
 import CourseOutcomeDetails from "./course-outcome-widgets/CourseOutcomeDetails";
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
+
 /* import CourseOutcomeFeaturedImage from "./course-outcome-widgets/CourseOutcomeFeaturedImage";
 import CourseOutcomeFeaturedVideo from "./course-outcome-widgets/CourseOutcomeFeaturedVideo";
 import CourseOutcomePrerequisite from "./course-outcome-widgets/CourseOutcomePrerequisite";
@@ -178,7 +180,7 @@ const CourseOutcomes = ({ course_id }) => {
   const [curOutcomeId, setcurOutcomeId] = useState("");
 
   const [spinner, setSpinner] = useState(false);
- 
+
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     outcomedetails: [],
   });
@@ -264,7 +266,9 @@ const CourseOutcomes = ({ course_id }) => {
     let curoutcomedescription =
       curOutcomeId && curOutcomeId.length ? curOutcomeId[0].description : "";
     let curoutcomevisibility =
-      curOutcomeId && curOutcomeId.length ? curOutcomeId[0].visibilityNumber : "";
+      curOutcomeId && curOutcomeId.length
+        ? curOutcomeId[0].visibilityNumber
+        : "";
 
     console.log("Current outcome: ", curOutcomeId);
     var data = {};
@@ -455,7 +459,14 @@ const CourseOutcomes = ({ course_id }) => {
   };
   // console.log(curOutcomeId)
   /*console.log(outcomeList)  */
-  let { description, title, usergroup, usergroupid, visibility,visibilityNumber } = "";
+  let {
+    description,
+    title,
+    usergroup,
+    usergroupid,
+    visibility,
+    visibilityNumber,
+  } = "";
   useEffect(() => {
     if (curOutcomeId.length) {
       //console.log(outcome);
@@ -549,7 +560,7 @@ const CourseOutcomes = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+                <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row

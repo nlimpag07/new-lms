@@ -44,7 +44,7 @@ import CourseCompetenciesList from "./course-competencies-widgets/CourseCompeten
 import CourseCompetenciesDetails from "./course-competencies-widgets/CourseCompetenciesDetails";
 import CourseCompetenciesCertificates from "./course-competencies-widgets/CourseCompetenciesCertificates";
 import CourseCompetenciesMetrics from "./course-competencies-widgets/CourseCompetenciesMetrics";
-
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -637,7 +637,7 @@ const CourseCompetencies = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+              <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row

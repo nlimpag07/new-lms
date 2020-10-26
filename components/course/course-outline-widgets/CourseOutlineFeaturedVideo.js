@@ -11,6 +11,7 @@ import {
   Collapse,
   Button,
   Upload,
+  Alert
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,8 +27,8 @@ const { TextArea } = Input;
 const { Dragger } = Upload;
 /*formlabels used for modal */
 const widgetFieldLabels = {
-  catname: "Outline - Featured Media",
-  catValueLabel: "Featured Video",
+  catname: "Outline - Featured Interactive Video",
+  catValueLabel: "Featured Interactive Video",
   catFormName: "outlinefeaturedvideo",
 };
 
@@ -170,9 +171,10 @@ const CourseOutlineFeaturedVideo = (props) => {
   );
 };
 const modalFormBody = () => {
-  const [fileList, seFileList] = useState("");
+  const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alertMessage, setalertMessage] = useState("");
 
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -182,29 +184,34 @@ const modalFormBody = () => {
   const handleChange = (info) => {
     setLoading(true);
     //console.log("set Loading to True");
-
+    setFileList(info.fileList.filter((file) => !!file.status));
+    //setFileList(info);
+    info.fileList = info.fileList.filter((file) => !!file.status);
     let fileList = [...info.fileList];
     fileList = fileList.slice(-1);
-    seFileList(info);
     if (Array.isArray(fileList) && fileList.length) {
       getBase64(fileList[0].originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
+        setalertMessage("");
         setLoading(false);
       });
     } else {
-      seFileList("");
+      setFileList("");
       setImageUrl("");
       setLoading(false);
     }
   };
   const onRemove = (info) => {
-    seFileList("");
+    setFileList("");
     setImageUrl("");
     setLoading(false);
   };
-  const beforeUpload = () => {
+  const beforeUpload = (file) => {
     setLoading(true);
-    return false;
+    if (file.type !== 'application/x-zip-compressed') {
+      setalertMessage(`${file.name} is not a ZIP file`);
+    }
+    return file.type === 'application/x-zip-compressed';
   };
   const uploadButton = (
     <div>
@@ -216,16 +223,18 @@ const modalFormBody = () => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">
-            Click or drag an .MP4 file to this area to upload
+            Click or drag an .ZIP file to this area to upload
           </p>
           <p className="ant-upload-hint">
-            Please upload an .mp4 file or leave it blank.
+            Please upload an .ZIP file or leave it blank.
           </p>
         </div>
       )}
     </div>
   );
   return (
+    <>
+      {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
     <Form.Item name="name">
       <Dragger
         onChange={handleChange}
@@ -235,7 +244,8 @@ const modalFormBody = () => {
         onRemove={onRemove}
       >
         {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+          <video
+          controls src={imageUrl} alt="avatar" style={{ width: "100%" }} />
         ) : (
           uploadButton
         )}
@@ -247,6 +257,7 @@ const modalFormBody = () => {
       </Upload> */}
       {/* <Input type="file" onChange={handleChange} /> */}
     </Form.Item>
+    </>
   );
 };
 export default CourseOutlineFeaturedVideo;

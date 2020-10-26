@@ -49,16 +49,8 @@ import CourseOutlinePrerequisite from "./course-outline-widgets/CourseOutlinePre
 import CourseOutlineMediaFiles from "./course-outline-widgets/CourseOutlineMediaFiles";
 import CourseOutlineMilestones from "./course-outline-widgets/CourseOutlineMilestones";
 import CourseOutlineDuration from "./course-outline-widgets/CourseOutlineDuration";
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 
-import CourseWidgetLevel from "./course-general-widgets/CourseWidgetLevel";
-import CourseWidgetCategory from "./course-general-widgets/CourseWidgetCategory";
-import CourseWidgetType from "./course-general-widgets/CourseWidgetType";
-import CourseWidgetRelatedCourses from "./course-general-widgets/CourseWidgetRelatedCourses";
-import CourseWidgetDuration from "./course-general-widgets/CourseWidgetDuration";
-import CourseWidgetLanguage from "./course-general-widgets/CourseWidgetLanguage";
-import CourseWidgetTags from "./course-general-widgets/CourseWidgetTags";
-import CourseWidgetFeaturedImage from "./course-general-widgets/CourseWidgetFeaturedImage";
-import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeaturedVideo";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -377,8 +369,10 @@ const CourseOutlines = ({ course_id }) => {
 
     let curOutlineIdExist =
       curOutlineId && curOutlineId.length ? curOutlineId[0].id : "";
-    let curOutlineTitle = curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
-    let curOutlineuserGroupId = curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
+    let curOutlineTitle =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
+    let curOutlineuserGroupId =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
     //console.log("Current Outline: ", curOutlineuserGroupId);
     var data = new FormData();
     var errorList = [];
@@ -392,7 +386,7 @@ const CourseOutlines = ({ course_id }) => {
         if (!!values.outlinedetails.outlinetitle) {
           data.append("title", values.outlinedetails.outlinetitle);
           isNotAllEmpty.push("Not Empty");
-        }else{
+        } else {
           data.append("title", curOutlineTitle);
         }
         if (!!values.outlinedetails.description) {
@@ -406,7 +400,7 @@ const CourseOutlines = ({ course_id }) => {
         if (!!values.outlinedetails.usergroup) {
           data.append("userGroupId", values.outlinedetails.usergroup);
           isNotAllEmpty.push("Not Empty");
-        }else{
+        } else {
           data.append("userGroupId", curOutlineuserGroupId);
         }
         //isNotAllEmpty.push("Not Empty");
@@ -453,7 +447,7 @@ const CourseOutlines = ({ course_id }) => {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
       } else {
-        console.log("IsNotAllEmpty",isNotAllEmpty);
+        console.log("IsNotAllEmpty", isNotAllEmpty);
         if (isNotAllEmpty.length) {
           var config = {
             method: "put",
@@ -675,14 +669,13 @@ const CourseOutlines = ({ course_id }) => {
       visibility,
     } = "";
     if (curOutlineId.length) {
-      
       let isSelected = outlineList.filter(
         (selectedOutline) => selectedOutline.id === curOutlineId[0].id
       );
       console.log(isSelected[0]);
       let prerequisite = [];
       let currentPrerequisite = isSelected[0].courseOutlinePrerequisite;
-      if (currentPrerequisite.length) {        
+      if (currentPrerequisite.length) {
         prerequisite = currentPrerequisite.map((c_outlinerequisite, index) => {
           let getOutline = outlineList.filter(
             (outline) => c_outlinerequisite.preRequisiteId == outline.id
@@ -740,7 +733,7 @@ const CourseOutlines = ({ course_id }) => {
           },
         ],
         outlinefeaturedimage: isSelected[0].featureImage,
-        outlinefeaturedvideo: isSelected[0].featureVideo,
+        outlinefeaturedvideo: isSelected[0].interactiveVideo,
         outlineprerequisite: prerequisite,
         outlineduration: isSelected[0].duration,
         outlinemediafiles: mediaFiles,
@@ -864,7 +857,7 @@ const CourseOutlines = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+                <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row

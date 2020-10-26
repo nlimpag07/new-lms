@@ -45,7 +45,7 @@ import CoursePostEvaluationsList from "./course-post-evaluations-widgets/CourseP
 import CoursePostEvaluationsDetails from "./course-post-evaluations-widgets/CoursePostEvaluationsDetails";
 import CoursePostEvaluationsValues from "./course-post-evaluations-widgets/CoursePostEvaluationsValues";
 import CoursePostEvaluationsStarProcess from "./course-post-evaluations-widgets/CoursePostEvaluationsStarProcess";
-import Error from "next/error";
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 
 import { useRouter } from "next/router";
 
@@ -763,7 +763,7 @@ const CoursePostEvaluations = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+              <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row

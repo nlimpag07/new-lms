@@ -11,6 +11,7 @@ import {
   Collapse,
   Button,
   Upload,
+  Alert,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -38,9 +39,11 @@ const CourseWidgetFeaturedImage = (props) => {
     defaultWidgetValues,
     setdefaultWidgetValues,
   } = props;
-  var featured_image = defaultWidgetValues.featuredimage?defaultWidgetValues.featuredimage:'';
+  var featured_image = defaultWidgetValues.featuredimage
+    ? defaultWidgetValues.featuredimage
+    : "";
   //console.log(defaultWidgetValues.featuredimage)
-  
+
   return (
     <>
       <Form.Item
@@ -62,7 +65,6 @@ const CourseWidgetFeaturedImage = (props) => {
                       style={{ textAlign: "center", marginBottom: "15px" }}
                     >
                       {fields.map((field, index) => {
-                        
                         field = {
                           ...field,
                           value: thisPicklist[index].file.name,
@@ -172,9 +174,10 @@ const CourseWidgetFeaturedImage = (props) => {
   );
 };
 const modalFormBody = () => {
-  const [fileList, seFileList] = useState("");
+  const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alertMessage, setalertMessage] = useState("");
 
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -185,28 +188,42 @@ const modalFormBody = () => {
     setLoading(true);
     //console.log("set Loading to True");
 
+    setFileList(info.fileList.filter((file) => !!file.status));
+    //setFileList(info);
+    info.fileList = info.fileList.filter((file) => !!file.status);
     let fileList = [...info.fileList];
     fileList = fileList.slice(-1);
-    seFileList(info);
     if (Array.isArray(fileList) && fileList.length) {
       getBase64(fileList[0].originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
+        setalertMessage("");
         setLoading(false);
       });
     } else {
-      seFileList("");
+      setFileList("");
       setImageUrl("");
       setLoading(false);
     }
   };
   const onRemove = (info) => {
-    seFileList("");
+    setFileList("");
     setImageUrl("");
     setLoading(false);
   };
-  const beforeUpload = () => {
+  const beforeUpload = (file) => {
     setLoading(true);
-    return false;
+    if (
+      file.type !== "image/png" ||
+      file.type !== "image/jpeg" ||
+      file.type !== "image/jpg"
+    ) {
+      setalertMessage(`${file.name} is not an Image file`);
+    }
+    return (
+      file.type === "image/png" ||
+      file.type === "image/jpeg" ||
+      file.type === "image/jpg"
+    );
   };
   const uploadButton = (
     <div>
@@ -218,35 +235,40 @@ const modalFormBody = () => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">
-            Click or drag file to this area to upload
+            Click or drag Image file to this area to upload
           </p>
-          <p className="ant-upload-hint">Please upload an image file only.</p>
+          <p className="ant-upload-hint">
+            Please upload a .PNG, .JPEG, .JPG only.
+          </p>
         </div>
       )}
     </div>
   );
   return (
-    <Form.Item name="name">
-      <Dragger
-        onChange={handleChange}
-        multiple={false}
-        beforeUpload={beforeUpload}
-        fileList={fileList.fileList}
-        onRemove={onRemove}
-      >
-        {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
-      </Dragger>
-      {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
+    <>
+      {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
+      <Form.Item name="name">
+        <Dragger
+          onChange={handleChange}
+          multiple={false}
+          beforeUpload={beforeUpload}
+          fileList={fileList.fileList}
+          onRemove={onRemove}
+        >
+          {imageUrl ? (
+            <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
+          ) : (
+            uploadButton
+          )}
+        </Dragger>
+        {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
         <Button>
           <UploadOutlined /> Upload
         </Button>
       </Upload> */}
-      {/* <Input type="file" onChange={handleChange} /> */}
-    </Form.Item>
+        {/* <Input type="file" onChange={handleChange} /> */}
+      </Form.Item>
+    </>
   );
 };
 export default CourseWidgetFeaturedImage;

@@ -52,6 +52,7 @@ import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeat
 
 import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
+import CourseDateFormat from "./course-date-format/CourseDateFormat"
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -614,7 +615,10 @@ const CourseEdit = ({ course_id }) => {
           let prevCourse = constDefaultValues.relatedcourses.filter(
             (previousCourse) => {
               let theItem = "";
-              if (submittedRelatedCourses.courseRelatedId == previousCourse.courseRelatedId) {
+              if (
+                submittedRelatedCourses.courseRelatedId ==
+                previousCourse.courseRelatedId
+              ) {
                 theItem = previousCourse;
               }
               return theItem;
@@ -630,10 +634,13 @@ const CourseEdit = ({ course_id }) => {
           return newCourses;
         }
       );
-      //console.log("SubmittedRelatedCourse: ", processPickListRelatedCourses);       
+      //console.log("SubmittedRelatedCourse: ", processPickListRelatedCourses);
       processPickListRelatedCourses.map((related, index) => {
         data.append(`relatedCourse[${index}][id]`, related.id);
-        data.append(`relatedCourse[${index}][relatedCourseId]`, related.courseRelatedId);
+        data.append(
+          `relatedCourse[${index}][relatedCourseId]`,
+          related.courseRelatedId
+        );
         data.append(`relatedCourse[${index}][isPrerequisite]`, related.isreq);
       });
 
@@ -661,10 +668,13 @@ const CourseEdit = ({ course_id }) => {
       });
       //console.log("======================");
       //console.log("tobedeletedRelatedCourses: ", tobedeleted);
-      tobedeleted.map((related, index) => {        
+      tobedeleted.map((related, index) => {
         data.append(`deleteRelatedCourse[${index}][id]`, related.id);
-        data.append(`deleteRelatedCourse[${index}][courseRelatedId]`, related.courseRelatedId);
-      })
+        data.append(
+          `deleteRelatedCourse[${index}][courseRelatedId]`,
+          related.courseRelatedId
+        );
+      });
     }
 
     //Edit picklistlanguage
@@ -784,31 +794,28 @@ const CourseEdit = ({ course_id }) => {
       });
     }
 
-     
     !!values.durationTime
       ? data.append("durationTime", values.durationTime)
-      : '';
+      : "";
     !!values.durationType
       ? data.append("durationType", values.durationType)
-      : '';
+      : "";
     !!values.passingGrade
       ? data.append("passingGrade", values.passingGrade)
-      : '';
-    !!values.capacity
-      ? data.append("capacity", values.capacity)
-      : '';
-    
+      : "";
+    !!values.capacity ? data.append("capacity", values.capacity) : "";
+
     !!values.picklistfeaturedimage && values.picklistfeaturedimage.length
       ? values.picklistfeaturedimage.map((image, index) => {
           data.append(`featureImage`, image.fileList[0].originFileObj);
         })
-      : '';
-    !!values.picklistfeaturedvideo &&
-      values.picklistfeaturedvideo.length ?
-      values.picklistfeaturedvideo.map((video, index) => {
-        data.append(`featureVideo`, video.fileList[0].originFileObj);
-      }):'';
-    
+      : "";
+    !!values.picklistfeaturedvideo && values.picklistfeaturedvideo.length
+      ? values.picklistfeaturedvideo.map((video, index) => {
+          data.append(`featureVideo`, video.fileList[0].originFileObj);
+        })
+      : "";
+
     if (errorList.length) {
       console.log("ERRORS: ", errorList);
       onFinishModal(errorList);
@@ -834,7 +841,7 @@ const CourseEdit = ({ course_id }) => {
           errorList.push(err.response.data.message);
           onFinishModal(errorList, "", course_id);
         });
-    } 
+    }
   };
 
   const onFinishModal = (errorList, response, course_id) => {
@@ -924,8 +931,9 @@ const CourseEdit = ({ course_id }) => {
     durationType,
     capacity,
     passingGrade,
+    updatedAt,
   } = course[0] || "";
-  //console.log(course[0])
+  console.log(course[0]);
   useEffect(() => {
     //setdefaultWidgetValues(defaultWidgetValues);
     let {
@@ -943,7 +951,7 @@ const CourseEdit = ({ course_id }) => {
 
     if (relatedCourse) {
       /* console.log("============");*/
-      console.log('Related Course:',relatedCourse); 
+      console.log("Related Course:", relatedCourse);
       relateds = relatedCourse.map((c_related, index) => {
         let list = {
           id: c_related.id,
@@ -1060,7 +1068,8 @@ const CourseEdit = ({ course_id }) => {
       passingGrade: passingGrade,
     },
   };
-
+  
+  
   /* console.log("Const Default Values ", constDefaultValues.courselevel);
   console.log("=========================================");
   console.log("Widget Values ", defaultWidgetValues.courselevel); */
@@ -1138,7 +1147,7 @@ const CourseEdit = ({ course_id }) => {
               >
                 <Row className="widget-header-row" justify="start">
                   <Col xs={24}>
-                    <h3 className="widget-title">Draft Status here</h3>
+                    <CourseDateFormat course_id={course_id} />
                   </Col>
                 </Row>
                 <Row
@@ -1335,6 +1344,7 @@ const CourseEdit = ({ course_id }) => {
                   margin-bottom: 0;
                   text-transform: uppercase;
                 }
+                
                 .widget-holder-col .widget-header-row {
                   padding: 5px 0;
                   color: #e69138;

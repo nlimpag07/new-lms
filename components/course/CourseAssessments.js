@@ -47,6 +47,7 @@ import CourseAssessmentsDuration from "./course-assessments-widgets/CourseAssess
 /* import CourseAssessmentsFeaturedImage from "./course-assessment-widgets/CourseAssessmentsFeaturedImage";
 import CourseAssessmentsFeaturedVideo from "./course-assessment-widgets/CourseAssessmentsFeaturedVideo"; */
 import CourseAssessmentsItems from "./course-assessments-widgets/CourseAssessmentsItems";
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -984,7 +985,7 @@ const CourseAssessments = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+              <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row

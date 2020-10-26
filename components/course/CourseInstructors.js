@@ -42,7 +42,7 @@ import {
 } from "@ant-design/icons";
 import CourseInstructorList from "./course-instructor-widgets/CourseInstructorList";
 import CourseInstructorDetails from "./course-instructor-widgets/CourseInstructorDetails";
-
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 
 import Error from "next/error";
 
@@ -264,11 +264,17 @@ const CourseInstructors = ({ course_id }) => {
     let curinstructorTitle =
       curInstructorId && curInstructorId.length ? curInstructorId[0].title : "";
     let curinstructoruserGroupId =
-      curInstructorId && curInstructorId.length ? curInstructorId[0].userGroupId : "";
+      curInstructorId && curInstructorId.length
+        ? curInstructorId[0].userGroupId
+        : "";
     let curinstructordescription =
-      curInstructorId && curInstructorId.length ? curInstructorId[0].description : "";
+      curInstructorId && curInstructorId.length
+        ? curInstructorId[0].description
+        : "";
     let curinstructorvisibility =
-      curInstructorId && curInstructorId.length ? curInstructorId[0].visibilityNumber : "";
+      curInstructorId && curInstructorId.length
+        ? curInstructorId[0].visibilityNumber
+        : "";
 
     console.log("Current instructor: ", curInstructorId);
     var data = {};
@@ -451,7 +457,14 @@ const CourseInstructors = ({ course_id }) => {
   };
   // console.log(curInstructorId)
   /*console.log(instructorList)  */
-  let { description, title, usergroup, usergroupid, visibility,visibilityNumber } = "";
+  let {
+    description,
+    title,
+    usergroup,
+    usergroupid,
+    visibility,
+    visibilityNumber,
+  } = "";
   useEffect(() => {
     if (curInstructorId.length) {
       //console.log(instructor);
@@ -539,7 +552,7 @@ const CourseInstructors = ({ course_id }) => {
           >
             <Row className="widget-header-row" justify="start">
               <Col xs={24}>
-                <h3 className="widget-title">Draft Status here</h3>
+                <CourseDateFormat course_id={course_id} />
               </Col>
             </Row>
             <Row
@@ -560,7 +573,11 @@ const CourseInstructors = ({ course_id }) => {
                     defaultActiveKey={["1"]}
                     expandIconPosition={"right"}
                   >
-                    <Panel header="Add instructor" key="1" className="greyBackground">
+                    <Panel
+                      header="Add instructor"
+                      key="1"
+                      className="greyBackground"
+                    >
                       <div className="instructorWidgetHolder">
                         <CourseInstructorDetails
                           shouldUpdate={(prevValues, curValues) =>
@@ -604,7 +621,9 @@ const CourseInstructors = ({ course_id }) => {
             modalBodyContent={instructorActionModal.modalBodyContent}
             visible={instructorActionModal.StateModal}
             onCancel={hideModal}
-            okText={`${instructorActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
+            okText={`${
+              instructorActionModal.modalTitle != "Save" ? "Add" : "Ok"
+            }`}
             onFinish={{
               form: "basicForm",
               key: "submit",
