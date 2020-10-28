@@ -1,13 +1,18 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
-import { useIsAuthenticated } from "../../../providers/Auth";
+import { useIsAuthenticated, useAuth } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
+import Cookies from "js-cookie";
 
+const linkUrl = Cookies.get("usertype");
 const AdministratorNavbar = () => {
+  const { isUsertype, setUsertype, userDetails } = useAuth();
   const isAuthenticated = useIsAuthenticated();
-  var [switchViewModal, setSwitchViewModal] = useState((switchViewModal = false));
+  var [switchViewModal, setSwitchViewModal] = useState(
+    (switchViewModal = false)
+  );
 
   return (
     <Layout>
@@ -39,7 +44,7 @@ const AdministratorNavbar = () => {
                         icon={["fas", "user-circle"]}
                         size="lg"
                       />{" "}
-                      Name <DownOutlined />
+                      {userDetails.firstName} <DownOutlined />
                     </a>
                   </Dropdown>
                 </li>
@@ -143,12 +148,26 @@ const profileMenu = (setSwitchViewModal) => (
       </Link>
     </Menu.Item>
     <Menu.Item key="1">
+      <Link href={`/${linkUrl}/users`} as={`/${linkUrl}/users`}>
+        <a>
+          <FontAwesomeIcon icon={["fas", "users"]} size="sm" /> Users
+        </a>
+      </Link>
+    </Menu.Item>
+    <Menu.Item key="2">
+      <Link href={`/${linkUrl}/picklists`} as={`/${linkUrl}/picklists`}>
+        <a>
+        <FontAwesomeIcon icon={["fas", "sliders-h"]} size="sm" /> Picklists
+        </a>
+      </Link>
+    </Menu.Item>
+    {/* <Menu.Item key="1">
       
       <a href="#switchview-modal" onClick={() => setSwitchViewModal(true)}>
         <EyeFilled /> Switch View
       </a>
-    </Menu.Item>
-    <Menu.Item key="2">
+    </Menu.Item> */}
+    <Menu.Item key="3">
       <Link href="/logout" passHref>
         <a>
           <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" /> Logout

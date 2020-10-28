@@ -111,28 +111,34 @@ const CourseAssessmentsItems = (props) => {
                   return (
                     <>
                       <Row className="" gutter={[8, 8]}>
-                      <Col span={2}></Col>
-                        <Col span={11}><b>Item</b></Col>
-                        <Col span={5}><b>Type</b></Col>
-                        <Col span={3}><b>Duration</b></Col>
+                        <Col span={2}></Col>
+                        <Col span={11}>
+                          <b>Item</b>
+                        </Col>
+                        <Col span={5}>
+                          <b>Type</b>
+                        </Col>
+                        <Col span={3}>
+                          <b>Duration</b>
+                        </Col>
                       </Row>
                       {thisPicklist.map((field, index) => {
-                        let istypeName="";
-                        if(field.assessmentItemTypeId==1){
-                          istypeName="Essay";
-                        }else if(field.assessmentItemTypeId==2){
-                          istypeName="Multiple Choice";
-                        }else if(field.assessmentItemTypeId==3){
-                          istypeName="True or False";
-                        }else{
-                          istypeName="---";
+                        let istypeName = "";
+                        if (field.assessmentItemTypeId == 1) {
+                          istypeName = "Essay";
+                        } else if (field.assessmentItemTypeId == 2) {
+                          istypeName = "Multiple Choice";
+                        } else if (field.assessmentItemTypeId == 3) {
+                          istypeName = "True or False";
+                        } else {
+                          istypeName = "---";
                         }
                         field = {
                           ...field,
                           key: index,
                           value: field.name,
                           id: field.id,
-                          assessmentItemTypeName:istypeName,
+                          assessmentItemTypeName: istypeName,
                         };
                         console.log("Individual Fields:", field);
                         return (
@@ -152,7 +158,9 @@ const CourseAssessmentsItems = (props) => {
                             </Col>
                             <Col span={11}>{field.value}</Col>
                             <Col span={5}>{field.assessmentItemTypeName}</Col>
-                            <Col span={3}>{field.duration?field.duration:'--'}</Col>
+                            <Col span={3}>
+                              {field.duration ? field.duration : "--"}
+                            </Col>
 
                             {/* <Form.Item
                               required={false}
@@ -195,17 +203,58 @@ const CourseAssessmentsItems = (props) => {
                 <Form.List name={widgetFieldLabels.catValueLabel}>
                   {(fields, { add, remove }) => {
                     return (
-                      <Row className="" gutter={[4, 8]}>
+                      <>
+                        <Row className="" gutter={[8, 8]}>
+                          <Col span={2}></Col>
+                          <Col span={11}>
+                            <b>Item</b>
+                          </Col>
+                          <Col span={5}>
+                            <b>Type</b>
+                          </Col>
+                          <Col span={3}>
+                            <b>Duration</b>
+                          </Col>
+                        </Row>
                         {chosenRows.map((field, index) => {
+                          let istypeName = "";
+                          if (field.assessmentItemTypeId == 1) {
+                            istypeName = "Essay";
+                          } else if (field.assessmentItemTypeId == 2) {
+                            istypeName = "Multiple Choice";
+                          } else if (field.assessmentItemTypeId == 3) {
+                            istypeName = "True or False";
+                          } else {
+                            istypeName = "---";
+                          }
                           field = {
                             ...field,
                             key: index,
                             value: field.name,
+                            assessmentItemTypeName: istypeName,
                           };
                           console.log("ChosenRows Individual Fields:", field);
                           return (
-                            <div key={field.key}>
-                              <Form.Item
+                            <Row className="" gutter={[0, 0]} key={field.key}>
+                            <Col span={2}>
+                              {chosenRows.length >= 1 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  style={{ margin: "0 8px" }}
+                                  key={`del-${field.key}`}
+                                  onClick={() => {
+                                    remove(field.key);
+                                    onRemove(field.value);
+                                  }}
+                                />
+                              ) : null}
+                            </Col>
+                            <Col span={11}>{field.value}</Col>
+                            <Col span={5}>{field.assessmentItemTypeName}</Col>
+                            <Col span={3}>
+                              {field.duration ? field.duration : "--"}
+                            </Col>
+                              {/* <Form.Item
                                 required={false}
                                 key={field.key}
                                 gutter={[16, 16]}
@@ -238,11 +287,11 @@ const CourseAssessmentsItems = (props) => {
                                     }}
                                   />
                                 ) : null}
-                              </Form.Item>
-                            </div>
+                              </Form.Item> */}
+                            </Row>
                           );
                         })}
-                      </Row>
+                      </>
                     );
                   }}
                 </Form.List>

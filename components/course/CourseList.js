@@ -404,15 +404,14 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                 </Link>
               }
               actions={[
-                course.isPublished ? (
+                /* course.isPublished ? (
                   <Tooltip title="Unpublish">
                     <div
                       className="class-icon-holder"
                       onClick={() => setModal2Visible(true)}
                     >
                       <CloudDownloadOutlined
-                        key="unpublish"
-                       /*  onClick={() => setModal2Visible(true)} */
+                        key="unpublish"                       
                       />
                     </div>
                   </Tooltip>
@@ -425,7 +424,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                       <CloudUploadOutlined key="publish" />
                     </div>
                   </Tooltip>
-                ),
+                ), */
                 <Tooltip title="Edit">
                   <div
                     className="class-icon-holder"

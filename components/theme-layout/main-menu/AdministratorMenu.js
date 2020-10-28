@@ -52,7 +52,7 @@ const AdministratorMenu = () => {
         </Link>
       </Menu.Item>
 
-      <Menu.Item
+      {/* <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "users"]} size="lg" />}
         key="users"
       >
@@ -67,7 +67,7 @@ const AdministratorMenu = () => {
         <Link href="/administrator/picklists" as={`/administrator/picklists`}>
           <a>Picklists</a>
         </Link>
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fa", "file-alt"]} size="lg" />}
         key="reports"

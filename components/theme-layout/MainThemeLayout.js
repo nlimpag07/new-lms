@@ -19,17 +19,25 @@ const MainMenu = dynamic(() => import("./main-menu/MainMenu"));
 const LearnerMenu = dynamic(() => import("./main-menu/LearnerMenu"));
 //import InstructorMenu from "./main-menu/InstructorMenu";
 const InstructorMenu = dynamic(() => import("./main-menu/InstructorMenu"));
-const CourseManagementMenu = dynamic(() => import("./main-menu/CourseManagementMenu"));
-const ClassesManagementMenu = dynamic(() => import("./main-menu/ClassesManagementMenu"));
+const CourseManagementMenu = dynamic(() =>
+  import("./main-menu/CourseManagementMenu")
+);
+const ClassesManagementMenu = dynamic(() =>
+  import("./main-menu/ClassesManagementMenu")
+);
 //import AdministratorMenu from "./main-menu/InstructorMenu";
-const AdministratorMenu = dynamic(() => import("./main-menu/AdministratorMenu"));
+const AdministratorMenu = dynamic(() =>
+  import("./main-menu/AdministratorMenu")
+);
 //importing navbar
 //import MainNavbar from "./navbar/MainNavbar";
 const MainNavbar = dynamic(() => import("./navbar/MainNavbar"));
 //import InstructorNavbar from "./navbar/InstructorNavbar";
 const InstructorNavbar = dynamic(() => import("./navbar/InstructorNavbar"));
 //import AdministratorNavbar from "./navbar/InstructorNavbar";
-const AdministratorNavbar = dynamic(() => import("./navbar/AdministratorNavbar"));
+const AdministratorNavbar = dynamic(() =>
+  import("./navbar/AdministratorNavbar")
+);
 //importing breadcrumbs
 import BreadCrumbs from "./breadcrumbs/BreadCrumbs";
 //importing footer
@@ -38,16 +46,15 @@ import TemplateFooter from "./templateFooter/templateFooter";
 //importing CourseListProvider Context
 //import { CourseListProvider } from "../../providers/CourseProvider";
 
-
 const { Header, Content, Sider } = Layout;
 import Loader from "./loader/loader";
 
 export default function MainThemeLayout({ children }) {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(true);
   //console.log(router.route);
   let NavigationMenu, MainNav, BreadCrumb, footer;
-  MainNav = <MainNavbar />
+
   BreadCrumb = <BreadCrumbs pathname={router.route} />;
   footer = <TemplateFooter />;
   //console.log(router.pathname)
@@ -56,55 +63,50 @@ export default function MainThemeLayout({ children }) {
     if (router.route.startsWith("/learner/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
-    
   } else if (router.route.startsWith("/instructor")) {
-    
-      NavigationMenu = <InstructorMenu />;
-     // MainNav = <InstructorNavbar />;
-      BreadCrumb = <BreadCrumbs pathname={router.route} />;
-      if (router.route.startsWith("/instructor/[course]/")) {
-        NavigationMenu = <CourseManagementMenu />;
-      }
-      if (router.route.startsWith("/instructor/classes/")) {
-        NavigationMenu = <ClassesManagementMenu />;
-      }
-      
-    
+    NavigationMenu = <InstructorMenu />;
+    // MainNav = <InstructorNavbar />;
+    BreadCrumb = <BreadCrumbs pathname={router.route} />;
+    if (router.route.startsWith("/instructor/[course]/")) {
+      NavigationMenu = <CourseManagementMenu />;
+    }
+    if (router.route.startsWith("/instructor/classes/")) {
+      NavigationMenu = <ClassesManagementMenu />;
+    }
   } else if (router.route.startsWith("/administrator")) {
-    
     NavigationMenu = <AdministratorMenu />;
     if (router.route.startsWith("/administrator/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
-    //MainNav = <AdministratorNavbar />;
-  
-} else {
+    MainNav = <AdministratorNavbar />;
+  } else {
+    MainNav = <MainNavbar />;
     NavigationMenu = <MainMenu />;
     //MainNav = <MainNavbar />;
-    
   }
 
-  const [collapsed, setCollapsed] = useState(false);  
-  const onCollapse = collapsed => {
+  const [collapsed, setCollapsed] = useState(false);
+  const onCollapse = (collapsed) => {
     //console.log(collapsed);
     setCollapsed(collapsed);
   };
   useEffect(() => {
     setLoading(false);
-  }, []); 
+  }, []);
   return (
     <Loader loading={loading}>
-      
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider theme="light" /* collapsible collapsed={collapsed} onCollapse={onCollapse} */ breakpoint="lg"
-      collapsedWidth="0"
-      /* onBreakpoint={broken => {
+        <Sider
+          theme="light"
+          /* collapsible collapsed={collapsed} onCollapse={onCollapse} */ breakpoint="lg"
+          collapsedWidth="0"
+          /* onBreakpoint={broken => {
         console.log(broken);
       }}
       onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
       }} */
-      >
+        >
           <div className="logo">
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
@@ -142,8 +144,12 @@ export default function MainThemeLayout({ children }) {
           * {
             box-sizing: border-box;
           }
-          .ant-menu-inline-collapsed span{display:none;}
-          .logo img{width:100%;}
+          .ant-menu-inline-collapsed span {
+            display: none;
+          }
+          .logo img {
+            width: 100%;
+          }
         `}</style>
       </Layout>
     </Loader>
