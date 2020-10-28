@@ -27,6 +27,7 @@ import {
   List,
   Tabs,
   Empty,
+  Alert,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -107,7 +108,7 @@ const CourseView = ({ course_id }) => {
   const [course_competencies, setCourse_competencies] = useState("");
   const [course_enrollments, setCourse_enrollments] = useState("");
   const [course_reviews, setCourse_reviews] = useState("");
-
+  const [copySuccess, setCopySuccess] = useState("");
   useEffect(() => {
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
@@ -245,9 +246,17 @@ const CourseView = ({ course_id }) => {
   ];
   function onShareClick(e) {
     e.preventDefault();
-    var copyText = document.getElementById("shareCourse").innerText;
-    //copyText.select();
-    console.log("The text:", copyText);
+    var copyText = document.getElementById("shareCourse");
+    //document.getElementById("shareCourse").innerText;
+    copyText.select();
+    document.execCommand("copy");
+    setCopySuccess("Copied!");
+    //console.log("The text:", copyText);
+  }
+  function onShareMouseOut(e) {
+    e.preventDefault();
+    setCopySuccess("");
+    //console.log("The text:", copyText);
   }
   return course.length ? (
     <Row
@@ -315,11 +324,21 @@ const CourseView = ({ course_id }) => {
                 <Col xs={24}>
                   <h3>SHARE</h3>
                   {
-                    <button
-                      onClick={onShareClick}
-                      id="shareCourse"
-                      className="tag-button"
-                    >{`${homeUrl}/course/view/${id}`}</button>
+                    <div>
+                      <Input
+                        id="shareCourse"
+                        value={`${homeUrl}/course/view/${id}`}
+                        readOnly
+                        style={{ maxWidth: "150px" }}
+                      />
+                      <Button
+                        onClick={onShareClick}
+                        onMouseOut={onShareMouseOut}
+                      >
+                        Copy
+                      </Button>
+                      {" "}{copySuccess}
+                    </div>
                   }
                 </Col>
               </Row>

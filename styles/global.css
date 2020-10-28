@@ -365,3 +365,7 @@ a.ellipsis i {
   text-transform: initial !important;
   font-style:italic;
 }
+.ant-menu-inline .ant-menu-item::after{
+  left:0 !important;
+  right:100% !important;
+}
