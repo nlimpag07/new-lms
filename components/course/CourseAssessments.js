@@ -382,12 +382,12 @@ const CourseAssessments = ({ course_id }) => {
         ? curAssessmentId[0].attempts
         : "";
 
-    console.log("Current assessment: ", curAssessmentId);
+    //console.log("Current assessment: ", curAssessmentId);
     var data = {};
     var errorList = [];
     if (curAssessmentIdExist) {
       //Edit Course assessment
-      console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
+      //console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.courseId = course_id;
@@ -506,7 +506,7 @@ const CourseAssessments = ({ course_id }) => {
       }
 
       data = JSON.stringify(data);
-      console.log("Edit Stringify Data: ", data);
+      //console.log("Edit Stringify Data: ", data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
         onFinishModal(errorList);
@@ -540,7 +540,7 @@ const CourseAssessments = ({ course_id }) => {
       }
     } else {
       //Add Course assessment
-      console.log("Empty Baby", course_id);
+      //console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
       data.courseId = course_id;
       if (!!values.assessmentdetails) {

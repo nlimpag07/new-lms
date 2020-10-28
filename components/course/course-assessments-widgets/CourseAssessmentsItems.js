@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 import {
   Row,
+  Col,
   Modal,
   Card,
   Input,
@@ -57,7 +58,7 @@ const CourseAssessmentsItems = (props) => {
     })
     chosenRows = choosed;
   } */
-  console.log('Chosen Rows',chosenRows);
+  //console.log('Chosen Rows',chosenRows);
   /* useEffect(() => {
     var data = JSON.stringify({});
     var config = {
@@ -85,7 +86,7 @@ const CourseAssessmentsItems = (props) => {
 
   const onRemove = (name) => {
     let newValues = chosenRows.filter((value) => value.name !== name);
-    console.log("NewValues:", newValues);
+    //console.log("NewValues:", newValues);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
       assessmentitems: newValues,
@@ -108,18 +109,52 @@ const CourseAssessmentsItems = (props) => {
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
                   return (
-                    <Row className="" gutter={[4, 8]}>
+                    <>
+                      <Row className="" gutter={[8, 8]}>
+                      <Col span={2}></Col>
+                        <Col span={11}><b>Item</b></Col>
+                        <Col span={5}><b>Type</b></Col>
+                        <Col span={3}><b>Duration</b></Col>
+                      </Row>
                       {thisPicklist.map((field, index) => {
+                        let istypeName="";
+                        if(field.assessmentItemTypeId==1){
+                          istypeName="Essay";
+                        }else if(field.assessmentItemTypeId==2){
+                          istypeName="Multiple Choice";
+                        }else if(field.assessmentItemTypeId==3){
+                          istypeName="True or False";
+                        }else{
+                          istypeName="---";
+                        }
                         field = {
-                          ...field,                          
+                          ...field,
                           key: index,
                           value: field.name,
                           id: field.id,
+                          assessmentItemTypeName:istypeName,
                         };
-                        //console.log('Individual Fields:', field)
+                        console.log("Individual Fields:", field);
                         return (
-                          <div key={field.key}>
-                            <Form.Item
+                          <Row className="" gutter={[0, 0]} key={field.key}>
+                            <Col span={2}>
+                              {fields.length >= 1 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  style={{ margin: "0 8px" }}
+                                  key={`del-${field.key}`}
+                                  onClick={() => {
+                                    remove(field.key);
+                                    onRemove(field.value);
+                                  }}
+                                />
+                              ) : null}
+                            </Col>
+                            <Col span={11}>{field.value}</Col>
+                            <Col span={5}>{field.assessmentItemTypeName}</Col>
+                            <Col span={3}>{field.duration?field.duration:'--'}</Col>
+
+                            {/* <Form.Item
                               required={false}
                               key={field.key}
                               gutter={[16, 16]}
@@ -140,23 +175,14 @@ const CourseAssessmentsItems = (props) => {
                                   value={field.value}
                                   readOnly
                                 />
+                                
                               </Form.Item>
-                              {fields.length >= 1 ? (
-                                <MinusCircleOutlined
-                                  className="dynamic-delete-button"
-                                  style={{ margin: "0 8px" }}
-                                  key={`del-${field.key}`}
-                                  onClick={() => {
-                                    remove(field.key);
-                                    onRemove(field.value);
-                                  }}
-                                />
-                              ) : null}
-                            </Form.Item>
-                          </div>
+                              
+                            </Form.Item> */}
+                          </Row>
                         );
                       })}
-                    </Row>
+                    </>
                   );
                 }}
               </Form.List>
@@ -176,7 +202,7 @@ const CourseAssessmentsItems = (props) => {
                             key: index,
                             value: field.name,
                           };
-                          //console.log("ChosenRows Individual Fields:", field);
+                          console.log("ChosenRows Individual Fields:", field);
                           return (
                             <div key={field.key}>
                               <Form.Item
@@ -243,7 +269,7 @@ const CourseAssessmentsItems = (props) => {
 const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
   const data = [];
   //console.log('chosenRows on Modal',chosenRows)
-  var last = chosenRows.length ? chosenRows[chosenRows.length - 1].id+1 : 0;
+  var last = chosenRows.length ? chosenRows[chosenRows.length - 1].id + 1 : 0;
   last = last ? last : 0;
   const [questionType, setquestionType] = useState(0);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);

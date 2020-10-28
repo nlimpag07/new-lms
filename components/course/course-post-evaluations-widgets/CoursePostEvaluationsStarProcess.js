@@ -35,9 +35,9 @@ const CoursePostEvaluationsStarProcess = (props) => {
   const [starRating, setStarRating] = useState(0);
   useEffect(() => {}, []);
   
-  const onStarRating = (value) => {
-    //console.log("minStar:", value);
-    setStarRating(value);
+  const onStarRating = (e) => {
+    console.log("Star:", e.target.value);
+    setStarRating(e.target.value);
   };
   return (
     <>
@@ -46,7 +46,7 @@ const CoursePostEvaluationsStarProcess = (props) => {
           <span>Min. Value</span>
         </Form.Item>
         <Form.Item name={["evaluationvalues", "minValue"]} noStyle>
-          <InputNumber min={1} max={3} placeholder="Min. Value" />
+          <Input placeholder="Min. Value" style={{width: "20%" }} />
         </Form.Item>
         <Form.Item
           style={{
@@ -58,11 +58,10 @@ const CoursePostEvaluationsStarProcess = (props) => {
           <span>Max. Value</span>
         </Form.Item>
         <Form.Item name={["evaluationvalues", "maxValue"]} noStyle>
-          <InputNumber
-            min={1}
-            max={5}
+          <Input
             onChange={onStarRating}
             placeholder="Max. Value"
+            style={{width: "20%" }}
           />
         </Form.Item>
       </Input.Group>
