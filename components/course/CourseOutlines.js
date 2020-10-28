@@ -191,6 +191,11 @@ const CourseOutlines = ({ course_id }) => {
     title: "",
     content: "",
   });
+  const [constDefaultValues, setconstDefaultValues] = useState({
+    outlinemediafiles: [],
+    outlineprerequisite: [],
+    outlinemilestones: [],
+  });
   const [defaultWidgetValues, setdefaultWidgetValues] = useState({
     outlinedetails: [],
     outlineprerequisite: [],
@@ -265,8 +270,8 @@ const CourseOutlines = ({ course_id }) => {
         ...defaultWidgetValues,
         outlineprerequisite: [...value],
       });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
+      console.log("outlineprerequisite value", value);
+      console.log("=======================");
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -322,10 +327,10 @@ const CourseOutlines = ({ course_id }) => {
         });
         setdefaultWidgetValues({
           ...defaultWidgetValues,
-          outlinemediafiles: values.outlinemedia,
+          outlinemediafiles: values.outlinemedia.fileList,
         });
       }
-      console.log("Course Outline Media File: ", value);
+      //console.log("Course Outline Media File: ", value);
     }
 
     if (name === "outlinemilestones") {
@@ -373,7 +378,9 @@ const CourseOutlines = ({ course_id }) => {
       curOutlineId && curOutlineId.length ? curOutlineId[0].title : "";
     let curOutlineuserGroupId =
       curOutlineId && curOutlineId.length ? curOutlineId[0].userGroupId : "";
-    //console.log("Current Outline: ", curOutlineuserGroupId);
+    let curOutlinedescription =
+      curOutlineId && curOutlineId.length ? curOutlineId[0].description : "";
+    //console.log("Current Outline: ", curOutlineId[0]);
     var data = new FormData();
     var errorList = [];
     if (curOutlineIdExist) {
@@ -382,6 +389,8 @@ const CourseOutlines = ({ course_id }) => {
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.append("courseId", course_id);
+      data.append("id", curOutlineIdExist);
+
       if (!!values.outlinedetails) {
         if (!!values.outlinedetails.outlinetitle) {
           data.append("title", values.outlinedetails.outlinetitle);
@@ -392,6 +401,8 @@ const CourseOutlines = ({ course_id }) => {
         if (!!values.outlinedetails.description) {
           data.append("description", values.outlinedetails.description);
           isNotAllEmpty.push("Not Empty");
+        } else {
+          data.append("description", curOutlinedescription);
         }
         if (!!values.outlinedetails.visibility) {
           data.append("visibility", values.outlinedetails.visibility);
@@ -407,32 +418,14 @@ const CourseOutlines = ({ course_id }) => {
       }
       if (!!values.outlinefeaturedimage && values.outlinefeaturedimage.length) {
         values.outlinefeaturedimage.map((image, index) => {
-          data.append(`featureImage`, image.fileList[0].originFileObj);
+          data.append("featureImage", image.fileList[0].originFileObj);
         });
         isNotAllEmpty.push("Not Empty");
       }
       if (values.outlinefeaturedvideo && values.outlinefeaturedvideo.length) {
         values.outlinefeaturedvideo.map((video, index) => {
           //console.log("Video:", video);
-          data.append(`interactiveVideo`, video.fileList[0].originFileObj);
-        });
-        isNotAllEmpty.push("Not Empty");
-      }
-      if (values.outlineprerequisite && values.outlineprerequisite.length) {
-        values.outlineprerequisite.map((outlineprereq, index) => {
-          data.append(
-            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-            outlineprereq.id
-          );
-        });
-        isNotAllEmpty.push("Not Empty");
-      }
-
-      if (!!values.outlinemediafiles && values.outlinemediafiles.length) {
-        values.outlinemediafiles.map((media) => {
-          media.fileList.map((listOfFiles, index) => {
-            data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
-          });
+          data.append("interactiveVideo", video.fileList[0].originFileObj);
         });
         isNotAllEmpty.push("Not Empty");
       }
@@ -440,6 +433,127 @@ const CourseOutlines = ({ course_id }) => {
       if (!!values.outlineduration) {
         data.append("duration", values.outlineduration);
         isNotAllEmpty.push("Not Empty");
+      }
+
+      /* if (!!values.outlinemediafiles && values.outlinemediafiles.length) {
+        values.outlinemediafiles.map((media) => {
+          media.fileList.map((listOfFiles, index) => {
+            data.append(`CourseOutlineMediaFile`, listOfFiles.originFileObj);
+          });
+        });
+        isNotAllEmpty.push("Not Empty");
+      } */
+
+      //Edit outlinemediafiles
+      if (values.outlinemediafiles) {
+        //Array for Addition
+        values.outlinemediafiles[0].fileList.map((submittedFile, index) => {
+          if (submittedFile.id == 0) {
+            data.append(`CourseOutlineMediaFile`, submittedFile.originFileObj);
+            isNotAllEmpty.push("Not Empty");
+          }
+        });
+
+        //Array for deletion
+        var tobedeleted = [];
+        constDefaultValues.outlinemediafiles.map(
+          (constantmediafiles, index) => {
+            let newFile = values.outlinemediafiles[0].fileList.filter(
+              (latest) => {
+                let theItem = "";
+                if (constantmediafiles.id == latest.id) {
+                  theItem = latest;
+                }
+                return theItem;
+              }
+            );
+
+            if (!newFile.length) {
+              /* let delTag = {
+              id: constantmediafiles.id,
+              title: constantmediafiles.title,
+              tagId: constantmediafiles.id,
+              isticked: false,
+            }; */
+              tobedeleted.push(constantmediafiles);
+            }
+          }
+        );
+        //console.log("======================");
+        //console.log("tobedeletedTags: ", tobedeleted);
+        if (tobedeleted && tobedeleted.length) {
+          tobedeleted.map((olmf, index) => {
+            //console.log('OMLF', olmf)
+            data.append(`DeleteCourseOutlineMedia`, olmf.id);
+          });
+          isNotAllEmpty.push("Not Empty");
+        }
+      }
+
+      /* if (values.outlineprerequisite && values.outlineprerequisite.length) {
+        values.outlineprerequisite.map((outlineprereq, index) => {
+          data.append(
+            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
+            outlineprereq.id
+          );
+        });
+        isNotAllEmpty.push("Not Empty");
+      } */
+      //Edit prerequisite
+      if (values.outlineprerequisite) {
+        //Array for Addition
+
+        var processOutlinePrerequisite;
+        processOutlinePrerequisite = values.outlineprerequisite.filter(
+          (previousRequisite) => previousRequisite.id === 0
+        );
+        //console.log("processOutlinePrerequisite: ", processOutlinePrerequisite);
+        processOutlinePrerequisite.map((requisite, index) => {
+          //console.log("Requi to be added:", requisite);
+          data.append(
+            `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
+            requisite.preRequisiteId
+          );
+          isNotAllEmpty.push("Not Empty");
+        });
+
+        //Array for deletion
+        var tobedeleted = [];
+        constDefaultValues.outlineprerequisite.map(
+          (constantrequisite, index) => {
+            let newRequi = values.outlineprerequisite.filter((latest) => {
+              let theItem = "";
+              if (constantrequisite.preRequisiteId == latest.preRequisiteId) {
+                theItem = latest;
+              }
+              return theItem;
+            });
+
+            if (!newRequi.length) {
+              let delReq = {
+                id: constantrequisite.id,
+                title: constantrequisite.title,
+                preRequisiteId: constantrequisite.preRequisiteId,
+              };
+              tobedeleted.push(delReq);
+            }
+          }
+        );
+        //console.log("======================");
+        //console.log("tobedeletedOutlinePrerequisite: ", tobedeleted);
+        if (tobedeleted && tobedeleted.length) {
+          tobedeleted.map((requisite, index) => {
+            data.append(
+              `DeleteCourseOutlinePrerequisite[${index}][id]`,
+              requisite.id
+            );
+            /* data.append(
+              `DeleteCourseOutlinePrerequisite[${index}][preRequisiteId]`,
+              requisite.preRequisiteId
+            ); */
+          });
+          isNotAllEmpty.push("Not Empty");
+        }
       }
 
       //data = JSON.stringify(data);
@@ -504,7 +618,7 @@ const CourseOutlines = ({ course_id }) => {
         values.outlinefeaturedvideo &&
           values.outlinefeaturedvideo.length &&
           values.outlinefeaturedvideo.map((video, index) => {
-            console.log("Video:", video);
+            //console.log("Video:", video);
             data.append(`interactiveVideo`, video.fileList[0].originFileObj);
           });
       } else {
@@ -515,7 +629,7 @@ const CourseOutlines = ({ course_id }) => {
         values.outlineprerequisite.map((outlineprereq, index) => {
           data.append(
             `CourseOutlinePrerequisite[${index}][preRequisiteId]`,
-            outlineprereq.id
+            outlineprereq.preRequisiteId
           );
         });
 
@@ -615,6 +729,11 @@ const CourseOutlines = ({ course_id }) => {
             `/${linkUrl}/[course]/[...manage]`,
             `/${linkUrl}/course/edit/${course_id}/course-outline`
           ); */
+          setconstDefaultValues({
+            outlinemediafiles: [],
+            outlineprerequisite: [],
+            outlinemilestones: [],
+          });
           setdefaultWidgetValues({
             outlinedetails: [],
             outlineprerequisite: [],
@@ -640,20 +759,7 @@ const CourseOutlines = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // console.log(curOutlineId)
-  /*console.log(outlineList)  */
-  /* let {
-    id,
-    courseOutlineMedia,
-    courseOutlineMilestone,
-    courseOutlinePrerequisite,
-    description,
-    duration,
-    featureImage,
-    interactiveVideo,
-    title,
-    userGroup,
-  } = ""; */
+
   useEffect(() => {
     let {
       id,
@@ -685,7 +791,6 @@ const CourseOutlines = ({ course_id }) => {
             title: getOutline[0].title,
             courseOutlineId: c_outlinerequisite.courseOutlineId,
             preRequisiteId: c_outlinerequisite.preRequisiteId,
-            isticked: true,
           };
           return list;
         });
@@ -721,6 +826,12 @@ const CourseOutlines = ({ course_id }) => {
       }
 
       //console.log(outlineItem)
+      setconstDefaultValues({
+        ...constDefaultValues,
+        outlinemediafiles: mediaFiles,
+        outlineprerequisite: prerequisite,
+        outlinemilestones: mileStones,
+      });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         outlinedetails: [
@@ -740,6 +851,12 @@ const CourseOutlines = ({ course_id }) => {
         outlinemilestones: mileStones,
       });
     } else {
+      setconstDefaultValues({
+        ...constDefaultValues,
+        outlinemediafiles: [],
+        outlineprerequisite: [],
+        outlinemilestones: [],
+      });
       setdefaultWidgetValues({
         ...defaultWidgetValues,
         outlinedetails: [],
@@ -749,57 +866,8 @@ const CourseOutlines = ({ course_id }) => {
         outlineprerequisite: [],
         outlinemediafiles: [],
         outlinemilestones: [],
-
-        /* featuredvideo: video,
-        relatedcourses: relateds,
-        duration: [durationtime], */
       });
     }
-    //console.log(title)
-    //setdefaultWidgetValues(defaultWidgetValues);
-    /* let {
-      relateds,
-      categories,
-      levels,
-      types,
-      languages,
-      tags,
-      image,
-      video,
-      durationtime,
-      durationtype,
-    } = "";
-
-    if (relatedCourse) {
-      relateds = relatedCourse.map((c_related, index) => {
-        let list = {
-          id: c_related.courseRelated.course.id,
-          title: c_related.courseRelated.course.title,
-          isreq: c_related.isPrerequisite,
-        };
-        return list;
-      });
-    }
-    
-    if (featureImage) {
-      image = featureImage;
-    }
-    if (featureVideo) {
-      video = featureVideo;
-    }
-    if (durationTime && durationType) {
-      video = featureVideo;
-    }
-    if (durationTime && durationType) {
-      durationtime = { durationTime: durationTime, durationType: durationType };
-    }
-    setdefaultWidgetValues({
-      ...defaultWidgetValues,
-      featuredimage: image,
-      featuredvideo: video,
-      relatedcourses: relateds,
-      duration: [durationtime],
-    }); */
   }, [curOutlineId]);
   /* console.log(defaultWidgetValues)
   console.log(outline) */

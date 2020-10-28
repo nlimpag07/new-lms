@@ -239,16 +239,20 @@ const CourseOutlinePrerequisite = (props) => {
   );
 };
 const modalFormBody = (outlineList, chosenRows) => {
-  const data = [];
-  
+  const data = []; 
+  const [sourceData, setsourceData] = useState([]);
+
+  /* console.log('Outline List:',outlineList)
+  console.log('=======================')
+  console.log('Chosen List:',chosenRows)
   outlineList.map((outline, index) => {
     data.push({
       key: index,
-      id: outline.id,
+      id: 0,
       title: outline.title,
       preRequisiteId:outline.id,
     });
-  });
+  }); */
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -269,7 +273,7 @@ const modalFormBody = (outlineList, chosenRows) => {
   const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
-    console.log(selectedRows);
+    //console.log(selectedRows);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -277,21 +281,49 @@ const modalFormBody = (outlineList, chosenRows) => {
     onChange: onSelectChange,
   };
   useEffect(() => {
+    
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
-      chosenRows.map((chosen, index) => {
-        data.filter((item) => {
-          if (item.id == chosen.preRequisiteId) {
-            defaultRows.push(item);
-            defaultKeys.push(item.key);
+      let datamap = outlineList.map((outline, index) => {
+        let theChosen = chosenRows.filter((item) => {
+          let newitem = false;
+          if (outline.id == item.preRequisiteId) {
+            newitem = true;
           }
+          return newitem;
         });
+        let theitem = {
+          key: index,
+          id: theChosen.length ? theChosen[0].id : 0,
+          title: outline.title,
+          preRequisiteId: outline.id,
+        };
+
+        if (theChosen.length) {
+          defaultRows.push(theitem);
+          defaultKeys.push(theitem.key);
+        }
+        return theitem;
       });
-      //console.log(thekeys)
+
+      setsourceData(datamap);
+      //console.log(datamap);
       setSelectedRowKeys(defaultKeys);
       setSelectedRows(defaultRows);
+    } else {
+      let theSource = outlineList.map((outline, index) => {
+        let item = {
+          key: index,
+          id: 0,
+          title: outline.title,
+          preRequisiteId: outline.id,
+        };
+        return item;
+      });
+      setsourceData(theSource);
     }
+    
   }, []);
   return (
     <Form.List name="outlineprerequisite">
@@ -338,7 +370,7 @@ const modalFormBody = (outlineList, chosenRows) => {
             <Table
               rowSelection={rowSelection}
               columns={columns}
-              dataSource={data}
+              dataSource={sourceData}
             />
           </div>
         );

@@ -93,7 +93,7 @@ const CourseOutlineMediaFiles = (props) => {
           var thisPicklist =
             getFieldValue(widgetFieldLabels.catValueLabel) || [];
           if (thisPicklist.length) {
-            console.log('received picklist value: ', thisPicklist);
+            //console.log('received picklist value: ', thisPicklist);
             return (
               <Form.List name={widgetFieldLabels.catValueLabel}>
                 {(fields, { add, remove }) => {
@@ -113,7 +113,7 @@ const CourseOutlineMediaFiles = (props) => {
                           key: index,
                           value: thisPicklist[index].file.name,
                         }; */
-                        console.log('Individual Fields:', field)
+                        //console.log('Individual Fields:', field)
                         return (
                           <div key={field.key}>
                             <Form.Item
@@ -279,7 +279,7 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     });
   }
   useEffect(() => {
-    setFileList({ file:'',fileList:dataList });
+    setFileList({ file: "", fileList: dataList });
   }, []);
   function getBase64(img, callback) {
     const reader = new FileReader();
@@ -305,6 +305,14 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     /* setLoading(true);    
     let thefileList = [...info.fileList];
     thefileList = thefileList.slice(-1); */
+
+    info.fileList.map((list, index) => {
+      if (!list.id) {
+        list["id"] = 0;
+      }
+      return list;
+    });
+    //console.log("Handle Change: ", [...info.fileList]);
     setFileList(info);
     /* if (Array.isArray(thefileList) && thefileList.length) {
       getBase64(thefileList[0].originFileObj, (imageUrl) => {
@@ -332,9 +340,11 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">
-            Click or drag file to this area to upload
+            Click or drag doc, docx, pdf file to this area to upload
           </p>
-          <p className="ant-upload-hint">Please upload an image file only.</p>
+          <p className="ant-upload-hint">
+            Please upload doc, docx, pdf file only.
+          </p>
         </div>
       )}
     </div>
