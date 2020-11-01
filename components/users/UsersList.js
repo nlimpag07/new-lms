@@ -47,9 +47,9 @@ const UsersList = ({ userlist }) => {
 
   
   var lastSelectedIndex = 0;
-  const ddata = userlist.map((dataItem) =>
+  const ddata = userlist.length?userlist.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)
-  );
+  ):null;
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],

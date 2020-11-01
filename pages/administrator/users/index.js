@@ -71,7 +71,7 @@ Users.getInitialProps = async (ctx) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/users",
+    url: apiBaseUrl + "/Users",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
