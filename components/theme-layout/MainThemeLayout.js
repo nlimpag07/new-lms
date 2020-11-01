@@ -59,13 +59,14 @@ export default function MainThemeLayout({ children }) {
   footer = <TemplateFooter />;
   //console.log(router.pathname)
   if (router.route.startsWith("/learner")) {
+    MainNav = <MainNavbar />;
     NavigationMenu = <LearnerMenu />;
     if (router.route.startsWith("/learner/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
   } else if (router.route.startsWith("/instructor")) {
     NavigationMenu = <InstructorMenu />;
-    // MainNav = <InstructorNavbar />;
+    MainNav = <InstructorNavbar />;
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     if (router.route.startsWith("/instructor/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
