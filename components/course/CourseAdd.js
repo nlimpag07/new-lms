@@ -397,7 +397,7 @@ const CourseAdd = () => {
             relatedcourse.isreq
           );
         })
-      : errorList.push("Missing Related Course");
+      : null;
     !!values.picklistlanguage
       ? values.picklistlanguage.map((language, index) => {
           data.append(`courseLanguage[${index}][languageId]`, language.languageId);

@@ -336,7 +336,7 @@ const CourseCompetencies = ({ course_id }) => {
         values.competencycertificates.length
       ) {
         values.competencycertificates.map((media) => {
-          data.append(`files`, media.fileList[0].originFileObj);
+          data.append(`attachment`, media.fileList[0].originFileObj);
           //console.log(media)
         });
         isNotAllEmpty.push("Not Empty");
@@ -432,7 +432,7 @@ const CourseCompetencies = ({ course_id }) => {
 
       !!values.competencycertificates && values.competencycertificates.length
           ? values.competencycertificates.map((image, index) => {
-              data.append(`files`, image.fileList[0].originFileObj);
+              data.append(`attachment`, image.fileList[0].originFileObj);
             })
           : errorList.push("Missing Competency Certificate");
       
@@ -572,7 +572,7 @@ const CourseCompetencies = ({ course_id }) => {
             final: isSelected[0].final,
           },
         ],
-        competencycertificates: isSelected[0].courseCompetenciesCertificate,
+        competencycertificates: {attachment:isSelected[0].attachment,fileName:isSelected[0].fileName,fileSize:isSelected[0].fileSize,fileType:isSelected[0].fileType,}
       });
     } else {
       setdefaultWidgetValues({

@@ -38,8 +38,7 @@ const CourseCompetenciesCertificates = (props) => {
     defaultWidgetValues,
     setdefaultWidgetValues,
   } = props;
-  var featured_image = defaultWidgetValues.competencycertificates && defaultWidgetValues.competencycertificates.length
-    ? defaultWidgetValues.competencycertificates[0].fileName
+  var featured_image = defaultWidgetValues.competencycertificates ? defaultWidgetValues.competencycertificates.fileName
     : "";
   //console.log(defaultWidgetValues.competencycertificates)
 

@@ -58,15 +58,15 @@ const linkUrl = Cookies.get("usertype");
 
 const AuthoredCourses = ({ authoredCoursesList }) => {
   const token = Cookies.get("token");
-  const {userDetails} = useAuth();
-  const userId= userDetails.id;
+  const { userDetails } = useAuth();
+  const userId = userDetails.id;
   const { courseAllList, setCourseAllList } = useCourseList();
-  
+
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [loading, setLoading] = useState(true);
-  const [myAuthoredCourses, setMyAuthoredCourses] = useState('');
+  const [myAuthoredCourses, setMyAuthoredCourses] = useState("");
   //console.log(authoredCoursesList)
   useEffect(() => {
     var data = JSON.stringify({});
@@ -81,18 +81,23 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
     };
     async function fetchData(config) {
       const response = await axios(config);
-      if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
+      if (response.data.result) {
+        //console.log(response)
+        //localStorage.setItem("courseAllList", JSON.stringify(response.data));
         setCourseAllList(response.data);
-        setMyAuthoredCourses(response.data.result.filter(course => course.authorId==userId));
+        setMyAuthoredCourses(
+          response.data.result.filter((course) => course.authorId == userId)
+        );
       } else {
         const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-        setMyAuthoredCourses(allCourses.result.filter(course => course.authorId==userId));
+        allCourses.length &&
+          setMyAuthoredCourses(
+            allCourses.result.filter((course) => course.authorId == userId)
+          );
       }
       setLoading(false);
     }
     fetchData(config);
-    
   }, []);
   return (
     <Col
@@ -256,9 +261,9 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-  
+
   /* let courses = courseList.result.filter(course => course.authorId==userId)*/
-  //console.log(courses) 
+  //console.log(courses)
   return courses.length ? (
     <>
       {courses.map((course) => (
