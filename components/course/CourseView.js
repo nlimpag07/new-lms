@@ -101,6 +101,9 @@ const CourseView = ({ course_id }) => {
   const { courseAllList } = useCourseList();
   const [course, setCourse] = useState("");
   const [modal2Visible, setModal2Visible] = useState("");
+  const [pubmodal2Visible, setPubModal2Visible] = useState("");
+
+  
   const [loading, setLoading] = useState(true);
 
   const [course_outline, setCourse_outline] = useState("");
@@ -189,10 +192,11 @@ const CourseView = ({ course_id }) => {
     courseLevel,
     courseTag,
     relatedCourse,
+    isPublished,
   } = courseDetails;
   featureImage = `${apidirectoryUrl}/Images/Course/${featureImage}`;
   featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
-
+  console.log("Course Details",courseDetails)
   let lessons = courseOutline ? courseOutline.length : 0;
   const listData = [
     {
@@ -272,9 +276,19 @@ const CourseView = ({ course_id }) => {
           md={24}
           lg={24}
         >
-          <Row className="widget-header-row" justify="start">
-            <Col xs={24}>
+          <Row className="widget-header-row" justify="start" align="middle">
+            <Col xs={24} sm={12} md={18}>
               <h1 className="widget-title">{title}</h1>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Row justify="end" align="middle" className="viewStatusReq">
+  <Col xs={24} sm={4} md={12}>Current Status: {isPublished==1?"Published":"Unpublished"}</Col>
+              <Col xs={24} sm={12} md={12}>{isPublished==1?<Button type="primary" shape="round" className="viewStatusReq-button" danger>
+              Unpublish
+        </Button>:<Button type="primary" shape="round" onClick={() => setPubModal2Visible(true)} className="viewStatusReq-button">
+          Publish
+        </Button>}</Col>
+              </Row>
             </Col>
           </Row>
           <Row
@@ -393,6 +407,20 @@ const CourseView = ({ course_id }) => {
             {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
           </Row>
         </Col>
+        <Modal
+        title="Publish Properties"
+        centered
+        visible={pubmodal2Visible}
+        onOk={() => setPubModal2Visible(false)}
+        onCancel={() => setPubModal2Visible(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+        width={1000}
+      >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+      </Modal>
         <Modal
           title={title}
           centered
@@ -595,6 +623,8 @@ const CourseView = ({ course_id }) => {
         .tab-content .related-courses a {
           margin-right: 1rem;
         }
+        .viewStatusReq {color:#666666;}
+        .viewStatusReq-button{padding-right:4rem !important; padding-left:4rem  !important;}
       `}</style>
     </Row>
   ) : (

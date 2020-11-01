@@ -123,7 +123,7 @@ const CourseManagement = (props) => {
     thePage[0] == "view" &&
       (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
-    thePage[0] == "edit" && (theContent = <CourseEdit />); // url /edit/couseId - Editing Course General
+    thePage[0] == "edit" && (theContent = <CourseEdit course_id={thePage[1]} />); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
