@@ -55,25 +55,20 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const RecentCourses = ({ RecentCoursesList }) => {
+const RecentCourses = ({ courses }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
 
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [loading, setLoading] = useState(true);
-  const [myRecentCourses, setMyRecentCourses] = useState('');
+  const [myRecentCourses, setMyRecentCourses] = useState("");
   //console.log(RecentCoursesList)
   useEffect(() => {
-    if (courseAllList) {
+    if (courses.length) {
       /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
       setCourseAllList(response.data); */
-      setMyRecentCourses(courseAllList.result.filter((getCourse) => getCourse.isPublished == 1));
-    } else {
-      const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-      setMyRecentCourses(allCourses.result.filter((getCourse) => getCourse.isPublished == 1));
-      //console.log(courseAllList)
-
+      setMyRecentCourses(courses.result);
     }
     /* var data = JSON.stringify({});
     var config = {

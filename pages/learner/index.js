@@ -38,8 +38,8 @@ import {
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = (props) => {
-  //console.log(courselist);
-  const { courselist } = props;
+  console.log("props From DashBoard GetInitialProps",props);
+  const { courses, learner,user } = props;
   
   const [curGridStyle, setCurGridStyle] = useState("grid");
   const {courseAllList, setCourseAllList } = useCourseList();
@@ -60,7 +60,7 @@ const LearnerIndex = (props) => {
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ margin: "1rem 0" }}
         >
-          <RecentCourses />
+          <RecentCourses courses={courses}  />
           <ToDos />
         </Row>
         {/*2nd Level*/}
@@ -86,7 +86,7 @@ const LearnerIndex = (props) => {
     </MainThemeLayout>
   );
 };
-/* LearnerIndex.getInitialProps = async (ctx) => {
+LearnerIndex.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -103,7 +103,7 @@ const LearnerIndex = (props) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/courses",
+    url: apiBaseUrl + "/Dashboard",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const LearnerIndex = (props) => {
   const result = await axios(config);
   res = result.data;
   const data = res;
-  //console.log(data);
-  return { courselist: res };
-}; */
+  //console.log('Dashboard Data:',data);
+  return { ...data };
+};
 export default withAuth(LearnerIndex);
