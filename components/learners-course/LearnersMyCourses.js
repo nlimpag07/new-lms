@@ -65,9 +65,9 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const LearnersCourseList = (props) => {
+const LearnersMyCourses = ({ mycourses }) => {
   const router = useRouter();
-  //console.log(router);
+  //console.log("My COURSES", mycourses);
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -75,43 +75,15 @@ const LearnersCourseList = (props) => {
   var [courseDrawerDetails, setCourseDrawerDetails] = useState(
     (courseDrawerDetails = "")
   );
-
+  var myCourseCount = 0;
+  if (mycourses && mycourses.result) myCourseCount = mycourses.result.length;
   useEffect(() => {
-    if (!courseAllList) {
+    /* if (!courseAllList) {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-      setCourseAllList(
-        courselist
-      );
-    }
-
-    /* var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(
-          response.data
-        );
-        //console.log(response.data);
-      } else {
-        const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(
-          courselist
-        );
-      }
-    }
-    fetchData(config); */
+      setCourseAllList(courselist);
+    } */
   }, []);
-console.log("catalog list",courseAllList)
+  //console.log(courseAllList)
   return (
     <Row
       className="widget-container"
@@ -130,9 +102,7 @@ console.log("catalog list",courseAllList)
             <h3 className="widget-title">Latest First</h3>
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
-            <span>
-              {courseAllList ? courseAllList.totalRecords : 0} Results
-            </span>{" "}
+            <span>{myCourseCount} Results</span>{" "}
             <button
               className="switch-grid"
               key="Switch"
@@ -191,14 +161,13 @@ console.log("catalog list",courseAllList)
           style={{ padding: "10px 0" }}
         >
           {GridType(
-            courseAllList,
+            mycourses,
             curGridStyle,
             setDrawer2Visible,
             setCourseDrawerDetails,
             router
           )}
         </Row>
-        
       </Col>
       {/* <Modal
         title="Publish Properties"
@@ -462,8 +431,8 @@ const GridType = (
   setCourseDrawerDetails,
   router
 ) => {
-  courses = courses?courses.result:null;
-  //console.log(router);
+  courses = courses ? courses.result : null;
+  console.log(courses);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -496,73 +465,85 @@ const GridType = (
     classes.toggle("selected-course-open"); */
     /*//setSelectedCourse("open");*/
   };
-
+  const progressPercentage = (a, b) => {
+    return a + b;
+  };
   return courses ? (
     <>
-      {courses.map((course) => (
-        <Col
-          key={course.id}
-          className={`gutter-row course-holder ${gridClass}`}
-          {...gridProps}
+      {courses.map((mycourse) => {
+        var baseNumber =
+          mycourse.course.courseOutline && mycourse.course.courseOutline.length
+            ? mycourse.course.courseOutline.length
+            : 100;
+        var newNumber =
+          mycourse.learnerCourseOutline && mycourse.learnerCourseOutline.length
+            ? mycourse.learnerCourseOutline.length
+            : 0;
+        var currentPercent = Math.round((newNumber*100)/baseNumber);
+        //console.log(currentPercent);
+        return (
+          <Col
+            key={mycourse.course.id}
+            className={`gutter-row course-holder ${gridClass}`}
+            {...gridProps}
 
-          /* onMouseEnter={handleMouseOver} 
+            /* onMouseEnter={handleMouseOver} 
           onMouseLeave={handleAnchorClick}*/
-        >
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={list}
-            className="card-holder"
-            onClick={(e) => handleAnchorClick(e, course)}
           >
-            <Card
-              className={
-                course.isPublished ? "published-course" : "unpublished-course"
-              }
-              extra={course.isPublished ? "Published" : "Unpublished"}
-              hoverable
-              style={{ width: "auto" }}
-              cover={
-                <img
-                  alt="example"
-                  src={`${apidirectoryUrl}/Images/course/${course.featureImage}`}
-                />
-              }
-              actions={
-                router.asPath.endsWith("/my-courses")
-                  ? [
-                      <h4>
-                        Continue{" "}
-                        <PlayCircleFilled key="action" title="Continue" />
-                      </h4>,
-                    ]
-                  : null
-              }
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={list}
+              className="card-holder"
+              onClick={(e) => handleAnchorClick(e, mycourse.course)}
             >
-              <Meta
-                title={course.title}
-                description={
-                  <div>
-                    <div>{decodeURI(course.description)}</div>
-                    <div>Public</div>
-                    {router.asPath.endsWith("/my-courses") && (
+              <Card
+                className={
+                  mycourse.course.isPublished
+                    ? "published-course"
+                    : "unpublished-course"
+                }
+                extra={
+                  mycourse.course.isPublished ? "Published" : "Unpublished"
+                }
+                hoverable
+                style={{ width: "auto" }}
+                cover={
+                  <img
+                    alt="example"
+                    src={`${apidirectoryUrl}/Images/course/${mycourse.course.featureImage}`}
+                  />
+                }
+                actions={[
+                  <h4>
+                    {mycourse.startDate ? "Continue" : "Start The Course"}{" "}
+                    <PlayCircleFilled key="action" title="Continue" />
+                  </h4>,
+                ]}
+              >
+                <Meta
+                  title={mycourse.course.title}
+                  description={
+                    <div>
+                      <div>{decodeURI(mycourse.course.description)}</div>
+                      <div>Public</div>
                       <div>
                         <Progress
                           strokeColor={{
                             "0%": "#108ee9",
                             "100%": "#87d068",
                           }}
-                          percent={99.9}
+                          percent={currentPercent}
                         />
                       </div>
-                    )}
-                  </div>
-                }
-              />
-            </Card>
-          </motion.div>
-        </Col>
-      ))}
+                    </div>
+                  }
+                />
+              </Card>
+            </motion.div>
+          </Col>
+        );
+      })}
     </>
   ) : (
     <>
@@ -585,4 +566,4 @@ function onSearch(val) {
   console.log("search:", val);
 }
 
-export default LearnersCourseList;
+export default LearnersMyCourses;

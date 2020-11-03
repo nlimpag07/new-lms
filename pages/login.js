@@ -45,14 +45,14 @@ export default withoutAuth(function Login() {
         ? "instructor"
         : "learner";
     console.log(values) */
-
+    var userType;
     axios
       .post(apiBaseUrl + "/auth/authenticate", values)
       .then((result) => {
         var _result = result.data;
         //console.log(_result)
         if (_result) {
-          var userType;
+          
           if (_result.isAdministrator == 1) {
             userType = "administrator";
           } else if (_result.isInstructor == 1) {

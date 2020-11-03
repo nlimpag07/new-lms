@@ -68,8 +68,8 @@ const DrawerCourseDetails = ({
   drawerVisible,
 }) => {
   const router = useRouter();
-
-  //console.log(courseDetails);
+  const [reviewDetails, setReviewDetails] = useState([]);
+  //console.log('Course Details:',courseDetails);
   let {
     id,
     featureImage,
@@ -84,8 +84,9 @@ const DrawerCourseDetails = ({
     courseLevel,
     courseTag,
     relatedCourse,
+    learner,
   } = courseDetails;
-
+  console.log(learner);
   const listData = [
     {
       title: `${
@@ -125,14 +126,80 @@ const DrawerCourseDetails = ({
     },
   ];
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (learner.length) {
+      let ratingArr = learner.map((l, index) => {
+        let theRating;
+        if (l.courseRating != 0) theRating = l.courseRating;
+        return theRating;
+      });
+      let totalLearners = ratingArr.length
+      let sumRating = ratingArr.length ? ratingArr.reduce((a, b) => a + b, 0) : 0;
+      setReviewDetails({
+        average:sumRating/totalLearners,
+        learnersCount:totalLearners,
+      })
+      //console.log(sumRating/totalLearners);
+    }
+  }, [drawerVisible]);
+
+  function onEnrollToCourse(e) {
+    e.preventDefault();
+    console.log("onEnrollToCourse", id);
+    //console.log("The text:", copyText);
+    var config = {
+      method: "post",
+      url: apiBaseUrl + "/learner/enrollment/" + id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: null,
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          console.log("Response", response.data);
+          Modal.info({
+            title: "Enrollment has been submitted",
+            content: response.data.message,
+            centered: true,
+            width: 450,
+            onOk: () => {
+              setdrawerVisible(false);
+              visible: false;
+            },
+          });
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        console.log(data.message);
+        Modal.error({
+          title: "Unable to Enroll",
+          content: data.message,
+          centered: true,
+          width: 450,
+          onOk: () => {
+            setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+  }
   return (
     <Drawer
       title={title} /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
-      height={`70vh`}
+      height={`60vh`}
       onClose={() => setdrawerVisible(false)}
       visible={drawerVisible}
-      bodyStyle={{ paddingBottom: 80 }}
+      bodyStyle={{ paddingBottom: 0 }}
       placement={`bottom`}
       maskClosable={false}
       destroyOnClose={true}
@@ -147,7 +214,7 @@ const DrawerCourseDetails = ({
               </Col>
               <Col xs={24} sm={12} md={12}>
                 <div className="star-rating">
-                  <Rate allowHalf disabled defaultValue={3} /> 3 (5 reviews)
+                  <Rate allowHalf disabled defaultValue={reviewDetails.average} /> {reviewDetails.average} ({reviewDetails.learnersCount} reviews)
                 </div>
               </Col>
             </Row>
@@ -158,7 +225,7 @@ const DrawerCourseDetails = ({
                     courseDetails != "" ? courseDetails.description : ""
                   }`}</p> */}
                   <p>
-                    {description}
+                    {decodeURI(description)}
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -182,7 +249,7 @@ const DrawerCourseDetails = ({
             <Row>
               <Col xs={24}>
                 <h2>Related Courses</h2>
-                {relatedCourse.length
+                {relatedCourse && relatedCourse.length
                   ? relatedCourse.map((rltdCourse, index) => (
                       <Link
                         key={index}
@@ -221,14 +288,15 @@ const DrawerCourseDetails = ({
                   type="primary"
                   shape="round"
                   size="large"
-                  onClick={() =>
+                  onClick={onEnrollToCourse}
+                  /* onClick={() =>
                     router.push(
                       `/${linkUrl}/course-catalogue/[...manage]`,
                       `/${linkUrl}/course-catalogue/view/${id}`
                     )
-                  }
+                  } */
                 >
-                  TAKE THIS COURSE
+                  ENROLL TO COURSE
                 </Button>{" "}
                 <Button
                   shape="round"

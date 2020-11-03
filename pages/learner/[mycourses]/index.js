@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import LearnersCourseList from "../../../components/learners-course/LearnersCourseList";
+import LearnersMyCourses from "../../../components/learners-course/LearnersMyCourses";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -30,14 +30,14 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const MyCourse = () => {
-  //console.log(courselist)
-  const {courseAllList, setCourseAllList } = useCourseList();
+const MyCourse = ({ mycourses }) => {
+  //console.log("My Courses", mycourses);
+  const { courseAllList, setCourseAllList } = useCourseList();
   //const [allCourses, setAllCourses] = useState(courselist);
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-  
+
   /* useEffect(() => {
     setCourseAllList(courselist)
     var data = JSON.stringify({});
@@ -63,7 +63,7 @@ const MyCourse = () => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <LearnersCourseList />
+        <LearnersMyCourses mycourses={mycourses} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -76,7 +76,7 @@ const MyCourse = () => {
   );
 };
 
-/* Course.getInitialProps = async (ctx) => {
+MyCourse.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -91,20 +91,20 @@ const MyCourse = () => {
     token = userData.token;
   }
 
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/learner/MyCourse",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
 
-    const result = await axios(config);
-    res = result.data;
+  const result = await axios(config);
+  res = result.data;
   const data = res;
   //console.log(data);
-  return { courselist: data, token: token, apiBaseUrl: apiBaseUrl };
-}; */
+  return { mycourses: data };
+};
 
 export default withAuth(MyCourse);
