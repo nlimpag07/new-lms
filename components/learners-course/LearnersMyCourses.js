@@ -8,7 +8,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
-const DrawerCourseDetails = dynamic(() => import("./DrawerCourseDetails"));
+import Loader from "../theme-layout/loader/loader";
+
+const MyCoursesDrawerCourseDetails = dynamic(() => import("./MyCoursesDrawerCourseDetails"));
 
 import {
   Layout,
@@ -26,6 +28,7 @@ import {
   Tooltip,
   Drawer,
   Progress,
+  Empty,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -69,12 +72,14 @@ const LearnersMyCourses = ({ mycourses }) => {
   const router = useRouter();
   //console.log("My COURSES", mycourses);
   const { courseAllList, setCourseAllList } = useCourseList();
-  //console.log(courseAllList)
+  const [loading, setLoading] = useState(true);
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [drawer2Visible, setDrawer2Visible] = useState((drawer2Visible = false));
   var [courseDrawerDetails, setCourseDrawerDetails] = useState(
     (courseDrawerDetails = "")
   );
+
+
   var myCourseCount = 0;
   if (mycourses && mycourses.result) myCourseCount = mycourses.result.length;
   useEffect(() => {
@@ -82,6 +87,7 @@ const LearnersMyCourses = ({ mycourses }) => {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       setCourseAllList(courselist);
     } */
+    setLoading(false);
   }, []);
   //console.log(courseAllList)
   return (
@@ -165,7 +171,8 @@ const LearnersMyCourses = ({ mycourses }) => {
             curGridStyle,
             setDrawer2Visible,
             setCourseDrawerDetails,
-            router
+            router,
+            loading
           )}
         </Row>
       </Col>
@@ -184,7 +191,7 @@ const LearnersMyCourses = ({ mycourses }) => {
         <p>some contents...</p>
       </Modal> */}
       {courseDrawerDetails && (
-        <DrawerCourseDetails
+        <MyCoursesDrawerCourseDetails
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
           courseDetails={courseDrawerDetails}
@@ -429,10 +436,11 @@ const GridType = (
   gridType,
   setDrawer2Visible,
   setCourseDrawerDetails,
-  router
+  router,
+  loading
 ) => {
   courses = courses ? courses.result : null;
-  console.log(courses);
+  console.log('Courses:',courses);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -479,7 +487,7 @@ const GridType = (
           mycourse.learnerCourseOutline && mycourse.learnerCourseOutline.length
             ? mycourse.learnerCourseOutline.length
             : 0;
-        var currentPercent = Math.round((newNumber*100)/baseNumber);
+        var currentPercent = Math.round((newNumber * 100) / baseNumber);
         //console.log(currentPercent);
         return (
           <Col
@@ -495,7 +503,7 @@ const GridType = (
               animate="visible"
               variants={list}
               className="card-holder"
-              onClick={(e) => handleAnchorClick(e, mycourse.course)}
+              onClick={(e) => handleAnchorClick(e, mycourse)}
             >
               <Card
                 className={
@@ -546,9 +554,9 @@ const GridType = (
       })}
     </>
   ) : (
-    <>
-      <p className="loading">..Loading</p>
-    </>
+    <Loader loading={loading}>
+      <Empty />
+    </Loader>
   );
 };
 

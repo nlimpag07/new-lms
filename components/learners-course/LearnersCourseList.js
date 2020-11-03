@@ -516,10 +516,8 @@ const GridType = (
             onClick={(e) => handleAnchorClick(e, course)}
           >
             <Card
-              className={
-                course.isPublished ? "published-course" : "unpublished-course"
-              }
-              extra={course.isPublished ? "Published" : "Unpublished"}
+              className="published-course"
+              /* extra={course.isPublished ? "Published" : "Unpublished"} */
               hoverable
               style={{ width: "auto" }}
               cover={

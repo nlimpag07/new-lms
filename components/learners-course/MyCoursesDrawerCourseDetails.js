@@ -64,7 +64,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const DrawerCourseDetails = ({
+const MyCoursesDrawerCourseDetails = ({
   courseDetails,
   setdrawerVisible,
   drawerVisible,
@@ -72,8 +72,12 @@ const DrawerCourseDetails = ({
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
-  const [isEnrolled, setIsEnrolled] = useState(false);
-  //console.log('User Details:',userDetails);
+  const [hasStarted, setHasStarted] = useState(false);
+  console.log("Course Details:", courseDetails);
+
+  let { isApproved, startDate, endDate } = courseDetails;
+
+  courseDetails = courseDetails.course;
   let {
     id,
     featureImage,
@@ -148,12 +152,11 @@ const DrawerCourseDetails = ({
         learnersCount: totalLearners > 0 ? totalLearners : 0,
       });
 
-      //Check if the user is in the learner's list
-      let isOnLearner = learner.filter((a) => a.userId == userDetails.id);
-      if (isOnLearner.length) {
-        setIsEnrolled(true);
+      //Check if Learner Already in progress      
+      if (startDate) {
+        setHasStarted(true);
       } else {
-        setIsEnrolled(false);
+        setHasStarted(false);
       }
       //console.log("Is on", isOnLearner);
     } else {
@@ -161,15 +164,33 @@ const DrawerCourseDetails = ({
         average: 0,
         learnersCount: 0,
       });
-      setIsEnrolled(false);
+      setHasStarted(false);
     }
   }, [drawerVisible]);
 
-  function onEnrollToCourse(e) {
+  function onStartOrContinueCourse(e) {
     e.preventDefault();
-    console.log("onEnrollToCourse", id);
+
+    console.log("onStartOrContinueCourse", id);
     //console.log("The text:", copyText);
-    var config = {
+    //if approved and has not started
+    if(isApproved==1){
+       if(!startDate){
+         //Update Enrollment Status then redirect to Outlines
+       }
+    }else{
+      Modal.info({
+        title: "Notice: Enrollment Needs Approval",
+        content: "Your enrollment to this course has yet to be approved.",
+        centered: true,
+        width: 450,
+        onOk: () => {
+          setdrawerVisible(false);
+          visible: false;
+        },
+      });
+    }
+    /* var config = {
       method: "post",
       url: apiBaseUrl + "/learner/enrollment/" + id,
       headers: {
@@ -213,7 +234,7 @@ const DrawerCourseDetails = ({
       }
       //setLoading(false);
     }
-    fetchData(config);
+    fetchData(config); */
   }
 
   return (
@@ -296,29 +317,30 @@ const DrawerCourseDetails = ({
           </Col>
           <Col xs={24} sm={24} md={6}>
             <div xs={24} className="drawerActionButtons">
-              {isEnrolled ? (
+              {hasStarted ? (
                 <Button
+                  type="primary"
                   shape="round"
                   size="large"
                   danger
-                  //onClick={onEnrollToCourse}
-                  onClick={() =>
+                  onClick={onStartOrContinueCourse}
+                  /* onClick={() =>
                     router.push(
                       `/${linkUrl}/course-catalogue/[...manage]`,
                       `/${linkUrl}/course-catalogue/view/${id}`
                     )
-                  }
+                  } */
                 >
-                  ENROLLED
+                  Continue
                 </Button>
               ) : (
                 <Button
                   type="primary"
                   shape="round"
                   size="large"
-                  onClick={onEnrollToCourse}
+                  onClick={onStartOrContinueCourse}
                 >
-                  ENROLL TO COURSE
+                  Start Course
                 </Button>
               )}
               <Button
@@ -331,7 +353,7 @@ const DrawerCourseDetails = ({
                   )
                 }
               >
-                LEARN MORE
+                Course Details
               </Button>
             </div>
             <List
@@ -408,4 +430,4 @@ const DrawerCourseDetails = ({
   );
 };
 
-export default DrawerCourseDetails;
+export default MyCoursesDrawerCourseDetails;
