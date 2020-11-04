@@ -202,8 +202,8 @@ const MyCoursesDrawerCourseDetails = ({
                 setdrawerVisible(false);
                 //Redirect to Course Outline
                 router.push(
-                  `/${linkUrl}/my-courses/[...manage]`,
-                  `/${linkUrl}/my-courses/${course.id}/course-outline`
+                  `/${linkUrl}/my-courses/[courseId]/[course-details]`,
+                  `/${linkUrl}/my-courses/${id}/overview`
                 );
               }else{
                 //false
@@ -244,8 +244,8 @@ const MyCoursesDrawerCourseDetails = ({
         //The learner already started this course, just
         //directly redirect to course outline
         router.push(
-          `/${linkUrl}/my-courses/[...manage]`,
-          `/${linkUrl}/my-courses/${id}/course-outline`
+          `/${linkUrl}/my-courses/[courseId]/[course-details]`,
+          `/${linkUrl}/my-courses/${id}/overview`
         );
       }
     } else {

@@ -6,14 +6,14 @@
 /* Imported Courses Components Dynamically **/
 import dynamic from "next/dynamic";
 const CourseList = dynamic(() =>
-  import("../../../components/course/CourseList")
+  import("../../../../components/course/CourseList")
 );
-const CourseAdd = dynamic(() => import("../../../components/course/CourseAdd"));
+const CourseAdd = dynamic(() => import("../../../../components/course/CourseAdd"));
 const CourseEdit = dynamic(() =>
-  import("../../../components/course/CourseEdit")
+  import("../../../../components/course/CourseEdit")
 );
 const CourseView = dynamic(() =>
-  import("../../../components/course/CourseView")
+  import("../../../../components/course/CourseView")
 );
 /**End Of Imported Courses Components **/
 
@@ -22,8 +22,8 @@ import axios from "axios";
 import Link from "next/link";
 import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
-import withAuth from "../../../hocs/withAuth";
+import MainThemeLayout from "../../../../components/theme-layout/MainThemeLayout";
+import withAuth from "../../../../hocs/withAuth";
 import Error from "next/error";
 import { useRouter } from "next/router";
 
@@ -40,10 +40,10 @@ const CourseManagement = (props) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var theContent; //content assignment variable
-  //console.log(props);
+  console.log(router.query);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
-  const managePages = ["add", "edit", "view", "publish"];
+  /* const managePages = ["add", "edit", "view", "publish"];
   //check if the value of router.query.manage[0] is in managePages
   const isPageIncluded = managePages.includes(router.query.manage[0]);
   const courseSubPanels = [
@@ -61,13 +61,7 @@ const CourseManagement = (props) => {
     return <Error statusCode={404} />;
   }
   //if url course/edit with no courseId return to 404
-  /*  if (urlPath.endsWith("edit")) {
-    return <Error statusCode={404} />;
-  }
-  //allow Manage[0] pages
-  urlPath.endsWith("add") && (theContent = <CourseAdd />);
-  urlPath.endsWith("view") && (theContent = <CourseAdd />);
-  urlPath.endsWith("publish") && (theContent = "HELLO Publish"); */
+ 
 
   //Entrapment: set maximum query length to 3 return 404 otherwise
   const thePage = router.query.manage;
@@ -139,7 +133,7 @@ const CourseManagement = (props) => {
       (theContent = "HELLO View Edit post-evaluation"); // Editing the course
   } else {
     return <Error statusCode={404} />;
-  }
+  } */
 
   //console.log(router.query.manage.length);
 
