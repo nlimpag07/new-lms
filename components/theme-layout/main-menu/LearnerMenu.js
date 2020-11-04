@@ -77,7 +77,7 @@ const LearnerMenu = () => {
         icon={<FontAwesomeIcon icon={["fas", "book"]} size="lg" />}
         key="my-courses"
       >
-        <Link href="/learner/[mycourses]" as={`/learner/my-courses`}>
+        <Link href="/learner/my-courses" as={`/learner/my-courses`}>
           <a>My Courses</a>
         </Link>
       </Menu.Item>

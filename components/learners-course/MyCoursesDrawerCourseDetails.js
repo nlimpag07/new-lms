@@ -75,8 +75,9 @@ const MyCoursesDrawerCourseDetails = ({
   const [hasStarted, setHasStarted] = useState(false);
   console.log("Course Details:", courseDetails);
 
-  let { isApproved, startDate, endDate } = courseDetails;
-
+  let {isApproved, startDate, endDate } = courseDetails;
+  const learnerId = courseDetails.id;
+  //Reassigning courseDetails
   courseDetails = courseDetails.course;
   let {
     id,
@@ -152,7 +153,7 @@ const MyCoursesDrawerCourseDetails = ({
         learnersCount: totalLearners > 0 ? totalLearners : 0,
       });
 
-      //Check if Learner Already in progress      
+      //Check if Learner Already in progress
       if (startDate) {
         setHasStarted(true);
       } else {
@@ -174,11 +175,80 @@ const MyCoursesDrawerCourseDetails = ({
     console.log("onStartOrContinueCourse", id);
     //console.log("The text:", copyText);
     //if approved and has not started
-    if(isApproved==1){
-       if(!startDate){
-         //Update Enrollment Status then redirect to Outlines
-       }
-    }else{
+    if (isApproved == 1) {
+      //Check if the Learner has not started this course
+      if (!startDate) {
+        //Learner has not started the course
+        //Update Enrollment  and set startDate then redirect to Outlines
+        var config = {
+          method: "put",
+          url: apiBaseUrl + "/learner/StartCourse/" + learnerId,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "plain/text",
+          },
+          data: null,
+        };
+        async function fetchData(config) {
+          try {
+            const response = await axios(config);
+            if (response) {
+              //setOutcomeList(response.data.result);
+              let theRes = response.data.response
+              //console.log("Response", response.data);
+              // wait for response if the verification is true              
+              if(theRes){
+                //true
+                setdrawerVisible(false);
+                //Redirect to Course Outline
+                router.push(
+                  `/${linkUrl}/my-courses/[...manage]`,
+                  `/${linkUrl}/my-courses/${course.id}/course-outline`
+                );
+              }else{
+                //false
+                Modal.error({
+                  title: "Error: Unable to Start Course",
+                  content: response.data.message + " Please contact Technical Support",
+                  centered: true,
+                  width: 450,
+                  onOk: () => {
+                    //setdrawerVisible(false);
+                    visible: false;
+                  },
+                });
+              }
+            }
+          } catch (error) {
+            const { response } = error;
+            const { request, data } = response; // take everything but 'request'
+
+            //console.log('Error Response',data.message);
+            Modal.error({
+              title: "Error: Unable to Start Course",
+              content: data.message + " Please contact Technical Support",
+              centered: true,
+              width: 450,
+              onOk: () => {
+                //setdrawerVisible(false);
+                visible: false;
+              },
+            });
+          }
+          //setLoading(false);
+        }
+        fetchData(config);
+
+
+      } else {
+        //The learner already started this course, just
+        //directly redirect to course outline
+        router.push(
+          `/${linkUrl}/my-courses/[...manage]`,
+          `/${linkUrl}/my-courses/${id}/course-outline`
+        );
+      }
+    } else {
       Modal.info({
         title: "Notice: Enrollment Needs Approval",
         content: "Your enrollment to this course has yet to be approved.",
@@ -190,51 +260,6 @@ const MyCoursesDrawerCourseDetails = ({
         },
       });
     }
-    /* var config = {
-      method: "post",
-      url: apiBaseUrl + "/learner/enrollment/" + id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: null,
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          console.log("Response", response.data);
-          Modal.info({
-            title: "Enrollment has been submitted",
-            content: response.data.message,
-            centered: true,
-            width: 450,
-            onOk: () => {
-              setdrawerVisible(false);
-              visible: false;
-            },
-          });
-        }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log(data.message);
-        Modal.error({
-          title: "Unable to Enroll",
-          content: data.message,
-          centered: true,
-          width: 450,
-          onOk: () => {
-            setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config); */
   }
 
   return (

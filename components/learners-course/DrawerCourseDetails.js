@@ -68,6 +68,7 @@ const DrawerCourseDetails = ({
   courseDetails,
   setdrawerVisible,
   drawerVisible,
+  setSpinner,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
@@ -190,6 +191,8 @@ const DrawerCourseDetails = ({
             centered: true,
             width: 450,
             onOk: () => {
+              setSpinner(true);
+              //setIsEnrolled(true);
               setdrawerVisible(false);
               visible: false;
             },

@@ -26,6 +26,7 @@ import {
   Tooltip,
   Drawer,
   Progress,
+  Spin,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -68,6 +69,8 @@ const linkUrl = Cookies.get("usertype");
 const LearnersCourseList = (props) => {
   const router = useRouter();
   //console.log(router);
+  const [spinner, setSpinner] = useState(false);
+
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -79,9 +82,7 @@ const LearnersCourseList = (props) => {
   useEffect(() => {
     if (!courseAllList) {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-      setCourseAllList(
-        courselist
-      );
+      setCourseAllList(courselist);
     }
 
     /* var data = JSON.stringify({});
@@ -111,7 +112,34 @@ const LearnersCourseList = (props) => {
     }
     fetchData(config); */
   }, []);
-console.log("catalog list",courseAllList)
+  useEffect(() => {
+    if (spinner) {
+      console.log("Updating CourseList");
+      var data = JSON.stringify({});
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/courses",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+      async function fetchData(config) {
+        const response = await axios(config);
+        if (response) {
+          localStorage.setItem("courseAllList", JSON.stringify(response.data));
+          setCourseAllList(response.data);
+          //console.log(response.data);
+        } else {
+          //do nothing
+        }
+      }
+      fetchData(config);
+      setSpinner(false);
+    }
+  }, [spinner]);
+  //console.log("catalog list",courseAllList)
   return (
     <Row
       className="widget-container"
@@ -198,7 +226,6 @@ console.log("catalog list",courseAllList)
             router
           )}
         </Row>
-        
       </Col>
       {/* <Modal
         title="Publish Properties"
@@ -219,8 +246,15 @@ console.log("catalog list",courseAllList)
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
           courseDetails={courseDrawerDetails}
+          setSpinner={setSpinner}
         />
       )}
+      <Spin
+        size="large"
+        tip="Processing..."
+        spinning={spinner}
+        delay={100}
+      ></Spin>
 
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
@@ -462,7 +496,7 @@ const GridType = (
   setCourseDrawerDetails,
   router
 ) => {
-  courses = courses?courses.result:null;
+  courses = courses ? courses.result : null;
   //console.log(router);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
