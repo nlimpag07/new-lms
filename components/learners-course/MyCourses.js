@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import Loader from "../theme-layout/loader/loader";
 
-const MyCoursesDrawerCourseDetails = dynamic(() => import("./MyCoursesDrawerCourseDetails"));
+const MyCoursesDrawerDetails = dynamic(() => import("./MyCoursesDrawerDetails"));
 
 import {
   Layout,
@@ -68,7 +68,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const LearnersMyCourses = ({ mycourses }) => {
+const MyCourses = ({ mycourses }) => {
   const router = useRouter();
   //console.log("My COURSES", mycourses);
   const { courseAllList, setCourseAllList } = useCourseList();
@@ -191,7 +191,7 @@ const LearnersMyCourses = ({ mycourses }) => {
         <p>some contents...</p>
       </Modal> */}
       {courseDrawerDetails && (
-        <MyCoursesDrawerCourseDetails
+        <MyCoursesDrawerDetails
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
           courseDetails={courseDrawerDetails}
@@ -574,4 +574,4 @@ function onSearch(val) {
   console.log("search:", val);
 }
 
-export default LearnersMyCourses;
+export default MyCourses;

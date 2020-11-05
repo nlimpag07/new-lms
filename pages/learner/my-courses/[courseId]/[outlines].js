@@ -5,16 +5,10 @@
 
 /* Imported Courses Components Dynamically **/
 import dynamic from "next/dynamic";
-const CourseList = dynamic(() =>
-  import("../../../../components/course/CourseList")
+const LearnersMyCourseOutlines = dynamic(() =>
+  import("../../../../components/learners-course/Outlines")
 );
-const CourseAdd = dynamic(() => import("../../../../components/course/CourseAdd"));
-const CourseEdit = dynamic(() =>
-  import("../../../../components/course/CourseEdit")
-);
-const CourseView = dynamic(() =>
-  import("../../../../components/course/CourseView")
-);
+
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
@@ -26,6 +20,7 @@ import MainThemeLayout from "../../../../components/theme-layout/MainThemeLayout
 import withAuth from "../../../../hocs/withAuth";
 import Error from "next/error";
 import { useRouter } from "next/router";
+import cookie from "cookie";
 
 import {
   EditOutlined,
@@ -36,13 +31,34 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const CourseManagement = (props) => {
+const CourseOutlines = ({ courseDetails }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var theContent; //content assignment variable
-  console.log(router.query);
+  let getlength = Object.keys(router.query).length;
+  console.log(getlength);
+  console.log("Course", courseDetails);
+  var outlines = courseDetails.course?courseDetails.course.courseOutline:null;
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
+  //Entrapment: set maximum query length to 3 return 404 otherwise
+  const courseId = router.query.courseId;
+  const theOutline = router.query.outlines;
+  let manageQueryLength = router.query ? Object.keys(router.query).length : 0;
+
+  if (manageQueryLength == 2 && theOutline == "learning-outlines") {
+    let course_id = courseId;
+    const parsed = parseInt(course_id);
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    course_id &&
+      (theContent = <LearnersMyCourseOutlines course_id={course_id} outlineList={outlines} />); // url /view/courseId - viewing the course General
+  } else {
+    return <Error statusCode={404} />;
+  }
   /* const managePages = ["add", "edit", "view", "publish"];
   //check if the value of router.query.manage[0] is in managePages
   const isPageIncluded = managePages.includes(router.query.manage[0]);
@@ -158,4 +174,36 @@ const CourseManagement = (props) => {
   );
 };
 
-export default withAuth(CourseManagement);
+CourseOutlines.getInitialProps = async (ctx) => {
+  var apiBaseUrl = process.env.apiBaseUrl;
+  var token = null;
+  var userData;
+  var res;
+  const cId = ctx.query.courseId;
+  const request = ctx.req;
+  if (request) {
+    request.cookies = cookie.parse(request.headers.cookie || "");
+    token = request.cookies.token;
+    //res = null;
+  } else {
+    userData = JSON.parse(localStorage.getItem("userDetails"));
+    token = userData.token;
+  }
+
+  var config = {
+    method: "get",
+    url: apiBaseUrl + `/Learner/MyCourse/${cId}/CourseOutline/`,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+
+  const result = await axios(config);
+  res = result.data;
+  const data = res;
+  //console.log(data);
+  return { courseDetails: data };
+};
+
+export default withAuth(CourseOutlines);

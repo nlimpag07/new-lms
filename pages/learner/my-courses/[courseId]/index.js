@@ -46,7 +46,7 @@ CourseIndex.getInitialProps = async (ctx) => {
     const {res} = ctx;
     const cId = ctx.query.courseId
   if (res) {
-    res.writeHead(301, {Location: `/learner/my-courses/${ctx.query.courseId}/overview`});
+    res.writeHead(301, {Location: `/learner/my-courses/${ctx.query.courseId}/learning-outlines`});
     res.end();
   }
   return {courseId:cId};

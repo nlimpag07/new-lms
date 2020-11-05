@@ -64,17 +64,21 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const DrawerCourseDetails = ({
+const MyCoursesDrawerDetails = ({
   courseDetails,
   setdrawerVisible,
   drawerVisible,
-  setSpinner,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
-  const [isEnrolled, setIsEnrolled] = useState(false);
-  //console.log('User Details:',userDetails);
+  const [hasStarted, setHasStarted] = useState(false);
+  console.log("Course Details:", courseDetails);
+
+  let {isApproved, startDate, endDate } = courseDetails;
+  const learnerId = courseDetails.id;
+  //Reassigning courseDetails
+  courseDetails = courseDetails.course;
   let {
     id,
     featureImage,
@@ -149,12 +153,11 @@ const DrawerCourseDetails = ({
         learnersCount: totalLearners > 0 ? totalLearners : 0,
       });
 
-      //Check if the user is in the learner's list
-      let isOnLearner = learner.filter((a) => a.userId == userDetails.id);
-      if (isOnLearner.length) {
-        setIsEnrolled(true);
+      //Check if Learner Already in progress
+      if (startDate) {
+        setHasStarted(true);
       } else {
-        setIsEnrolled(false);
+        setHasStarted(false);
       }
       //console.log("Is on", isOnLearner);
     } else {
@@ -162,61 +165,101 @@ const DrawerCourseDetails = ({
         average: 0,
         learnersCount: 0,
       });
-      setIsEnrolled(false);
+      setHasStarted(false);
     }
   }, [drawerVisible]);
 
-  function onEnrollToCourse(e) {
+  function onStartOrContinueCourse(e) {
     e.preventDefault();
-    console.log("onEnrollToCourse", id);
-    //console.log("The text:", copyText);
-    var config = {
-      method: "post",
-      url: apiBaseUrl + "/learner/enrollment/" + id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: null,
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          console.log("Response", response.data);
-          Modal.info({
-            title: "Enrollment has been submitted",
-            content: response.data.message,
-            centered: true,
-            width: 450,
-            onOk: () => {
-              setSpinner(true);
-              //setIsEnrolled(true);
-              setdrawerVisible(false);
-              visible: false;
-            },
-          });
-        }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
 
-        console.log(data.message);
-        Modal.error({
-          title: "Unable to Enroll",
-          content: data.message,
-          centered: true,
-          width: 450,
-          onOk: () => {
-            setdrawerVisible(false);
-            visible: false;
+    console.log("onStartOrContinueCourse", id);
+    //console.log("The text:", copyText);
+    //if approved and has not started
+    if (isApproved == 1) {
+      //Check if the Learner has not started this course
+      if (!startDate) {
+        //Learner has not started the course
+        //Update Enrollment  and set startDate then redirect to Outlines
+        var config = {
+          method: "put",
+          url: apiBaseUrl + "/learner/StartCourse/" + learnerId,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "plain/text",
           },
-        });
+          data: null,
+        };
+        async function fetchData(config) {
+          try {
+            const response = await axios(config);
+            if (response) {
+              //setOutcomeList(response.data.result);
+              let theRes = response.data.response
+              //console.log("Response", response.data);
+              // wait for response if the verification is true              
+              if(theRes){
+                //true
+                setdrawerVisible(false);
+                //Redirect to Course Outline
+                router.push(
+                  `/${linkUrl}/my-courses/[courseId]/[outlines]`,
+                  `/${linkUrl}/my-courses/${id}/learning-outlines`
+                );
+              }else{
+                //false
+                Modal.error({
+                  title: "Error: Unable to Start Course",
+                  content: response.data.message + " Please contact Technical Support",
+                  centered: true,
+                  width: 450,
+                  onOk: () => {
+                    //setdrawerVisible(false);
+                    visible: false;
+                  },
+                });
+              }
+            }
+          } catch (error) {
+            const { response } = error;
+            const { request, data } = response; // take everything but 'request'
+
+            //console.log('Error Response',data.message);
+            Modal.error({
+              title: "Error: Unable to Start Course",
+              content: data.message + " Please contact Technical Support",
+              centered: true,
+              width: 450,
+              onOk: () => {
+                //setdrawerVisible(false);
+                visible: false;
+              },
+            });
+          }
+          //setLoading(false);
+        }
+        fetchData(config);
+
+
+      } else {
+        //The learner already started this course, just
+        //directly redirect to course outline
+        router.push(
+          `/${linkUrl}/my-courses/[courseId]/[outlines]`,
+          `/${linkUrl}/my-courses/${id}/learning-outlines`
+        );
       }
-      //setLoading(false);
+    } else {
+      Modal.info({
+        title: "Notice: Enrollment Needs Approval",
+        content: "Your enrollment to this course has yet to be approved.",
+        centered: true,
+        width: 450,
+        onOk: () => {
+          setdrawerVisible(false);
+          visible: false;
+        },
+      });
     }
-    fetchData(config);
   }
 
   return (
@@ -299,29 +342,30 @@ const DrawerCourseDetails = ({
           </Col>
           <Col xs={24} sm={24} md={6}>
             <div xs={24} className="drawerActionButtons">
-              {isEnrolled ? (
+              {hasStarted ? (
                 <Button
+                  type="primary"
                   shape="round"
                   size="large"
                   danger
-                  //onClick={onEnrollToCourse}
-                  onClick={() =>
+                  onClick={onStartOrContinueCourse}
+                  /* onClick={() =>
                     router.push(
                       `/${linkUrl}/course-catalogue/[...manage]`,
                       `/${linkUrl}/course-catalogue/view/${id}`
                     )
-                  }
+                  } */
                 >
-                  ENROLLED
+                  Continue
                 </Button>
               ) : (
                 <Button
                   type="primary"
                   shape="round"
                   size="large"
-                  onClick={onEnrollToCourse}
+                  onClick={onStartOrContinueCourse}
                 >
-                  ENROLL TO COURSE
+                  Start Course
                 </Button>
               )}
               <Button
@@ -334,7 +378,7 @@ const DrawerCourseDetails = ({
                   )
                 }
               >
-                LEARN MORE
+                Course Details
               </Button>
             </div>
             <List
@@ -411,4 +455,4 @@ const DrawerCourseDetails = ({
   );
 };
 
-export default DrawerCourseDetails;
+export default MyCoursesDrawerDetails;

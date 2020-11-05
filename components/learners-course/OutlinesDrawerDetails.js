@@ -64,7 +64,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const MyCoursesDrawerCourseDetails = ({
+const OutlinesDrawerDetails = ({
   courseDetails,
   setdrawerVisible,
   drawerVisible,
@@ -202,8 +202,8 @@ const MyCoursesDrawerCourseDetails = ({
                 setdrawerVisible(false);
                 //Redirect to Course Outline
                 router.push(
-                  `/${linkUrl}/my-courses/[courseId]/[course-details]`,
-                  `/${linkUrl}/my-courses/${id}/overview`
+                  `/${linkUrl}/my-courses/[courseId]/[outlines]`,
+                  `/${linkUrl}/my-courses/${id}/learning-outlines`
                 );
               }else{
                 //false
@@ -244,8 +244,8 @@ const MyCoursesDrawerCourseDetails = ({
         //The learner already started this course, just
         //directly redirect to course outline
         router.push(
-          `/${linkUrl}/my-courses/[courseId]/[course-details]`,
-          `/${linkUrl}/my-courses/${id}/overview`
+          `/${linkUrl}/my-courses/[courseId]/[outlines]`,
+          `/${linkUrl}/my-courses/${id}/learning-outlines`
         );
       }
     } else {
@@ -455,4 +455,4 @@ const MyCoursesDrawerCourseDetails = ({
   );
 };
 
-export default MyCoursesDrawerCourseDetails;
+export default OutlinesDrawerDetails;

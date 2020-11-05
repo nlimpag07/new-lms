@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import LearnersCourseList from "../../../components/learners-course/LearnersCourseList";
+import LearnersCatalog from "../../../components/learners-course/LearnersCatalog";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -63,7 +63,7 @@ const Course = () => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <LearnersCourseList />
+        <LearnersCatalog />
       </Layout>
       <style jsx global>{`
         /* .status-col {
