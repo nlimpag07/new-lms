@@ -65,108 +65,40 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const OutlinesDrawerDetails = ({
-  courseDetails,
+  outlineDetails,
   setdrawerVisible,
   drawerVisible,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
-  const [hasStarted, setHasStarted] = useState(false);
-  console.log("Course Details:", courseDetails);
+  const [outlineStatus, setOutlineStatus] = useState(0);
+  console.log("Course Details:", outlineDetails);
 
-  let {isApproved, startDate, endDate } = courseDetails;
-  const learnerId = courseDetails.id;
-  //Reassigning courseDetails
-  courseDetails = courseDetails.course;
+  let {isApproved, startDate, endDate } = outlineDetails;
+  const outlineId = outlineDetails.id;
+  //Reassigning courseDetails  
   let {
     id,
-    featureImage,
-    featureVideo,
-    courseLanguage,
-    courseCategory,
-    title,
     description,
-    courseInstructor,
-    courseOutline,
-    courseType,
-    courseLevel,
-    courseTag,
-    relatedCourse,
-    learner,
-  } = courseDetails;
-  //console.log(learner);
-  const listData = [
-    {
-      title: `${
-        courseType &&
-        courseType.map((type, index) => {
-          return type.courseType.name + " ";
-        })
-      }`,
-      avatar: <FontAwesomeIcon icon={["fas", "video"]} size="lg" />,
-    },
-    {
-      title: `${courseDetails.durationTime} ${courseDetails.durationType}`,
-      avatar: <FontAwesomeIcon icon={["far", "clock"]} size="lg" />,
-    },
-
-    {
-      title: `${
-        courseLanguage &&
-        courseLanguage.map((lang, index) => {
-          return lang.language.name + " ";
-        })
-      }`,
-      avatar: <FontAwesomeIcon icon={["fas", "globe-americas"]} size="lg" />,
-    },
-    {
-      title: `${courseDetails.passingGrade}% passing grade`,
-      avatar: <FontAwesomeIcon icon={["fas", "chart-line"]} size="lg" />,
-    },
-    {
-      title: `${
-        courseLevel &&
-        courseLevel.map((clevel, index) => {
-          return clevel.level.name + " ";
-        })
-      }`,
-      avatar: <FontAwesomeIcon icon={["fas", "star"]} size="lg" />,
-    },
-  ];
+    title,
+    duration,
+    courseId,
+    featureImage,
+    interactiveVideo,
+    courseAssessment,
+    courseOutlineMedia,
+    courseOutlineMilestone,
+    courseOutlinePrerequisite,
+    courseSessionOutline,
+    learnerCourseOutline,
+    outlineStatusId
+    
+  } = outlineDetails;
+  
 
   useEffect(() => {
-    if (learner.length) {
-      let ratingArr = learner.map((l, index) => {
-        let theRating = 0;
-        if (l.courseRating != 0) theRating = l.courseRating;
-        return theRating;
-      });
-      let totalLearners =
-        ratingArr.length > 0 && ratingArr[0] > 0 ? ratingArr.length : 0;
-      let sumRating =
-        ratingArr.length > 0 && ratingArr[0] > 0
-          ? ratingArr.reduce((a, b) => a + b, 0)
-          : 0;
-      setReviewDetails({
-        average: sumRating > 0 ? sumRating / totalLearners : 0,
-        learnersCount: totalLearners > 0 ? totalLearners : 0,
-      });
-
-      //Check if Learner Already in progress
-      if (startDate) {
-        setHasStarted(true);
-      } else {
-        setHasStarted(false);
-      }
-      //console.log("Is on", isOnLearner);
-    } else {
-      setReviewDetails({
-        average: 0,
-        learnersCount: 0,
-      });
-      setHasStarted(false);
-    }
+    
   }, [drawerVisible]);
 
   function onStartOrContinueCourse(e) {
@@ -182,7 +114,7 @@ const OutlinesDrawerDetails = ({
         //Update Enrollment  and set startDate then redirect to Outlines
         var config = {
           method: "put",
-          url: apiBaseUrl + "/learner/StartCourse/" + learnerId,
+          url: apiBaseUrl + "/learner/StartCourse/" + outlineId,
           headers: {
             Authorization: "Bearer " + token,
             "Content-Type": "plain/text",
@@ -279,16 +211,16 @@ const OutlinesDrawerDetails = ({
           <Col xs={24} sm={24} md={18}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24} sm={12} md={12}>
-                <h1>About this course</h1>
+                <h1>{title}</h1>
               </Col>
               <Col xs={24} sm={12} md={12}>
                 <div className="star-rating">
                   <Rate
                     allowHalf
                     disabled
-                    defaultValue={reviewDetails.average}
+                    defaultValue={4}
                   />{" "}
-                  {reviewDetails.average} ({reviewDetails.learnersCount}{" "}
+                  {4} ({" "}
                   reviews)
                 </div>
               </Col>
@@ -324,7 +256,7 @@ const OutlinesDrawerDetails = ({
             <Row>
               <Col xs={24}>
                 <h2>Related Courses</h2>
-                {relatedCourse && relatedCourse.length
+                {/* {relatedCourse && relatedCourse.length
                   ? relatedCourse.map((rltdCourse, index) => (
                       <Link
                         key={index}
@@ -336,13 +268,13 @@ const OutlinesDrawerDetails = ({
                         </a>
                       </Link>
                     ))
-                  : "None"}
+                  : "None"} */}
               </Col>
             </Row>
           </Col>
           <Col xs={24} sm={24} md={6}>
             <div xs={24} className="drawerActionButtons">
-              {hasStarted ? (
+              {outlineStatus ? (
                 <Button
                   type="primary"
                   shape="round"
@@ -380,25 +312,8 @@ const OutlinesDrawerDetails = ({
               >
                 Course Details
               </Button>
-            </div>
-            <List
-              itemLayout="horizontal"
-              dataSource={listData}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta avatar={item.avatar} title={item.title} />
-                </List.Item>
-              )}
-            />
-            <div className="Course-Tags">
-              <h2>Tags</h2>
-              {courseTag &&
-                courseTag.map((tags, index) => (
-                  <Button key={index} className="tag-button">
-                    {tags.tag.name}
-                  </Button>
-                ))}
-            </div>
+            </div>          
+            
           </Col>
         </Row>
       </motion.div>

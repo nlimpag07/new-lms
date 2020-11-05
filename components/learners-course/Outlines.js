@@ -70,8 +70,8 @@ const linkUrl = Cookies.get("usertype");
 
 const Outlines = (props) => {
   const router = useRouter();
-  const {course_id, outlineList} =props
-  console.log("My outlines", outlineList);
+  const { course_id, outlineList } = props;
+  //console.log("My outlines", outlineList);
   const { courseAllList, setCourseAllList } = useCourseList();
   const [loading, setLoading] = useState(true);
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -80,10 +80,9 @@ const Outlines = (props) => {
     (outlineDrawerDetails = "")
   );
 
-
   var myCourseCount = 0;
   if (outlineList) myCourseCount = outlineList.length;
-  useEffect(() => {  
+  useEffect(() => {
     setLoading(false);
   }, []);
   //console.log(courseAllList)
@@ -188,7 +187,7 @@ const Outlines = (props) => {
         <p>some contents...</p>
       </Modal> */}
       {outlineDrawerDetails && (
-        <MyCoursesDrawerCourseDetails
+        <OutlinesDrawerDetails
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
           outlineDetails={outlineDrawerDetails}
@@ -437,7 +436,7 @@ const GridType = (
   loading
 ) => {
   outlines = outlines ? outlines : null;
-  console.log('Outlines:',outlines);
+  //console.log("Outlines:", outlines);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -476,7 +475,30 @@ const GridType = (
   return outlines ? (
     <>
       {outlines.map((outline) => {
-       /*  var baseNumber =
+        var outlineStatus = "";
+        var outlineStatusId = 0;
+        var isNotEmpty =
+          outline.learnerCourseOutline && outline.learnerCourseOutline.length
+            ? true
+            : false;
+        //console.log(isNotEmpty);
+        if (isNotEmpty) {
+          let lco = outline.learnerCourseOutline;
+          //get the last item details
+          const lco_lastItem = lco[lco.length - 1];
+          if (lco_lastItem.courseStart && lco_lastItem.courseEnd)
+            outlineStatus = "Finished";
+          outlineStatusId = 2;
+          if (lco_lastItem.courseStart && !lco_lastItem.courseEnd)
+            outlineStatus = "In Progress";
+          outlineStatusId = 1;
+        } else {
+          outlineStatus = "Not Started";
+          outlineStatusId = 0;
+        }
+        //Insert outlineStatusId to outline for Drawer Usage
+        outline["outlineStatusId"] = outlineStatusId;
+        /*  var baseNumber =
           outline && outline.length
             ? outline.length
             : 100;
@@ -504,21 +526,16 @@ const GridType = (
               onClick={(e) => handleAnchorClick(e, outline)}
             >
               <Card
-              
                 className={
-                  outline.id
-                    ? "published-course"
-                    : "unpublished-course"
+                  outline.id ? "published-course" : "unpublished-course"
                 }
-                extra={
-                  outline.id ? "Not Started" : "Unpublished"
-                }
+                extra={outlineStatus}
                 hoverable
                 style={{ width: "auto" }}
                 cover={
                   <img
                     alt="example"
-                    src={`${apidirectoryUrl}/Images/course/${outline.featureImage}`}
+                    src={`${apidirectoryUrl}/Images/courseOutline/${outline.featureImage}`}
                   />
                 }
                 actions={[
@@ -531,7 +548,7 @@ const GridType = (
                 <Meta
                   title={outline.title}
                   description={
-                    <div>                      
+                    <div>
                       <div>Public</div>
                       <div>Lesson Duration: {outline.duration} Minutes</div>
                       <div>
