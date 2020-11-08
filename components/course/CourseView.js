@@ -452,7 +452,7 @@ const CourseView = ({ course_id }) => {
           width="70%"
           className="videoModal"
         >
-          <div className="demoModalBoday">
+          <div className="demoModalBody">
             <ReactPlayer
               playing={true}
               url={featureVideo}

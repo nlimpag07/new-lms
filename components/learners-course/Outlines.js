@@ -29,6 +29,7 @@ import {
   Drawer,
   Progress,
   Empty,
+  Spin,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -70,9 +71,10 @@ const linkUrl = Cookies.get("usertype");
 
 const Outlines = (props) => {
   const router = useRouter();
-  const { course_id, outlineList } = props;
+  const { course_id, learnerId, outlineList } = props;
   //console.log("My outlines", outlineList);
   const { courseAllList, setCourseAllList } = useCourseList();
+  const [spinner, setSpinner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [drawer2Visible, setDrawer2Visible] = useState((drawer2Visible = false));
@@ -88,7 +90,7 @@ const Outlines = (props) => {
   //console.log(courseAllList)
   return (
     <Row
-      className="widget-container"
+      className="widget-container learnerOutlines"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
       style={{ margin: "1rem 0" }}
     >
@@ -191,10 +193,17 @@ const Outlines = (props) => {
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
           outlineDetails={outlineDrawerDetails}
+          learnerId={learnerId}
+          setSpinner={setSpinner}
         />
       )}
 
-      {/* <CourseCircularUi /> */}
+      <Spin
+        size="large"
+        tip="Processing..."
+        spinning={spinner}
+        delay={100}
+      ></Spin>
       <style jsx global>{`
         .LearnersCourses-ListItems .ant-card-cover {
           margin-right: 0;
@@ -421,6 +430,17 @@ const Outlines = (props) => {
           box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
             0 3px 6px 0 rgba(242, 163, 5, 0.3),
             0 5px 12px 4px rgba(242, 163, 5, 0.3);
+        }
+        .learnerOutlines .ant-spin-spinning {
+          position: fixed;
+          display: block;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: #cccccc9e;
+          z-index: 1001;
+          padding: 23% 0;
         }
       `}</style>
     </Row>

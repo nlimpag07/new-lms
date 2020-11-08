@@ -33,7 +33,6 @@ const { Meta } = Card;
 
 const CourseOutlines = ({ courseDetails }) => {
   const router = useRouter();
-
   //check if Err response
   var isError = courseDetails.err ? true : false;
   //console.log(isError);
@@ -42,13 +41,14 @@ const CourseOutlines = ({ courseDetails }) => {
   var theContent; //content assignment variable
   let getlength = Object.keys(router.query).length;
   //console.log(getlength);
-  //console.log("Course", courseDetails);
+  //console.log("My Learner Course", courseDetails);
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise
+  const learnerId=courseDetails.id
   const courseId = router.query.courseId;
   const theOutline = router.query.outlines;
   let manageQueryLength = router.query ? Object.keys(router.query).length : 0;
@@ -67,6 +67,7 @@ const CourseOutlines = ({ courseDetails }) => {
       (theContent = (
         <LearnersMyCourseOutlines
           course_id={course_id}
+          learnerId={learnerId}
           outlineList={outlines}
         />
       )); // url /view/courseId - viewing the course General

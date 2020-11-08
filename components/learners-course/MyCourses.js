@@ -10,7 +10,9 @@ import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import Loader from "../theme-layout/loader/loader";
 
-const MyCoursesDrawerDetails = dynamic(() => import("./MyCoursesDrawerDetails"));
+const MyCoursesDrawerDetails = dynamic(() =>
+  import("./MyCoursesDrawerDetails")
+);
 
 import {
   Layout,
@@ -78,7 +80,6 @@ const MyCourses = ({ mycourses }) => {
   var [courseDrawerDetails, setCourseDrawerDetails] = useState(
     (courseDrawerDetails = "")
   );
-
 
   var myCourseCount = 0;
   if (mycourses && mycourses.result) myCourseCount = mycourses.result.length;
@@ -194,7 +195,7 @@ const MyCourses = ({ mycourses }) => {
         <MyCoursesDrawerDetails
           drawerVisible={drawer2Visible}
           setdrawerVisible={setDrawer2Visible}
-          courseDetails={courseDrawerDetails}
+          mycourseDetails={courseDrawerDetails}
         />
       )}
 
@@ -440,7 +441,7 @@ const GridType = (
   loading
 ) => {
   courses = courses ? courses.result : null;
-  console.log('Courses:',courses);
+  console.log("Courses:", courses);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -507,12 +508,14 @@ const GridType = (
             >
               <Card
                 className={
-                  mycourse.course.isPublished
-                    ? "published-course"
-                    : "unpublished-course"
+                  mycourse.startDate ? "published-course" : "unpublished-course"
                 }
                 extra={
-                  mycourse.course.isPublished ? "Published" : "Unpublished"
+                  mycourse.startDate
+                    ? "In Progress"
+                    : mycourse.endDate
+                    ? "Completed"
+                    : "Not Started"
                 }
                 hoverable
                 style={{ width: "auto" }}
@@ -524,7 +527,8 @@ const GridType = (
                 }
                 actions={[
                   <h4>
-                    {mycourse.startDate ? "Continue" : "Start The Course"}{" "}
+                    {mycourse.startDate ? "Continue" :mycourse.endDate
+                    ? "Completed": "Start The Course"}{" "}
                     <PlayCircleFilled key="action" title="Continue" />
                   </h4>,
                 ]}

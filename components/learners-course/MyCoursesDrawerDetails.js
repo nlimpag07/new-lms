@@ -65,7 +65,7 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const MyCoursesDrawerDetails = ({
-  courseDetails,
+  mycourseDetails,
   setdrawerVisible,
   drawerVisible,
 }) => {
@@ -73,12 +73,12 @@ const MyCoursesDrawerDetails = ({
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
-  console.log("Course Details:", courseDetails);
+  console.log("Course Details:", mycourseDetails);
 
-  let {isApproved, startDate, endDate } = courseDetails;
-  const learnerId = courseDetails.id;
+  let {isApproved, startDate, endDate } = mycourseDetails;
+  const learnerId = mycourseDetails.id;
   //Reassigning courseDetails
-  courseDetails = courseDetails.course;
+  var courseDetails = mycourseDetails.course;
   let {
     id,
     featureImage,
@@ -153,20 +153,23 @@ const MyCoursesDrawerDetails = ({
         learnersCount: totalLearners > 0 ? totalLearners : 0,
       });
 
-      //Check if Learner Already in progress
-      if (startDate) {
-        setHasStarted(true);
-      } else {
-        setHasStarted(false);
-      }
-      //console.log("Is on", isOnLearner);
+      
     } else {
       setReviewDetails({
         average: 0,
         learnersCount: 0,
       });
+      //setHasStarted(false);
+    }
+
+    //Check if Learner Already in progress
+    if (startDate) {
+      console.log(startDate)
+      setHasStarted(true);
+    } else {
       setHasStarted(false);
     }
+    //console.log("Is on", isOnLearner);
   }, [drawerVisible]);
 
   function onStartOrContinueCourse(e) {
@@ -346,8 +349,7 @@ const MyCoursesDrawerDetails = ({
                 <Button
                   type="primary"
                   shape="round"
-                  size="large"
-                  danger
+                  size="large"                  
                   onClick={onStartOrContinueCourse}
                   /* onClick={() =>
                     router.push(
@@ -363,6 +365,7 @@ const MyCoursesDrawerDetails = ({
                   type="primary"
                   shape="round"
                   size="large"
+                  danger
                   onClick={onStartOrContinueCourse}
                 >
                   Start Course
