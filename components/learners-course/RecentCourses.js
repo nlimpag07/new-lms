@@ -57,42 +57,13 @@ const linkUrl = Cookies.get("usertype");
 
 const RecentCourses = ({ courses }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
-
+console.log(courses)
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [loading, setLoading] = useState(true);
-  const [myRecentCourses, setMyRecentCourses] = useState("");
+  const [loading, setLoading] = useState(true); 
   //console.log(RecentCoursesList)
-  useEffect(() => {
-    if (courses.length) {
-      /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
-      setCourseAllList(response.data); */
-      setMyRecentCourses(courses.result);
-    }
-    /* var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(response.data);
-        setMyRecentCourses(response.data.slice(0, 6));
-      } else {
-        const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        setMyRecentCourses(userData.slice(0, 6));
-      }
-    }
-    fetchData(config); */
-    setLoading(false);
+  useEffect(() => {    
   }, []);
   return (
     <Col
@@ -127,7 +98,7 @@ const RecentCourses = ({ courses }) => {
         style={{ padding: "10px 0" }}
       >
         {GridType(
-          myRecentCourses,
+          courses,
           curGridStyle,
           setModal2Visible,
           router,
@@ -256,7 +227,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-
+  console.log('My Recent Courses:',courses)
   return courses ? (
     <>
       {courses.map((course) => (

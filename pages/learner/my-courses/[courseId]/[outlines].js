@@ -41,10 +41,11 @@ const CourseOutlines = ({ courseDetails }) => {
   var theContent; //content assignment variable
   let getlength = Object.keys(router.query).length;
   //console.log(getlength);
-  //console.log("My Learner Course", courseDetails);
+  console.log("My Learner Course", courseDetails);
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
+    console.log('Outline to pass',outlines)
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise
@@ -219,7 +220,7 @@ CourseOutlines.getInitialProps = async (ctx) => {
     res = result.data;
     const data = res;
     //console.log(data);
-    return { courseDetails: data };
+    return { courseDetails: data[0] };
   } catch (error) {
     const { response } = error;
     const { request, data } = response; // take everything but 'request'

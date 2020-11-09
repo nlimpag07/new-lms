@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
-
+import AssessmentProcess from "./AssessmentProcessPopup/AssessmentProcess";
 import {
   Layout,
   Row,
@@ -69,14 +69,17 @@ const OutlinesDrawerDetails = ({
   setdrawerVisible,
   drawerVisible,
   learnerId,
+  spinner,
   setSpinner,
+  setOutlineAssessmentModal
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
   const [outlineStatus, setOutlineStatus] = useState(0);
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
-  //console.log("Outline Details:", outlineDetails);
+
+  console.log("Outline Details:", outlineDetails);
 
   let { isApproved, startDate, endDate } = outlineDetails;
   //const outlineId = outlineDetails.id;
@@ -102,8 +105,6 @@ const OutlinesDrawerDetails = ({
   function onStartOrContinueLesson(e) {
     e.preventDefault();
     setSpinner(true);
-    console.log("onStartOrContinueLesson", id);
-    //console.log("The text:", copyText);
     //if approved and has not started
     //Check if the Learner has not started this lesson
     if (!learnerCourseOutline.length) {
@@ -162,7 +163,7 @@ const OutlinesDrawerDetails = ({
           const { request, data } = response; // take everything but 'request'
 
           //console.log('Error Response',data.message);
-          setSpinner(false)
+          setSpinner(false);
           Modal.error({
             title: "Error: Unable to Start Lesson",
             content: data.message + " Please contact Technical Support",
@@ -181,7 +182,7 @@ const OutlinesDrawerDetails = ({
       //The learner already started this lesson, just
       //show the lesson
       //setdrawerVisible(false);
-      
+
       setArticulateModal2Visible(true);
       setSpinner(false);
       /* router.push(
@@ -284,6 +285,18 @@ const OutlinesDrawerDetails = ({
     'Man charged over missing wedding girl.',
     'Los Angeles battles huge wildfires.',
   ]; */
+
+  const OnArticulateModalClose = () => {
+    /* let statusButtons = "";
+    
+    return statusButtons; */
+    setSpinner(true);
+    console.log("Articulate Modal Status: Closed");
+    console.log("Run assessments:", courseAssessment);
+    setArticulateModal2Visible(false);
+    setdrawerVisible(false);
+    setOutlineAssessmentModal(true);
+  };
 
   return (
     <Drawer
@@ -412,14 +425,31 @@ const OutlinesDrawerDetails = ({
         centered
         visible={articulateModal2Visible}
         onOk={() => setArticulateModal2Visible(false)}
-        onCancel={() => setArticulateModal2Visible(false)}
+        onCancel={OnArticulateModalClose}
         maskClosable={false}
         destroyOnClose={true}
-        width="90%"
+        width="95%"
         className="articulateVideoModal"
       >
-        <div className="demoModalBody"><iframe src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/story.html`} width="100%" height="850" frameBorder="0"></iframe></div>
+        <div className="demoModalBody">
+          <iframe
+            src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/story.html`}
+            width="100%"
+            height="850"
+            frameBorder="0"
+          ></iframe>
+        </div>
       </Modal>
+     {/*  {outlineAssessmentModal && (
+        <AssessmentProcess
+          assessment={courseAssessment}
+          outlineAssessmentModal={outlineAssessmentModal}
+          setOutlineAssessmentModal={setOutlineAssessmentModal}
+          learnerId={learnerId}
+          spinner={spinner}
+          setSpinner={setSpinner}
+        />
+      )} */}
       <style jsx global>{`
         .drawer-course-details .ant-drawer-title {
           font-size: 1.2rem;

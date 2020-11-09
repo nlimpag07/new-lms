@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import Loader from "../theme-layout/loader/loader";
 
 const OutlinesDrawerDetails = dynamic(() => import("./OutlinesDrawerDetails"));
+import AssessmentProcess from "./AssessmentProcessPopup/AssessmentProcess";
 
 import {
   Layout,
@@ -81,6 +82,8 @@ const Outlines = (props) => {
   var [outlineDrawerDetails, setCourseDrawerDetails] = useState(
     (outlineDrawerDetails = "")
   );
+  const [outlineAssessmentModal, setOutlineAssessmentModal] = useState(false);
+
 
   var myCourseCount = 0;
   if (outlineList) myCourseCount = outlineList.length;
@@ -194,10 +197,21 @@ const Outlines = (props) => {
           setdrawerVisible={setDrawer2Visible}
           outlineDetails={outlineDrawerDetails}
           learnerId={learnerId}
+          spinner={spinner}
+          setSpinner={setSpinner}
+          setOutlineAssessmentModal={setOutlineAssessmentModal}
+        />
+      )}
+       {outlineAssessmentModal && (
+        <AssessmentProcess
+          assessment={outlineDrawerDetails}
+          outlineAssessmentModal={outlineAssessmentModal}
+          setOutlineAssessmentModal={setOutlineAssessmentModal}
+          learnerId={learnerId}
+          spinner={spinner}
           setSpinner={setSpinner}
         />
       )}
-
       <Spin
         size="large"
         tip="Processing..."
@@ -547,7 +561,7 @@ const GridType = (
             >
               <Card
                 className={
-                  outline.id ? "published-course" : "unpublished-course"
+                  outlineStatusId ? "published-course" : "unpublished-course"
                 }
                 extra={outlineStatus}
                 hoverable
@@ -560,8 +574,12 @@ const GridType = (
                 }
                 actions={[
                   <h4>
-                    {outline.startDate ? "Continue" : "Start This Lesson"}{" "}
-                    <PlayCircleFilled key="action" title="Continue" />
+                    {outlineStatusId == 2
+                      ? "Completed"
+                      : outlineStatusId == 1
+                      ? "Continue"
+                      : "Start Lesson"}{" "}
+                     {outlineStatusId != 2 && <PlayCircleFilled key="action" title="Continue" />}
                   </h4>,
                 ]}
               >

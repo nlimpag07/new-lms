@@ -95,7 +95,7 @@ const MyCoursesDrawerDetails = ({
     relatedCourse,
     learner,
   } = courseDetails;
-  //console.log(learner);
+  console.log('Learner',learner);
   const listData = [
     {
       title: `${
@@ -175,8 +175,7 @@ const MyCoursesDrawerDetails = ({
   function onStartOrContinueCourse(e) {
     e.preventDefault();
 
-    console.log("onStartOrContinueCourse", id);
-    //console.log("The text:", copyText);
+    
     //if approved and has not started
     if (isApproved == 1) {
       //Check if the Learner has not started this course
