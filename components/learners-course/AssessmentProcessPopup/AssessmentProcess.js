@@ -281,10 +281,10 @@ const AssessmentProcess = ({
     //setArticulateModal2Visible(false);
     //setdrawerVisible(false);
   };
-  const onClickReload =(e)=>{
+  const onClickReload = (e) => {
     e.preventDefault();
     window.location.reload();
-  }
+  };
   return (
     <Row>
       <Modal
@@ -300,203 +300,226 @@ const AssessmentProcess = ({
         className="outlineAssessmentModal"
         maskStyle={{ backgroundColor: "rgb(0 0 0 / 91%)" }}
       >
-        {takeAssessment?(<div className="assessmentModalBody">
-          <h1>Assessment</h1>
-          <Row style={{ border: "1px dashed #999999", padding: "20px" }}>
-            <Col xs={32} sm={24} md={24}>
-              <Row>
-                <Col xs={24} sm={10} md={10}>
-                  <p>
-                    <b>Assessment Title:</b> {title}
-                  </p>
-                  <p>
-                    <b>Assessment Type:</b>{" "}
-                    {assessmentTypeId == 1
-                      ? "Assignment"
-                      : assessmentTypeId == 2
-                      ? "Exam"
-                      : "Quiz"}
-                  </p>
-                  <p>
-                    <b>Attempts:</b> {isAttempts == 1 ? attempts : "Unlimited"}
-                  </p>
-                </Col>
-                <Col xs={24} sm={10} md={10}>
-                  <p>
-                    <b>Lesson Link:</b> {outlineTitle}
-                  </p>
-                  <p>
-                    <b>Assessment Duration:</b>{" "}
-                    {duration == 1 ? duration : "No Time Limit"}
-                  </p>
-                  <p>
-                    <b>To be Taken:</b>{" "}
-                    {isImmediate == 1
-                      ? "Immediately"
-                      : fromDate + " - " + toDate}
-                  </p>
-                </Col>
-                <Col xs={24} sm={4} md={4} style={{ textAlign: "center" }}>
-                  <h2 style={{ fontSize: "3rem", marginBottom: "0" }}>
-                    {passingGrade}
-                  </h2>
-                  <p>
-                    <b>Passing Grade:</b>
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-            <Divider orientation="left" plain></Divider>
-            {assessmentResult ? (
-              <Spin
-                size="small"
-                /* tip="Processing..." */
-                spinning={submitAnswerSpin}
-                delay={100}
-              >
-                <Result
-                  status="error"
-                  title="Assessment Result: Failed"
-                  subTitle="We are sad that you didn't pass the assessment and is not allowed to proceed to the next lesson."
-                  extra={[
-                    <Button type="primary" key="console" onClick={onClickReload}>
-                      Retake this Assessment
-                    </Button>,
-                  ]}
-                ></Result>
-              </Spin>
-            ) : (
+        {takeAssessment ? (
+          <div className="assessmentModalBody">
+            <h1>Assessment</h1>
+            <Row style={{ border: "1px dashed #999999", padding: "20px" }}>
               <Col xs={32} sm={24} md={24}>
-                <Steps current={currentStep}>
-                  {stepQuestions.map((item) => (
-                    <Step
-                      key={item.questionTypeName}
-                      title={item.questionTypeName}
-                    />
-                  ))}
-                </Steps>
-                <Spin
-                  size="small"
-                  /* tip="Processing..." */
-                  spinning={submitAnswerSpin}
-                  delay={100}
-                >
-                  <div className="questionContainer">
-                    <div className="steps-content">
-                      {stepQuestions[currentStep].questionTypeId == 3 ? (
-                        <div>
-                          {/*  True or False Question */}
-                          <h3>
-                            Question: {stepQuestions[currentStep].questionName}
-                          </h3>
-                          <p>
-                            <InfoCircleFilled /> Select your answer.
-                          </p>
-                          <Radio.Group
-                            optionType="button"
-                            buttonStyle="solid"
-                            onChange={(e) =>
-                              onChangeToF(e, stepQuestions[currentStep])
-                            }
-                          >
-                            <Radio.Button value="True">True</Radio.Button>
-                            <Radio.Button value="False">False</Radio.Button>
-                          </Radio.Group>
-                        </div>
-                      ) : stepQuestions[currentStep].questionTypeId == 2 ? (
-                        <div>
-                          {/*  Multiple Choice Question */}
-                          <h3>
-                            Question: {stepQuestions[currentStep].questionName}
-                          </h3>
-                          <p>
-                            <InfoCircleFilled /> Select your answer.
-                          </p>
-                          <Radio.Group
-                            optionType="button"
-                            buttonStyle="solid"
-                            onChange={(e) =>
-                              onChangeToF(e, stepQuestions[currentStep])
-                            }
-                          >
-                            <Radio.Button value="True">True</Radio.Button>
-                            <Radio.Button value="False">False</Radio.Button>
-                          </Radio.Group>
-                        </div>
-                      ) : (
-                        <div>
-                          {/*  Essay */}
-                          <h3>
-                            Question: {stepQuestions[currentStep].questionName}
-                          </h3>
-                          <p>
-                            <InfoCircleFilled /> Minimum length of{" "}
-                            {stepQuestions[currentStep].questionMinLength} and
-                            Maximum of{" "}
-                            {stepQuestions[currentStep].questionMaxLength}.
-                          </p>
-                          <TextArea
-                            showCount
-                            rows="5"
-                            minLength={
-                              stepQuestions[currentStep].questionMinLength
-                            }
-                            maxLength={
-                              stepQuestions[currentStep].questionMaxLength
-                            }
-                            onBlur={(e) =>
-                              onBlurEssay(e, stepQuestions[currentStep])
-                            }
-                            onFocus={() => setIsError("")}
-                          />
-                          {isError && (
-                            <p style={{ color: "#f00000" }}>{isError}</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div className="steps-action" style={{ marginTop: "2rem" }}>
-                      {currentStep < stepQuestions.length - 1 && (
-                        <Button
-                          type="primary"
-                          onClick={() => onSubmitAnswer(learnerAnswer, 0)}
-                        >
-                          Submit
-                        </Button>
-                      )}
-                      {currentStep === stepQuestions.length - 1 && (
-                        <Button
-                          type="primary"
-                          onClick={() => onSubmitAnswer(learnerAnswer, 1)}
-                          /* onClick={() => message.success("Processing complete!")} */
-                        >
-                          Submit
-                        </Button>
-                      )}
-                      {currentStep > 0 && (
-                        <Button
-                          style={{ margin: "0 8px" }}
-                          onClick={() => prev()}
-                        >
-                          Previous
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </Spin>
+                <Row>
+                  <Col xs={24} sm={10} md={10}>
+                    <p>
+                      <b>Assessment Title:</b> {title}
+                    </p>
+                    <p>
+                      <b>Assessment Type:</b>{" "}
+                      {assessmentTypeId == 1
+                        ? "Assignment"
+                        : assessmentTypeId == 2
+                        ? "Exam"
+                        : "Quiz"}
+                    </p>
+                    <p>
+                      <b>Attempts:</b>{" "}
+                      {isAttempts == 1 ? attempts : "Unlimited"}
+                    </p>
+                  </Col>
+                  <Col xs={24} sm={10} md={10}>
+                    <p>
+                      <b>Lesson Link:</b> {outlineTitle}
+                    </p>
+                    <p>
+                      <b>Assessment Duration:</b>{" "}
+                      {duration == 1 ? duration : "No Time Limit"}
+                    </p>
+                    <p>
+                      <b>To be Taken:</b>{" "}
+                      {isImmediate == 1
+                        ? "Immediately"
+                        : fromDate + " - " + toDate}
+                    </p>
+                  </Col>
+                  <Col xs={24} sm={4} md={4} style={{ textAlign: "center" }}>
+                    <h2 style={{ fontSize: "3rem", marginBottom: "0" }}>
+                      {passingGrade}
+                    </h2>
+                    <p>
+                      <b>Passing Grade:</b>
+                    </p>
+                  </Col>
+                </Row>
               </Col>
-            )}
-          </Row>
-        </div>):(<Result
-    status="success"
-    title="Congratulations! You have successfully completed the lesson."
-    subTitle="Please take the assessment exam to proceed to the next lesson."
-    extra={[
-      <Button type="primary" shape="round" key="console" size="large" onClick={()=>setTakeAssessment(true)}>
-        Take the Assessment
-      </Button>,
-    ]}
-  />)}
+              <Divider orientation="left" plain></Divider>
+              {assessmentResult ? (
+                <Col xs={32} sm={24} md={24}>
+                  <Spin
+                    size="small"
+                    /* tip="Processing..." */
+                    spinning={submitAnswerSpin}
+                    delay={100}
+                  >
+                    <Result
+                      status="error"
+                      title="Assessment Result: Failed"
+                      subTitle="We are sad that you didn't pass the assessment and is not allowed to proceed to the next lesson."
+                      extra={[
+                        <Button
+                          type="primary"
+                          key="console"
+                          onClick={onClickReload}
+                        >
+                          Retake this Assessment
+                        </Button>,
+                      ]}
+                    ></Result>
+                  </Spin>
+                </Col>
+              ) : (
+                <Col xs={32} sm={24} md={24}>
+                  <Steps current={currentStep}>
+                    {stepQuestions.map((item) => (
+                      <Step
+                        key={item.questionTypeName}
+                        title={item.questionTypeName}
+                      />
+                    ))}
+                  </Steps>
+                  <Spin
+                    size="small"
+                    /* tip="Processing..." */
+                    spinning={submitAnswerSpin}
+                    delay={100}
+                  >
+                    <div className="questionContainer">
+                      <div className="steps-content">
+                        {stepQuestions[currentStep].questionTypeId == 3 ? (
+                          <div>
+                            {/*  True or False Question */}
+                            <h3>
+                              Question:{" "}
+                              {stepQuestions[currentStep].questionName}
+                            </h3>
+                            <p>
+                              <InfoCircleFilled /> Select your answer.
+                            </p>
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                              onChange={(e) =>
+                                onChangeToF(e, stepQuestions[currentStep])
+                              }
+                            >
+                              <Radio.Button value="True">True</Radio.Button>
+                              <Radio.Button value="False">False</Radio.Button>
+                            </Radio.Group>
+                          </div>
+                        ) : stepQuestions[currentStep].questionTypeId == 2 ? (
+                          <div>
+                            {/*  Multiple Choice Question */}
+                            <h3>
+                              Question:{" "}
+                              {stepQuestions[currentStep].questionName}
+                            </h3>
+                            <p>
+                              <InfoCircleFilled /> Select your answer.
+                            </p>
+                            <Radio.Group
+                              optionType="button"
+                              buttonStyle="solid"
+                              onChange={(e) =>
+                                onChangeToF(e, stepQuestions[currentStep])
+                              }
+                            >
+                              <Radio.Button value="True">True</Radio.Button>
+                              <Radio.Button value="False">False</Radio.Button>
+                            </Radio.Group>
+                          </div>
+                        ) : (
+                          <div>
+                            {/*  Essay */}
+                            <h3>
+                              Question:{" "}
+                              {stepQuestions[currentStep].questionName}
+                            </h3>
+                            <p>
+                              <InfoCircleFilled /> Minimum length of{" "}
+                              {stepQuestions[currentStep].questionMinLength} and
+                              Maximum of{" "}
+                              {stepQuestions[currentStep].questionMaxLength}.
+                            </p>
+                            <TextArea
+                              showCount
+                              rows="5"
+                              minLength={
+                                stepQuestions[currentStep].questionMinLength
+                              }
+                              maxLength={
+                                stepQuestions[currentStep].questionMaxLength
+                              }
+                              onBlur={(e) =>
+                                onBlurEssay(e, stepQuestions[currentStep])
+                              }
+                              onFocus={() => setIsError("")}
+                            />
+                            {isError && (
+                              <p style={{ color: "#f00000" }}>{isError}</p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className="steps-action"
+                        style={{ marginTop: "2rem" }}
+                      >
+                        {currentStep < stepQuestions.length - 1 && (
+                          <Button
+                            type="primary"
+                            onClick={() => onSubmitAnswer(learnerAnswer, 0)}
+                          >
+                            Submit
+                          </Button>
+                        )}
+                        {currentStep === stepQuestions.length - 1 && (
+                          <Button
+                            type="primary"
+                            onClick={() => onSubmitAnswer(learnerAnswer, 1)}
+                            /* onClick={() => message.success("Processing complete!")} */
+                          >
+                            Submit
+                          </Button>
+                        )}
+                        {currentStep > 0 && (
+                          <Button
+                            style={{ margin: "0 8px" }}
+                            onClick={() => prev()}
+                          >
+                            Previous
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </Spin>
+                </Col>
+              )}
+            </Row>
+          </div>
+        ) : (
+          <Result
+            status="success"
+            title="Congratulations! You have successfully completed the lesson."
+            subTitle="Please take the assessment exam to proceed to the next lesson."
+            extra={[
+              <Button
+                type="primary"
+                shape="round"
+                key="console"
+                size="large"
+                onClick={() => setTakeAssessment(true)}
+              >
+                Take the Assessment
+              </Button>,
+            ]}
+          />
+        )}
       </Modal>
       <style jsx global>{`
         .outlineAssessmentModal .ant-modal-header,
