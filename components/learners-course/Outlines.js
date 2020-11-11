@@ -204,17 +204,18 @@ const Outlines = (props) => {
       )}
        {outlineAssessmentModal && (
         <AssessmentProcess
-          assessment={outlineDrawerDetails}
+          outlineDetails={outlineDrawerDetails}
           outlineAssessmentModal={outlineAssessmentModal}
           setOutlineAssessmentModal={setOutlineAssessmentModal}
           learnerId={learnerId}
           spinner={spinner}
           setSpinner={setSpinner}
         />
+      
       )}
       <Spin
         size="large"
-        tip="Processing..."
+        /* tip="Processing..." */
         spinning={spinner}
         delay={100}
       ></Spin>

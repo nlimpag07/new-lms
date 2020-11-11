@@ -71,7 +71,7 @@ const OutlinesDrawerDetails = ({
   learnerId,
   spinner,
   setSpinner,
-  setOutlineAssessmentModal
+  setOutlineAssessmentModal,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
@@ -295,7 +295,16 @@ const OutlinesDrawerDetails = ({
     console.log("Run assessments:", courseAssessment);
     setArticulateModal2Visible(false);
     setdrawerVisible(false);
-    setOutlineAssessmentModal(true);
+    if (courseAssessment.length) {
+      //Run the Assessment
+      setOutlineAssessmentModal(true);
+    } else {
+      //setSpinner(false);
+      //Don't run assessment, refresh the outlineList instead
+      //setOutlineAssessmentModal(false);
+      window.location.reload();
+      //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
+    }
   };
 
   return (
@@ -440,7 +449,7 @@ const OutlinesDrawerDetails = ({
           ></iframe>
         </div>
       </Modal>
-     {/*  {outlineAssessmentModal && (
+      {/*  {outlineAssessmentModal && (
         <AssessmentProcess
           assessment={courseAssessment}
           outlineAssessmentModal={outlineAssessmentModal}

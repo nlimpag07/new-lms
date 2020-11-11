@@ -322,7 +322,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 }
                 description={
                   <div>
-                    <div>{course.description}</div>
+                    <div>{decodeURI(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }
