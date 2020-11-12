@@ -52,7 +52,22 @@ const LearnerMenu = () => {
       `}</style>
     </Menu>
   ) : aspath.startsWith("/learner/my-courses/") ? (
-    <h3>wahahaha</h3>
+    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">     
+      <Menu.Item
+        icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
+        key="my-courses"
+      >
+        <Link href="/learner/my-courses" as={`/learner/my-courses`}>
+          <a>Back to My Courses</a>
+        </Link>
+      </Menu.Item>
+
+      <style jsx global>{`
+        .ant-layout-sider {
+          background-color: #ffffff;
+        }
+      `}</style>
+    </Menu>
   ) : (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
@@ -84,18 +99,18 @@ const LearnerMenu = () => {
 
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "file-alt"]} size="lg" />}
-        key="/user/transcript"
+        key="/learner/my-transcripts"
       >
-        <Link href="/user/transcript" passHref>
+        <Link href="/learner/my-transcripts" passHref>
           <a>My Transcript</a>
         </Link>
       </Menu.Item>
 
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "calendar-alt"]} size="lg" />}
-        key="/user/calendar"
+        key="/learner/calendar"
       >
-        <Link href="/user/calendar" passHref>
+        <Link href="/learner/calendar" passHref>
           <a>Calendar</a>
         </Link>
       </Menu.Item>

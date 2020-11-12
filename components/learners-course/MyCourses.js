@@ -296,9 +296,11 @@ const MyCourses = ({ mycourses }) => {
         }
         .widget-holder-col .published-course .ant-card-head {
           background-color: #62ab35bf;
+          z-index:1;
         }
         .widget-holder-col .unpublished-course .ant-card-head {
           background-color: #ff572294;
+          z-index:1;
         }
         .widget-holder-col .widget-search-row {
           padding: 5px 10px;

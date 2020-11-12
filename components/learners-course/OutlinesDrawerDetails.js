@@ -73,6 +73,8 @@ const OutlinesDrawerDetails = ({
   setSpinner,
   setOutlineAssessmentModal,
   setOutlineFinishModal,
+  setStartOutline,
+  startOutline
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
@@ -81,6 +83,7 @@ const OutlinesDrawerDetails = ({
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
 
   //console.log("Outline Details:", outlineDetails);
+  //console.log("startOutline:", startOutline);
 
   let { isApproved, startDate, endDate } = outlineDetails;
   //const outlineId = outlineDetails.id;
@@ -102,6 +105,11 @@ const OutlinesDrawerDetails = ({
   } = outlineDetails;
 
   useEffect(() => {}, [drawerVisible]);
+  useEffect(() => {
+    if(startOutline){
+      setArticulateModal2Visible(true)
+    }
+  }, [startOutline]);
 
   function onStartOrContinueLesson(e) {
     e.preventDefault();
@@ -135,8 +143,9 @@ const OutlinesDrawerDetails = ({
             // wait for response if the verification is true
             if (theRes) {
               //true
-              setSpinner(false);
-              setdrawerVisible(false);
+              //setSpinner(true);
+              setdrawerVisible(true);
+              setStartOutline(true)
               //console.log()
               //Redirect to Course Outline
               /* router.push(
@@ -183,7 +192,7 @@ const OutlinesDrawerDetails = ({
       //The learner already started this lesson, just
       //show the lesson
       //setdrawerVisible(false);
-
+      setStartOutline(false)
       setArticulateModal2Visible(true);
       setSpinner(false);
       /* router.push(
@@ -294,9 +303,53 @@ const OutlinesDrawerDetails = ({
     setSpinner(true);
     //console.log("Articulate Modal Status: Closed");
     //console.log("Run assessments:", courseAssessment);
+
+    var postConfig = {
+      method: "post",
+      url: apiBaseUrl + "/learner/courseoutline",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: {
+        courseOutlineId: id,
+        learnerId: learnerId,
+        hoursTaken: 0,
+        score: 100,
+      },
+    };
+    async function postData(postConfig) {
+      try {
+        const response = await axios(postConfig);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data.response;
+          console.log("Successfully Posted Data", response.data);
+          // wait for response if the verification is true
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        //console.log('Error Response',data.message);
+        setSpinner(false);
+        Modal.error({
+          title: "Error: Unable to Start Lesson",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+    }
+    postData(postConfig);
+
     setArticulateModal2Visible(false);
     setdrawerVisible(false);
-    
+
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
@@ -304,7 +357,7 @@ const OutlinesDrawerDetails = ({
       setSpinner(false);
       //Don't run assessment, refresh the outlineList instead
       //setOutlineAssessmentModal(false);
-      setOutlineFinishModal(true)
+      setOutlineFinishModal(true);
       //window.location.reload();
       //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
     }

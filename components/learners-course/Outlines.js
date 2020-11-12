@@ -73,11 +73,11 @@ const linkUrl = Cookies.get("usertype");
 
 const Outlines = (props) => {
   const router = useRouter();
-  const { course_id, learnerId, outlineList } = props;
+  const { course_id, learnerId, listOfOutlines } = props;
   //console.log("My outlines", outlineList);
-  const { courseAllList, setCourseAllList } = useCourseList();
+  const [outlineList, setOutlineList] = useState(listOfOutlines);
   const [spinner, setSpinner] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [drawer2Visible, setDrawer2Visible] = useState((drawer2Visible = false));
   var [outlineDrawerDetails, setCourseDrawerDetails] = useState(
@@ -85,12 +85,47 @@ const Outlines = (props) => {
   );
   const [outlineAssessmentModal, setOutlineAssessmentModal] = useState(false);
   const [outlineFinishModal, setOutlineFinishModal] = useState(false);
+  const [startOutline, setStartOutline] = useState(false);
 
   var myCourseCount = 0;
   if (outlineList) myCourseCount = outlineList.length;
   useEffect(() => {
-    setLoading(false);
+    //setOutlineList(listOfOutlines);
+    //console.log("run SetLoading",loading)
+    setLoading(true);
   }, []);
+  useEffect(() => {
+    if (startOutline) {
+      //console.log("run Start Outline", startOutline);
+      var config = {
+        method: "get",
+        url: apiBaseUrl + `/Learner/MyCourse/${course_id}`,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      async function fetchData(config) {        
+          const response = await axios(config);
+          if (response) {
+            //setOutcomeList(response.data.result);
+            let theRes = response.data;
+            //console.log("Response", response.data);
+            // wait for response if the verification is true
+            if (theRes.length) {
+              let outlines = theRes[0].course
+    ? theRes[0].course.courseOutline
+    : null;   
+              setOutlineList(outlines);
+            } else {
+              //false
+            }
+          }
+      }
+      fetchData(config);
+      setSpinner(false);
+    }
+  }, [startOutline]);
   //console.log(courseAllList)
   return (
     <Row
@@ -202,9 +237,11 @@ const Outlines = (props) => {
           setSpinner={setSpinner}
           setOutlineAssessmentModal={setOutlineAssessmentModal}
           setOutlineFinishModal={setOutlineFinishModal}
+          startOutline={startOutline}
+          setStartOutline={setStartOutline}
         />
       )}
-       {outlineAssessmentModal && (
+      {outlineAssessmentModal && (
         <AssessmentProcess
           outlineDetails={outlineDrawerDetails}
           outlineAssessmentModal={outlineAssessmentModal}
@@ -212,7 +249,7 @@ const Outlines = (props) => {
           learnerId={learnerId}
           spinner={spinner}
           setSpinner={setSpinner}
-        />     
+        />
       )}
       {outlineFinishModal && (
         <BeforeAssessment
@@ -220,7 +257,7 @@ const Outlines = (props) => {
           setOutlineFinishModal={setOutlineFinishModal}
           setTakeAssessment=""
           learnerId={learnerId}
-        />     
+        />
       )}
       <Spin
         size="large"
@@ -324,10 +361,19 @@ const Outlines = (props) => {
         }
         .widget-holder-col .published-course .ant-card-head {
           background-color: #62ab35bf;
+          z-index: 1;
+        }
+        .widget-holder-col .published-course .ant-card-actions {
+          background-color: #62ab35bf;
         }
         .widget-holder-col .unpublished-course .ant-card-head {
           background-color: #ff572294;
+          z-index: 1;
         }
+        .widget-holder-col .unpublished-course .ant-card-actions {
+          background-color: #ff572294;
+        }
+        
         .widget-holder-col .widget-search-row {
           padding: 5px 10px;
           color: #e69138;
@@ -525,17 +571,20 @@ const GridType = (
           outline.learnerCourseOutline && outline.learnerCourseOutline.length
             ? true
             : false;
-        //console.log(isNotEmpty);
+        //console.log("isNotEmpty", isNotEmpty);
         if (isNotEmpty) {
           let lco = outline.learnerCourseOutline;
           //get the last item details
           const lco_lastItem = lco[lco.length - 1];
-          if (lco_lastItem.courseStart && lco_lastItem.courseEnd)
+          //console.log("Last Item", lco_lastItem);
+          if (lco_lastItem.courseStart && lco_lastItem.courseEnd) {
             outlineStatus = "Finished";
-          outlineStatusId = 2;
-          if (lco_lastItem.courseStart && !lco_lastItem.courseEnd)
+            outlineStatusId = 2;
+          }
+          if (lco_lastItem.courseStart && !lco_lastItem.courseEnd) {
             outlineStatus = "In Progress";
-          outlineStatusId = 1;
+            outlineStatusId = 1;
+          }
         } else {
           outlineStatus = "Not Started";
           outlineStatusId = 0;
@@ -589,7 +638,9 @@ const GridType = (
                       : outlineStatusId == 1
                       ? "Continue"
                       : "Start Lesson"}{" "}
-                     {outlineStatusId != 2 && <PlayCircleFilled key="action" title="Continue" />}
+                    {outlineStatusId != 2 && (
+                      <PlayCircleFilled key="action" title="Continue" />
+                    )}
                   </h4>,
                 ]}
               >

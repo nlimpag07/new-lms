@@ -69,7 +69,7 @@ const CourseOutlines = ({ courseDetails }) => {
         <LearnersMyCourseOutlines
           course_id={course_id}
           learnerId={learnerId}
-          outlineList={outlines}
+          listOfOutlines={outlines}
         />
       )); // url /view/courseId - viewing the course General
   } else {
