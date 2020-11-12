@@ -41,11 +41,11 @@ const CourseOutlines = ({ courseDetails }) => {
   var theContent; //content assignment variable
   let getlength = Object.keys(router.query).length;
   //console.log(getlength);
-  console.log("My Learner Course", courseDetails);
+  //console.log("My Learner Course", courseDetails);
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
-    console.log('Outline to pass',outlines)
+    //console.log('Outline to pass',outlines)
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise

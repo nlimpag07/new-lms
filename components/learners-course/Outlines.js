@@ -12,6 +12,7 @@ import Loader from "../theme-layout/loader/loader";
 
 const OutlinesDrawerDetails = dynamic(() => import("./OutlinesDrawerDetails"));
 import AssessmentProcess from "./AssessmentProcessPopup/AssessmentProcess";
+import BeforeAssessment from "./AssessmentProcessPopup/BeforeAssessment";
 
 import {
   Layout,
@@ -83,7 +84,7 @@ const Outlines = (props) => {
     (outlineDrawerDetails = "")
   );
   const [outlineAssessmentModal, setOutlineAssessmentModal] = useState(false);
-
+  const [outlineFinishModal, setOutlineFinishModal] = useState(false);
 
   var myCourseCount = 0;
   if (outlineList) myCourseCount = outlineList.length;
@@ -200,6 +201,7 @@ const Outlines = (props) => {
           spinner={spinner}
           setSpinner={setSpinner}
           setOutlineAssessmentModal={setOutlineAssessmentModal}
+          setOutlineFinishModal={setOutlineFinishModal}
         />
       )}
        {outlineAssessmentModal && (
@@ -210,8 +212,15 @@ const Outlines = (props) => {
           learnerId={learnerId}
           spinner={spinner}
           setSpinner={setSpinner}
-        />
-      
+        />     
+      )}
+      {outlineFinishModal && (
+        <BeforeAssessment
+          outlineFinishModal={outlineFinishModal}
+          setOutlineFinishModal={setOutlineFinishModal}
+          setTakeAssessment=""
+          learnerId={learnerId}
+        />     
       )}
       <Spin
         size="large"

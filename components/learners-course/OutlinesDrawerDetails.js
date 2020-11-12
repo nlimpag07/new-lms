@@ -72,6 +72,7 @@ const OutlinesDrawerDetails = ({
   spinner,
   setSpinner,
   setOutlineAssessmentModal,
+  setOutlineFinishModal,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
@@ -79,7 +80,7 @@ const OutlinesDrawerDetails = ({
   const [outlineStatus, setOutlineStatus] = useState(0);
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
 
-  console.log("Outline Details:", outlineDetails);
+  //console.log("Outline Details:", outlineDetails);
 
   let { isApproved, startDate, endDate } = outlineDetails;
   //const outlineId = outlineDetails.id;
@@ -291,18 +292,20 @@ const OutlinesDrawerDetails = ({
     
     return statusButtons; */
     setSpinner(true);
-    console.log("Articulate Modal Status: Closed");
-    console.log("Run assessments:", courseAssessment);
+    //console.log("Articulate Modal Status: Closed");
+    //console.log("Run assessments:", courseAssessment);
     setArticulateModal2Visible(false);
     setdrawerVisible(false);
+    
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
     } else {
-      //setSpinner(false);
+      setSpinner(false);
       //Don't run assessment, refresh the outlineList instead
       //setOutlineAssessmentModal(false);
-      window.location.reload();
+      setOutlineFinishModal(true)
+      //window.location.reload();
       //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
     }
   };

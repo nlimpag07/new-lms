@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-
+import BeforeAssessment from "./BeforeAssessment";
+import AssessmentResult from "./AssessmentResult";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -81,9 +82,11 @@ const AssessmentProcess = ({
   const router = useRouter();
   const [takeAssessment, setTakeAssessment] = useState(false);
   const [submitAnswerSpin, setSubmitAnswerSpin] = useState(false);
+  const [submitIsActive, setSubmitIsActive] = useState(false);
+
   const [learnerAnswer, setLearnerAnswer] = useState("");
   const [isError, setIsError] = useState("");
-  const [assessmentResult, setAssessmentResult] = useState("");
+  const [assessResult, setAssessmentResult] = useState("");
   //console.log("AssessmentModal Status", outlineAssessmentModal);
   var hasError = "";
   //reassign assessment
@@ -111,7 +114,7 @@ const AssessmentProcess = ({
   } = assessmentDetails;
   const courseAssessmentId = id;
 
-  console.log("Assessment Details:", assessmentDetails);
+  //console.log("Assessment Details:", assessmentDetails);
   const stepQuestions = assessmentDetails.courseAssessmentItem.map(
     (question, index) => {
       let questionData = {
@@ -142,33 +145,7 @@ const AssessmentProcess = ({
       return questionData;
     }
   );
-  //console.log(stepQuestions);
-  const steps = [
-    {
-      title: "First Question",
-      content: "First-content",
-    },
-    {
-      title: "Second",
-      content: "Second-content",
-    },
-    {
-      title: "Last",
-      content: "Last-content",
-    },
-    {
-      title: "First",
-      content: "First-content",
-    },
-    {
-      title: "Second",
-      content: "Second-content",
-    },
-    {
-      title: "Last",
-      content: "Last-content",
-    },
-  ];
+  //console.log("stepQuestions", stepQuestions);
 
   const [currentStep, setCurrentStep] = useState(0);
   const next = (ans) => {
@@ -184,11 +161,11 @@ const AssessmentProcess = ({
     setSpinner(false);
   }, [outlineAssessmentModal]);
 
-  function onSubmitAnswer(ans, isLastItem) {
+  function onSubmitAnswer(answer, isLastItem) {
     //e.preventDefault();
     setSubmitAnswerSpin(true);
 
-    var config = {
+     var config = {
       method: "post",
       url: apiBaseUrl + "/Learner/courseassessment",
       headers: {
@@ -198,10 +175,10 @@ const AssessmentProcess = ({
       data: {
         learnerId: learnerId,
         courseAssessmentId: courseAssessmentId,
-        courseAssessmentItemId: ans.courseAssessmentItemId,
-        answer: ans.answer,
+        courseAssessmentItemId: answer.courseAssessmentItemId,
+        answer: answer.answer,
         hoursTaken: 0,
-        points: 0,
+        points: answer.courseAssessmentItempoints,
       },
     };
     async function fetchData(config) {
@@ -210,11 +187,45 @@ const AssessmentProcess = ({
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.response;
-          console.log("Response", response.data);
+          //console.log("Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //true
             //setSubmitAnswerSpin(false);
+            //check if it is the last quest in the assessment
+            if (isLastItem == 1) {
+              //get the total score and display
+              var configRes = {
+                method: "get",
+                url:
+                  apiBaseUrl +
+                  `/Learner/courseassessment/${learnerId}/${courseAssessmentId}`,
+                headers: {
+                  Authorization: "Bearer " + token,
+                  "Content-Type": "application/json",
+                },
+              };
+              try {
+                const response = await axios(configRes);
+                if (response) {
+                  //let theRes = response.data.response;
+                  //console.log("Assessment Result", response.data);
+                  setAssessmentResult(response.data);
+                }
+              } catch (error) {
+                const { response } = error;
+                const { request, data } = response; // take everything but 'request'
+                //console.log("Error Getting Total Assessment Result", data.message);
+                setAssessmentResult(data.message);
+              }
+              setSubmitAnswerSpin(false);
+            } else {
+              //continue to next question
+              setAssessmentResult("");
+              setCurrentStep(currentStep + 1);
+              setSubmitAnswerSpin(false);
+            }
+            //end filtration
           } else {
             //false
             //setSubmitAnswerSpin(false);
@@ -223,63 +234,86 @@ const AssessmentProcess = ({
       } catch (error) {
         const { response } = error;
         const { request, data } = response; // take everything but 'request'
-        console.log("Error Response", data.message);
+        //console.log("Error Response", data.message);
       }
       //setLoading(false);
     }
     fetchData(config);
     setLearnerAnswer("");
-
-    //check if it is the last quest in the assessment
-    if (isLastItem == 1) {
-      //get the total score and display
-      setAssessmentResult("is done");
-    } else {
-      //continue to next question
-      setAssessmentResult("");
-      setCurrentStep(currentStep + 1);
-    }
-    setSubmitAnswerSpin(false);
+    setSubmitIsActive(false);
+    /*setSubmitAnswerSpin(false); */
   }
 
-  const OnAssessmentModalClose = () => {
-    /* let statusButtons = "";
-    
-    return statusButtons; */
-    setSpinner(true);
-
-    console.log("Submit Assessment");
-    //setArticulateModal2Visible(false);
-    //setdrawerVisible(false);
-  };
+  
 
   const onChangeToF = (e, q_info) => {
     //console.log("Selected Question", q_info);
     //console.log("Selected Answer", e.target.value);
-    let ans = e.target.value == "True" ? 1 : 0;
+    let ans;
+    let points;
+    if (e.target.value == "True" && q_info.questionIsTrue == 1) {
+      ans = 1;
+      points = 10;
+    } else if (e.target.value == "False" && q_info.questionIsFalse == 1) {
+      ans = 0;
+      points = 10;
+    } else {
+      ans = 0;
+      points = 0;
+    }
+
     setLearnerAnswer({
       answer: ans,
+      courseAssessmentItempoints: points,
       courseAssessmentItemId: q_info.questionId,
+      courseAssessmentItemType: q_info.questionTypeId,
     });
+    setSubmitIsActive(true);
     //setArticulateModal2Visible(false);
     //setdrawerVisible(false);
   };
   const onBlurEssay = (e, q_info) => {
     setIsError("");
-    console.log("Selected Question", q_info);
-    console.log("Selected Answer", e.target.value.length);
+    //console.log("Selected Question", q_info);
+    //console.log("Selected Answer", e.target.value.length);
     let ans = e.target.value;
+    let points = 0;
     if (ans.length >= q_info.questionMinLength) {
       setLearnerAnswer({
         answer: ans,
+        courseAssessmentItempoints: points,
         courseAssessmentItemId: q_info.questionId,
+        courseAssessmentItemType: q_info.questionTypeId,
       });
+      setSubmitIsActive(true);
     } else {
       setIsError("length must be greater than Minimum Length");
+      setSubmitIsActive(false);
     }
-
-    //setArticulateModal2Visible(false);
-    //setdrawerVisible(false);
+  };
+  const onMultipleChoice = (e, q_info) => {
+    setIsError("");
+    //console.log("Selected Question", q_info);
+    //console.log("Selected Answer", e.target.value);
+    let ans = e.target.value;
+    let points = 0;
+    if (ans) {
+      let isCorrect = q_info.questionChoices.filter(
+        (choice) => choice.id === ans && choice.isCorrect === 1
+      );
+      if (isCorrect.length) points = 10;
+      setLearnerAnswer({
+        answer: ans,
+        courseAssessmentItempoints: points,
+        courseAssessmentItemId: q_info.questionId,
+        courseAssessmentItemType: q_info.questionTypeId,
+        courseAssessmentItemChoices: q_info.questionChoices,
+      });
+      setSubmitIsActive(true);
+    } else {
+      setIsError("Please Select your Choice");
+      setSubmitIsActive(false);
+    }
   };
   const onClickReload = (e) => {
     e.preventDefault();
@@ -349,29 +383,9 @@ const AssessmentProcess = ({
                 </Row>
               </Col>
               <Divider orientation="left" plain></Divider>
-              {assessmentResult ? (
-                <Col xs={32} sm={24} md={24}>
-                  <Spin
-                    size="small"
-                    /* tip="Processing..." */
-                    spinning={submitAnswerSpin}
-                    delay={100}
-                  >
-                    <Result
-                      status="error"
-                      title="Assessment Result: Failed"
-                      subTitle="We are sad that you didn't pass the assessment and is not allowed to proceed to the next lesson."
-                      extra={[
-                        <Button
-                          type="primary"
-                          key="console"
-                          onClick={onClickReload}
-                        >
-                          Retake this Assessment
-                        </Button>,
-                      ]}
-                    ></Result>
-                  </Spin>
+              {assessResult ? (
+                <Col xs={32} sm={24} md={24}>                                  
+                    <AssessmentResult onClickReload={onClickReload} resultInfo={assessResult?assessResult:"error"}/>
                 </Col>
               ) : (
                 <Col xs={32} sm={24} md={24}>
@@ -387,7 +401,7 @@ const AssessmentProcess = ({
                     size="small"
                     /* tip="Processing..." */
                     spinning={submitAnswerSpin}
-                    delay={100}
+                    delay={50}
                   >
                     <div className="questionContainer">
                       <div className="steps-content">
@@ -426,11 +440,19 @@ const AssessmentProcess = ({
                               optionType="button"
                               buttonStyle="solid"
                               onChange={(e) =>
-                                onChangeToF(e, stepQuestions[currentStep])
+                                onMultipleChoice(e, stepQuestions[currentStep])
                               }
                             >
-                              <Radio.Button value="True">True</Radio.Button>
-                              <Radio.Button value="False">False</Radio.Button>
+                              {stepQuestions[currentStep].questionChoices.map(
+                                (choice) => (
+                                  <Radio.Button
+                                    key={choice.id}
+                                    value={choice.id}
+                                  >
+                                    {choice.name}
+                                  </Radio.Button>
+                                )
+                              )}
                             </Radio.Group>
                           </div>
                         ) : (
@@ -470,23 +492,32 @@ const AssessmentProcess = ({
                         className="steps-action"
                         style={{ marginTop: "2rem" }}
                       >
-                        {currentStep < stepQuestions.length - 1 && (
-                          <Button
-                            type="primary"
-                            onClick={() => onSubmitAnswer(learnerAnswer, 0)}
-                          >
-                            Submit
-                          </Button>
-                        )}
-                        {currentStep === stepQuestions.length - 1 && (
-                          <Button
-                            type="primary"
-                            onClick={() => onSubmitAnswer(learnerAnswer, 1)}
-                            /* onClick={() => message.success("Processing complete!")} */
-                          >
-                            Submit
-                          </Button>
-                        )}
+                        {currentStep < stepQuestions.length - 1 &&
+                          (submitIsActive ? (
+                            <Button
+                              type="primary"
+                              onClick={() => onSubmitAnswer(learnerAnswer, 0)}
+                            >
+                              Submit
+                            </Button>
+                          ) : (
+                            <Button type="primary" disabled>
+                              Submit
+                            </Button>
+                          ))}
+                        {currentStep === stepQuestions.length - 1 &&
+                          (submitIsActive ? (
+                            <Button
+                              type="primary"
+                              onClick={() => onSubmitAnswer(learnerAnswer, 1)}
+                            >
+                              Submit
+                            </Button>
+                          ) : (
+                            <Button type="primary" disabled>
+                              Submit
+                            </Button>
+                          ))}
                         {currentStep > 0 && (
                           <Button
                             style={{ margin: "0 8px" }}
@@ -503,22 +534,7 @@ const AssessmentProcess = ({
             </Row>
           </div>
         ) : (
-          <Result
-            status="success"
-            title="Congratulations! You have successfully completed the lesson."
-            subTitle="Please take the assessment exam to proceed to the next lesson."
-            extra={[
-              <Button
-                type="primary"
-                shape="round"
-                key="console"
-                size="large"
-                onClick={() => setTakeAssessment(true)}
-              >
-                Take the Assessment
-              </Button>,
-            ]}
-          />
+          <BeforeAssessment setTakeAssessment={() => setTakeAssessment(true)} />
         )}
       </Modal>
       <style jsx global>{`
