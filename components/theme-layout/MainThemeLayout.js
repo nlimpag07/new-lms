@@ -11,6 +11,7 @@ import {
   Divider,
   Layout,
 } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 //importing menu
 //import MainMenu from "./main-menu/MainMenu";
@@ -87,10 +88,7 @@ export default function MainThemeLayout({ children }) {
   }
 
   const [collapsed, setCollapsed] = useState(false);
-  const onCollapse = (collapsed) => {
-    //console.log(collapsed);
-    setCollapsed(collapsed);
-  };
+
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -99,9 +97,13 @@ export default function MainThemeLayout({ children }) {
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
           theme="light"
-          /* collapsible collapsed={collapsed} onCollapse={onCollapse} */ breakpoint="lg"
-          collapsedWidth="0"
-          /* onBreakpoint={broken => {
+          collapsible
+          collapsed={collapsed}
+          onCollapse={() => setCollapsed(!collapsed)}
+           
+          /*trigger={null} 
+
+          onBreakpoint={broken => {
         console.log(broken);
       }}
       onCollapse={(collapsed, type) => {
@@ -112,8 +114,17 @@ export default function MainThemeLayout({ children }) {
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
           {NavigationMenu}
+          
           <div className="sideBottom">
-            <div className="sideBottom-shape"></div>
+            <div className="sideBottom-shape">
+              {/* <span
+                className={
+                  "ant-layout-sider-trigger ant-layout-sider-zero-width-trigger-left"
+                }
+              >
+                <LeftOutlined type={"bars"} onClick={() => setCollapsed(!collapsed)} />
+              </span> */}
+            </div>
           </div>
         </Sider>
         <Layout className="site-layout">
@@ -145,9 +156,9 @@ export default function MainThemeLayout({ children }) {
           * {
             box-sizing: border-box;
           }
-          .ant-menu-inline-collapsed span {
+          /* .ant-menu-inline-collapsed span {
             display: none;
-          }
+          } */
           .logo img {
             width: 100%;
           }

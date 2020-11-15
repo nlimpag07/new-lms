@@ -36,7 +36,6 @@ const list = {
   },
 };
 
-
 const UsersList = ({ listOfTranscripts }) => {
   var transcripts = listOfTranscripts;
   const router = useRouter();
@@ -45,11 +44,26 @@ const UsersList = ({ listOfTranscripts }) => {
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
 
-  
+  const newTranscripts = transcripts.length
+    ? transcripts.map((transcript) => {
+        const reArraytranscripts = {
+          id:transcript.id,
+          courseTitle:transcript.course.title,
+          result:transcript.statusId,
+          steps:"",
+          totalHoursTaken:transcript.totalHoursTaken,
+          finalScore:transcript.finalScore,
+        };
+        return reArraytranscripts;
+      })
+    : null;
+
   var lastSelectedIndex = 0;
-  const ddata = userlist.length?userlist.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  ):null;
+  const ddata = newTranscripts.length
+    ? newTranscripts.map((dataItem) =>
+        Object.assign({ selected: false }, dataItem)
+      )
+    : null;
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
@@ -102,6 +116,8 @@ const UsersList = ({ listOfTranscripts }) => {
     setCourseDetails(theCourse[0]); */
   }, []);
 
+  console.log(Data);
+
   return (
     //GridType(gridList)
     <Row
@@ -144,15 +160,15 @@ const UsersList = ({ listOfTranscripts }) => {
                     ) === -1
                   }
                 />
-                <Column field="empId" title="Emp ID" width="100px" />
-                <Column field="firstName" title="Name" width="300px" />
-                <Column field="lastName" title="Enrollment Type" />
-                <Column field="email" title="Email" />
-                
-                <Column field="isActive" title="Active Status" />
+                <Column field="courseTitle" title="Course" width="300px" />
+                <Column field="result" title="Result" />
+                <Column field="email" title="Steps" />
+                <Column field="email" title="Avg. Score" />
+                <Column field="finalScore" title="Final Score" />
+                <Column field="totalHoursTaken" title="Hours Taken" />
                 <Column
                   sortable={false}
-                  cell={ActionRender}
+                  cell={()=>ActionRender(setModal2Visible)}
                   field=""
                   title="Action"
                 />
@@ -190,26 +206,17 @@ const UsersList = ({ listOfTranscripts }) => {
   );
 };
 
-const ActionRender = () => {
+const ActionRender = (setModal2Visible) => {
   return (
     <td>
       <button
-        className="k-primary k-button k-grid-edit-command"
+        className="k-grid-edit-command"
+        onClick={() => setModal2Visible(true)}
         /* onClick={() => {
           edit(this.props.dataItem);
         }} */
       >
         <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
-      </button>
-      &nbsp;
-      <button
-        className="k-button k-grid-remove-command"
-        /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
-      >
-        ✖
       </button>
     </td>
   );

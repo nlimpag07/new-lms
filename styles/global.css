@@ -12,10 +12,16 @@
 .ant-layout-sider svg {
   margin-right: 0.5rem;
 }
+.ant-layout-sider-light .ant-layout-sider-trigger {
+  color:#ffffff;
+  background: #4d4d4d;
+  border-radius: 0 1.5rem 0 0;
+}
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   /* border-right: solid 4px #f9ad48; */
   background-color: rgba(0, 0, 0, 0.03);
 }
+/* .ant-menu-inline-collapsed span{display:none !important;} */
 .ant-menu-vertical .ant-menu-item::after,
 .ant-menu-vertical-left .ant-menu-item::after,
 .ant-menu-vertical-right .ant-menu-item::after,
@@ -43,6 +49,8 @@
 .ant-menu-submenu-title a:hover {
   color: #f9ad48;
 }
+.ant-menu-item, .ant-menu-submenu-title{white-space: inherit !important;}
+
 .sideBottom {
   position: absolute;
   bottom: 0;

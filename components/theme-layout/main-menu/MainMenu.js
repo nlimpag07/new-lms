@@ -103,6 +103,7 @@ class MainMenu extends Component {
           .ant-layout-sider {
             background-color: #ffffff;
           }
+          
         `}</style>
       </Menu>
     );

@@ -55,7 +55,7 @@ const LearnerMenu = () => {
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">     
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
-        key="my-courses"
+        key="/learner/my-courses"
       >
         <Link href="/learner/my-courses" as={`/learner/my-courses`}>
           <a>Back to My Courses</a>
