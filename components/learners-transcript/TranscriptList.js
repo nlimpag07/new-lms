@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Empty } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -37,33 +37,36 @@ const list = {
 };
 
 const UsersList = ({ listOfTranscripts }) => {
-  var transcripts = listOfTranscripts;
+  var transcripts = []; //listOfTranscripts;
   const router = useRouter();
-  console.log(transcripts);
+  //console.log(transcripts);
 
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
 
-  const newTranscripts = transcripts.length
-    ? transcripts.map((transcript) => {
-        const reArraytranscripts = {
-          id:transcript.id,
-          courseTitle:transcript.course.title,
-          result:transcript.statusId,
-          steps:"",
-          totalHoursTaken:transcript.totalHoursTaken,
-          finalScore:transcript.finalScore,
-        };
-        return reArraytranscripts;
-      })
-    : null;
+  const newTranscripts =
+    transcripts && transcripts.length
+      ? transcripts.map((transcript, index) => {
+          const reArraytranscripts = {
+            id: transcript.id,
+            courseTitle: transcript.course.title,
+            result: transcript.statusId,
+            steps: 0,
+            avg: 0,
+            totalHoursTaken: transcript.totalHoursTaken,
+            finalScore: transcript.finalScore,
+            num: index + 1,
+          };
+          return reArraytranscripts;
+        })
+      : [];
 
   var lastSelectedIndex = 0;
   const ddata = newTranscripts.length
     ? newTranscripts.map((dataItem) =>
         Object.assign({ selected: false }, dataItem)
       )
-    : null;
+    : [];
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
@@ -118,7 +121,7 @@ const UsersList = ({ listOfTranscripts }) => {
 
   console.log(Data);
 
-  return (
+  return Data.length ? (
     //GridType(gridList)
     <Row
       className="widget-container"
@@ -151,7 +154,7 @@ const UsersList = ({ listOfTranscripts }) => {
                   });
                 }}
               >
-                <Column
+                {/* <Column
                   field="selected"
                   width="65px"
                   headerSelectionValue={
@@ -159,16 +162,17 @@ const UsersList = ({ listOfTranscripts }) => {
                       (dataItem) => dataItem.selected === false
                     ) === -1
                   }
-                />
+                /> */}
+                <Column field="num" width="65px" title="#" />
                 <Column field="courseTitle" title="Course" width="300px" />
                 <Column field="result" title="Result" />
-                <Column field="email" title="Steps" />
-                <Column field="email" title="Avg. Score" />
+                <Column field="steps" title="Steps" />
+                <Column field="avg" title="Avg. Score" />
                 <Column field="finalScore" title="Final Score" />
                 <Column field="totalHoursTaken" title="Hours Taken" />
                 <Column
                   sortable={false}
-                  cell={()=>ActionRender(setModal2Visible)}
+                  cell={() => ActionRender(setModal2Visible)}
                   field=""
                   title="Action"
                 />
@@ -203,6 +207,8 @@ const UsersList = ({ listOfTranscripts }) => {
         }
       `}</style>
     </Row>
+  ) : (
+    <Empty></Empty>
   );
 };
 
