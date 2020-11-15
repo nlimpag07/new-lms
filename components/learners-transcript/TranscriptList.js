@@ -133,7 +133,7 @@ const UsersList = ({ listOfTranscripts }) => {
           md={24}
           lg={24}
         >
-          <h1>Users List</h1>
+          <h1>My Transcripts</h1>
           <Row className="Course-Enrollments">
             <Col xs={24}>
               <Grid
