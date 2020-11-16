@@ -446,24 +446,6 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                     />
                   </div>
                 </Tooltip>,
-                <Tooltip title="Class">
-                  <div
-                    className="class-icon-holder"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(
-                        `/${linkUrl}/classes/[...manageclasses]`,
-                        `/${linkUrl}/classes/class/${course.id}`
-                      );
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={["far", "list-alt"]}
-                      size="lg"
-                      key="class"
-                    />
-                  </div>
-                </Tooltip>,
                 <Tooltip title="Attendance">
                   <div
                     className="class-icon-holder"
@@ -496,7 +478,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 }
                 description={
                   <div>
-                    <div>{course.description}</div>
+                    <div>{decodeURI(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

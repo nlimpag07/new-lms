@@ -37,7 +37,7 @@ const list = {
 };
 
 const UsersList = ({ listOfTranscripts }) => {
-  var transcripts = []; //listOfTranscripts;
+  var transcripts = listOfTranscripts;
   const router = useRouter();
   //console.log(transcripts);
 

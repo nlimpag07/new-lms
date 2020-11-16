@@ -5,13 +5,28 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
+import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
+
+import ClassesEnrollmentsList from "./EnrollmentOperations/ClassesEnrollmentsList";
+//import EnrollmentsView from "./EnrollmentOperations/EnrollmentsView";
+const EnrollmentsView = dynamic(() =>
+  import("./EnrollmentOperations/EnrollmentsView")
+);
+const EnrollmentsAdd = dynamic(() =>
+  import("./EnrollmentOperations/EnrollmentsAdd")
+);
 
 const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const list = {
   visible: {
@@ -36,259 +51,103 @@ const list = {
   },
 };
 
-const products = [
+/*menulists used by radial menu */
+const menulists = [
   {
-    ProductID: 1,
-    ProductName: "Chai",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "10 boxes x 20 bags",
-    UnitPrice: 18.0,
-    UnitsInStock: 39,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 2,
-    ProductName: "Chang",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "24 - 12 oz bottles",
-    UnitPrice: 19.0,
-    UnitsInStock: 17,
-    UnitsOnOrder: 40,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 3,
-    ProductName: "Aniseed Syrup",
-    SupplierID: 1,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 550 ml bottles",
-    UnitPrice: 10.0,
-    UnitsInStock: 13,
-    UnitsOnOrder: 70,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 4,
-    ProductName: "Chef Anton's Cajun Seasoning",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "48 - 6 oz jars",
-    UnitPrice: 22.0,
-    UnitsInStock: 53,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 5,
-    ProductName: "Chef Anton's Gumbo Mix",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "36 boxes",
-    UnitPrice: 21.35,
-    UnitsInStock: 0,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: true,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 6,
-    ProductName: "Grandma's Boysenberry Spread",
-    SupplierID: 3,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 8 oz jars",
-    UnitPrice: 25.0,
-    UnitsInStock: 120,
-    UnitsOnOrder: 0,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 7,
-    ProductName: "Uncle Bob's Organic Dried Pears",
-    SupplierID: 3,
-    CategoryID: 7,
-    QuantityPerUnit: "12 - 1 lb pkgs.",
-    UnitPrice: 30.0,
-    UnitsInStock: 15,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 7,
-      CategoryName: "Produce",
-      Description: "Dried fruit and bean curd",
-    },
-  },
-  {
-    ProductID: 8,
-    ProductName: "Northwoods Cranberry Sauce",
-    SupplierID: 3,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 12 oz jars",
-    UnitPrice: 40.0,
-    UnitsInStock: 6,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 9,
-    ProductName: "Mishi Kobe Niku",
-    SupplierID: 4,
-    CategoryID: 6,
-    QuantityPerUnit: "18 - 500 g pkgs.",
-    UnitPrice: 97.0,
-    UnitsInStock: 29,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: true,
-    Category: {
-      CategoryID: 6,
-      CategoryName: "Meat/Poultry",
-      Description: "Prepared meats",
-    },
-  },
-  {
-    ProductID: 10,
-    ProductName: "Ikura",
-    SupplierID: 4,
-    CategoryID: 8,
-    QuantityPerUnit: "12 - 200 ml jars",
-    UnitPrice: 31.0,
-    UnitsInStock: 31,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 8,
-      CategoryName: "Seafood",
-      Description: "Seaweed and fish",
-    },
-  },
-  {
-    ProductID: 11,
-    ProductName: "Queso Cabrales",
-    SupplierID: 5,
-    CategoryID: 4,
-    QuantityPerUnit: "1 kg pkg.",
-    UnitPrice: 21.0,
-    UnitsInStock: 22,
-    UnitsOnOrder: 30,
-    ReorderLevel: 30,
-    Discontinued: false,
-    Category: {
-      CategoryID: 4,
-      CategoryName: "Dairy Products",
-      Description: "Cheeses",
-    },
+    title: "Add",
+    icon: "&#xf055;",
+    active: true,
+    url: "/instructor/[course]/edit",
+    urlAs: "/instructor/course/edit",
+    callback: "Save",
   },
 ];
 
 const ClassesEnrollments = ({ course_id }) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  var [enrollmentsModal, setEnrollmentsModal] = useState(false);
+
   const [courseDetails, setCourseDetails] = useState("");
-
-  var lastSelectedIndex = 0;
-  const ddata = products.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  );
-  const [Data, setData] = useState(ddata);
-  const [theSort, setTheSort] = useState({
-    sort: [{ field: "ProductName", dir: "asc" }],
-  });
-  //console.log(Data)
-
-  const selectionChange = (event) => {
-    const theData = Data.map((item) => {
-      if (item.ProductID === event.dataItem.ProductID) {
-        item.selected = !event.dataItem.selected;
-      }
-      return item;
-    });
-    setData(theData);
-  };
-  const rowClick = (event) => {
-    let last = lastSelectedIndex;
-    const theData = [...Data];
-
-    const current = theData.findIndex(
-      (dataItem) => dataItem === event.dataItem
-    );
-
-    if (!event.nativeEvent.shiftKey) {
-      lastSelectedIndex = last = current;
-    }
-
-    if (!event.nativeEvent.ctrlKey) {
-      theData.forEach((item) => (item.selected = false));
-    }
-    const select = !event.dataItem.selected;
-    for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
-      theData[i].selected = select;
-    }
-    setData(theData);
-  };
-
-  const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  };
-
+  const [enrollees, setEnrollees] = useState("");
+  const [spin, setSpin] = useState(true);
   useEffect(() => {
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.result.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourses.result.filter(
+      (getCourse) => getCourse.id == course_id
+    );
     setCourseDetails(theCourse[0]);
+
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/enrollment/" + course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data.result;
+          console.log("Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            //there are enrollees
+            setEnrollees(theRes);
+          } else {
+            //no enrollees
+            setEnrollees(theRes);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        console.log("Error Response", data.message);
+
+        Modal.error({
+          title: "Error: Unable to Start Lesson",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+
+    setSpin(false);
   }, []);
 
-  return (
-    //GridType(gridList)
+  const showModal = (modalOperation) => {
+    setEnrollmentsModal({
+      visible: true,
+      modalOperation: modalOperation,
+    });
+    console.log(modalOperation);
+  };
+  const hideModal = (modalOperation) => {
+    setEnrollmentsModal({
+      visible: false,
+      modalOperation: modalOperation,
+    });
+    console.log("modalOperation", modalOperation);
+  };
+  //console.log("EnrollmentsView", EnrollmentsView);
+
+  //Process Enrollment Applications
+  const processEnrollment = (flag) => {
+    console.log("modalOperation", modalOperation);
+  };
+
+  return enrollees ? (
     <Row
       className="widget-container"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -305,72 +164,69 @@ const ClassesEnrollments = ({ course_id }) => {
           <h1>{courseDetails.title}: Enrollments</h1>
           <Row className="Course-Enrollments">
             <Col xs={24}>
-              <Grid
-                data={orderBy(Data, theSort.sort)}
-                style={{ height: "550px" }}
-                selectedField="selected"
-                onSelectionChange={selectionChange}
-                onHeaderSelectionChange={headerSelectionChange}
-                onRowClick={rowClick}
-                sortable
-                sort={theSort.sort}
-                onSortChange={(e) => {
-                  setTheSort({
-                    sort: e.sort,
-                  });
-                }}
-              >
-                <Column
-                  field="selected"
-                  width="65px"
-                  headerSelectionValue={
-                    Data.findIndex(
-                      (dataItem) => dataItem.selected === false
-                    ) === -1
-                  }
-                />
-                <Column field="ProductName" title="Name" width="300px" />
-                <Column field="UnitsInStock" title="Enrollment Type" />
-                <Column field="UnitsOnOrder" title="User Group" />
-                <Column field="ReorderLevel" title="Enrollment Date" />
-                <Column field="Discontinued" title="Status" />
-                <Column
-                  sortable={false}
-                  cell={ActionRender}
-                  field="SupplierID"
-                  title="Action"
-                />
-              </Grid>
+              <ClassesEnrollmentsList
+                enrollees_list={enrollees}
+                showModal={showModal}
+                hideModal={hideModal}
+              />
             </Col>
           </Row>
         </Col>
       </motion.div>
+
       <Modal
-        title="Publish Properties"
+        title="Enrollment"
         centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
+        visible={enrollmentsModal.visible}
+        onOk={() => hideModal(enrollmentsModal.modalOperation)}
+        onCancel={() => hideModal(enrollmentsModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={1000}
+        width="50%"
+        cancelButtonProps={{ style: { display: "none" } }}
+        okButtonProps={{ style: { display: "none" } }}
+        className="enrollmentProcess"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        {enrollmentsModal.modalOperation == "view" ? (
+          <EnrollmentsView />
+        ) : enrollmentsModal.modalOperation == "add" ? (
+          <EnrollmentsAdd course_id={course_id} courseDetails={courseDetails} hideModal={hideModal} />
+        ) : enrollmentsModal.modalOperation == "approve" ? (
+          "HELLO Approve"
+        ) : enrollmentsModal.modalOperation == "delete" ? (
+          "HELLO Delete"
+        ) : (
+          "Default"
+        )}
       </Modal>
 
-      <CourseCircularUi />
+      <RadialUI
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+        toggleModal={() => showModal("add")}
+      />
       <style jsx global>{`
         .ClassesEnrollments h1 {
           font-size: 2rem;
           font-weight: 700;
         }
         .ClassesEnrollments .k-grid-header {
-          background-color: rgba(0, 0, 0, 0.05);
+          background-color: rgba(0, 0, 0, 0.05); /* #4E4E4E */
+        }
+        .enrollmentProcess .ant-modal-footer {
+          display: none;
+          opacity:0;
         }
       `}</style>
     </Row>
+  ) : (
+    <Spin
+      size="small"
+      /* tip="Processing..." */
+      spinning={spin}
+      delay={50}
+    ></Spin>
   );
 };
 
