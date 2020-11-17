@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal, Spin, Button } from "antd";
+import { Row, Col, Modal, Spin, Button, Popconfirm } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -41,16 +41,21 @@ const list = {
   },
 };
 
-const ClassesEnrollmentsList = ({ enrollees_list, showModal, hideModal }) => {
+const ClassesEnrollmentsList = ({
+  enrollees_list,
+  showModal,
+  hideModal,
+  setSpin,
+}) => {
   const router = useRouter();
 
   useEffect(() => {}, []);
 
-  console.log("Enrollees", enrollees_list);
+  //console.log("Enrollees", enrollees_list);
 
   const newEnrolleesData = enrollees_list.map((dataItem) => {
-    let ItemLearner = dataItem.learner.length
-      ? dataItem.learner[0].createdAt
+    let ItemLearner = dataItem
+      ? dataItem.createdAt
       : null;
     let rawDate = new Date(ItemLearner);
     let newDate =
@@ -61,13 +66,16 @@ const ClassesEnrollmentsList = ({ enrollees_list, showModal, hideModal }) => {
       rawDate.getDate();
     let newEnrollee = {
       id: dataItem.id,
-      studentFullName: `${dataItem.firstName} ${dataItem.lastName}`,
+      studentFullName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
       enrollmentType:
-        dataItem.learner[0].enrollmentType == 1 ? "Manual" : "Self-Enrolled",
-      userGroup: dataItem.groups.length ? dataItem.groups[0].name : "None",
+        dataItem.length && dataItem.enrollmentType == 1
+          ? "Manual"
+          : "Self-Enrolled",
+      userGroup: dataItem.user.groups ? dataItem.user.groups.name : "None",
       enrollmentDate: ItemLearner ? newDate : "None",
-      status: dataItem.learner[0].statusId,
-      isApproved: dataItem.learner[0].isApproved,
+      status: dataItem ? dataItem.statusId : 0,
+      isApproved: dataItem ? dataItem.isApproved : 0,
+      learnerId: dataItem ? dataItem.id : 0,
     };
     return newEnrollee;
   });
@@ -80,7 +88,7 @@ const ClassesEnrollmentsList = ({ enrollees_list, showModal, hideModal }) => {
   const [theSort, setTheSort] = useState({
     sort: [{ field: "studentFullName", dir: "asc" }],
   });
-  console.log(Data);
+  //console.log(Data);
 
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
@@ -152,7 +160,7 @@ const ClassesEnrollmentsList = ({ enrollees_list, showModal, hideModal }) => {
       <Column field="status" title="Status" cell={StatusRender} />
       <Column
         sortable={false}
-        cell={(props) => ActionRender(props, showModal, hideModal)}
+        cell={(props) => ActionRender(props, showModal, hideModal,setSpin)}
         field="action"
         title="Action"
       />
@@ -161,7 +169,7 @@ const ClassesEnrollmentsList = ({ enrollees_list, showModal, hideModal }) => {
 };
 
 const StatusRender = (props) => {
-  console.log("props", props);
+  //console.log("props", props);
   const wasApproved = props.dataItem.isApproved === 1 ? true : false;
 
   return wasApproved ? (
@@ -194,7 +202,70 @@ const StatusRender = (props) => {
     </td>
   );
 };
-const ActionRender = (props, showModal, hideModal) => {
+
+function deleteConfirm(e, data,setSpin) {
+  //console.log(e);
+  //console.log("PopConfirm", data);
+  //setSpin(true);  
+  var config = {
+    method: "delete",
+    url: apiBaseUrl + "/enrollment/" + data.learnerId,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+  async function fetchData(config) {
+    try {
+      const response = await axios(config);
+      if (response) {
+        //setOutcomeList(response.data.result);
+        let theRes = response.data.response;
+        console.log("Response", response.data);
+        // wait for response if the verification is true
+        if (theRes) {
+          Modal.success({
+            title: "Enrollment Application successfully rejected",
+            content: "You have successfully rejected the selected application",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              visible: false;
+              setSpin(true);
+              //console.log("Should hide modal")
+            },
+          });
+        } else {
+        }
+      }
+    } catch (error) {
+      const { response } = error;
+      const { request, data } = response; // take everything but 'request'
+
+      console.log("Error Response", data.message);
+
+      Modal.error({
+        title: "Error: Unable to Start Lesson",
+        content: data.message + " Please contact Technical Support",
+        centered: true,
+        width: 450,
+        onOk: () => {
+          //setdrawerVisible(false);
+          setSpin(true);
+          visible: false;
+        },
+      });
+    }
+    //setLoading(false);
+  }
+  fetchData(config);
+}
+
+function deleteCancel(e) {
+  /* console.log(e);
+  message.error('Click on No'); */
+}
+const ActionRender = (props, showModal, hideModal,setSpin) => {
   //console.log("props", props);
   const wasApproved = props.dataItem.isApproved === 1 ? true : false;
   const enrollDate = props.dataItem.enrollmentDate;
@@ -215,11 +286,19 @@ const ActionRender = (props, showModal, hideModal) => {
         onClick={() => showModal("approve")}
       />
       &nbsp;
-      <Button
-        shape="circle"
-        icon={<CloseOutlined />}
-        onClick={() => showModal("delete")}
-      />
+      <Popconfirm
+        title="Are you sure to reject this enrollment?"
+        onConfirm={(e) => deleteConfirm(e, props.dataItem,setSpin)}
+        onCancel={deleteCancel}
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button
+          shape="circle"
+          icon={<CloseOutlined />}
+          /* onClick={() => showModal("delete")} */
+        />
+      </Popconfirm>
     </td>
   );
 };

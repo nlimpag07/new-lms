@@ -71,60 +71,60 @@ const ClassesEnrollments = ({ course_id }) => {
   const [courseDetails, setCourseDetails] = useState("");
   const [enrollees, setEnrollees] = useState("");
   const [spin, setSpin] = useState(true);
+
   useEffect(() => {
-    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.result.filter(
-      (getCourse) => getCourse.id == course_id
-    );
-    setCourseDetails(theCourse[0]);
+    if (spin) {
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/Courses/" + course_id,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            //setOutcomeList(response.data.result);
+            let theRes = response.data;
 
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/enrollment/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //there are enrollees
-            setEnrollees(theRes);
-          } else {
-            //no enrollees
-            setEnrollees(theRes);
+            // wait for response if the verification is true
+            if (theRes && theRes.learner.length) {
+              console.log("Response", response.data.learner);
+              //there are enrollees
+              setCourseDetails(theRes);
+              setEnrollees(theRes.learner);
+              setSpin(false);
+            } else {
+              //no enrollees
+              setEnrollees([]);
+              setSpin(false);
+            }
           }
+        } catch (error) {
+          const { response } = error;
+          const { request, data } = response; // take everything but 'request'
+
+          console.log("Error Response", data.message);
+
+          Modal.error({
+            title: "Error: Unable to Start Lesson",
+            content: data.message + " Please contact Technical Support",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              //setdrawerVisible(false);
+              visible: false;
+            },
+          });
+          setSpin(false);
         }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
-        Modal.error({
-          title: "Error: Unable to Start Lesson",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
       }
-      //setLoading(false);
+      fetchData(config);
+      //setSpin(false);
     }
-    fetchData(config);
-
-    setSpin(false);
-  }, []);
+  }, [spin]);
 
   const showModal = (modalOperation) => {
     setEnrollmentsModal({
@@ -140,72 +140,93 @@ const ClassesEnrollments = ({ course_id }) => {
     });
     console.log("modalOperation", modalOperation);
   };
-  //console.log("EnrollmentsView", EnrollmentsView);
+  console.log("Spin", spin);
 
   //Process Enrollment Applications
   const processEnrollment = (flag) => {
     console.log("modalOperation", modalOperation);
   };
 
-  return enrollees ? (
+  return (
     <Row
       className="widget-container"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
       style={{ margin: "1rem 0" }}
     >
-      <motion.div initial="hidden" animate="visible" variants={list}>
-        <Col
-          className="gutter-row widget-holder-col ClassesEnrollments"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>{courseDetails.title}: Enrollments</h1>
-          <Row className="Course-Enrollments">
-            <Col xs={24}>
-              <ClassesEnrollmentsList
-                enrollees_list={enrollees}
-                showModal={showModal}
-                hideModal={hideModal}
-              />
-            </Col>
-          </Row>
-        </Col>
-      </motion.div>
-
-      <Modal
-        title="Enrollment"
-        centered
-        visible={enrollmentsModal.visible}
-        onOk={() => hideModal(enrollmentsModal.modalOperation)}
-        onCancel={() => hideModal(enrollmentsModal.modalOperation)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width="50%"
-        cancelButtonProps={{ style: { display: "none" } }}
-        okButtonProps={{ style: { display: "none" } }}
-        className="enrollmentProcess"
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={list}
+        style={{ width: "100%" }}
       >
-        {enrollmentsModal.modalOperation == "view" ? (
-          <EnrollmentsView />
-        ) : enrollmentsModal.modalOperation == "add" ? (
-          <EnrollmentsAdd course_id={course_id} courseDetails={courseDetails} hideModal={hideModal} />
-        ) : enrollmentsModal.modalOperation == "approve" ? (
-          "HELLO Approve"
-        ) : enrollmentsModal.modalOperation == "delete" ? (
-          "HELLO Delete"
+        {!spin ? (
+          <Col
+            className="gutter-row widget-holder-col ClassesEnrollments"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>{courseDetails.title}: Enrollments</h1>
+            <Row className="Course-Enrollments">
+              <Col xs={24}>
+                <ClassesEnrollmentsList
+                  enrollees_list={enrollees}
+                  showModal={showModal}
+                  hideModal={hideModal}
+                  setSpin={setSpin}
+                />
+              </Col>
+            </Row>
+          </Col>
         ) : (
-          "Default"
+          <Col xs={24} style={{ textAlign: "center" }}>
+            <Spin
+              size="small"
+              tip="Processing..."
+              spinning={spin}
+              delay={100}
+            ></Spin>
+          </Col>
         )}
-      </Modal>
 
-      <RadialUI
-        listMenu={menulists}
-        position="bottom-right"
-        iconColor="#8998BA"
-        toggleModal={() => showModal("add")}
-      />
+        <Modal
+          title="Enrollment"
+          centered
+          visible={enrollmentsModal.visible}
+          onOk={() => hideModal(enrollmentsModal.modalOperation)}
+          onCancel={() => hideModal(enrollmentsModal.modalOperation)}
+          maskClosable={false}
+          destroyOnClose={true}
+          width="90%"
+          cancelButtonProps={{ style: { display: "none" } }}
+          okButtonProps={{ style: { display: "none" } }}
+          className="enrollmentProcess"
+        >
+          {enrollmentsModal.modalOperation == "view" ? (
+            <EnrollmentsView />
+          ) : enrollmentsModal.modalOperation == "add" ? (
+            <EnrollmentsAdd
+              course_id={course_id}
+              courseDetails={courseDetails}
+              hideModal={hideModal}
+            />
+          ) : enrollmentsModal.modalOperation == "approve" ? (
+            "HELLO Approve"
+          ) : enrollmentsModal.modalOperation == "delete" ? (
+            "HELLO Delete"
+          ) : (
+            "Default"
+          )}
+        </Modal>
+
+        <RadialUI
+          listMenu={menulists}
+          position="bottom-right"
+          iconColor="#8998BA"
+          toggleModal={() => showModal("add")}
+        />
+      </motion.div>
       <style jsx global>{`
         .ClassesEnrollments h1 {
           font-size: 2rem;
@@ -216,17 +237,13 @@ const ClassesEnrollments = ({ course_id }) => {
         }
         .enrollmentProcess .ant-modal-footer {
           display: none;
-          opacity:0;
+          opacity: 0;
+        }
+        .enrollmentProcess .ant-transfer-list {
+          width: 50% !important;
         }
       `}</style>
     </Row>
-  ) : (
-    <Spin
-      size="small"
-      /* tip="Processing..." */
-      spinning={spin}
-      delay={50}
-    ></Spin>
   );
 };
 
