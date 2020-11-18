@@ -18,6 +18,7 @@ import {
   Button,
   Switch,
   Divider,
+  message,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
@@ -31,13 +32,14 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
+const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseSession, setCourseSession] = useState([]);
   const [unEnrolledLearners, setUnEnrolledLearners] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState([]);
-  const [spin, setSpin] = useState(true);
+  const [hasError, setHasError] = useState("");
+  const [spinning, setSpinning] = useState(true);
 
   useEffect(() => {
     var config = {
@@ -105,7 +107,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
           if (theRes) {
             //there are enrollees
             setUnEnrolledLearners(theRes);
-            setSpin(false);
+            setSpinning(false);
           } else {
             //no enrollees
             setUnEnrolledLearners([]);
@@ -160,24 +162,89 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
   //console.log("selectInstructor", selectInstructor);
   const onCancel = (form) => {
     form.resetFields();
-    setSpin(true)
+    setSpinning(true);
     hideModal("add");
-    setUnEnrolledLearners([])
-    setCourseSession([])
-    setSelectedUserId([])
+    setUnEnrolledLearners([]);
+    setCourseSession([]);
+    setSelectedUserId([]);
   };
   const onFinish = (values) => {
+    setHasError("");
+    var data = {};
+    var checker = [];
     console.log("Received values of form: ", values);
     console.log("Re-Evaluating UserIds====");
-    if(!!values.learnersData){
-      console.log("Learners Data Supplied");
-    }else{
-      console.log("Learners Data Undefined... Please Supply Data");
-      if(selectedUserId.length){
-        console.log("Learners Data Supplied");
-      }else{
-        console.log("Learners Data Empty");
+    if (!!values.learnersData) {
+      //Standard undefined
+      //console.log("Learners Data Supplied");
+    } else {
+      //console.log("Learners Data Undefined... Please Supply Data");
+      if (selectedUserId.length) {
+        let learnerUserId = [];
+        console.log("Learners Data Supplied", selectedUserId);
+        selectedUserId.map((userId) => {
+          learnerUserId.push({ userId: userId });
+        });
+        data.learner = learnerUserId;
+      } else {
+        setHasError("* Please add at least 1 learner");
+        checker.push("Error");
       }
+    }
+    //Standard Entry, Static atm
+    data.userGroupId = 3;
+
+    if (!!values.isNotify) {
+      values.isNotify ? (data.isNotify = 1) : (data.isNotify = 0);
+    } else {
+      data.isNotify = 0;
+    }
+    if (!!values.isAutoEnroll) {
+      values.isAutoEnroll ? (data.isAutoEnroll = 1) : (data.isAutoEnroll = 0);
+    } else {
+      data.isAutoEnroll = 0;
+    }
+    if (!!values.learnerSession) {
+      let l_session = [];
+      learnerSession.map((session) => {
+        l_session.push({
+          sessionId: session,
+          //date is not sure if necessary for now
+          dateScheduled: now(),
+        });
+      });
+      data.learnerSession = l_session;
+    }
+    if (!!values.notificationDetails) {
+      data.notificationDetails = values.notificationDetails;
+    }
+    data = JSON.stringify(data);
+    if (!checker.length) {
+      var config = {
+        method: "post",
+        url: apiBaseUrl + "/enrollment/" + course_id,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log("res: ", res.data);
+          message.success(res.data.message);
+          setSpin(true);
+          hideModal("add");
+        })
+        .catch((err) => {
+          console.log("err: ", err.response.data);
+          message.error(
+            "Network Error on Submission, Contact Technical Support"
+          );
+          setSpin(true);
+          //hideModal("add");
+        });
     }
   };
 
@@ -227,12 +294,12 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
           <Form.Item
             name="learnerSession"
             label="Session"
-            rules={[
+            /* rules={[
               {
                 required: true,
                 message: "Please select Session!",
               },
-            ]}
+            ]} */
           >
             <Select
               mode="multiple"
@@ -285,12 +352,34 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
             </p>
           </Form.Item>
         </Form.Item>
-        <Divider dashed style={{ borderColor: "#999999" }}>
+        <Divider dashed style={{ borderColor: "#999999", marginBottom: "0" }}>
           Select Learners to Enroll
         </Divider>
-
+        {hasError ? (
+          <p
+            style={{
+              color: "#ff4d4f",
+              textAlign: "right",
+              marginBottom: "0",
+              minHeight: "25px",
+            }}
+          >
+            {hasError}
+          </p>
+        ) : (
+          <p
+            style={{
+              color: "#ff4d4f",
+              textAlign: "right",
+              marginBottom: "0",
+              minHeight: "25px",
+            }}
+          >
+            {""}
+          </p>
+        )}
         <Form.Item name="learnersData">
-          {!spin ? (
+          {!spinning ? (
             <EnrollmentsAddSelectLearners
               setUnEnrolledLearners={setUnEnrolledLearners}
               unEnrolledLearners={unEnrolledLearners}
@@ -301,7 +390,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal }) => {
             <Spin
               size="small"
               tip="Processing..."
-              spinning={spin}
+              spinning={spinning}
               delay={10000}
             ></Spin>
           )}

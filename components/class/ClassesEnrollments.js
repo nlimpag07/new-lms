@@ -69,7 +69,7 @@ const ClassesEnrollments = ({ course_id }) => {
   var [enrollmentsModal, setEnrollmentsModal] = useState(false);
 
   const [courseDetails, setCourseDetails] = useState("");
-  const [enrollees, setEnrollees] = useState("");
+  const [enrollees, setEnrollees] = useState([]);
   const [spin, setSpin] = useState(true);
 
   useEffect(() => {
@@ -185,7 +185,7 @@ const ClassesEnrollments = ({ course_id }) => {
               size="small"
               tip="Processing..."
               spinning={spin}
-              delay={100}
+              delay={500}
             ></Spin>
           </Col>
         )}
@@ -210,6 +210,7 @@ const ClassesEnrollments = ({ course_id }) => {
               course_id={course_id}
               courseDetails={courseDetails}
               hideModal={hideModal}
+              setSpin={setSpin}
             />
           ) : enrollmentsModal.modalOperation == "approve" ? (
             "HELLO Approve"

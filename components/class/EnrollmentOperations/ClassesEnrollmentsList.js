@@ -51,12 +51,11 @@ const ClassesEnrollmentsList = ({
 
   useEffect(() => {}, []);
 
-  //console.log("Enrollees", enrollees_list);
-
+  console.log("Enrollees", enrollees_list);
+  enrollees_list =
+    enrollees_list && enrollees_list.length ? enrollees_list : [];
   const newEnrolleesData = enrollees_list.map((dataItem) => {
-    let ItemLearner = dataItem
-      ? dataItem.createdAt
-      : null;
+    let ItemLearner = dataItem ? dataItem.createdAt : null;
     let rawDate = new Date(ItemLearner);
     let newDate =
       rawDate.getFullYear() +
@@ -160,7 +159,7 @@ const ClassesEnrollmentsList = ({
       <Column field="status" title="Status" cell={StatusRender} />
       <Column
         sortable={false}
-        cell={(props) => ActionRender(props, showModal, hideModal,setSpin)}
+        cell={(props) => ActionRender(props, showModal, hideModal, setSpin)}
         field="action"
         title="Action"
       />
@@ -203,10 +202,10 @@ const StatusRender = (props) => {
   );
 };
 
-function deleteConfirm(e, data,setSpin) {
+function deleteConfirm(e, data, setSpin) {
   //console.log(e);
   //console.log("PopConfirm", data);
-  //setSpin(true);  
+  //setSpin(true);
   var config = {
     method: "delete",
     url: apiBaseUrl + "/enrollment/" + data.learnerId,
@@ -265,7 +264,7 @@ function deleteCancel(e) {
   /* console.log(e);
   message.error('Click on No'); */
 }
-const ActionRender = (props, showModal, hideModal,setSpin) => {
+const ActionRender = (props, showModal, hideModal, setSpin) => {
   //console.log("props", props);
   const wasApproved = props.dataItem.isApproved === 1 ? true : false;
   const enrollDate = props.dataItem.enrollmentDate;
@@ -288,7 +287,7 @@ const ActionRender = (props, showModal, hideModal,setSpin) => {
       &nbsp;
       <Popconfirm
         title="Are you sure to reject this enrollment?"
-        onConfirm={(e) => deleteConfirm(e, props.dataItem,setSpin)}
+        onConfirm={(e) => deleteConfirm(e, props.dataItem, setSpin)}
         onCancel={deleteCancel}
         okText="Yes"
         cancelText="No"

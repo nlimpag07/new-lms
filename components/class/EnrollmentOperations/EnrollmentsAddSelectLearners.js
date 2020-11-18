@@ -47,13 +47,13 @@ const EnrollmentsAddSelectLearners = ({
   ];
   const tKeys = [];
   const mData = [];
-  for (let i = 0; i < theLearners.length; i++) {
+  for (let i = 0; i < unEnrolledLearners.length; i++) {
     const data = {
       key: i.toString(),
-      id: theLearners[i].id,
-      firstName: theLearners[i].firstName,
-      lastName: theLearners[i].lastName,
-      email: theLearners[i].email,
+      id: unEnrolledLearners[i].id,
+      firstName: unEnrolledLearners[i].firstName,
+      lastName: unEnrolledLearners[i].lastName,
+      email: unEnrolledLearners[i].email,
     };
     if (data.chosen) {
       tKeys.push(data.key);
