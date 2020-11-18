@@ -31,7 +31,7 @@ import {
 const { Meta } = Card;
 
 const Transcript = ({ transcripts, token, apiBaseUrl }) => {
-  console.log("transcripts",transcripts)
+  //console.log("transcripts",transcripts)
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;

@@ -56,7 +56,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          console.log("Session Response", response.data);
+          //console.log("Session Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
@@ -102,7 +102,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data;
-          console.log("UnEnrolled Response", response.data);
+          //console.log("UnEnrolled Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
@@ -144,7 +144,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
   //console.log("CourseTypes", courseTypes.length?"True":"False");
   //If filtered courseTypes has Data
   var isCourseType = courseTypes.length ? true : false;
-  console.log(isCourseType);
+  //console.log(isCourseType);
   const selectInstructor = courseDetails.courseInstructor.length
     ? courseDetails.courseInstructor.map((instructor) => instructor)
     : [];
@@ -172,8 +172,8 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
     setHasError("");
     var data = {};
     var checker = [];
-    console.log("Received values of form: ", values);
-    console.log("Re-Evaluating UserIds====");
+    //console.log("Received values of form: ", values);
+    //console.log("Re-Evaluating UserIds====");
     if (!!values.learnersData) {
       //Standard undefined
       //console.log("Learners Data Supplied");
@@ -181,7 +181,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
       //console.log("Learners Data Undefined... Please Supply Data");
       if (selectedUserId.length) {
         let learnerUserId = [];
-        console.log("Learners Data Supplied", selectedUserId);
+        //console.log("Learners Data Supplied", selectedUserId);
         selectedUserId.map((userId) => {
           learnerUserId.push({ userId: userId });
         });
@@ -232,7 +232,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
 
       axios(config)
         .then((res) => {
-          console.log("res: ", res.data);
+          //console.log("res: ", res.data);
           message.success(res.data.message);
           setSpin(true);
           hideModal("add");

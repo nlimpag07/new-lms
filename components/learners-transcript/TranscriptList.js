@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { Row, Col, Modal, Empty } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
+import TranscriptDetails from "./TranscriptDetails";
 
 const apiBaseUrl = process.env.apiBaseUrl;
 
@@ -36,26 +36,39 @@ const list = {
   },
 };
 
-const UsersList = ({ listOfTranscripts }) => {
+const TranscriptList = ({ listOfTranscripts }) => {
   var transcripts = listOfTranscripts;
   const router = useRouter();
-  //console.log(transcripts);
+  console.log("transcripts", transcripts);
 
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [courseDetails, setCourseDetails] = useState("");
+  const [transcriptDetails, setTranscriptDetails] = useState("");
 
   const newTranscripts =
     transcripts && transcripts.length
       ? transcripts.map((transcript, index) => {
+          //console.log("Course", transcript.course);
+          let totalSteps = transcript.course.courseOutline.length;
+          let takenSteps = transcript.course.courseOutline.filter(
+            (outline) => outline.learnerCourseOutline.length != 0
+          );
+          takenSteps = takenSteps.length ? takenSteps.length : 0;
           const reArraytranscripts = {
             id: transcript.id,
             courseTitle: transcript.course.title,
-            result: transcript.statusId,
-            steps: 0,
+            result: "-",
+            steps: `${takenSteps} / ${totalSteps}`,
             avg: 0,
             totalHoursTaken: transcript.totalHoursTaken,
+            totalHoursTakenLabel:
+              transcript.totalHoursTaken == 0
+                ? "-"
+                : transcript.totalHoursTaken,
             finalScore: transcript.finalScore,
+            finalScoreLabel:
+              transcript.finalScore == 0 ? "-" : transcript.finalScore,
             num: index + 1,
+            course: transcript.course,
           };
           return reArraytranscripts;
         })
@@ -116,10 +129,8 @@ const UsersList = ({ listOfTranscripts }) => {
   useEffect(() => {
     /* let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
     let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
-    setCourseDetails(theCourse[0]); */
+    setTranscriptDetails(theCourse[0]); */
   }, []);
-
-  console.log(Data);
 
   return Data.length ? (
     //GridType(gridList)
@@ -130,7 +141,7 @@ const UsersList = ({ listOfTranscripts }) => {
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
         <Col
-          className="gutter-row widget-holder-col UsersList"
+          className="gutter-row widget-holder-col TranscriptList"
           xs={24}
           sm={24}
           md={24}
@@ -168,11 +179,13 @@ const UsersList = ({ listOfTranscripts }) => {
                 <Column field="result" title="Result" />
                 <Column field="steps" title="Steps" />
                 <Column field="avg" title="Avg. Score" />
-                <Column field="finalScore" title="Final Score" />
-                <Column field="totalHoursTaken" title="Hours Taken" />
+                <Column field="finalScoreLabel" title="Final Score" />
+                <Column field="totalHoursTakenLabel" title="Hours Taken" />
                 <Column
                   sortable={false}
-                  cell={() => ActionRender(setModal2Visible)}
+                  cell={(props) =>
+                    ActionRender(props, setModal2Visible, setTranscriptDetails)
+                  }
                   field=""
                   title="Action"
                 />
@@ -181,28 +194,19 @@ const UsersList = ({ listOfTranscripts }) => {
           </Row>
         </Col>
       </motion.div>
-      <Modal
-        title="Publish Properties"
-        centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
+      <TranscriptDetails
+        modal2Visible={modal2Visible}
+        setModal2Visible={setModal2Visible}
+        transcriptDetails={transcriptDetails}
+      />
 
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
-        .UsersList h1 {
+        .TranscriptList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .UsersList .k-grid-header {
+        .TranscriptList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
       `}</style>
@@ -212,12 +216,16 @@ const UsersList = ({ listOfTranscripts }) => {
   );
 };
 
-const ActionRender = (setModal2Visible) => {
+const ActionRender = (props, setModal2Visible, setTranscriptDetails) => {
+  const setDetails = (props) => {
+    setTranscriptDetails(props.dataItem);
+    setModal2Visible(true);
+  };
   return (
     <td>
       <button
         className="k-grid-edit-command"
-        onClick={() => setModal2Visible(true)}
+        onClick={() => setDetails(props)}
         /* onClick={() => {
           edit(this.props.dataItem);
         }} */
@@ -228,4 +236,4 @@ const ActionRender = (setModal2Visible) => {
   );
 };
 
-export default UsersList;
+export default TranscriptList;
