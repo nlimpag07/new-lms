@@ -61,6 +61,12 @@ const list = {
 };
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
+const homeUrl = process.env.homeUrl;
+const lrsUrl = process.env.lrsUrl;
+const lrsIdentifier = process.env.lrsIdentifier;
+const lrsSecret = process.env.lrsSecret;
+
+
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
@@ -74,7 +80,7 @@ const OutlinesDrawerDetails = ({
   setOutlineAssessmentModal,
   setOutlineFinishModal,
   setStartOutline,
-  startOutline
+  startOutline,
 }) => {
   const router = useRouter();
   const { userDetails } = useAuth();
@@ -106,8 +112,8 @@ const OutlinesDrawerDetails = ({
 
   useEffect(() => {}, [drawerVisible]);
   useEffect(() => {
-    if(startOutline){
-      setArticulateModal2Visible(true)
+    if (startOutline) {
+      setArticulateModal2Visible(true);
     }
   }, [startOutline]);
 
@@ -145,7 +151,7 @@ const OutlinesDrawerDetails = ({
               //true
               //setSpinner(true);
               setdrawerVisible(true);
-              setStartOutline(true)
+              setStartOutline(true);
               //console.log()
               //Redirect to Course Outline
               /* router.push(
@@ -192,7 +198,7 @@ const OutlinesDrawerDetails = ({
       //The learner already started this lesson, just
       //show the lesson
       //setdrawerVisible(false);
-      setStartOutline(false)
+      setStartOutline(false);
       setArticulateModal2Visible(true);
       setSpinner(false);
       /* router.push(
@@ -363,6 +369,13 @@ const OutlinesDrawerDetails = ({
     }
   };
 
+  //Used for lrs validation
+  var actor =
+    '{"objectType":"Agent","name":"Noel Limpag","account":{"name":"Noel","homePage":"' +
+    homeUrl +
+    '"}}';
+  var activity_id = `${homeUrl}/learner/my-courses/${courseId}/learning-outlines/${id}`;
+
   return (
     <Drawer
       //title={title} /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
@@ -498,7 +511,13 @@ const OutlinesDrawerDetails = ({
       >
         <div className="demoModalBody">
           <iframe
-            src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/story.html`}
+            src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
+              "https://test.gblrs.com/xAPI/"
+            )}&auth=${encodeURI(
+              "Basic " + btoa(`${lrsIdentifier}:${lrsSecret}`)
+            )}&actor=${encodeURI(actor)}&activity_id=${encodeURI(
+              activity_id
+            )}&tincan=true`}
             width="100%"
             height="850"
             frameBorder="0"
