@@ -66,7 +66,6 @@ const lrsUrl = process.env.lrsUrl;
 const lrsIdentifier = process.env.lrsIdentifier;
 const lrsSecret = process.env.lrsSecret;
 
-
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
@@ -113,7 +112,7 @@ const OutlinesDrawerDetails = ({
   useEffect(() => {}, [drawerVisible]);
   useEffect(() => {
     if (startOutline) {
-      setArticulateModal2Visible(true);
+      setArticulateModal2Visible(true);      
     }
   }, [startOutline]);
 
@@ -301,7 +300,13 @@ const OutlinesDrawerDetails = ({
     'Man charged over missing wedding girl.',
     'Los Angeles battles huge wildfires.',
   ]; */
+  const onEndCourse = () => {
+    console.log("courseOutlineId", id)
+    console.log("=================")
+    console.log("Hello END COURSE")
 
+
+  }
   const OnArticulateModalClose = () => {
     /* let statusButtons = "";
     
@@ -510,7 +515,18 @@ const OutlinesDrawerDetails = ({
         className="articulateVideoModal"
       >
         <div className="demoModalBody">
-          <iframe
+        <object data={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
+              "https://test.gblrs.com/xAPI/"
+            )}&auth=${encodeURI(
+              "Basic " + btoa(`${lrsIdentifier}:${lrsSecret}`)
+            )}&actor=${encodeURI(actor)}&activity_id=${encodeURI(
+              activity_id
+            )}&tincan=true`}
+            width="100%"
+            height="850" type="text/html">
+    Alternative Content
+</object>
+          {/* <iframe
             src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
               "https://test.gblrs.com/xAPI/"
             )}&auth=${encodeURI(
@@ -521,7 +537,7 @@ const OutlinesDrawerDetails = ({
             width="100%"
             height="850"
             frameBorder="0"
-          ></iframe>
+          ></iframe> */}
         </div>
       </Modal>
       {/*  {outlineAssessmentModal && (
