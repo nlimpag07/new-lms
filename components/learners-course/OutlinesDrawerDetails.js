@@ -88,7 +88,7 @@ const OutlinesDrawerDetails = ({
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
 
   //console.log("Outline Details:", outlineDetails);
-  //console.log("startOutline:", startOutline);
+  console.log("startOutline:", startOutline);
 
   let { isApproved, startDate, endDate } = outlineDetails;
   //const outlineId = outlineDetails.id;
@@ -112,7 +112,7 @@ const OutlinesDrawerDetails = ({
   useEffect(() => {}, [drawerVisible]);
   useEffect(() => {
     if (startOutline) {
-      setArticulateModal2Visible(true);      
+      setArticulateModal2Visible(true);
     }
   }, [startOutline]);
 
@@ -300,13 +300,25 @@ const OutlinesDrawerDetails = ({
     'Man charged over missing wedding girl.',
     'Los Angeles battles huge wildfires.',
   ]; */
-  const onEndCourse = () => {
-    console.log("courseOutlineId", id)
-    console.log("=================")
-    console.log("Hello END COURSE")
+  useEffect(() => {
+    if (drawerVisible) {
+      var eventMethod = window.addEventListener
+        ? "addEventListener"
+        : "attachEvent";
+      var eventer = window[eventMethod];
+      var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
+      console.log("courseOutlineId", id);
+      console.log("=================");
 
-  }
+      eventer(messageEvent, function (e) {
+        if (e.data == "1" && e.origin == "http://localhost:5001") {
+          console.log("RUN API FETCH", e.origin);
+        }
+      });
+    }
+  }, [drawerVisible]);
+
   const OnArticulateModalClose = () => {
     /* let statusButtons = "";
     
@@ -515,7 +527,8 @@ const OutlinesDrawerDetails = ({
         className="articulateVideoModal"
       >
         <div className="demoModalBody">
-        <object data={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
+          <object
+            data={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
               "https://test.gblrs.com/xAPI/"
             )}&auth=${encodeURI(
               "Basic " + btoa(`${lrsIdentifier}:${lrsSecret}`)
@@ -523,9 +536,11 @@ const OutlinesDrawerDetails = ({
               activity_id
             )}&tincan=true`}
             width="100%"
-            height="850" type="text/html">
-    Alternative Content
-</object>
+            height="850"
+            type="text/html"
+          >
+            Alternative Content
+          </object>
           {/* <iframe
             src={`${apidirectoryUrl}/Video/courseOutline/${interactiveVideo}/index_lms.html?endpoint=${encodeURI(
               "https://test.gblrs.com/xAPI/"
