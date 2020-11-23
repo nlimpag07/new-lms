@@ -87,8 +87,8 @@ const OutlinesDrawerDetails = ({
   const [outlineStatus, setOutlineStatus] = useState(0);
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
 
-  //console.log("Outline Details:", outlineDetails);
-  console.log("startOutline:", startOutline);
+  //console.log("User Details:", userDetails);
+  //console.log("startOutline:", startOutline);
 
   let { isApproved, startDate, endDate } = outlineDetails;
   //const outlineId = outlineDetails.id;
@@ -142,7 +142,6 @@ const OutlinesDrawerDetails = ({
         try {
           const response = await axios(config);
           if (response) {
-            //setOutcomeList(response.data.result);
             let theRes = response.data.response;
             //console.log("Response", response.data);
             // wait for response if the verification is true
@@ -293,13 +292,6 @@ const OutlinesDrawerDetails = ({
     return statusButtons;
   };
 
-  /* const learningOutcomeData = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-  ]; */
   useEffect(() => {
     if (drawerVisible) {
       var eventMethod = window.addEventListener
@@ -308,69 +300,195 @@ const OutlinesDrawerDetails = ({
       var eventer = window[eventMethod];
       var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
-      console.log("courseOutlineId", id);
-      console.log("=================");
-
       eventer(messageEvent, function (e) {
         if (e.data == "1" && e.origin == "http://localhost:5001") {
-          console.log("RUN API FETCH", e.origin);
+          //console.log("RUN API FETCH", e.origin);
+          OnArticulateModalClose();
         }
       });
     }
   }, [drawerVisible]);
 
+  //Used for lrs validation
+  var actor =
+    '{"objectType":"Agent","name":"' +
+    userDetails.firstName +
+    " " +
+    userDetails.lastName +
+    '","account":{"name":"' +
+    userDetails.id +
+    '","homePage":"' +
+    homeUrl +
+    '"}}';
+  var activity_id = `${homeUrl}/learner/my-courses/${courseId}/learning-outlines/${id}`;
+
+  function parseDuration(PT) {
+    var output = [];
+    var durationInSec = 0;
+    var matches = PT.match(
+      /P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i
+    );
+    var parts = [
+      {
+        // years
+        pos: 1,
+        multiplier: 86400 * 365,
+      },
+      {
+        // months
+        pos: 2,
+        multiplier: 86400 * 30,
+      },
+      {
+        // weeks
+        pos: 3,
+        multiplier: 604800,
+      },
+      {
+        // days
+        pos: 4,
+        multiplier: 86400,
+      },
+      {
+        // hours
+        pos: 5,
+        multiplier: 3600,
+      },
+      {
+        // minutes
+        pos: 6,
+        multiplier: 60,
+      },
+      {
+        // seconds
+        pos: 7,
+        multiplier: 1,
+      },
+    ];
+    for (var i = 0; i < parts.length; i++) {
+      if (typeof matches[parts[i].pos] != "undefined") {
+        durationInSec += parseInt(matches[parts[i].pos]) * parts[i].multiplier;
+      }
+    }
+    return formatTime(durationInSec * 1000);
+  }
+  function formatTime(data) {
+    data = Math.round((((data % 86400000) % 3600000) / 60000 / 60) * 100) / 100;
+    return data;
+  }
+
+  //Process the Data On Clicking Exit Course
   const OnArticulateModalClose = () => {
-    /* let statusButtons = "";
-    
-    return statusButtons; */
     setSpinner(true);
     //console.log("Articulate Modal Status: Closed");
     //console.log("Run assessments:", courseAssessment);
 
-    var postConfig = {
-      method: "post",
-      url: apiBaseUrl + "/learner/courseoutline",
+    var lrsConfig = {
       headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: {
-        courseOutlineId: id,
-        learnerId: learnerId,
-        hoursTaken: 0,
-        score: 100,
+        Authorization: "Basic " + btoa(lrsIdentifier + ":" + lrsSecret),
+        "X-Experience-API-Version": "1.0.3",
       },
     };
+    axios
+      .get(
+        lrsUrl +
+          "/statements?activity=" +
+          activity_id +
+          "&agent={%22account%22:{%22name%22:%22" +
+          userDetails.id +
+          "%22,%22homePage%22:%22" +
+          homeUrl +
+          "%22}}&ascending=true&limit=300000",
+        lrsConfig
+      )
+      .then((result) => {
+        //console.log(result);
+        var completion_time = null,
+          time_spent = null,
+          xapi = result.data.statements,
+          user_score = null,
+          user_result = null,
+          cycle = null,
+          recordList = [];
+
+        xapi.map((data, index) => {
+          if (data.result) {
+            if (data.result.completion) {
+              cycle = index;
+              completion_time = parseDuration(data.result.duration);
+
+              if (data.result.score) {
+                user_score = data.result.score.scaled * 100;
+                user_result = data.result.success ? 1 : 0;
+              } else {
+                user_score = 100;
+                user_result = 1;
+              }
+
+              let clist = {
+                courseOutlineId: id,
+                learnerId: learnerId,
+                hoursTaken: completion_time,
+                score: user_score,
+                cycle: index,
+                user_result: user_result,
+              };
+              recordList.push(clist);
+            }
+          }
+        });
+
+        if (recordList && recordList.length) {
+          let lastRecord = recordList[recordList.length - 1];
+          //console.log("Last Record",lastRecord)
+          let data = JSON.stringify(lastRecord)
+          //console.log("before Sent to LMS API",lastRecord)
+          var postConfig = {
+            method: "post",
+            url: apiBaseUrl + "/learner/courseoutline",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            data: data,
+          };
+          postData(postConfig);
+        }
+      });
+
     async function postData(postConfig) {
       try {
         const response = await axios(postConfig);
         if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.response;
-          console.log("Successfully Posted Data", response.data);
+          //let theRes = response.data.response;
+          setStartOutline(true)
+          setArticulateModal2Visible(false);
+          setdrawerVisible(false);
+          setOutlineFinishModal(false);
+          //console.log("Successfully Posted Data", response.data);
           // wait for response if the verification is true
         }
       } catch (error) {
         const { response } = error;
         const { request, data } = response; // take everything but 'request'
-
+        setOutlineFinishModal(false);
         //console.log('Error Response',data.message);
         setSpinner(false);
         Modal.error({
-          title: "Error: Unable to Start Lesson",
-          content: data.message + " Please contact Technical Support",
+          title: "Error: Unable to Record Result",
+          content: data.status + " Please contact Technical Support",
           centered: true,
           width: 450,
           onOk: () => {
-            //setdrawerVisible(false);
+            setdrawerVisible(false);
+            setArticulateModal2Visible(false);
             visible: false;
           },
         });
       }
     }
-    postData(postConfig);
 
-    setArticulateModal2Visible(false);
+    /* setArticulateModal2Visible(false);
     setdrawerVisible(false);
 
     if (courseAssessment.length) {
@@ -383,15 +501,8 @@ const OutlinesDrawerDetails = ({
       setOutlineFinishModal(true);
       //window.location.reload();
       //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
-    }
+    } */
   };
-
-  //Used for lrs validation
-  var actor =
-    '{"objectType":"Agent","name":"Noel Limpag","account":{"name":"Noel","homePage":"' +
-    homeUrl +
-    '"}}';
-  var activity_id = `${homeUrl}/learner/my-courses/${courseId}/learning-outlines/${id}`;
 
   return (
     <Drawer
@@ -485,21 +596,7 @@ const OutlinesDrawerDetails = ({
             <Row>
               <h2>In this lesson</h2>
               <div className="course-desc">
-                <p>
-                  {decodeURI(description)}
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum. Lorem ipsum dolor sit amet,
-                  consectetur adipisicing elit, sed do eiusmod tempor incididunt
-                  ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                  quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                  ea commodo consequat.
-                </p>
+                <p>{decodeURI(description)}</p>
               </div>
               {/* <div style={{marginTop:"16px"}} className="outlineDrawerLearningOutcomes">
                 <h2>Learning Outcome</h2>

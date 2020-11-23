@@ -105,22 +105,22 @@ const Outlines = (props) => {
           "Content-Type": "application/json",
         },
       };
-      async function fetchData(config) {        
-          const response = await axios(config);
-          if (response) {
-            //setOutcomeList(response.data.result);
-            let theRes = response.data;
-            //console.log("Response", response.data);
-            // wait for response if the verification is true
-            if (theRes.length) {
-              let outlines = theRes[0].course
-    ? theRes[0].course.courseOutline
-    : null;   
-              setOutlineList(outlines);
-            } else {
-              //false
-            }
+      async function fetchData(config) {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data;
+          //console.log("Response", response.data);
+          // wait for response if the verification is true
+          if (theRes.length) {
+            let outlines = theRes[0].course
+              ? theRes[0].course.courseOutline
+              : null;
+            setOutlineList(outlines);
+          } else {
+            //false
           }
+        }
       }
       fetchData(config);
       setSpinner(false);
@@ -373,7 +373,7 @@ const Outlines = (props) => {
         .widget-holder-col .unpublished-course .ant-card-actions {
           background-color: #ff572294;
         }
-        
+
         .widget-holder-col .widget-search-row {
           padding: 5px 10px;
           color: #e69138;
