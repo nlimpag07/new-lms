@@ -257,42 +257,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   </a>
                 </Link>
               }
-              actions={[
-                course.isPublished ? (
-                  <Tooltip title="Unpublish">
-                    <div
-                      className="class-icon-holder"
-                      onClick={() => setModal2Visible(true)}
-                    >
-                      <CloudDownloadOutlined
-                        key="unpublish"
-                        onClick={() => setModal2Visible(true)}
-                      />
-                    </div>
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Publish">
-                    <div
-                      className="class-icon-holder"
-                      onClick={() => setModal2Visible(true)}
-                    >
-                      <CloudUploadOutlined key="publish" />
-                    </div>
-                  </Tooltip>
-                ),
-                <Tooltip title="Edit">
-                  <div
-                    className="class-icon-holder"
-                    onClick={() =>
-                      router.push(
-                        `/${linkUrl}/[course-catalogue]/[...manage]`,
-                        `/${linkUrl}/course-catalogue/edit/${course.id}`
-                      )
-                    }
-                  >
-                    <EditOutlined key="edit" />
-                  </div>
-                </Tooltip>,
+              actions={[                
                 <Tooltip title="View">
                   <div
                     className="class-icon-holder"

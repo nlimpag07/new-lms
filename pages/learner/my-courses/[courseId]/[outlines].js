@@ -14,7 +14,7 @@ const LearnersMyCourseOutlines = dynamic(() =>
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { Layout, Row, Col, Button, Card, Avatar } from "antd";
+import { Layout, Row, Col, Button, Card, Avatar, Tabs } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../../hocs/withAuth";
@@ -30,7 +30,7 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 const { Meta } = Card;
-
+const { TabPane } = Tabs;
 const CourseOutlines = ({ courseDetails }) => {
   const router = useRouter();
   //check if Err response
@@ -42,14 +42,15 @@ const CourseOutlines = ({ courseDetails }) => {
   let getlength = Object.keys(router.query).length;
   //console.log(getlength);
   //console.log("My Learner Course", courseDetails);
+  var cDetails = courseDetails.course ? courseDetails.course : null;
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
-    //console.log('Outline to pass',outlines)
+  //console.log('Outline to pass',outlines)
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise
-  const learnerId=courseDetails.id
+  const learnerId = courseDetails.id;
   const courseId = router.query.courseId;
   const theOutline = router.query.outlines;
   let manageQueryLength = router.query ? Object.keys(router.query).length : 0;
@@ -67,6 +68,41 @@ const CourseOutlines = ({ courseDetails }) => {
     course_id &&
       (theContent = (
         <LearnersMyCourseOutlines
+          cDetails={cDetails}
+          course_id={course_id}
+          learnerId={learnerId}
+          listOfOutlines={outlines}
+        />
+      )); // url /view/courseId - viewing the course General
+  }else if (manageQueryLength == 2 && theOutline == "learning-overview" && !isError) {
+    let course_id = courseId;
+    const parsed = parseInt(course_id);
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    course_id &&
+      (theContent = (
+        <LearnersMyCourseOutlines
+          cDetails={cDetails}
+          course_id={course_id}
+          learnerId={learnerId}
+          listOfOutlines={outlines}
+        />
+      )); // url /view/courseId - viewing the course General
+  }else if (manageQueryLength == 2 && theOutline == "learning-certificates" && !isError) {
+    let course_id = courseId;
+    const parsed = parseInt(course_id);
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    course_id &&
+      (theContent = (
+        <LearnersMyCourseOutlines
+          cDetails={cDetails}
           course_id={course_id}
           learnerId={learnerId}
           listOfOutlines={outlines}
@@ -81,7 +117,22 @@ const CourseOutlines = ({ courseDetails }) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        {theContent}
+        <Row>
+          <Col>
+            <h2 className="widget-title">{cDetails.title}</h2>
+          </Col>
+        </Row>
+        <Tabs defaultActiveKey={theOutline}>
+          <TabPane tab="Overview" key="learning-overview">
+            Content of Tab Pane 1
+          </TabPane>
+          <TabPane tab="Outlines" key="learning-outlines">
+            {theContent}
+          </TabPane>
+          <TabPane tab="Certificates" key="learning-certificates">
+            Content of Tab Pane 3
+          </TabPane>
+        </Tabs>
       </Layout>
 
       <style jsx global>{`
@@ -90,6 +141,17 @@ const CourseOutlines = ({ courseDetails }) => {
           padding: 8px 0;
           min-height: 150px;
         } */
+        .ant-tabs-nav::before {
+          /* border: 0 !important; */
+        }
+        .ant-tabs-tab {
+          /* background-color: #bcbcbc; */
+          padding: 15px 20px;
+          font-weight: 500;
+        }
+        .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+          height: 5px;
+        }
       `}</style>
     </MainThemeLayout>
   );

@@ -66,6 +66,9 @@ const list = {
     },
   },
 };
+
+
+
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
@@ -73,8 +76,9 @@ const linkUrl = Cookies.get("usertype");
 
 const Outlines = (props) => {
   const router = useRouter();
-  const { course_id, learnerId, listOfOutlines } = props;
+  const { cDetails, course_id, learnerId, listOfOutlines } = props;
   //console.log("My outlines", outlineList);
+  const [course, setCourse] = useState(cDetails);
   const [outlineList, setOutlineList] = useState(listOfOutlines);
   const [spinner, setSpinner] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -87,8 +91,8 @@ const Outlines = (props) => {
   const [outlineFinishModal, setOutlineFinishModal] = useState(false);
   const [startOutline, setStartOutline] = useState(false);
 
-  var myCourseCount = 0;
-  if (outlineList) myCourseCount = outlineList.length;
+  var myOutlineCount = 0;
+  if (outlineList) myOutlineCount = outlineList.length;
   useEffect(() => {
     //setOutlineList(listOfOutlines);
     //console.log("run SetLoading",loading)
@@ -117,6 +121,8 @@ const Outlines = (props) => {
               ? theRes[0].course.courseOutline
               : null;
             setOutlineList(outlines);
+            let cDetails = theRes[0].course ? theRes[0].course : null;
+            setCourse(cDetails);
           } else {
             //false
           }
@@ -126,7 +132,7 @@ const Outlines = (props) => {
       setSpinner(false);
     }
   }, [startOutline]);
-  //console.log(courseAllList)
+  console.log("");
   return (
     <Row
       className="widget-container learnerOutlines"
@@ -140,12 +146,13 @@ const Outlines = (props) => {
         md={24}
         lg={24}
       >
+        
         <Row className="widget-header-row" justify="start">
           <Col xs={20}>
             <h3 className="widget-title">Latest First</h3>
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
-            <span>{myCourseCount} Results</span>{" "}
+            <span>{myOutlineCount} Results</span>{" "}
             <button
               className="switch-grid"
               key="Switch"
@@ -163,7 +170,7 @@ const Outlines = (props) => {
             </button>
           </Col>
         </Row>
-        <Row
+        {/* <Row
           className="widget-search-row"
           justify="start"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -197,7 +204,7 @@ const Outlines = (props) => {
               />
             </div>
           </Col>
-        </Row>
+        </Row> */}
         <Row
           className="LearnersCourses-ListItems"
           gutter={[16, 16]}
@@ -287,7 +294,7 @@ const Outlines = (props) => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        .widget-holder-col:nth-child(even) {
+        /* .widget-holder-col:nth-child(even) {
           padding-right: 0px !important;
           padding-left: 10px !important;
         }
@@ -295,7 +302,7 @@ const Outlines = (props) => {
         .widget-holder-col:nth-child(odd) {
           padding-left: 0px !important;
           padding-right: 10px !important;
-        }
+        } */
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
