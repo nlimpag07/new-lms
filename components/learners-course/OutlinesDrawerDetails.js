@@ -441,7 +441,7 @@ const OutlinesDrawerDetails = ({
         if (recordList && recordList.length) {
           let lastRecord = recordList[recordList.length - 1];
           //console.log("Last Record",lastRecord)
-          let data = JSON.stringify(lastRecord)
+          let data = JSON.stringify(lastRecord);
           //console.log("before Sent to LMS API",lastRecord)
           var postConfig = {
             method: "post",
@@ -461,7 +461,7 @@ const OutlinesDrawerDetails = ({
         const response = await axios(postConfig);
         if (response) {
           //let theRes = response.data.response;
-          setStartOutline(true)
+          setStartOutline(true);
           setArticulateModal2Visible(false);
           setdrawerVisible(false);
           setOutlineFinishModal(false);
@@ -558,38 +558,6 @@ const OutlinesDrawerDetails = ({
               <Col xs={24} sm={24} md={24} style={{ textAlign: "end" }}>
                 <div xs={24} className="drawerActionButtons">
                   {DrawerButtons(outlineStatusId)}
-                  {/* {outlineStatus ? (
-                    <Button
-                      type="primary"
-                      shape="round"
-                      size="large"
-                      danger
-                      onClick={onStartOrContinueLesson}
-                    >
-                      Continue
-                    </Button>
-                  ) : (
-                    <Button
-                      type="primary"
-                      shape="round"
-                      size="large"
-                      onClick={onStartOrContinueLesson}
-                    >
-                      Start Course
-                    </Button>
-                  )} */}
-                  {/*  <Button
-                    shape="round"
-                    size="large"
-                    onClick={() =>
-                      router.push(
-                        `/${linkUrl}/course-catalogue/[...manage]`,
-                        `/${linkUrl}/course-catalogue/view/${id}`
-                      )
-                    }
-                  >
-                    Course Details
-                  </Button> */}
                 </div>
               </Col>
             </Row>
@@ -598,16 +566,6 @@ const OutlinesDrawerDetails = ({
               <div className="course-desc">
                 <p>{decodeURI(description)}</p>
               </div>
-              {/* <div style={{marginTop:"16px"}} className="outlineDrawerLearningOutcomes">
-                <h2>Learning Outcome</h2>
-                <div>
-                  <List
-                    size="small"                    
-                    dataSource={learningOutcomeData}
-                renderItem={(item) => <List.Item><FontAwesomeIcon icon={["far", "check-circle"]} size="lg" style={{color:"e69138"}} /> {" "}{item}</List.Item>}
-                  />
-                </div>
-              </div> */}
             </Row>
           </Col>
         </Row>
