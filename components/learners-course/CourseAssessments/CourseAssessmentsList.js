@@ -47,32 +47,31 @@ const AssessmentsList = ({ listOfOutlines }) => {
   const newTranscripts =
     outlineList && outlineList.length
       ? outlineList.map((otl, index) => {
-          
           if (otl.courseAssessment.length) {
             let a = otl.courseAssessment;
             //console.log("assessment", otl.courseAssessment);
-            a.map((at, index) => {              
+            a.map((at, index) => {
               const reArrayAss = {
                 outlineId: otl.id,
                 courseId: otl.courseId,
                 outlineTitle: otl.title,
                 id: at.id,
                 assessmentTypeId: at.assessmentTypeId,
-                title:at.title,
+                title: at.title,
                 totalItems: at.courseAssessmentItem
                   ? at.courseAssessmentItem.length
                   : 0,
                 due: at.isImmediate == 1 ? "immediately" : toDate,
               };
-              newAssessmentList.push(reArrayAss)
-            });            
-          }          
+              newAssessmentList.push(reArrayAss);
+            });
+          }
         })
       : [];
   console.log("assessments", newAssessmentList);
   const ddata = newAssessmentList.length
-    ? newAssessmentList.map((dataItem,index) =>
-        Object.assign({ selected: false,num:index+1 }, dataItem)
+    ? newAssessmentList.map((dataItem, index) =>
+        Object.assign({ selected: false, num: index + 1 }, dataItem)
       )
     : [];
   const [Data, setData] = useState(ddata);
@@ -126,7 +125,7 @@ const AssessmentsList = ({ listOfOutlines }) => {
     let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
     setCourseAssessmentDetails(theCourse[0]); */
   }, []);
-console.log(Data)
+  console.log(Data);
   return Data.length ? (
     //GridType(gridList)
     <Row
@@ -141,7 +140,7 @@ console.log(Data)
           sm={24}
           md={24}
           lg={24}
-        >          
+        >
           <Row className="Course-Enrollments">
             <Col xs={24}>
               <Grid
@@ -150,7 +149,7 @@ console.log(Data)
                 selectedField="selected"
                 onSelectionChange={selectionChange}
                 onHeaderSelectionChange={headerSelectionChange}
-                onRowClick={rowClick}
+                /* onRowClick={rowClick} */
                 sortable
                 sort={theSort.sort}
                 onSortChange={(e) => {
@@ -170,10 +169,18 @@ console.log(Data)
                 /> */}
                 <Column field="num" width="65px" title="#" />
                 <Column field="title" title="Assessment" />
-                <Column field="outlineTitle" title="Source Lesson" width="300px" />
+                <Column
+                  field="outlineTitle"
+                  title="Source Lesson"
+                  width="300px"
+                />
                 <Column field="totalItems" title="Total Items" />
-                <Column field="assessmentTypeId" title="Type" />
-                <Column field="due" title="Due On" cell={DueTypeRender} />
+                <Column
+                  field="assessmentTypeId"
+                  title="Type"
+                  cell={DueTypeRender}
+                />
+                <Column field="due" title="Due On" />
                 <Column
                   sortable={false}
                   cell={(props) =>
@@ -214,38 +221,43 @@ console.log(Data)
 };
 
 const DueTypeRender = (props) => {
-  //console.log("props", props);
-  const wasApproved = props.dataItem.due === 1 ? true : false;
+  console.log("props", props);
+  const wasApproved = props.dataItem.assessmentTypeId === 1 ? true : false;
+  var typeContent;
+  switch (props.dataItem.assessmentTypeId) {
+    case 1:
+      typeContent = (
+        <span
+         
+        >
+          Assignment
+        </span>
+      );
+      break;
+    case 2:
+      typeContent = (
+        <span
+          
+        >
+          Exam
+        </span>
+      );
+      break;
+    case 3:
+      typeContent = (
+        <span
+          
+        >
+          Quiz
+        </span>
+      );
+      break;
 
-  return wasApproved ? (
-    <td>
-      <span
-        style={{
-          border: "1px solid #85D871",
-          padding: "5px 15px",
-          borderRadius: "3px",
-          color: "#85D871",
-          fontWeight: "500",
-        }}
-      >
-        Enrolled
-      </span>
-    </td>
-  ) : (
-    <td>
-      <span
-        style={{
-          border: "1px solid #FFBC1C",
-          padding: "5px 15px",
-          borderRadius: "3px",
-          color: "#FFBC1C",
-          fontWeight: "500",
-        }}
-      >
-        For Approval
-      </span>
-    </td>
-  );
+    default:
+      break;
+  }
+
+  return <td>{typeContent}</td>;
 };
 
 const ActionRender = (props, setModal2Visible, setCourseAssessmentDetails) => {

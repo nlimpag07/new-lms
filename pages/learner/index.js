@@ -38,7 +38,7 @@ import {
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = (props) => {
-  console.log("props From DashBoard GetInitialProps",props);
+  //console.log("props From DashBoard GetInitialProps",props);
   const { courses, learner,user } = props;
   
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -54,13 +54,13 @@ const LearnerIndex = (props) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder">
-        <StatusBar />
+        <StatusBar learner={learner} />
         <Row
           className="widget-container"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ margin: "1rem 0" }}
         >
-          <RecentCourses courses={courses}  />
+          <RecentCourses courses={courses}   />
           <ToDos />
         </Row>
         {/*2nd Level*/}

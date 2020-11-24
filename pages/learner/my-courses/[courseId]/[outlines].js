@@ -51,7 +51,11 @@ const CourseOutlines = ({ courseDetails }) => {
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
-  console.log("outlines", outlines);
+    var competencies = courseDetails.course
+    ? courseDetails.course.courseCompetencies
+    : null;
+    
+  console.log("cDetails", cDetails);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise
@@ -226,7 +230,7 @@ const CourseOutlines = ({ courseDetails }) => {
           />
           </TabPane>
           <TabPane tab="Certificates" key="learning-certificates">
-            Content of Tab Pane 3
+            Needs to be addressed
           </TabPane>
         </Tabs>
       </Layout>

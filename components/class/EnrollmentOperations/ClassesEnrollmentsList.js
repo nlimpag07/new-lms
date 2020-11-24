@@ -51,7 +51,7 @@ const ClassesEnrollmentsList = ({
 
   useEffect(() => {}, []);
 
-  console.log("Enrollees", enrollees_list);
+  //console.log("Enrollees", enrollees_list);
   enrollees_list =
     enrollees_list && enrollees_list.length ? enrollees_list : [];
   const newEnrolleesData = enrollees_list.map((dataItem) => {
@@ -220,7 +220,7 @@ function deleteConfirm(e, data, setSpin) {
       if (response) {
         //setOutcomeList(response.data.result);
         let theRes = response.data.response;
-        console.log("Response", response.data);
+        //console.log("Response", response.data);
         // wait for response if the verification is true
         if (theRes) {
           Modal.success({

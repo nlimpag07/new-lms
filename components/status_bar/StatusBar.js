@@ -5,23 +5,26 @@ import { Row, Col, Card } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 
-
-
-const StatusBar = () => {
+const StatusBar = ({ learner }) => {
   const usertype = Cookies.get("usertype");
-  //console.log(usertype)
-  const [uType,setUtype] = useState("");
+  console.log("Learner", learner);
+  const [uType, setUtype] = useState("");
+  const [sc, setSc] = useState({
+    ac: 0,
+    oc: 0,
+    cc: 0,
+  });
+
   useEffect(() => {
-    if(usertype =="learner"){
-      setUtype("learner")
+    if (usertype == "learner") {
+      setUtype("learner");
     }
   }, [usertype]);
-  
-  return <StatusContent userType={uType}/>
+
+  return <StatusContent userType={uType} sc={sc} />;
 };
 
-const StatusContent = ({userType}) => {
-  
+const StatusContent = ({ userType,sc }) => {
   switch (userType) {
     case "learner":
       return (
@@ -29,7 +32,7 @@ const StatusContent = ({userType}) => {
         <Row gutter={[24, 16]} className="status-banner-container">
           <Col className="gutter-row" xs={24} sm={12} md={6}>
             <div className="status-col">
-              <h1>2</h1>
+              <h1>{sc.ac}</h1>
               <span>Assigned Courses</span>
             </div>
           </Col>
@@ -48,7 +51,7 @@ const StatusContent = ({userType}) => {
           <Col className="gutter-row" xs={24} sm={12} md={6}>
             <div className="status-col current-rank">
               <h1>
-                <FontAwesomeIcon icon={["fas", "shield-alt"]} size="lg" />            
+                <FontAwesomeIcon icon={["fas", "shield-alt"]} size="lg" />
               </h1>
               <span>Current Rank</span>
             </div>
@@ -81,26 +84,22 @@ const StatusContent = ({userType}) => {
         </Row>
       );
       break;
-  
+
     default:
       return (
         //GridType(gridList)
         <Row gutter={[24, 16]} className="status-banner-container">
           <Col className="gutter-row" xs={24} sm={12} md={6}>
-            <div className="status-col">              
-            </div>
+            <div className="status-col"></div>
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={6}>
-            <div className="status-col">              
-            </div>
+            <div className="status-col"></div>
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={6}>
-            <div className="status-col">              
-            </div>
+            <div className="status-col"></div>
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={6}>
-            <div className="status-col current-rank">              
-            </div>
+            <div className="status-col current-rank"></div>
           </Col>
           <style jsx global>{`
             .status-banner-container .status-col h1 {
@@ -131,7 +130,6 @@ const StatusContent = ({userType}) => {
       );
       break;
   }
-  
 };
 
 export default StatusBar;

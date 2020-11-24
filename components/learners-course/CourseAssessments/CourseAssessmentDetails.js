@@ -15,7 +15,7 @@ const CourseAssessmentDetails = ({
 }) => {
   const router = useRouter();
   const [userFullName, setUserFullName] = useState("");
-  console.log("transcriptDetails", transcriptDetails);
+  //console.log("transcriptDetails", transcriptDetails);
 
   useEffect(() => {
     let userData = JSON.parse(localStorage.getItem("userDetails"));
@@ -71,7 +71,7 @@ const CourseAssessmentDetails = ({
         })
       : [];
   }
-  console.log(courseOutlines);
+  //console.log(courseOutlines);
 
   const columns = [
     {
