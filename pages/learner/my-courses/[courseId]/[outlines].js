@@ -8,13 +8,17 @@ import dynamic from "next/dynamic";
 const LearnersMyCourseOutlines = dynamic(() =>
   import("../../../../components/learners-course/Outlines")
 );
-
+const CourseAssessmentsList = dynamic(() =>
+  import(
+    "../../../../components/learners-course/CourseAssessments/CourseAssessmentsList"
+  )
+);
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { Layout, Row, Col, Button, Card, Avatar, Tabs } from "antd";
+import { Layout, Row, Col, Button, Card, Avatar, Tabs, Switch } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../../../hocs/withAuth";
@@ -33,6 +37,7 @@ const { Meta } = Card;
 const { TabPane } = Tabs;
 const CourseOutlines = ({ courseDetails }) => {
   const router = useRouter();
+  const [theLabel, setTheLabel] = useState("");
   //check if Err response
   var isError = courseDetails.err ? true : false;
   //console.log(isError);
@@ -46,7 +51,7 @@ const CourseOutlines = ({ courseDetails }) => {
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
-  //console.log('Outline to pass',outlines)
+  console.log("outlines", outlines);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise
@@ -57,7 +62,56 @@ const CourseOutlines = ({ courseDetails }) => {
   var isApproved = courseDetails.course ? 1 : 0;
   /* var isApproved =
     courseDetails.course & (courseDetails.course.isApproved == 1) ? 1 : 0; */
-  if (manageQueryLength == 2 && theOutline == "learning-outlines" && !isError) {
+
+
+
+  useEffect(() => {
+    setTheLabel(theOutline);
+  }, []);
+
+  /* if (theLabel && manageQueryLength == 2 && !isError) {
+    let course_id = courseId;
+    const parsed = parseInt(course_id);
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+      courseId =course_id;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    switch (theLabel) {
+      case "learning-outlines":
+        theContent = (
+          <LearnersMyCourseOutlines
+            cDetails={cDetails}
+            course_id={course_id}
+            learnerId={learnerId}
+            listOfOutlines={outlines}
+          />
+        );
+        break;
+      case "learning-assessments":
+        theContent = (
+          <CourseAssessmentsList
+            cDetails={cDetails}
+            course_id={course_id}
+            learnerId={learnerId}
+            listOfOutlines={outlines}
+          />
+        );
+        break;
+      default:
+        break;
+    }
+  } else {
+    return <Error statusCode={404} />;
+  } */
+
+  const onChangeTab=(activeKey)=>{
+    //console.log(activeKey)
+    router.push(`/learner/my-courses/${courseId}/${activeKey}`);
+
+  }
+  /* if (manageQueryLength == 2 && theOutline == "learning-outlines" && !isError) {
     let course_id = courseId;
     const parsed = parseInt(course_id);
     if (!isNaN(parsed)) {
@@ -74,7 +128,11 @@ const CourseOutlines = ({ courseDetails }) => {
           listOfOutlines={outlines}
         />
       )); // url /view/courseId - viewing the course General
-  }else if (manageQueryLength == 2 && theOutline == "learning-overview" && !isError) {
+  } else if (
+    manageQueryLength == 2 &&
+    theOutline == "learning-overview" &&
+    !isError
+  ) {
     let course_id = courseId;
     const parsed = parseInt(course_id);
     if (!isNaN(parsed)) {
@@ -91,7 +149,32 @@ const CourseOutlines = ({ courseDetails }) => {
           listOfOutlines={outlines}
         />
       )); // url /view/courseId - viewing the course General
-  }else if (manageQueryLength == 2 && theOutline == "learning-certificates" && !isError) {
+  } else if (
+    manageQueryLength == 2 &&
+    theOutline == "learning-assessments" &&
+    !isError
+  ) {
+    let course_id = courseId;
+    const parsed = parseInt(course_id);
+    if (!isNaN(parsed)) {
+      course_id = parsed;
+    } else {
+      return <Error statusCode={404} />;
+    }
+    course_id &&
+      (theContent = (
+        <CourseAssessmentsList
+          cDetails={cDetails}
+          course_id={course_id}
+          learnerId={learnerId}
+          listOfOutlines={outlines}
+        />
+      )); // url /view/courseId - viewing the course General
+  } else if (
+    manageQueryLength == 2 &&
+    theOutline == "learning-certificates" &&
+    !isError
+  ) {
     let course_id = courseId;
     const parsed = parseInt(course_id);
     if (!isNaN(parsed)) {
@@ -110,7 +193,7 @@ const CourseOutlines = ({ courseDetails }) => {
       )); // url /view/courseId - viewing the course General
   } else {
     return <Error statusCode={404} />;
-  }
+  } */
 
   useEffect(() => {}, []);
 
@@ -122,12 +205,25 @@ const CourseOutlines = ({ courseDetails }) => {
             <h2 className="widget-title">{cDetails.title}</h2>
           </Col>
         </Row>
-        <Tabs defaultActiveKey={theOutline}>
-          <TabPane tab="Overview" key="learning-overview">
+        <Tabs defaultActiveKey={theLabel} onChange={onChangeTab}>
+          {/* <TabPane tab="Overview" key="learning-overview">
             Content of Tab Pane 1
-          </TabPane>
+          </TabPane> */}
           <TabPane tab="Outlines" key="learning-outlines">
-            {theContent}
+          <LearnersMyCourseOutlines
+            cDetails={cDetails}
+            course_id={courseId}
+            learnerId={learnerId}
+            listOfOutlines={outlines}
+          />
+          </TabPane>
+          <TabPane tab="Assessments" key="learning-assessments">
+          <CourseAssessmentsList
+            cDetails={cDetails}
+            course_id={courseId}
+            learnerId={learnerId}
+            listOfOutlines={outlines}
+          />
           </TabPane>
           <TabPane tab="Certificates" key="learning-certificates">
             Content of Tab Pane 3
