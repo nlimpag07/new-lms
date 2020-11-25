@@ -31,7 +31,7 @@ import {
 const { Meta } = Card;
 
 const MyCourse = ({ mycourses }) => {
-  //console.log("My Courses", mycourses);
+  console.log("My Courses", mycourses);
   const { courseAllList, setCourseAllList } = useCourseList();
   //const [allCourses, setAllCourses] = useState(courselist);
   const router = useRouter();

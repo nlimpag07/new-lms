@@ -21,6 +21,7 @@ import {
   Select,
   Input,
   Tooltip,
+  Empty,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -181,7 +182,13 @@ const CourseList = (props) => {
           gutter={[16, 16]}
           style={{ padding: "10px 0" }}
         >
-          {GridType(courseAllList, curGridStyle, setModal2Visible, router, linkUrl)}
+          {GridType(
+            courseAllList,
+            curGridStyle,
+            setModal2Visible,
+            router,
+            linkUrl
+          )}
         </Row>
       </Col>
       <Modal
@@ -363,7 +370,13 @@ const CourseList = (props) => {
         }
       `}</style>
     </Row>
-  );
+  )/*  : (
+    <Col>
+      <div style={{ textAlign: "center" }}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    </Col>
+  ) */;
 };
 
 const GridType = (courses, gridType, setModal2Visible, router) => {
@@ -374,6 +387,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
     gridClass = "grid-list";
   }
   courses = courses.result;
+
   return courses ? (
     <>
       {courses.map((course) => (
@@ -477,11 +491,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
         </Col>
       ))}
     </>
-  ) : (
-    <>
-      <p className="loading">..Loading</p>
-    </>
-  );
+  ) : null;
 };
 
 const { Option } = Select;

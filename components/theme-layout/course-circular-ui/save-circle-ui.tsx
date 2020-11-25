@@ -10,6 +10,7 @@ interface IRadialListProps {
   url: String;
   urlAs: String;
   callback: String;
+  iconClass: String;
 }
 
 interface IRadialProps {
@@ -23,8 +24,11 @@ interface IRadialProps {
 const RadialMenuStyled = styled.div<IRadialProps>``;
 
 export const SaveUI: React.FC<IRadialProps> = (props) => {
+  const iconClass = props.listMenu.length?props.listMenu[0].iconClass:"ams-floppy-disk";
   const router = useRouter();
   const [isRadial, setIsRadial] = useState({ isRadial: "close" });
+  const [operation, setOperation] = useState(iconClass);
+  
   //console.log("Radial Elems Const:" + targetElem.classList);
   useEffect(() => {
     var targetElem = document.querySelector(".radial-ui");
@@ -201,7 +205,7 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
           props.position || "bottom-right"
         }-aligned`}
       >
-        <i className="ams-floppy-disk"></i>
+        <i className={operation}/* "ams-floppy-disk" */></i>
       </a>
       <style jsx global>{``}</style>
     </RadialMenuStyled>

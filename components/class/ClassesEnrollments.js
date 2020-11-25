@@ -140,7 +140,7 @@ const ClassesEnrollments = ({ course_id }) => {
     });
     console.log("modalOperation", modalOperation);
   };
-  console.log("Spin", spin);
+  //console.log("Spin", spin);
 
   //Process Enrollment Applications
   const processEnrollment = (flag) => {

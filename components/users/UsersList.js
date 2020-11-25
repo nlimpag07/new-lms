@@ -7,10 +7,10 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { Row, Col, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
+import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
-
+import UsersAdd from "./UsersAdd";
 const apiBaseUrl = process.env.apiBaseUrl;
 
 const list = {
@@ -36,6 +36,17 @@ const list = {
   },
 };
 
+const menulists = [
+  {
+    title: "Add",
+    icon: "&#xf055;",
+    active: true,
+    url: "/instructor/[course]/edit",
+    urlAs: "/instructor/course/edit",
+    callback: "add",
+    iconClass: "ams-plus-circle",
+  },
+];
 
 const UsersList = ({ userlist }) => {
   userlist = userlist.result;
@@ -43,13 +54,14 @@ const UsersList = ({ userlist }) => {
   //console.log(userlist);
 
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  var [userModal, setUserModal] = useState(false);
   const [courseDetails, setCourseDetails] = useState("");
+  const [spin, setSpin] = useState(true);
 
-  
   var lastSelectedIndex = 0;
-  const ddata = userlist.length?userlist.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  ):null;
+  const ddata = userlist.length
+    ? userlist.map((dataItem) => Object.assign({ selected: false }, dataItem))
+    : null;
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
@@ -102,6 +114,19 @@ const UsersList = ({ userlist }) => {
     setCourseDetails(theCourse[0]); */
   }, []);
 
+  const showModal = (modalOperation) => {
+    setUserModal({
+      visible: true,
+      modalOperation: modalOperation,
+    });
+  };
+  const hideModal = (modalOperation) => {
+    setUserModal({
+      visible: false,
+      modalOperation: modalOperation,
+    });
+  };
+
   return (
     //GridType(gridList)
     <Row
@@ -148,11 +173,11 @@ const UsersList = ({ userlist }) => {
                 <Column field="firstName" title="Name" width="300px" />
                 <Column field="lastName" title="Enrollment Type" />
                 <Column field="email" title="Email" />
-                
+
                 <Column field="isActive" title="Active Status" />
                 <Column
                   sortable={false}
-                  cell={ActionRender}
+                  cell={() => ActionRender(showModal)}
                   field=""
                   title="Action"
                 />
@@ -162,21 +187,37 @@ const UsersList = ({ userlist }) => {
         </Col>
       </motion.div>
       <Modal
-        title="Publish Properties"
+        title={`Users - ${userModal.modalOperation}`}
         centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
+        visible={userModal.visible}
+        onOk={() => hideModal(userModal.modalOperation)}
+        onCancel={() => hideModal(userModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={1000}
+        width="90%"
+        cancelButtonProps={{ style: { display: "none" } }}
+        okButtonProps={{ style: { display: "none" } }}
+        className="UsersList"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        {userModal.modalOperation == "view" ? (
+          "HELLO View"
+        ) : userModal.modalOperation == "add" ? (
+          <UsersAdd hideModal={hideModal} setSpin={setSpin} />
+        ) : userModal.modalOperation == "approve" ? (
+          "HELLO Approve"
+        ) : userModal.modalOperation == "delete" ? (
+          "HELLO Delete"
+        ) : (
+          "Default"
+        )}
       </Modal>
 
-      {/* <CourseCircularUi /> */}
+      <SaveUI
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+        toggleModal={showModal}
+      />
       <style jsx global>{`
         .UsersList h1 {
           font-size: 2rem;
@@ -190,14 +231,12 @@ const UsersList = ({ userlist }) => {
   );
 };
 
-const ActionRender = () => {
+const ActionRender = (showModal) => {
   return (
     <td>
       <button
         className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+        onClick={() => showModal("view")}
       >
         <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
       </button>

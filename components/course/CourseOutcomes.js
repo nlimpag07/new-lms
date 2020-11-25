@@ -67,6 +67,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
+    iconClass:"ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */

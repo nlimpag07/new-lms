@@ -68,7 +68,7 @@ const Course = (props) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <CourseList />
+        <CourseList courseAllList={courseAllList} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
