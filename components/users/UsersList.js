@@ -49,7 +49,8 @@ const menulists = [
 ];
 
 const UsersList = ({ userlist }) => {
-  userlist = userlist.result;
+  //userlist = userlist.result;
+  const [userslist,setUsersList] = useState(userlist.result)
   const router = useRouter();
   //console.log(userlist);
 
@@ -59,8 +60,8 @@ const UsersList = ({ userlist }) => {
   const [spin, setSpin] = useState(true);
 
   var lastSelectedIndex = 0;
-  const ddata = userlist.length
-    ? userlist.map((dataItem) => Object.assign({ selected: false }, dataItem))
+  const ddata = userslist.length
+    ? userslist.map((dataItem) => Object.assign({ selected: false }, dataItem))
     : null;
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
@@ -109,9 +110,7 @@ const UsersList = ({ userlist }) => {
   };
 
   useEffect(() => {
-    /* let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.filter((getCourse) => getCourse.id == course_id);
-    setCourseDetails(theCourse[0]); */
+    
   }, []);
 
   const showModal = (modalOperation) => {
@@ -194,10 +193,10 @@ const UsersList = ({ userlist }) => {
         onCancel={() => hideModal(userModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width="90%"
+        width="50%"
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="UsersList"
+        className="UsersAddForm"
       >
         {userModal.modalOperation == "view" ? (
           "HELLO View"
@@ -225,6 +224,9 @@ const UsersList = ({ userlist }) => {
         }
         .UsersList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
+        }
+        .UsersAddForm .ant-modal-body{
+          padding:3rem;
         }
       `}</style>
     </Row>
