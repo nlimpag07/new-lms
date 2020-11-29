@@ -18,13 +18,22 @@ const StatusBar = ({ learner }) => {
   useEffect(() => {
     if (usertype == "learner") {
       setUtype("learner");
+
+      let theCount = learner.map((l, index) => {
+        let totalCounts = { ac: [], oc: [], cc: [] };
+        l.startDate && l.endDate
+          ? setSc({ ...sc, cc: sc.cc + 1 })
+          : l.startDate && !l.endDate
+          ? setSc({ ...sc, oc: sc.oc + 1 })
+          : setSc({ ...sc, ac: sc.ac + 1 });
+      });
     }
   }, [usertype]);
-
+  console.log("sc", sc);
   return <StatusContent userType={uType} sc={sc} />;
 };
 
-const StatusContent = ({ userType,sc }) => {
+const StatusContent = ({ userType, sc }) => {
   switch (userType) {
     case "learner":
       return (
@@ -38,13 +47,13 @@ const StatusContent = ({ userType,sc }) => {
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={6}>
             <div className="status-col">
-              <h1>1</h1>
+              <h1>{sc.oc}</h1>
               <span>On Going</span>
             </div>
           </Col>
           <Col className="gutter-row" xs={24} sm={12} md={6}>
             <div className="status-col">
-              <h1>2</h1>
+              <h1>{sc.cc}</h1>
               <span>Completed</span>
             </div>
           </Col>

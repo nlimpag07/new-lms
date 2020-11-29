@@ -1,18 +1,77 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
+import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal,notification } from "antd";
 import { useIsAuthenticated, useAuth } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
 import Cookies from "js-cookie";
+import axios from "axios";
 
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
+
 const AdministratorNavbar = () => {
   const { isUsertype, setUsertype, userDetails } = useAuth();
   const isAuthenticated = useIsAuthenticated();
   var [switchViewModal, setSwitchViewModal] = useState(
     (switchViewModal = false)
   );
+  const [notifCount,setNotifCount] = useState(0);
+
+  useEffect(() => {
+    var config = {
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    axios.get(apiBaseUrl + "/Dashboard/Notifications", config).then((res) => {
+      var _res = res.data;
+      
+      if (_res.result.length) {
+        setNotifCount(_res.totalRecords)
+        console.log("res",_res)
+      }
+    });
+    /* async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data.result;
+          console.log("Notification Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            //console.log(theRes)
+
+            
+          } else {
+            
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        //const { data } = response; // take everything but 'request'
+
+        console.log("Error Response", response);
+
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: response + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    fetchData(config); */
+  }, []);
 
   return (
     <Layout>
@@ -25,7 +84,7 @@ const AdministratorNavbar = () => {
             <li className="notif">
               <Link href="/" passHref>
                 <a>
-                  <Badge dot status="error">
+                  <Badge /* status="error" */ count={notifCount} overflowCount={99}>
                     <FontAwesomeIcon icon={["fas", "bell"]} size="lg" />
                   </Badge>
                 </a>

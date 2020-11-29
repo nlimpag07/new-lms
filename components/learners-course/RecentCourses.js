@@ -57,7 +57,7 @@ const linkUrl = Cookies.get("usertype");
 
 const RecentCourses = ({ courses }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
-console.log(courses)
+//console.log('getCoursesFromLearner',courses)
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
@@ -227,32 +227,38 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-  console.log('My Recent Courses:',courses)
+  //console.log('My Recent Courses:',courses)
   return courses ? (
     <>
-      {courses.map((course) => (
+      {courses.map((course, index) => (
         <Col
-          key={course.id}
+          key={index}
           className={`gutter-row ${gridClass}`}
           {...gridProps}
         >
           <motion.div initial="hidden" animate="visible" variants={list}>
-            <Card
+            <Card              
               className={
-                course.isPublished ? "published-course" : "unpublished-course"
+                course.startDate ? "published-course" : "unpublished-course"
               }
-              extra={course.isPublished ? "Published" : "Unpublished"}
+              extra={
+                course.startDate
+                  ? "In Progress"
+                  : course.endDate
+                  ? "Completed"
+                  : "Not Started"
+              }
               hoverable
               style={{ width: "auto" }}
               cover={
                 <Link
                   href={`/${linkUrl}/[course-catalogue]/[...manage]`}
-                  as={`/${linkUrl}/course-catalogue/view/${course.id}`}
+                  as={`/${linkUrl}/course-catalogue/view/${course.course.id}`}
                 >
                   <a>
                     <img
-                      alt={`${course.title}`}
-                      src={`${apidirectoryUrl}/Images/Course/${course.featureImage}`}
+                      alt={`${course.course.title}`}
+                      src={`${apidirectoryUrl}/Images/Course/${course.course.featureImage}`}
                     />
                   </a>
                 </Link>
@@ -264,7 +270,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                     onClick={() =>
                       router.push(
                         `/${linkUrl}/[course-catalogue]/[...manage]`,
-                        `/${linkUrl}/course-catalogue/view/${course.id}`
+                        `/${linkUrl}/course-catalogue/view/${course.course.id}`
                       )
                     }
                   >
@@ -280,14 +286,14 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 title={
                   <Link
                     href={`/${linkUrl}/[course-catalogue]/[...manage]`}
-                    as={`/${linkUrl}/course-catalogue/view/${course.id}`}
+                    as={`/${linkUrl}/course-catalogue/view/${course.course.id}`}
                   >
-                    <a>{course.title}</a>
+                    <a>{course.course.title}</a>
                   </Link>
                 }
                 description={
                   <div>
-                    <div>{decodeURI(course.description)}</div>
+                    <div>{decodeURI(course.course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

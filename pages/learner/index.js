@@ -1,11 +1,10 @@
 /** NLI
- * Use NextJs Conditional Importing 
+ * Use NextJs Conditional Importing
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
 //import AdminDashboard from "../../../components/course/CourseList";
 /**End Of Imported Courses Components **/
-
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -38,19 +37,17 @@ import {
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = (props) => {
-  //console.log("props From DashBoard GetInitialProps",props);
-  const { courses, learner,user } = props;
-  
+  //console.log("props From DashBoard GetInitialProps", props);
+  const { courses, learner, user } = props;
+
   const [curGridStyle, setCurGridStyle] = useState("grid");
-  const {courseAllList, setCourseAllList } = useCourseList();
-  const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
+  const { courseAllList, setCourseAllList } = useCourseList();
   useEffect(() => {
     //setCourseAllList(courselist);
   }, []);
   //console.log(courseAllList);
-  useEffect(() => {    
-  }, []);
-
+  useEffect(() => {}, []);
+ 
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder">
@@ -60,7 +57,7 @@ const LearnerIndex = (props) => {
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
           style={{ margin: "1rem 0" }}
         >
-          <RecentCourses courses={courses}   />
+          <RecentCourses courses={learner} />
           <ToDos />
         </Row>
         {/*2nd Level*/}
@@ -80,9 +77,7 @@ const LearnerIndex = (props) => {
         </Row>
       </Layout>
 
-      <style jsx global>{`
-        
-      `}</style>
+      <style jsx global>{``}</style>
     </MainThemeLayout>
   );
 };
