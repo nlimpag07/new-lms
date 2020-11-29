@@ -5,13 +5,18 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal, Spin, Popconfirm } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 import UsersAdd from "./UsersAdd";
+import Cookies from "js-cookie";
+
 const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const list = {
   visible: {
@@ -50,7 +55,8 @@ const menulists = [
 
 const UsersList = ({ userlist }) => {
   //userlist = userlist.result;
-  const [userslist,setUsersList] = useState(userlist.result)
+  const [userslist, setUsersList] = useState(userlist.result);
+  const [Data, setData] = useState("");
   const router = useRouter();
   //console.log(userlist);
 
@@ -58,16 +64,78 @@ const UsersList = ({ userlist }) => {
   var [userModal, setUserModal] = useState(false);
   const [courseDetails, setCourseDetails] = useState("");
   const [spin, setSpin] = useState(true);
+  const [pagination, setPagination] = useState({ skip: 0, take: 5 });
+
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Users",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data.result;
+          console.log("Session Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            //console.log(theRes)
+
+            const ddata = theRes.length
+              ? theRes.map((dataItem) =>
+                  Object.assign({ selected: false }, dataItem)
+                )
+              : null;
+            setData(ddata);
+            setUsersList(ddata);
+            setSpin(false);
+          } else {
+            const ddata = userlist.result
+              ? userlist.result.map((dataItem) =>
+                  Object.assign({ selected: false }, dataItem)
+                )
+              : null;
+            setData(ddata);
+            setUsersList(ddata);
+            setSpin(false);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        console.log("Error Response", data.message);
+
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+  }, [spin]);
 
   var lastSelectedIndex = 0;
-  const ddata = userslist.length
+  /* const ddata = userslist.length
     ? userslist.map((dataItem) => Object.assign({ selected: false }, dataItem))
-    : null;
-  const [Data, setData] = useState(ddata);
+    : null; 
+  const [Data, setData] = useState(userslist);*/
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
   });
-  //console.log(Data)
+  //console.log("Data", Data);
 
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
@@ -109,10 +177,6 @@ const UsersList = ({ userlist }) => {
     setData(theData);
   };
 
-  useEffect(() => {
-    
-  }, []);
-
   const showModal = (modalOperation) => {
     setUserModal({
       visible: true,
@@ -125,7 +189,12 @@ const UsersList = ({ userlist }) => {
       modalOperation: modalOperation,
     });
   };
-
+  const pageChange = (event) => {
+    setPagination({
+      skip: event.page.skip,
+      take: event.page.take,
+    });
+  };
   return (
     //GridType(gridList)
     <Row
@@ -144,43 +213,65 @@ const UsersList = ({ userlist }) => {
           <h1>Users List</h1>
           <Row className="Course-Enrollments">
             <Col xs={24}>
-              <Grid
-                data={orderBy(Data, theSort.sort)}
-                style={{ height: "550px" }}
-                selectedField="selected"
-                onSelectionChange={selectionChange}
-                onHeaderSelectionChange={headerSelectionChange}
-                onRowClick={rowClick}
-                sortable
-                sort={theSort.sort}
-                onSortChange={(e) => {
-                  setTheSort({
-                    sort: e.sort,
-                  });
-                }}
-              >
-                <Column
-                  field="selected"
-                  width="65px"
-                  headerSelectionValue={
-                    Data.findIndex(
-                      (dataItem) => dataItem.selected === false
-                    ) === -1
-                  }
-                />
-                <Column field="empId" title="Emp ID" width="100px" />
-                <Column field="firstName" title="Name" width="300px" />
-                <Column field="lastName" title="Enrollment Type" />
-                <Column field="email" title="Email" />
+              {spin ? (
+                <div className="spinHolder">
+                  <Spin
+                    size="small"
+                    tip="Retrieving data..."
+                    spinning={spin}
+                    delay={100}
+                  ></Spin>
+                </div>
+              ) : (
+                <Grid
+                  data={orderBy(
+                    Data.slice(
+                      pagination.skip,
+                      pagination.take + pagination.skip
+                    ),
+                    theSort.sort
+                  )}
+                  style={{ height: "550px" }}
+                  selectedField="selected"
+                  onSelectionChange={selectionChange}
+                  onHeaderSelectionChange={headerSelectionChange}
+                  onRowClick={rowClick}
+                  sortable
+                  sort={theSort.sort}
+                  onSortChange={(e) => {
+                    setTheSort({
+                      sort: e.sort,
+                    });
+                  }}
+                  skip={pagination.skip}
+                  take={pagination.take}
+                  total={Data.length}
+                  pageable={true}
+                  onPageChange={pageChange}
+                >
+                  <Column
+                    field="selected"
+                    width="65px"
+                    headerSelectionValue={
+                      Data.findIndex(
+                        (dataItem) => dataItem.selected === false
+                      ) === -1
+                    }
+                  />
+                  <Column field="empId" title="Emp ID" width="100px" />
+                  <Column field="firstName" title="Name" width="300px" />
+                  <Column field="lastName" title="Enrollment Type" />
+                  <Column field="email" title="Email" />
 
-                <Column field="isActive" title="Active Status" />
-                <Column
-                  sortable={false}
-                  cell={() => ActionRender(showModal)}
-                  field=""
-                  title="Action"
-                />
-              </Grid>
+                  <Column field="isActive" title="Active Status" />
+                  <Column
+                    sortable={false}
+                    cell={ActionRender}
+                    field=""
+                    title="Action"
+                  />
+                </Grid>
+              )}
             </Col>
           </Row>
         </Col>
@@ -225,33 +316,90 @@ const UsersList = ({ userlist }) => {
         .UsersList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
-        .UsersAddForm .ant-modal-body{
-          padding:3rem;
+        .UsersAddForm .ant-modal-body {
+          padding: 3rem;
+        }
+        .spinHolder {
+          text-align: center;
+          z-index: 100;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          background-color: #ffffff;
+          padding: 34% 0;
         }
       `}</style>
     </Row>
   );
 };
 
-const ActionRender = (showModal) => {
+const removeSelected = (item) => {
+  
+  console.log("onRemove", item.id);
+  
+  var config = {
+    method: "delete",
+    url: apiBaseUrl + "/Users/" + item.id,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    data: { id: item.id },
+  };
+  async function fetchData(config) {
+    try {
+      const response = await axios(config);
+      if (response) {
+        //setAssessmentList(response.data.result);
+        console.log("Response", response.data);        
+        message.success(res.data.message);
+        setSpin(true);
+      }
+    } catch (error) {
+      const { response } = error;
+      //const { request, ...errorObject } = response; // take everything but 'request'      
+      console.log(response.data.message);
+      Modal.error({
+        title: "Unable to Delete",
+        content: response.data.message,
+        centered: true,
+        width: 450,
+      });
+    }
+    //setLoading(false);
+  }
+  fetchData(config);
+};
+
+const ActionRender = (item) => {
+  //console.log(list)
   return (
     <td>
       <button
         className="k-primary k-button k-grid-edit-command"
-        onClick={() => showModal("view")}
+        /* onClick={() => showModal("view")} */
       >
         <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
       </button>
       &nbsp;
-      <button
-        className="k-button k-grid-remove-command"
-        /* onClick={() => {
+      <Popconfirm
+        title="Are you sure？"
+        okText="Yes"
+        cancelText="No"
+        onConfirm={() => removeSelected(item.dataItem)}
+      >
+        <button
+          className="k-button k-grid-remove-command"
+          /* onClick={() => {
           confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
             remove(this.props.dataItem);
         }} */
-      >
-        ✖
-      </button>
+        >
+          ✖
+        </button>
+      </Popconfirm>
     </td>
   );
 };

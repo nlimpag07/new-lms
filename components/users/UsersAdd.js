@@ -145,17 +145,25 @@ const UsersAdd = ({ hideModal, setSpin }) => {
       : errorList.push("Missing Position");
     if (!!values.userRole) {
       switch (values.userRole) {
-        case '1':
+        case "1":
           data.isLearner = 1;
+          data.isInstructor = 0;
+          data.isAdministrator = 0;
           break;
-        case '2':
+        case "2":
           data.isInstructor = 1;
+          data.isLearner = 0;
+          data.isAdministrator = 0;
           break;
-        case '3':
+        case "3":
+          data.isInstructor = 0;
+          data.isLearner = 0;
           data.isAdministrator = 1;
           break;
         default:
+          data.isInstructor = 0;
           data.isLearner = 1;
+          data.isAdministrator = 0;
           break;
       }
     } else {
@@ -164,7 +172,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
 
     data = JSON.stringify(data);
     console.log(data);
-    
+
     if (!errorList.length) {
       var config = {
         method: "post",
@@ -178,23 +186,21 @@ const UsersAdd = ({ hideModal, setSpin }) => {
 
       axios(config)
         .then((res) => {
-          setSpinning(false);
           //console.log("res: ", res.data);
           message.success(res.data.message);
-          
+          setSpinning(false);
           setSpin(true);
           hideModal("add");
         })
         .catch((err) => {
           console.log("err: ", err.response.data);
-          message.error(
-            "Network Error on Submission, Contact Technical Support"
-          );
-          setSpin(true);
+          message.error(err.response.data.message);
+         
+          setSpinning(false);
+          setSpin(false);
           //hideModal("add");
         });
     }
-    
   };
 
   //For Update: emailCheck // THis needs a new API endpoint
