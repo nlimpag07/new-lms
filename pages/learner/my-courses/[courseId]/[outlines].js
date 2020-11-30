@@ -55,7 +55,7 @@ const CourseOutlines = ({ courseDetails }) => {
     ? courseDetails.course.courseCompetencies
     : null;
     
-  console.log("cDetails", cDetails);
+  //console.log("cDetails", cDetails);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
   //Entrapment: set maximum query length to 3 return 404 otherwise

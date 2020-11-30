@@ -39,39 +39,32 @@ const AdministratorNavbar = () => {
         <Col className="nav-top-left" flex="1 1 200px">
           AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
         </Col>
-        <Col className="nav-top-right" flex="0 1 300px">
+        <Col className="nav-top-right" flex="0 1 25%">
           <ul>
             <li className="notif">
               <Notifications />
             </li>
             {isAuthenticated ? (
-              <>
-                <li className="logout">
-                  <Dropdown overlay={profileMenu(setSwitchViewModal)}>
-                    <a
-                      className="ant-dropdown-link"
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {/*  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> */}
-                      <FontAwesomeIcon
-                        icon={["fas", "user-circle"]}
-                        size="lg"
-                      />{" "}
-                      {userDetails.firstName} <DownOutlined />
-                    </a>
-                  </Dropdown>
-                </li>
-              </>
+              <li className="logout">
+                <Dropdown overlay={profileMenu(setSwitchViewModal)}>
+                  <a
+                    className="ant-dropdown-link"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    {/*  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> */}
+                    <FontAwesomeIcon icon={["fas", "user-circle"]} size="lg" />{" "}
+                    {userDetails.firstName} <DownOutlined />
+                  </a>
+                </Dropdown>
+              </li>
             ) : (
-              <>
-                <li className="login">
-                  <Link href="/login" passHref>
-                    <a>
-                      <FontAwesomeIcon icon={["fas", "lock"]} size="lg" /> Login
-                    </a>
-                  </Link>
-                </li>
-              </>
+              <li className="login">
+                <Link href="/login" passHref>
+                  <a>
+                    <FontAwesomeIcon icon={["fas", "lock"]} size="lg" /> Login
+                  </a>
+                </Link>
+              </li>
             )}
             <li className="language">
               <Link href="/lang" passHref>
@@ -87,7 +80,7 @@ const AdministratorNavbar = () => {
         <Col className="nav-bot-left" flex="1 1 200px">
           LEFT Bottom NAV
         </Col>
-        <Col className="nav-bot-right" flex="0 1 300px">
+        <Col className="nav-bot-right" flex="0 1 25%">
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>
@@ -174,12 +167,6 @@ const profileMenu = (setSwitchViewModal) => (
         </a>
       </Link>
     </Menu.Item>
-    {/* <Menu.Item key="1">
-      
-      <a href="#switchview-modal" onClick={() => setSwitchViewModal(true)}>
-        <EyeFilled /> Switch View
-      </a>
-    </Menu.Item> */}
     <Menu.Item key="3">
       <Link href="/logout" passHref>
         <a>
@@ -187,10 +174,6 @@ const profileMenu = (setSwitchViewModal) => (
         </a>
       </Link>
     </Menu.Item>
-    {/* <Menu.Divider />
-    <Menu.Item key="3" disabled>
-      3rd menu item（disabled）
-    </Menu.Item> */}
   </Menu>
 );
 

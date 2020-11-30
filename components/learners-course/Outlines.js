@@ -67,8 +67,6 @@ const list = {
   },
 };
 
-
-
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
@@ -77,7 +75,7 @@ const linkUrl = Cookies.get("usertype");
 const Outlines = (props) => {
   const router = useRouter();
   const { cDetails, course_id, learnerId, listOfOutlines } = props;
-  //console.log("My outlines", outlineList);
+  console.log("My outlines", cDetails);
   const [course, setCourse] = useState(cDetails);
   const [outlineList, setOutlineList] = useState(listOfOutlines);
   const [spinner, setSpinner] = useState(false);
@@ -132,7 +130,7 @@ const Outlines = (props) => {
       setSpinner(false);
     }
   }, [startOutline]);
-  console.log("");
+
   return (
     <Row
       className="widget-container learnerOutlines"
@@ -146,7 +144,6 @@ const Outlines = (props) => {
         md={24}
         lg={24}
       >
-        
         <Row className="widget-header-row" justify="start">
           <Col xs={20}>
             <h3 className="widget-title">Latest First</h3>
@@ -574,6 +571,7 @@ const GridType = (
       {outlines.map((outline) => {
         var outlineStatus = "";
         var outlineStatusId = 0;
+        var currentPercent = 0;
         var isNotEmpty =
           outline.learnerCourseOutline && outline.learnerCourseOutline.length
             ? true
@@ -587,10 +585,19 @@ const GridType = (
           if (lco_lastItem.courseStart && lco_lastItem.courseEnd) {
             outlineStatus = "Finished";
             outlineStatusId = 2;
+            currentPercent = 100;
           }
           if (lco_lastItem.courseStart && !lco_lastItem.courseEnd) {
             outlineStatus = "In Progress";
             outlineStatusId = 1;
+
+            var baseNumber = outline && outline.length ? outline.duration : 100;
+            var newNumber =
+              outline.learnerCourseOutline &&
+              outline.learnerCourseOutline.length
+                ? outline.learnerCourseOutline.hoursTaken
+                : 0;
+            currentPercent = Math.round((newNumber * 100) / baseNumber);
           }
         } else {
           outlineStatus = "Not Started";
@@ -598,17 +605,8 @@ const GridType = (
         }
         //Insert outlineStatusId to outline for Drawer Usage
         outline["outlineStatusId"] = outlineStatusId;
-        /*  var baseNumber =
-          outline && outline.length
-            ? outline.length
-            : 100;
-        var newNumber =
-          outline.learnerCourseOutline && outline.learnerCourseOutline.length
-            ? outline.learnerCourseOutline.length
-            : 0;
-        var currentPercent = Math.round((newNumber * 100) / baseNumber); */
-        var currentPercent = 0;
-        //console.log(currentPercent);
+
+        console.log(currentPercent);
         return (
           <Col
             key={outline.id}

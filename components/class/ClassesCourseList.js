@@ -379,7 +379,11 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
   return courses ? (
     <>
       {courses.map((course) => (
@@ -478,7 +482,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 }
                 description={
                   <div>
-                    <div>{decodeURI(course.description)}</div>
+                    <div>{descTrimmerDecoder(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

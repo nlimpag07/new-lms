@@ -479,6 +479,11 @@ const GridType = (
   const progressPercentage = (a, b) => {
     return a + b;
   };
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
   return courses ? (
     <>
       {courses.map((mycourse) => {
@@ -491,7 +496,7 @@ const GridType = (
             ? mycourse.learnerCourseOutline.length
             : 0;
         var currentPercent = Math.round((newNumber * 100) / baseNumber);
-        //console.log(currentPercent);
+        console.log(currentPercent);
         return (
           <Col
             key={mycourse.course.id}
@@ -539,7 +544,7 @@ const GridType = (
                   title={mycourse.course.title}
                   description={
                     <div>
-                      <div>{decodeURI(mycourse.course.description)}</div>
+                      <div>{descTrimmerDecoder(mycourse.course.description)}</div>
                       <div>Public</div>
                       <div>
                         <Progress

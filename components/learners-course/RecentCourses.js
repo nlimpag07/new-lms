@@ -228,6 +228,11 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridClass = "grid-list";
   }
   //console.log('My Recent Courses:',courses)
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
   return courses ? (
     <>
       {courses.map((course, index) => (
@@ -293,7 +298,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 }
                 description={
                   <div>
-                    <div>{decodeURI(course.course.description)}</div>
+                    <div>{descTrimmerDecoder(course.course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

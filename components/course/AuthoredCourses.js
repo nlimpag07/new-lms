@@ -264,6 +264,13 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
 
   /* let courses = courseList.result.filter(course => course.authorId==userId)*/
   //console.log(courses)
+
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
+
   return courses.length ? (
     <>
       {courses.map((course) => (
@@ -358,7 +365,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                 }
                 description={
                   <div>
-                    <div>{course.description}</div>
+                    <div>{descTrimmerDecoder(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

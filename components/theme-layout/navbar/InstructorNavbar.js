@@ -22,7 +22,7 @@ const InstructorNavbar = () => {
         <Col className="nav-top-left" flex="1 1 200px">
           AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
         </Col>
-        <Col className="nav-top-right" flex="0 1 300px">
+        <Col className="nav-top-right" flex="0 1 25%">
           <ul>
             <li className="notif">
               <Link href="/" passHref>
@@ -76,7 +76,7 @@ const InstructorNavbar = () => {
         <Col className="nav-bot-left" flex="1 1 200px">
           LEFT Bottom NAV
         </Col>
-        <Col className="nav-bot-right" flex="0 1 300px">
+        <Col className="nav-bot-right" flex="0 1 25%">
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>

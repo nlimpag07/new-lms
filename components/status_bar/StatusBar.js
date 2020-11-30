@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Row, Col, Card } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
+const linkUrl = Cookies.get("usertype");
 
 const StatusBar = ({ learner }) => {
-  const usertype = Cookies.get("usertype");
   //console.log("Learner", learner);
   const [uType, setUtype] = useState("");
   const [sc, setSc] = useState({
@@ -16,19 +16,27 @@ const StatusBar = ({ learner }) => {
   });
 
   useEffect(() => {
-    if (usertype == "learner") {
+    if (linkUrl == "learner") {
       setUtype("learner");
 
       let theCount = learner.map((l, index) => {
         let totalCounts = { ac: [], oc: [], cc: [] };
-        l.startDate && l.endDate
-          ? setSc({ ...sc, cc: sc.cc + 1 })
-          : l.startDate && !l.endDate
-          ? setSc({ ...sc, oc: sc.oc + 1 })
-          : setSc({ ...sc, ac: sc.ac + 1 });
+        if (l.startDate && l.endDate) {
+          setSc({ ...sc, cc: sc.cc + 1 });
+        } else if (l.startDate && !l.endDate) {
+          setSc({ ...sc, oc: sc.oc + 1 });
+        } else {
+          setSc({ ...sc, ac: sc.ac + 1 });
+        }
+      });
+    } else {
+      setSc({
+        ac: 0,
+        oc: 0,
+        cc: 0,
       });
     }
-  }, [usertype]);
+  }, [linkUrl]);
   //console.log("sc", sc);
   return <StatusContent userType={uType} sc={sc} />;
 };

@@ -369,14 +369,20 @@ const CourseList = (props) => {
           color: #e69138;
         }
       `}</style>
-    </Row>
-  )/*  : (
+    </Row> /*  : (
     <Col>
       <div style={{ textAlign: "center" }}>
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     </Col>
-  ) */;
+  ) */
+   /*: (
+    <Col>
+      <div style={{ textAlign: "center" }}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    </Col>
+  ) */);
 };
 
 const GridType = (courses, gridType, setModal2Visible, router) => {
@@ -387,7 +393,11 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
     gridClass = "grid-list";
   }
   courses = courses.result;
-
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
   return courses ? (
     <>
       {courses.map((course) => (
@@ -481,7 +491,7 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
                 }
                 description={
                   <div>
-                    <div>{decodeURI(course.description)}</div>
+                    <div>{descTrimmerDecoder(course.description)}</div>
                     <div>Public</div>
                   </div>
                 }

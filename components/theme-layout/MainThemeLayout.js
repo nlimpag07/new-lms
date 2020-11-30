@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Cookies from "js-cookie";
 import {
   Form,
   Select,
@@ -49,25 +50,25 @@ import TemplateFooter from "./templateFooter/templateFooter";
 
 const { Header, Content, Sider } = Layout;
 import Loader from "./loader/loader";
+const userRole = Cookies.get("usertype");
 
 export default function MainThemeLayout({ children }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  //console.log(router.route);
-  let NavigationMenu, MainNav, BreadCrumb, footer;
+  let NavigationMenu, BreadCrumb, footer;
 
   BreadCrumb = <BreadCrumbs pathname={router.route} />;
   footer = <TemplateFooter />;
+  let MainNav = <MainNavbar userRole={userRole} />;
   //console.log(router.pathname)
   if (router.route.startsWith("/learner")) {
-    MainNav = <MainNavbar />;
     NavigationMenu = <LearnerMenu />;
     if (router.route.startsWith("/learner/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
   } else if (router.route.startsWith("/instructor")) {
     NavigationMenu = <InstructorMenu />;
-    MainNav = <InstructorNavbar />;
+    
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     if (router.route.startsWith("/instructor/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
@@ -80,9 +81,9 @@ export default function MainThemeLayout({ children }) {
     if (router.route.startsWith("/administrator/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
-    MainNav = <AdministratorNavbar />;
+    //MainNav = <AdministratorNavbar />;   
   } else {
-    MainNav = <MainNavbar />;
+   
     NavigationMenu = <MainMenu />;
     //MainNav = <MainNavbar />;
   }
@@ -99,7 +100,7 @@ export default function MainThemeLayout({ children }) {
           theme="light"
           collapsible
           collapsed={collapsed}
-          onCollapse={() => setCollapsed(!collapsed)}           
+          onCollapse={() => setCollapsed(!collapsed)}
           /*trigger={null} 
           onBreakpoint={broken => {
         console.log(broken);
@@ -112,7 +113,7 @@ export default function MainThemeLayout({ children }) {
             <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
           </div>
           {NavigationMenu}
-          
+
           <div className="sideBottom">
             <div className="sideBottom-shape">
               {/* <span

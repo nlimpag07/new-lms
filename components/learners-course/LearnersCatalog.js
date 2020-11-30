@@ -531,6 +531,12 @@ const GridType = (
     /*//setSelectedCourse("open");*/
   };
 
+  const descTrimmerDecoder = (desc) => {
+    let d = decodeURI(desc);
+    let trimmedDesc = d.substr(0, 250);
+    return trimmedDesc+'...';
+  };
+
   return courses ? (
     <>
       {courses.map((course) => (
@@ -575,7 +581,7 @@ const GridType = (
                 title={course.title}
                 description={
                   <div>
-                    <div>{decodeURI(course.description)}</div>
+                    <div>{descTrimmerDecoder(course.description)}</div>
                     <div>Public</div>
                     {router.asPath.endsWith("/my-courses") && (
                       <div>

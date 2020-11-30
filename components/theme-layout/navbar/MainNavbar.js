@@ -4,11 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
 import { useIsAuthenticated, useAuth } from "../../../providers/Auth";
 import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
+import Notifications from "./Notifications";
+
 //import UserRoleSwitcher from "../../user/UserRoleSwitcher";
 
-const MainNavbar = () => {
+const MainNavbar = ({ userRole }) => {
   const { isUsertype, setUsertype, userDetails } = useAuth();
-  //console.log(userDetails);
+  console.log(userRole);
   const isAuthenticated = useIsAuthenticated();
   var [switchViewModal, setSwitchViewModal] = useState(
     (switchViewModal = false)
@@ -24,21 +26,15 @@ const MainNavbar = () => {
         <Col className="nav-top-left" flex="1 1">
           AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
         </Col>
-        <Col className="nav-top-right" flex="0 1 300px">
+        <Col className="nav-top-right" flex="0 1 25%">
           <ul>
             <li className="notif">
-              <Link href="/" passHref>
-                <a>
-                  <Badge dot status="error">
-                    <FontAwesomeIcon icon={["fas", "bell"]} size="lg" />
-                  </Badge>
-                </a>
-              </Link>
+              <Notifications />
             </li>
             {isAuthenticated ? (
               <>
                 <li className="logout">
-                  <Dropdown overlay={profileMenu(setSwitchViewModal)} trigger={['click']}>
+                  <Dropdown overlay={profileMenu(userRole)} trigger={["click"]}>
                     <a
                       className="ant-dropdown-link"
                       onClick={(e) => e.preventDefault()}
@@ -47,7 +43,8 @@ const MainNavbar = () => {
                       <FontAwesomeIcon
                         icon={["fas", "user-circle"]}
                         size="lg"
-                      />{" "}{userDetails.firstName}{" "}<DownOutlined />
+                      />{" "}
+                      {userDetails.firstName} <DownOutlined />
                     </a>
                   </Dropdown>
                 </li>
@@ -63,7 +60,7 @@ const MainNavbar = () => {
                 </li>
               </>
             )}
-            <li className="language">
+            <li className="lang">
               <Link href="/lang" passHref>
                 <a>
                   <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" /> En
@@ -77,7 +74,7 @@ const MainNavbar = () => {
         <Col className="nav-bot-left" flex="1 1 200px">
           LEFT Bottom NAV
         </Col>
-        <Col className="nav-bot-right" flex="0 1 300px">
+        <Col className="nav-bot-right" flex="0 1 25%">
           <Col className="right-shape">Right Bottom Nav</Col>
         </Col>
       </Row>
@@ -94,9 +91,16 @@ const MainNavbar = () => {
         .ant-layout-header .header-nav-top {
           text-align: center;
         }
+        
+        .header-nav-top .nav-top-right .notif,.header-nav-top .nav-top-right .lang{
+          width:30%;
+        }
+        .header-nav-top .nav-top-right .logout{
+          width:40%;
+        }
         .header-nav-top .nav-top-right ul li {
           display: inline-block;
-          padding:0 1rem;
+          padding: 0 1rem;
           text-align: center;
         }
         .header-nav-top .nav-top-right ul li a,
@@ -127,33 +131,89 @@ const MainNavbar = () => {
   );
 };
 
-const profileMenu = (setSwitchViewModal) => (
-  <Menu>
-    <Menu.Item key="0">
-      <Link href="/lang" passHref>
-        <a>
-          <ProfileFilled /> Profile
-        </a>
-      </Link>
-    </Menu.Item>
-    {/* <Menu.Item key="1">
-      
-      <a href="#switchview-modal" onClick={() => setSwitchViewModal(true)}>
-        <EyeFilled /> Switch View
-      </a>
-    </Menu.Item> */}
-    <Menu.Item key="2">
-      <Link href="/logout" passHref>
-        <a>
-          <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" /> Logout
-        </a>
-      </Link>
-    </Menu.Item>
-    {/* <Menu.Divider />
-    <Menu.Item key="3" disabled>
-      3rd menu item（disabled）
-    </Menu.Item> */}
-  </Menu>
-);
+const profileMenu = (userRole) => {
+  var menuItems;
+  switch (userRole) {
+    case "administrator":
+      menuItems = (
+        <Menu>
+          <Menu.Item key="0">
+            <Link href="/lang" passHref>
+              <a>
+                <ProfileFilled /> Profile
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="1">
+            <Link href={`/${userRole}/users`} as={`/${userRole}/users`}>
+              <a>
+                <FontAwesomeIcon icon={["fas", "users"]} size="sm" /> Users
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href={`/${userRole}/picklists`} as={`/${userRole}/picklists`}>
+              <a>
+                <FontAwesomeIcon icon={["fas", "sliders-h"]} size="sm" />{" "}
+                Picklists
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="3">
+            <Link href="/logout" passHref>
+              <a>
+                <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" />{" "}
+                Logout
+              </a>
+            </Link>
+          </Menu.Item>
+        </Menu>
+      );
+      break;
+    case "instructor":
+      menuItems = (
+        <Menu>
+          <Menu.Item key="0">
+            <Link href="/lang" passHref>
+              <a>
+                <ProfileFilled /> Profile
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href="/logout" passHref>
+              <a>
+                <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" />{" "}
+                Logout
+              </a>
+            </Link>
+          </Menu.Item>
+        </Menu>
+      );
+      break;
+    default:
+      menuItems = (
+        <Menu>
+          <Menu.Item key="0">
+            <Link href="/lang" passHref>
+              <a>
+                <ProfileFilled /> Profile
+              </a>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="2">
+            <Link href="/logout" passHref>
+              <a>
+                <FontAwesomeIcon icon={["fas", "sign-out-alt"]} size="lg" />{" "}
+                Logout
+              </a>
+            </Link>
+          </Menu.Item>
+        </Menu>
+      );
+      break;
+  }
+  return menuItems;
+};
 
 export default MainNavbar;

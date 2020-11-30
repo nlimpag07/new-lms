@@ -26,7 +26,7 @@ const Notifications = () => {
 
       if (_res.result.length) {
         setNotifCount(_res.totalRecords);
-        console.log("res", _res);
+        //console.log("res", _res);
 
         let ddata = _res.result
           ? _res.result.map((noti, index) => {
@@ -47,52 +47,18 @@ const Notifications = () => {
         setNotiList(ddata);
       }
     });
-    /* async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Notification Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //console.log(theRes)
-
-            
-          } else {
-            
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        //const { data } = response; // take everything but 'request'
-
-        console.log("Error Response", response);
-
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: response + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config); */
+    
   }, []);
 
   const openNotification = (e) => {
     e.preventDefault();
 
     const desc = (
-      <div>
+      <div className="">
         <Divider style={{ marginTop: "0", marginBottom: "0" }} />
-        <div className="Listcontainer">
+        <div className="notiListHolder">
           <List
+          className="Listcontainer"
             size="small"
             itemLayout="horizontal"
             dataSource={notiList}
@@ -112,7 +78,7 @@ const Notifications = () => {
                     />
                   }
                   /* title={item.auditTrailDescription} */
-                  description={item.auditTrailDescription}
+                  description={<a>{item.auditTrailDescription}</a>}
                 />
               </List.Item>
             )}
@@ -139,39 +105,7 @@ const Notifications = () => {
       </Link>
 
       <style jsx global>{`
-        .ant-layout-header {
-          color: #ffffff;
-        }
-        .header-nav-top .nav-top-right ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-        .ant-layout-header .header-nav-top {
-          text-align: center;
-        }
-        .header-nav-top .nav-top-right ul li {
-          display: inline-block;
-          width: 27%;
-          text-align: center;
-        }
-        .header-nav-top .nav-top-right ul li a,
-        .header-nav-top .nav-top-right ul li a:active,
-        .header-nav-top .nav-top-right ul li a:focus,
-        .header-nav-top .nav-top-right ul li a:visited {
-          color: #ffffff;
-          text-decoration: none;
-        }
-        .header-nav-top .nav-top-right ul li a:hover {
-          color: #fdb813;
-        }
-        .ant-layout-header .header-nav-bot .nav-bot-left {
-          padding: 0 15px;
-        }
-        .ant-layout-header .header-nav-bot .nav-bot-right .right-shape {
-          color: #000000;
-          padding: 0 15px;
-        }
+        
         .ant-badge {
           display: inline;
         }
@@ -184,13 +118,21 @@ const Notifications = () => {
           height: 16px;
           padding: 0 3px;
         }
+        .notiListHolder {
+          height: auto;
+          overflow: hidden;
+        }
         .Listcontainer {
-          height: 60vh;
+          height: auto;
           overflow: auto;
         }
         .Listcontainer .ant-list-item {
           padding: 8px 0;
         }
+        .Listcontainer .ant-list-item span{
+          font-size:10px;
+        }
+        
       `}</style>
     </>
   );
