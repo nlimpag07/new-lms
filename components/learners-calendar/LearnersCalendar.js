@@ -7,7 +7,6 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { Calendar, Badge, Row, Col, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 
 const apiBaseUrl = process.env.apiBaseUrl;
 
@@ -94,6 +93,8 @@ function monthCellRender(value) {
   ) : null;
 }
 
+
+
 const LearnersCalendar = ({ course_id }) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
@@ -101,14 +102,10 @@ const LearnersCalendar = ({ course_id }) => {
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
-    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.result.filter(
-      (getCourse) => getCourse.id == course_id
-    );
-    setCourseDetails(theCourse[0]);
+   
   }, []);
 
-  console.log(courseDetails);
+  
   return (
     //GridType(gridList)
     <Row
@@ -124,10 +121,11 @@ const LearnersCalendar = ({ course_id }) => {
           md={24}
           lg={24}
         >
-          <h1>{courseDetails.title}: Sessions</h1>
+          <h1>Calendar</h1>
           <Calendar
             dateCellRender={dateCellRender}
             monthCellRender={monthCellRender}
+            onSelect={() => setModal2Visible(true)}
           />
         </Col>
       </motion.div>
@@ -145,8 +143,6 @@ const LearnersCalendar = ({ course_id }) => {
         <p>some contents...</p>
         <p>some contents...</p>
       </Modal>
-
-      <CourseCircularUi />
       <style jsx global>{`
         .LearnersCalendar h1 {
           font-size: 2rem;

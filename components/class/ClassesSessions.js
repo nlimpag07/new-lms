@@ -5,9 +5,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Calendar, Badge, Row, Col, Modal } from "antd";
+import { Calendar, Badge, Row, Col, Modal,Drawer } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 
 const apiBaseUrl = process.env.apiBaseUrl;
 
@@ -33,7 +32,6 @@ const list = {
     },
   },
 };
-
 
 function getListData(value) {
   let listData;
@@ -99,15 +97,31 @@ const ClassesSessions = ({ course_id }) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
+  var [drawerVisible, setDrawerVisible] = useState(false);
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.result.filter((getCourse) => getCourse.id == course_id);
+    let theCourse = allCourses.result.filter(
+      (getCourse) => getCourse.id == course_id
+    );
     setCourseDetails(theCourse[0]);
   }, []);
 
   console.log(courseDetails);
+
+  const onSelect = (date) => {
+    setModal2Visible(true);
+    console.log(date.format("YYYY-MM-DD"));
+  };
+
+  const showDrawer = () => {
+    setDrawerVisible(true);
+  };
+
+  const closeDrawer = () => {
+    setDrawerVisible(false);
+  };
   return (
     //GridType(gridList)
     <Row
@@ -127,9 +141,21 @@ const ClassesSessions = ({ course_id }) => {
           <Calendar
             dateCellRender={dateCellRender}
             monthCellRender={monthCellRender}
+            onSelect={showDrawer}
           />
         </Col>
       </motion.div>
+      <Drawer
+          title="Basic Drawer"
+          placement="right"
+          closable={false}
+          onClose={closeDrawer}
+          visible={drawerVisible}
+          getContainer={false}
+          style={{ position: 'absolute' }}
+        >
+          <p>Some contents...</p>
+        </Drawer>
       <Modal
         title="Publish Properties"
         centered
@@ -139,17 +165,21 @@ const ClassesSessions = ({ course_id }) => {
         maskClosable={false}
         destroyOnClose={true}
         width={1000}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okButtonProps={{ style: { display: "none" } }}
+        className="csModal"
       >
         <p>some contents...</p>
         <p>some contents...</p>
         <p>some contents...</p>
       </Modal>
-
-      <CourseCircularUi />
       <style jsx global>{`
         .ClassesSessions h1 {
           font-size: 2rem;
           font-weight: 700;
+        }
+        .csModal .ant-modal-footer {
+          display: none;
         }
       `}</style>
     </Row>

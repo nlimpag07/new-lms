@@ -22,6 +22,12 @@ const LearnerMenu = () => {
   if (aspath.endsWith("/my-courses")) {
     selectedKey = "my-courses";
   }
+  if (aspath.endsWith("/my-transcripts")) {
+    selectedKey = "my-transcripts";
+  }
+  if (aspath.endsWith("/calendar")) {
+    selectedKey = "calendar";
+  }
   if (aspath.endsWith("/picklists")) {
     selectedKey = "picklists";
   }
@@ -40,7 +46,10 @@ const LearnerMenu = () => {
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
       >
         {/* <span onClick={() => setGoback(true)}>Back</span> */}
-        <Link href={`/${linkUrl}/course-catalogue`} as={`/${linkUrl}/course-catalogue`}>
+        <Link
+          href={`/${linkUrl}/course-catalogue`}
+          as={`/${linkUrl}/course-catalogue`}
+        >
           <a>Back to Catalogue</a>
         </Link>
       </Menu.Item>
@@ -52,7 +61,7 @@ const LearnerMenu = () => {
       `}</style>
     </Menu>
   ) : aspath.startsWith("/learner/my-courses/") ? (
-    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">     
+    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
         key="/learner/my-courses"
@@ -99,7 +108,7 @@ const LearnerMenu = () => {
 
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "file-alt"]} size="lg" />}
-        key="/learner/my-transcripts"
+        key="my-transcripts"
       >
         <Link href="/learner/my-transcripts" passHref>
           <a>My Transcript</a>
@@ -108,7 +117,7 @@ const LearnerMenu = () => {
 
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "calendar-alt"]} size="lg" />}
-        key="/learner/calendar"
+        key="calendar"
       >
         <Link href="/learner/calendar" passHref>
           <a>Calendar</a>
