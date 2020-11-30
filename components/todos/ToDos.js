@@ -115,7 +115,13 @@ const GridType = (gridType) => {
       dataSource={data}
       renderItem={(item) => (
         <List.Item
-          actions={[ item.overdue =="" ? <a key="list-loadmore-edit">Join</a>:<a key="list-loadmore-edit">View</a>]}
+          actions={[
+            item.overdue == "" ? (
+              <a key="list-loadmore-edit">Join</a>
+            ) : (
+              <a key="list-loadmore-edit">View</a>
+            ),
+          ]}
         >
           <List.Item.Meta
             avatar={item.avatar}

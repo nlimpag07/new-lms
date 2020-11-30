@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 
 const StatusBar = ({ learner }) => {
   const usertype = Cookies.get("usertype");
-  console.log("Learner", learner);
+  //console.log("Learner", learner);
   const [uType, setUtype] = useState("");
   const [sc, setSc] = useState({
     ac: 0,
@@ -29,7 +29,7 @@ const StatusBar = ({ learner }) => {
       });
     }
   }, [usertype]);
-  console.log("sc", sc);
+  //console.log("sc", sc);
   return <StatusContent userType={uType} sc={sc} />;
 };
 

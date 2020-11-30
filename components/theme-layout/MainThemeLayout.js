@@ -99,10 +99,8 @@ export default function MainThemeLayout({ children }) {
           theme="light"
           collapsible
           collapsed={collapsed}
-          onCollapse={() => setCollapsed(!collapsed)}
-           
+          onCollapse={() => setCollapsed(!collapsed)}           
           /*trigger={null} 
-
           onBreakpoint={broken => {
         console.log(broken);
       }}
