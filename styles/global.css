@@ -407,3 +407,6 @@ a.ellipsis i {
   left: 45%;
   font-size: 2rem;
 }
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-value {
+  font-size: 1.7rem;
+}

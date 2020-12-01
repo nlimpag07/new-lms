@@ -1,14 +1,21 @@
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useCourseList } from "../../providers/CourseProvider";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Calendar, Badge, Row, Col, Modal,Drawer } from "antd";
+import { Calendar, Badge, Row, Col, Modal, Drawer, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
+const SessionOperationOptions = dynamic(() =>
+  import("./SessionOperations/SessionOperationOptions")
+);
+const SessionAdd = dynamic(() => import("./SessionOperations/SessionAdd"));
 const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const list = {
   visible: {
@@ -33,95 +40,231 @@ const list = {
   },
 };
 
-function getListData(value) {
-  let listData;
-  switch (value.date()) {
-    case 8:
-      listData = [
-        { type: "warning", content: "This is warning event." },
-        { type: "success", content: "This is usual event." },
-      ];
-      break;
-    case 10:
-      listData = [
-        { type: "warning", content: "This is warning event." },
-        { type: "success", content: "This is usual event." },
-        { type: "error", content: "This is error event." },
-      ];
-      break;
-    case 15:
-      listData = [
-        { type: "warning", content: "This is warning event" },
-        { type: "success", content: "This is very long usual event。。...." },
-        { type: "error", content: "This is error event 1." },
-        { type: "error", content: "This is error event 2." },
-        { type: "error", content: "This is error event 3." },
-        { type: "error", content: "This is error event 4." },
-      ];
-      break;
-    default:
-  }
-  return listData || [];
-}
-
-function dateCellRender(value) {
-  const listData = getListData(value);
-  return (
-    <ul className="events">
-      {listData.map((item) => (
-        <li key={item.content}>
-          <Badge status={item.type} text={item.content} />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function getMonthData(value) {
-  if (value.month() === 8) {
-    return 1394;
-  }
-}
-
-function monthCellRender(value) {
-  const num = getMonthData(value);
-  return num ? (
-    <div className="notes-month">
-      <section>{num}</section>
-      <span>Backlog number</span>
-    </div>
-  ) : null;
-}
-
 const ClassesSessions = ({ course_id }) => {
   const router = useRouter();
-  var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [courseDetails, setCourseDetails] = useState("");
-  var [drawerVisible, setDrawerVisible] = useState(false);
+  const [spin, setSpin] = useState(true);
 
+  const [sessionList, setSessionList] = useState("");
+  const [calSessionModal, setCalSessionModal] = useState({
+    date: "",
+    visible: false,
+    modalOperation: "general",
+    width: 0,
+  });
+  const [dateSessionList, setDateSessionList] = useState("");
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
-    let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourses.result.filter(
-      (getCourse) => getCourse.id == course_id
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/CourseSession/" + course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: { courseId: course_id },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data.result;
+          console.log("Session Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            //console.log(theRes)
+
+            const ddata = theRes.length
+              ? theRes.map((dataItem) =>
+                  Object.assign({ selected: false }, dataItem)
+                )
+              : null;
+            setSessionList(ddata);
+            setSpin(false);
+          } else {
+            const ddata = userlist.result
+              ? userlist.result.map((dataItem) =>
+                  Object.assign({ selected: false }, dataItem)
+                )
+              : null;
+            setSessionList(ddata);
+            setSpin(false);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        console.log("Error Response", data.message);
+
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+  }, [spin]);
+
+  function getListData(value) {
+    let listData;
+    switch (value.date()) {
+      case 8:
+        listData = [
+          {
+            id: 1,
+            dateTime: value,
+            title: "This is a title1",
+            type: "warning",
+            content: "This is warning event.",
+          },
+          {
+            id: 2,
+            dateTime: value,
+            title: "This is a title2",
+            type: "success",
+            content: "This is usual event.",
+          },
+        ];
+        break;
+      case 10:
+        listData = [
+          {
+            id: 1,
+            dateTime: value,
+            title: "This is a title1",
+            type: "warning",
+            content: "This is warning event.",
+          },
+          {
+            id: 2,
+            dateTime: value,
+            title: "This is a title2",
+            type: "success",
+            content: "This is usual event.",
+          },
+          {
+            id: 3,
+            dateTime: value,
+            title: "This is a title3",
+            type: "error",
+            content: "This is error event.",
+          },
+        ];
+        break;
+      case 15:
+        listData = [
+          {
+            id: 1,
+            dateTime: value,
+            title: "This is a title1",
+            type: "warning",
+            content: "This is warning event",
+          },
+          {
+            id: 2,
+            dateTime: value,
+            title: "This is a title2",
+            type: "success",
+            content: "This is very long usual event。。....",
+          },
+          {
+            id: 3,
+            dateTime: value,
+            title: "This is a title3",
+            type: "error",
+            content: "This is error event 1.",
+          },
+          {
+            id: 4,
+            dateTime: value,
+            title: "This is a title4",
+            type: "error",
+            content: "This is error event 2.",
+          },
+          {
+            id: 5,
+            dateTime: value,
+            title: "This is a title5",
+            type: "error",
+            content: "This is error event 3.",
+          },
+          {
+            id: 6,
+            dateTime: value,
+            title: "This is a title6",
+            type: "error",
+            content: "This is error event 4.",
+          },
+        ];
+        break;
+      default:
+    }
+    return listData || [];
+  }
+
+  function dateCellRender(value) {
+    const listData = getListData(value);
+    return (
+      <ul className="events">
+        {listData.map((item) => (
+          <li key={item.content}>
+            <Badge status={item.type} text={item.content} />
+          </li>
+        ))}
+      </ul>
     );
-    setCourseDetails(theCourse[0]);
-  }, []);
+  }
 
-  console.log(courseDetails);
+  function getMonthData(value) {
+    if (value.month() === 8) {
+      return 1394;
+    }
+  }
 
-  const onSelect = (date) => {
-    setModal2Visible(true);
-    console.log(date.format("YYYY-MM-DD"));
+  function monthCellRender(value) {
+    const num = getMonthData(value);
+    return num ? (
+      <div className="notes-month">
+        <section>{num}</section>
+        <span>Backlog number</span>
+      </div>
+    ) : null;
+  }
+
+  //console.log(sessionList);
+
+  const onOpenModal = (date, calSessionModal) => {
+    let sessModalArr = calSessionModal;
+    setCalSessionModal({
+      ...sessModalArr,
+      date: date.format("MM-DD-YYYY"),
+      visible: true,
+      width: "70%",
+    });
+    let theList = getListData(date);
+    setDateSessionList(theList);
+    //console.log("New List",theList);
   };
-
-  const showDrawer = () => {
-    setDrawerVisible(true);
+  const onCloseModal = (calSessionModal) => {
+    //let sessModalArr = calSessionModal;
+    setCalSessionModal({
+      date: "",
+      visible: false,
+      modalOperation: "general",
+      width: 0,
+    });
+    setDateSessionList("");
   };
+  //console.log(calSessionModal);
 
-  const closeDrawer = () => {
-    setDrawerVisible(false);
-  };
   return (
     //GridType(gridList)
     <Row
@@ -129,49 +272,72 @@ const ClassesSessions = ({ course_id }) => {
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
       style={{ margin: "1rem 0" }}
     >
-      <motion.div initial="hidden" animate="visible" variants={list}>
-        <Col
-          className="gutter-row widget-holder-col ClassesSessions"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>{courseDetails.title}: Sessions</h1>
-          <Calendar
-            dateCellRender={dateCellRender}
-            monthCellRender={monthCellRender}
-            onSelect={showDrawer}
-          />
-        </Col>
-      </motion.div>
-      <Drawer
-          title="Basic Drawer"
-          placement="right"
-          closable={false}
-          onClose={closeDrawer}
-          visible={drawerVisible}
-          getContainer={false}
-          style={{ position: 'absolute' }}
-        >
-          <p>Some contents...</p>
-        </Drawer>
+      {spin ? (
+        <div className="spinHolder">
+          <Spin
+            size="small"
+            tip="Retrieving data..."
+            spinning={spin}
+            delay={100}
+          ></Spin>
+        </div>
+      ) : (
+        <motion.div initial="hidden" animate="visible" variants={list}>
+          <Col
+            className="gutter-row widget-holder-col ClassesSessions"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>Sessions</h1>
+            <Calendar
+              dateCellRender={dateCellRender}
+              monthCellRender={monthCellRender}
+              onSelect={(date) => onOpenModal(date, calSessionModal)}
+              mode="month"
+            />
+          </Col>
+        </motion.div>
+      )}
       <Modal
-        title="Publish Properties"
+        title={`Sessions :${calSessionModal.date}`}
         centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
+        visible={calSessionModal.visible}
+        onOk={() => onCloseModal(calSessionModal.modalOperation)}
+        onCancel={() => onCloseModal(calSessionModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={1000}
+        width={calSessionModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
         className="csModal"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        {calSessionModal.modalOperation == "view" ? (
+          "HELLO View"
+        ) : calSessionModal.modalOperation == "add" ? (
+          <SessionAdd
+            course_id={course_id}
+            spin={spin}
+            setSpin={setSpin}
+            setCalSessionModal={setCalSessionModal}
+            calSessionModal={calSessionModal}
+          />
+        ) : calSessionModal.modalOperation == "approve" ? (
+          "HELLO Approve"
+        ) : calSessionModal.modalOperation == "delete" ? (
+          "HELLO Delete"
+        ) : (
+          <SessionOperationOptions
+            course_id={course_id}
+            spin={spin}
+            setSpin={setSpin}
+            setCalSessionModal={setCalSessionModal}
+            calSessionModal={calSessionModal}
+            dateSessionList={dateSessionList}
+            setDateSessionList={setDateSessionList}
+          />
+        )}
       </Modal>
       <style jsx global>{`
         .ClassesSessions h1 {
@@ -180,6 +346,18 @@ const ClassesSessions = ({ course_id }) => {
         }
         .csModal .ant-modal-footer {
           display: none;
+        }
+        .spinHolder {
+          text-align: center;
+          z-index: 100;
+          position: relative;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          background-color: #ffffff;
+          padding: 34vh 0;
+          width: 100%;
         }
       `}</style>
     </Row>
