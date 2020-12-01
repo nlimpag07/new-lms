@@ -51,7 +51,8 @@ export default function withConditionalRedirect({
       } else if (usertypecond == "administrator") {
         location = "/administrator";
       }
-      router.push(location);
+      //router.push(location);
+      window.location.replace(location);
       return <Loader loading={loading} />;
     }
     return <WrappedComponent {...props} />;

@@ -12,7 +12,7 @@ const linkUrl = Cookies.get("usertype");
 
 const Notifications = () => {
   const [notifCount, setNotifCount] = useState(0);
-  const [notiList, setNotiList] = useState([]);
+  const [notiList, setNotiList] = useState("");
 
   useEffect(() => {
     var config = {
