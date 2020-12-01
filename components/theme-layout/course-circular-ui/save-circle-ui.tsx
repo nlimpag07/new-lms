@@ -182,8 +182,9 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
       });
 
     setCenterData(pie(data)[0]);
-    let iconClass = data.iconClass?data.iconClass:"ams-floppy-disk";
+    let iconClass = data[0].iconClass?data[0].iconClass:"ams-floppy-disk";
     setOperation(iconClass)
+    console.log(data[0])
     //};
   }, []);
 
@@ -193,7 +194,7 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
     props.toggleModal(callback[0].callback)
     //setIsRadial({ isRadial: "close" });
   };
-
+  
   return (
     <RadialMenuStyled
       {...props}
