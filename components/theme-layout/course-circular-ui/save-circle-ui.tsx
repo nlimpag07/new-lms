@@ -24,10 +24,10 @@ interface IRadialProps {
 const RadialMenuStyled = styled.div<IRadialProps>``;
 
 export const SaveUI: React.FC<IRadialProps> = (props) => {
-  const iconClass = props.listMenu.length?props.listMenu[0].iconClass:"ams-floppy-disk";
+  
   const router = useRouter();
   const [isRadial, setIsRadial] = useState({ isRadial: "close" });
-  const [operation, setOperation] = useState(iconClass);
+  const [operation, setOperation] = useState("");
   
   //console.log("Radial Elems Const:" + targetElem.classList);
   useEffect(() => {
@@ -182,7 +182,8 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
       });
 
     setCenterData(pie(data)[0]);
-
+    let iconClass = data.iconClass?data.iconClass:"ams-floppy-disk";
+    setOperation(iconClass)
     //};
   }, []);
 

@@ -19,16 +19,19 @@ const StatusBar = ({ learner }) => {
     if (linkUrl == "learner") {
       setUtype("learner");
 
-      let theCount = learner.map((l, index) => {
-        let totalCounts = { ac: [], oc: [], cc: [] };
-        if (l.startDate && l.endDate) {
-          setSc({ ...sc, cc: sc.cc + 1 });
-        } else if (l.startDate && !l.endDate) {
-          setSc({ ...sc, oc: sc.oc + 1 });
-        } else {
-          setSc({ ...sc, ac: sc.ac + 1 });
-        }
-      });
+      let theCount =
+        learner &&
+        learner.length &&
+        learner.map((l, index) => {
+          let totalCounts = { ac: [], oc: [], cc: [] };
+          if (l.startDate && l.endDate) {
+            setSc({ ...sc, cc: sc.cc + 1 });
+          } else if (l.startDate && !l.endDate) {
+            setSc({ ...sc, oc: sc.oc + 1 });
+          } else {
+            setSc({ ...sc, ac: sc.ac + 1 });
+          }
+        });
     } else {
       setSc({
         ac: 0,
