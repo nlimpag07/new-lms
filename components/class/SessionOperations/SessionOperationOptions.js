@@ -39,12 +39,13 @@ const SessionOperationOptions = ({
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
+      title: "Session - " + action,
       modalOperation: action,
-      width: "60%",
+      width: "35%",
     });
-    console.log("On Add", sessModalArr);
+    //console.log("On Add", sessModalArr);
   };
-  console.log(dateSessionList);
+  //console.log(dateSessionList);
   return (
     //GridType(gridList)
     <Row
@@ -69,7 +70,7 @@ const SessionOperationOptions = ({
           md={24}
           lg={24}
         >
-          <h1>Sessions List</h1>
+          {/* <h1>Sessions List</h1> */}
           <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
             <Col xs={24} sm={24} md={24} lg={24}>
               <List
@@ -78,7 +79,16 @@ const SessionOperationOptions = ({
                 itemLayout="horizontal"
                 dataSource={dateSessionList}
                 renderItem={(item) => (
-                  <List.Item actions={[<Button type="link" onClick={()=>onAddEditView("view")}>View</Button>, <Button type="link" onClick={()=>onAddEditView("edit")}>Edit</Button>]}>
+                  <List.Item
+                    actions={[
+                      <Button type="link" onClick={() => onAddEditView("view")}>
+                        View
+                      </Button>,
+                      <Button type="link" onClick={() => onAddEditView("edit")}>
+                        Edit
+                      </Button>,
+                    ]}
+                  >
                     <List.Item.Meta
                       avatar={
                         <Badge
@@ -111,7 +121,7 @@ const SessionOperationOptions = ({
                 shape="round"
                 icon={<PlusSquareOutlined />}
                 size="large"
-                onClick={()=>onAddEditView("add")}
+                onClick={() => onAddEditView("add")}
               >
                 Add Session
               </Button>

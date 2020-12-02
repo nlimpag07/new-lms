@@ -46,13 +46,64 @@ const ClassesSessions = ({ course_id }) => {
 
   const [sessionList, setSessionList] = useState("");
   const [calSessionModal, setCalSessionModal] = useState({
+    title:"",
     date: "",
     visible: false,
     modalOperation: "general",
     width: 0,
   });
   const [dateSessionList, setDateSessionList] = useState("");
+  const [instructorsList, setInstructorsList] = useState("");
   /*const [grid,setGrid] = useState(gridList);*/
+
+  useEffect(() => {
+    var conf = {
+      method: "get",
+      url: apiBaseUrl + "/Courses/" + course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: { id: course_id },
+    };
+    async function getCourseDetails(conf) {
+      try {
+        const response = await axios(conf);
+        if (response) {
+          let theRes = response.data;
+          console.log("Course", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            //console.log(theRes)
+            theRes.courseInstructor && theRes.courseInstructor.length
+              ? setInstructorsList(theRes.courseInstructor)
+              : setInstructorsList([]);
+          } else {
+            setInstructorsList([]);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        //console.log("Error Response", data.message);
+
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+      //setLoading(false);
+    }
+    getCourseDetails(conf);
+  }, []);
+
   useEffect(() => {
     var config = {
       method: "get",
@@ -245,6 +296,7 @@ const ClassesSessions = ({ course_id }) => {
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
+      title:"Sessions List",
       date: date.format("MM-DD-YYYY"),
       visible: true,
       width: "70%",
@@ -256,6 +308,7 @@ const ClassesSessions = ({ course_id }) => {
   const onCloseModal = (calSessionModal) => {
     //let sessModalArr = calSessionModal;
     setCalSessionModal({
+      title:"",
       date: "",
       visible: false,
       modalOperation: "general",
@@ -301,7 +354,7 @@ const ClassesSessions = ({ course_id }) => {
         </motion.div>
       )}
       <Modal
-        title={`Sessions :${calSessionModal.date}`}
+        title={`${calSessionModal.title}`}
         centered
         visible={calSessionModal.visible}
         onOk={() => onCloseModal(calSessionModal.modalOperation)}
@@ -322,6 +375,7 @@ const ClassesSessions = ({ course_id }) => {
             setSpin={setSpin}
             setCalSessionModal={setCalSessionModal}
             calSessionModal={calSessionModal}
+            instructorsList={instructorsList}
           />
         ) : calSessionModal.modalOperation == "approve" ? (
           "HELLO Approve"
