@@ -13,6 +13,9 @@ import {
   Spin,
   Button,
   List,
+  Table,
+  Tag,
+  Space,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,6 +35,7 @@ const SessionOperationOptions = ({
   dateSessionList,
   setDateSessionList,
 }) => {
+  console.log(dateSessionList);
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {}, []);
 
@@ -46,8 +50,46 @@ const SessionOperationOptions = ({
     //console.log("On Add", sessModalArr);
   };
   //console.log(dateSessionList);
+
+  const columns = [
+    {
+      title: "Running Date",
+      dataIndex: "dateTime",
+      key: "date",
+      render: (date, record) => {
+        return(<><Tag color={`geekblue`} key={record.index}>
+          {date.format("YYYY-MM-DD HH:mm")}
+        </Tag>{" => "}<Tag color={`volcano`} key={record.index+1}>
+          {date.format("YYYY-MM-DD HH:mm")}
+        </Tag></>);
+      },
+    },
+    
+    {
+      title: "Session Title",
+      dataIndex: "title",
+      key: "title",
+      render: (text) => <a>{text}</a>,
+    },
+
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+   
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <>
+          <Button type="link" onClick={() => onAddEditView("view")}>View</Button>
+          <Button type="link" onClick={() => onAddEditView("delete")}>Delete</Button>
+        </>
+      ),
+    },
+  ];
   return (
-    //GridType(gridList)
     <Row
       className="widget-container"
       gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}
@@ -73,48 +115,10 @@ const SessionOperationOptions = ({
           {/* <h1>Sessions List</h1> */}
           <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <List
-                className="SessionListcontainer"
-                size="large"
-                itemLayout="horizontal"
-                dataSource={dateSessionList}
-                renderItem={(item) => (
-                  <List.Item
-                    actions={[
-                      <Button type="link" onClick={() => onAddEditView("view")}>
-                        View
-                      </Button>,
-                      <Button type="link" onClick={() => onAddEditView("edit")}>
-                        Edit
-                      </Button>,
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={
-                        <Badge
-                          status={item.type}
-                          text={DateFormatter(item.dateTime)}
-                        />
-                      }
-                      /* title={item.auditTrailDescription} */
-                      description={<a>{item.title}</a>}
-                    />
-                  </List.Item>
-                )}
-              />
+              <Table columns={columns} dataSource={dateSessionList} pagination={{ defaultPageSize: 5 }} size="small" />              
             </Col>
           </Row>
-          <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
-            <Col xs={24} sm={12} md={12} lg={12}>
-              <Button
-                type="primary"
-                shape="round"
-                icon={<UnorderedListOutlined />}
-                size="large"
-              >
-                Today's Sessions
-              </Button>
-            </Col>
+          <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>            
             <Col xs={24} sm={12} md={12} lg={12}>
               <Button
                 type="primary"
@@ -135,9 +139,7 @@ const SessionOperationOptions = ({
           font-weight: 700;
           margin-bottom: 2rem;
         }
-        .SessionOperationOptions {
-          text-align: center;
-        }
+        
         /* .SessionOperationOptions .SessionListcontainer .ant-list-item {
           padding: 8px 0;
         }

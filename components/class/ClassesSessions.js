@@ -12,6 +12,7 @@ const SessionOperationOptions = dynamic(() =>
   import("./SessionOperations/SessionOperationOptions")
 );
 const SessionAdd = dynamic(() => import("./SessionOperations/SessionAdd"));
+const SessionView = dynamic(() => import("./SessionOperations/SessionView"));
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
@@ -367,7 +368,14 @@ const ClassesSessions = ({ course_id }) => {
         className="csModal"
       >
         {calSessionModal.modalOperation == "view" ? (
-          "HELLO View"
+          <SessionView
+          course_id={course_id}
+          spin={spin}
+          setSpin={setSpin}
+          setCalSessionModal={setCalSessionModal}
+          calSessionModal={calSessionModal}
+          instructorsList={instructorsList}
+        />
         ) : calSessionModal.modalOperation == "add" ? (
           <SessionAdd
             course_id={course_id}
