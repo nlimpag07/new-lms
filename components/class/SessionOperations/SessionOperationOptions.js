@@ -16,6 +16,8 @@ import {
   Table,
   Tag,
   Space,
+  Popconfirm,
+  message
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,6 +27,12 @@ import {
 } from "@ant-design/icons";
 
 import DateFormatter from "../../dateFormatter/DateFormatter";
+import Cookies from "js-cookie";
+
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 
 const SessionOperationOptions = ({
   course_id,
@@ -50,6 +58,50 @@ const SessionOperationOptions = ({
     //console.log("On Add", sessModalArr);
   };
   //console.log(dateSessionList);
+  const confirmDelete = (rec) => {
+    console.log(rec)
+    var config = {
+      method: "delete",
+      url: apiBaseUrl + "/CourseSession/" + rec.id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: { id: rec.id },
+    };
+    async function delData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setAssessmentList(response.data.result);
+          console.log("Response", response.data);        
+          message.success(response.data.message);
+          setCalSessionModal({
+            title: "",
+            date: "",
+            visible: false,
+            modalOperation: "general",
+            width: 0,
+          });
+          setSpin(true);
+        }
+      } catch (error) {
+        const { response } = error;
+        //const { request, ...errorObject } = response; // take everything but 'request'      
+        console.log(response.data.message);
+        message.error(response.data.message);
+        
+        /* Modal.error({
+          title: "Unable to Delete",
+          content: response.data.message,
+          centered: true,
+          width: 450,
+        }); */
+      }
+      //setLoading(false);
+    }
+    delData(config);
+  };
 
   const columns = [
     {
@@ -57,14 +109,20 @@ const SessionOperationOptions = ({
       dataIndex: "dateTime",
       key: "date",
       render: (date, record) => {
-        return(<><Tag color={`geekblue`} key={record.index}>
-          {date.format("YYYY-MM-DD HH:mm")}
-        </Tag>{" => "}<Tag color={`volcano`} key={record.index+1}>
-          {date.format("YYYY-MM-DD HH:mm")}
-        </Tag></>);
+        return (
+          <>
+            <Tag color={`geekblue`} key={record.index}>
+              {date.format("YYYY-MM-DD HH:mm")}
+            </Tag>
+            {" => "}
+            <Tag color={`volcano`} key={record.index + 1}>
+              {date.format("YYYY-MM-DD HH:mm")}
+            </Tag>
+          </>
+        );
       },
     },
-    
+
     {
       title: "Session Title",
       dataIndex: "title",
@@ -77,14 +135,26 @@ const SessionOperationOptions = ({
       dataIndex: "type",
       key: "type",
     },
-   
+
     {
       title: "Action",
       key: "action",
       render: (text, record) => (
         <>
-          <Button type="link" onClick={() => onAddEditView("view")}>View</Button>
-          <Button type="link" onClick={() => onAddEditView("delete")}>Delete</Button>
+          <Button type="link" onClick={() => onAddEditView("view")}>
+            View
+          </Button>
+          {/* <Button type="link" onClick={() => onAddEditView("delete")}>Delete</Button> */}
+          <Popconfirm
+            title="Are you sure to delete this?"
+            onConfirm={() => confirmDelete(record)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" >
+            Delete
+          </Button>
+          </Popconfirm>
         </>
       ),
     },
@@ -115,10 +185,15 @@ const SessionOperationOptions = ({
           {/* <h1>Sessions List</h1> */}
           <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
             <Col xs={24} sm={24} md={24} lg={24}>
-              <Table columns={columns} dataSource={dateSessionList} pagination={{ defaultPageSize: 5 }} size="small" />              
+              <Table
+                columns={columns}
+                dataSource={dateSessionList}
+                pagination={{ defaultPageSize: 5 }}
+                size="small"
+              />
             </Col>
           </Row>
-          <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>            
+          <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
             <Col xs={24} sm={12} md={12} lg={12}>
               <Button
                 type="primary"
@@ -139,7 +214,7 @@ const SessionOperationOptions = ({
           font-weight: 700;
           margin-bottom: 2rem;
         }
-        
+
         /* .SessionOperationOptions .SessionListcontainer .ant-list-item {
           padding: 8px 0;
         }

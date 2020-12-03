@@ -354,7 +354,7 @@ const removeSelected = (item) => {
       if (response) {
         //setAssessmentList(response.data.result);
         console.log("Response", response.data);        
-        message.success(res.data.message);
+        message.success(response.data.message);
         setSpin(true);
       }
     } catch (error) {
