@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import moment from "moment";
+
 import {
   Calendar,
   Badge,
@@ -17,7 +19,7 @@ import {
   Tag,
   Space,
   Popconfirm,
-  message
+  message,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -59,7 +61,7 @@ const SessionOperationOptions = ({
   };
   //console.log(dateSessionList);
   const confirmDelete = (rec) => {
-    console.log(rec)
+    console.log(rec);
     var config = {
       method: "delete",
       url: apiBaseUrl + "/CourseSession/" + rec.id,
@@ -74,7 +76,7 @@ const SessionOperationOptions = ({
         const response = await axios(config);
         if (response) {
           //setAssessmentList(response.data.result);
-          console.log("Response", response.data);        
+          console.log("Response", response.data);
           message.success(response.data.message);
           setCalSessionModal({
             title: "",
@@ -87,10 +89,10 @@ const SessionOperationOptions = ({
         }
       } catch (error) {
         const { response } = error;
-        //const { request, ...errorObject } = response; // take everything but 'request'      
+        //const { request, ...errorObject } = response; // take everything but 'request'
         console.log(response.data.message);
         message.error(response.data.message);
-        
+
         /* Modal.error({
           title: "Unable to Delete",
           content: response.data.message,
@@ -111,13 +113,20 @@ const SessionOperationOptions = ({
       render: (date, record) => {
         return (
           <>
-            <Tag color={`geekblue`} key={record.index}>
+            <Tag color={`geekblue`} key={record.id}>
+              {date.format("YYYY-MM-DD HH:mm")}
+            </Tag>
+            {" => "}
+            <Tag color={`volcano`} key={`nth${record.id}`}>
+              {date.format("YYYY-MM-DD HH:mm")}
+            </Tag>
+            {/* <Tag color={`geekblue`} key={record.index}>
               {date.format("YYYY-MM-DD HH:mm")}
             </Tag>
             {" => "}
             <Tag color={`volcano`} key={record.index + 1}>
               {date.format("YYYY-MM-DD HH:mm")}
-            </Tag>
+            </Tag> */}
           </>
         );
       },
@@ -141,7 +150,11 @@ const SessionOperationOptions = ({
       key: "action",
       render: (text, record) => (
         <>
-          <Button type="link" onClick={() => onAddEditView("view")}>
+          <Button
+            key={`view-${record.id}`}
+            type="link"
+            onClick={() => onAddEditView("view")}
+          >
             View
           </Button>
           {/* <Button type="link" onClick={() => onAddEditView("delete")}>Delete</Button> */}
@@ -151,9 +164,9 @@ const SessionOperationOptions = ({
             okText="Yes"
             cancelText="No"
           >
-            <Button type="link" >
-            Delete
-          </Button>
+            <Button key={`view-${record.id}`} type="link">
+              Delete
+            </Button>
           </Popconfirm>
         </>
       ),
@@ -190,6 +203,7 @@ const SessionOperationOptions = ({
                 dataSource={dateSessionList}
                 pagination={{ defaultPageSize: 5 }}
                 size="small"
+                rowKey="id"
               />
             </Col>
           </Row>

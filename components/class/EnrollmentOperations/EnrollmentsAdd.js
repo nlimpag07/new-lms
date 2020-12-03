@@ -56,7 +56,7 @@ const EnrollmentsAdd = ({ course_id, courseDetails, hideModal, setSpin }) => {
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          //console.log("Session Response", response.data);
+          console.log("Session Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees

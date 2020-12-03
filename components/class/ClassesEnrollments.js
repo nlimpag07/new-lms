@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Row, Col, Modal, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
+import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui"
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
@@ -60,6 +61,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
+    iconClass: "ams-plus-circle",
   },
 ];
 
@@ -221,12 +223,19 @@ const ClassesEnrollments = ({ course_id }) => {
           )}
         </Modal>
 
-        <RadialUI
+        {/* <RadialUI
+          listMenu={menulists}
+          position="bottom-right"
+          iconColor="#8998BA"
+          toggleModal={() => showModal("add")}
+        /> */}
+        <SaveUI
           listMenu={menulists}
           position="bottom-right"
           iconColor="#8998BA"
           toggleModal={() => showModal("add")}
         />
+        
       </motion.div>
       <style jsx global>{`
         .ClassesEnrollments h1 {

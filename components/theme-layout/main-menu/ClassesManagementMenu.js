@@ -72,7 +72,7 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         </Link>
       </Menu.Item>
 
-      <Menu.Item
+      {/* <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "star"]} size="lg" />}
         key={`class`}
       >
@@ -82,7 +82,7 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         >
           <a>Class</a>
         </Link>
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         icon={<FontAwesomeIcon icon={["fas", "hourglass-half"]} size="lg" />}
         key={`attendance`}
