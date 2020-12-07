@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
+import moment from "moment";
 
 import {
   Layout,
@@ -365,7 +366,7 @@ const CourseAdd = () => {
       ? data.append("description", encodeURI(decodeURI(values.description)))
       : errorList.push("Missing Course Description");
     !!values.durationTime
-      ? data.append("durationTime", values.durationTime)
+      ? data.append("durationTime", values.durationTime.format("HH:mm"))
       : errorList.push("Missing Course Duration Time");
     !!values.durationType
       ? data.append("durationType", values.durationType)
@@ -383,7 +384,10 @@ const CourseAdd = () => {
       : errorList.push("Missing Course Level");
     !!values.picklistcategory
       ? values.picklistcategory.map((category, index) => {
-          data.append(`courseCategory[${index}][categoryId]`, category.categoryId);
+          data.append(
+            `courseCategory[${index}][categoryId]`,
+            category.categoryId
+          );
         })
       : errorList.push("Missing Course Category");
     !!values.picklistrelatedcourses
@@ -400,7 +404,10 @@ const CourseAdd = () => {
       : null;
     !!values.picklistlanguage
       ? values.picklistlanguage.map((language, index) => {
-          data.append(`courseLanguage[${index}][languageId]`, language.languageId);
+          data.append(
+            `courseLanguage[${index}][languageId]`,
+            language.languageId
+          );
         })
       : errorList.push("Missing Course Language");
     !!values.picklisttags
@@ -593,7 +600,9 @@ const CourseAdd = () => {
             >
               <Row className="widget-header-row" justify="start">
                 <Col xs={24}>
-                  <h3 className="widget-title"><i>Course status reflects after submission</i></h3>
+                  <h3 className="widget-title">
+                    <i>Course status reflects after submission</i>
+                  </h3>
                 </Col>
               </Row>
               <Row
@@ -778,7 +787,7 @@ const CourseAdd = () => {
                 margin-bottom: 0;
                 text-transform: uppercase;
               }
-              .cm-main-right .widget-title{
+              .cm-main-right .widget-title {
                 text-transform: initial;
               }
               .widget-holder-col .widget-header-row {

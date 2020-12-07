@@ -1,6 +1,8 @@
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
+import Loader from "../../components/theme-layout/loader/loader";
+
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -61,8 +63,7 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const CourseList = (props) => {
-  //const { courselist } = props;
-
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   //console.log(router);
   const { courseAllList, setCourseAllList } = useCourseList();
@@ -103,6 +104,7 @@ const CourseList = (props) => {
     } else {
       //put additional Filtration here
     } */
+    setLoading(false);
   }, []);
   return (
     <Row
@@ -187,7 +189,7 @@ const CourseList = (props) => {
             curGridStyle,
             setModal2Visible,
             router,
-            linkUrl
+            loading
           )}
         </Row>
       </Col>
@@ -376,6 +378,13 @@ const CourseList = (props) => {
       </div>
     </Col>
   ) */
+    /*: (
+    <Col>
+      <div style={{ textAlign: "center" }}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    </Col>
+  ) */
    /*: (
     <Col>
       <div style={{ textAlign: "center" }}>
@@ -385,7 +394,7 @@ const CourseList = (props) => {
   ) */);
 };
 
-const GridType = (courses, gridType, setModal2Visible, router) => {
+const GridType = (courses, gridType, setModal2Visible, router,loading) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
   if (gridType == "list") {
@@ -396,9 +405,10 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
-    return trimmedDesc+'...';
+    return trimmedDesc + "...";
   };
-  return courses ? (
+  console.log(courses)
+  return courses.length ? (
     <>
       {courses.map((course) => (
         <Col
@@ -501,7 +511,11 @@ const GridType = (courses, gridType, setModal2Visible, router) => {
         </Col>
       ))}
     </>
-  ) : null;
+  ) : (
+    <Loader loading={loading}>
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    </Loader>
+  );
 };
 
 const { Option } = Select;

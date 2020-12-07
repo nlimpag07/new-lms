@@ -21,7 +21,7 @@ const BreadCrumbs = () => {
       case 1:
         return (
           <Breadcrumb.Item key={index}>
-            <a href={`/${path}`}>{path}</a>
+            <a href={`/${path}`}>{path[0].toUpperCase() + path.substring(1)}</a>
           </Breadcrumb.Item>
         );
       //console.log("/", path, " ", index);
@@ -29,7 +29,7 @@ const BreadCrumbs = () => {
       case 2:
         return (
           <Breadcrumb.Item key={index}>
-            <a href={`/${pathname[1]}/${pathname[2]}`}>{path}</a>
+            <a href={`/${pathname[1]}/${pathname[2]}`}>{path[0].toUpperCase() + path.substring(1)}</a>
           </Breadcrumb.Item>
         );
       //console.log("/", pathname[1], "/", path, " ---", index);
@@ -37,7 +37,7 @@ const BreadCrumbs = () => {
       case 3:
         return (
           <Breadcrumb.Item key={index}>
-            <a href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}`}>{path}</a>
+            <a href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}`}>{path[0].toUpperCase() + path.substring(1)}</a>
           </Breadcrumb.Item>
         );
         console.log(
@@ -82,7 +82,7 @@ const BreadCrumbs = () => {
             <a
               href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}`}
             >
-              {path}
+              {path[0].toUpperCase() + path.substring(1)}
             </a>
           </Breadcrumb.Item>
         );
@@ -107,7 +107,7 @@ const BreadCrumbs = () => {
             <a
               href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}/${pathname[6]}`}
             >
-              {path}
+              {path[0].toUpperCase() + path.substring(1)}
             </a>
           </Breadcrumb.Item>
         );
@@ -116,7 +116,7 @@ const BreadCrumbs = () => {
             <a
               href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}/${pathname[6]}/${pathname[7]}`}
             >
-              {path}
+              {path[0].toUpperCase() + path.substring(1)}
             </a>
           </Breadcrumb.Item>
       case 8:
@@ -124,7 +124,7 @@ const BreadCrumbs = () => {
             <a
               href={`/${pathname[1]}/${pathname[2]}/${pathname[3]}/${pathname[4]}/${pathname[5]}/${pathname[6]}/${pathname[7]}/${pathname[8]}`}
             >
-              {path}
+              {path[0].toUpperCase() + path.substring(1)}
             </a>
           </Breadcrumb.Item>
       default:

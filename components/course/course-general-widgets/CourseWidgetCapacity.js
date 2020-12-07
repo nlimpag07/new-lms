@@ -23,14 +23,15 @@ const CourseWidgetCapacity = (props) => {
         <Form.Item
           name="capacity"
         >
-          <Select placeholder="Capacity" size="medium">
+          <InputNumber placeholder="Capacity" style={{ width: "100%" }} min={1} />
+          {/* <Select placeholder="Capacity" size="medium">
               <Option value="75">75</Option>
               <Option value="80">80</Option>
               <Option value="85">85</Option>
               <Option value="90">90</Option>
               <Option value="95">95</Option>
               <Option value="100">100</Option>
-            </Select>            
+            </Select> */}            
         </Form.Item>
         <Form.Item>
           <div className="s-description">Learners</div>            

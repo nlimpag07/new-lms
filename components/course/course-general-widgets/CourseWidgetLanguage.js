@@ -228,20 +228,12 @@ const CourseWidgetLanguage = (props) => {
 const modalFormBody = (allCourseLanguage, chosenRows) => {
   const [sourceData, setsourceData] = useState([]);
   const data = [];
-  /* allCourseLanguage.map((language, index) => {
-    data.push({
-      key: index,
-      id: language.id,
-      title: language.name,
-    });
-  }); */
-
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [fileList, seFileList] = useState("");
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const columns = [
+  const baseColumns = [
     {
       title: "Language",
       dataIndex: "title",
@@ -260,7 +252,7 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
     });
     setSelectedRows(rowData);
     //setSelectedRows(selectedRows);
-    console.log(rowData);
+    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
@@ -268,7 +260,6 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
     onChange: onSelectChange,
   };
   useEffect(() => {
-    
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
@@ -313,6 +304,22 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
       setsourceData(theSource);
     }
   }, []);
+
+  const [filtration, setFiltration] = useState({
+    filterTable: null,
+    columns: baseColumns,
+    baseData: sourceData,
+  });
+
+  const search = (value) => {
+    const filterTable = sourceData.filter((o) =>
+      Object.keys(o).some((k) =>
+        String(o[k]).toLowerCase().includes(value.toLowerCase())
+      )
+    );
+    setFiltration({ ...filtration, filterTable: filterTable });
+  };
+
   return (
     <Form.List name="courselanguage">
       {(fields, { add, remove }) => {
@@ -350,7 +357,10 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
                     key={`languageId-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="languageId Title" value={field.languageId} />
+                    <Input
+                      placeholder="languageId Title"
+                      value={field.languageId}
+                    />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "isticked"]}
@@ -368,11 +378,21 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
                 <div>Data Empty</div>
               );
             })}
-
+            <Input.Search
+              style={{ margin: "0 0 10px 0" }}
+              placeholder="Search Language..."
+              enterButton
+              onSearch={search}
+            />
             <Table
               rowSelection={rowSelection}
-              columns={columns}
-              dataSource={sourceData}
+              columns={filtration.columns}
+              /* dataSource={sourceData} */
+              dataSource={
+                filtration.filterTable == null
+                  ? sourceData
+                  : filtration.filterTable
+              }
             />
           </div>
         );

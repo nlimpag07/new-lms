@@ -125,17 +125,22 @@ const CourseWidgetLevel = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {/* {fields.length >= 1 ? (
-                                <MinusCircleOutlined
+                              {fields.length >= 1 ? (
+                                <SettingFilled
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
                                   key={`del-${field.key}`}
                                   onClick={() => {
-                                    remove(field.name);
-                                    onRemove(field.id);
+                                    /* remove(field.name);
+                                    onRemove(field.id); */
+                                    showModal(
+                                      widgetFieldLabels.catname,
+                                      widgetFieldLabels.catValueLabel,
+                                      () => modalFormBody(allCourseLevel, thisPicklist)
+                                    )
                                   }}
                                 />
-                              ) : null} */}
+                              ) : null}
                             </Form.Item>
                           </div>
                         );
@@ -186,17 +191,22 @@ const CourseWidgetLevel = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {/* {chosenRows.length >= 1 ? (
-                                  <MinusCircleOutlined
+                                {chosenRows.length >= 1 ? (
+                                  <SettingFilled
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
                                     key={`del-${field.key}`}
                                     onClick={() => {
-                                      remove(field.name);
-                                      onRemove(field.id);
+                                      /* remove(field.name);
+                                      onRemove(field.id); */
+                                      showModal(
+                                        widgetFieldLabels.catname,
+                                        widgetFieldLabels.catValueLabel,
+                                        () => modalFormBody(allCourseLevel, chosenRows)
+                                      )
                                     }}
                                   />
-                                ) : null} */}
+                                ) : null}
                               </Form.Item>
                             </div>
                           );
@@ -210,18 +220,19 @@ const CourseWidgetLevel = (props) => {
           }
         }}
       </Form.Item>
-      <span>
-        <PlusOutlined
-          onClick={() =>
-            showModal(
-              widgetFieldLabels.catname,
-              widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allCourseLevel, chosenRows)
-            )
-          }
-        />
-      </span>
-
+      {chosenRows.length < 1 ? (
+        <span>
+          <PlusOutlined
+            onClick={() =>
+              showModal(
+                widgetFieldLabels.catname,
+                widgetFieldLabels.catValueLabel,
+                () => modalFormBody(allCourseLevel, chosenRows)
+              )
+            }
+          />
+        </span>
+      ) : null}
       <style jsx global>{``}</style>
     </>
   );
@@ -258,20 +269,28 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
     }, */
   ];
 
-  const onSelectChange = (selectedRowKeys, selectedRows) => {
+  //for multiple selection code
+  /* const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     let rowData = selectedRows.map((entry, index) => {
       entry.isticked = true;
       return entry; 
     });
     setSelectedRows(rowData);
-    //setSelectedRows(selectedRows);
-    //console.log(rowData);
+  }; */
+  //For single selection Code
+  const onSelectRow = (selected, selectedRows, changeRows) => {
+    setSelectedRowKeys([selected.key]);
+    let rowData = [];
+    rowData.push({ ...selected, isticked: true });
+    setSelectedRows(rowData);
+    console.log("selected", selectedRows);
   };
   const rowSelection = {
     selectedRowKeys,
     selectedRows,
-    onChange: onSelectChange,
+    /* onChange: onSelectChange, */
+    onSelect: onSelectRow,
   };
   useEffect(() => {
     if (chosenRows.length) {

@@ -12,7 +12,7 @@ import {
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { PlusOutlined, MinusCircleOutlined,SettingFilled } from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -121,17 +121,22 @@ const CourseWidgetType = (props) => {
                                   readOnly
                                 />
                               </Form.Item>
-                              {/* {fields.length >= 1 ? (
-                                <MinusCircleOutlined
+                              {fields.length >= 1 ? (
+                                <SettingFilled
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
                                   key={`del-${field.key}`}
                                   onClick={() => {
-                                    remove(field.name);
-                                    onRemove(field.id);
+                                    /* remove(field.name);
+                                    onRemove(field.id); */
+                                    showModal(
+                                      widgetFieldLabels.catname,
+                                      widgetFieldLabels.catValueLabel,
+                                      () => modalFormBody(allCourseType, thisPicklist)
+                                    )
                                   }}
                                 />
-                              ) : null} */}
+                              ) : null}
                             </Form.Item>
                           </div>
                         );
@@ -182,17 +187,22 @@ const CourseWidgetType = (props) => {
                                     readOnly
                                   />
                                 </Form.Item>
-                                {/* {chosenRows.length >= 1 ? (
-                                  <MinusCircleOutlined
+                                {chosenRows.length >= 1 ? (
+                                  <SettingFilled
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
                                     key={`del-${field.key}`}
                                     onClick={() => {
-                                      remove(field.name);
-                                      onRemove(field.id);
+                                      /* remove(field.name);
+                                      onRemove(field.id); */
+                                      showModal(
+                                        widgetFieldLabels.catname,
+                                        widgetFieldLabels.catValueLabel,
+                                        () => modalFormBody(allCourseType, chosenRows)
+                                      )
                                     }}
                                   />
-                                ) : null} */}
+                                ) : null}
                               </Form.Item>
                             </div>
                           );
@@ -206,6 +216,7 @@ const CourseWidgetType = (props) => {
           }
         }}
       </Form.Item>
+      {chosenRows.length < 1 ? (
       <span>
         <PlusOutlined
           onClick={() =>
@@ -217,12 +228,14 @@ const CourseWidgetType = (props) => {
           }
         />
       </span>
-
+      ) : null}
       <style jsx global>{``}</style>
     </>
   );
 };
 const modalFormBody = (allCourseType, chosenRows) => {
+  console.log('AllCourseType',allCourseType)
+  console.log('chosen',chosenRows)
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   /* allCourseType.map((type, index) => {
@@ -249,20 +262,28 @@ const modalFormBody = (allCourseType, chosenRows) => {
     }, */
   ];
 
-  const onSelectChange = (selectedRowKeys, selectedRows) => {
+  //for multiple selection code
+  /* const onSelectChange = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     let rowData = selectedRows.map((entry, index) => {
       entry.isticked = true;
       return entry;
     });
     setSelectedRows(rowData);
-    //setSelectedRows(selectedRows);
-    //console.log(rowData);
+  }; */
+  //For single selection Code
+  const onSelectRow = (selected, selectedRows, changeRows) => {
+    setSelectedRowKeys([selected.key]);
+    let rowData=[]
+    rowData.push({ ...selected, isticked: true });    
+    setSelectedRows(rowData);
+    //console.log("selected", rowData);
   };
   const rowSelection = {
     selectedRowKeys,
     selectedRows,
-    onChange: onSelectChange,
+    /* onChange: onSelectChange, */
+    onSelect: onSelectRow,
   };
   useEffect(() => {
     if (chosenRows.length) {
@@ -346,7 +367,10 @@ const modalFormBody = (allCourseType, chosenRows) => {
                     key={`courseTypeId-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="typeId Title" value={field.courseTypeId} />
+                    <Input
+                      placeholder="typeId Title"
+                      value={field.courseTypeId}
+                    />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "isticked"]}
