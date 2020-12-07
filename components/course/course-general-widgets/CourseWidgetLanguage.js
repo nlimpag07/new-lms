@@ -99,7 +99,7 @@ const CourseWidgetLanguage = (props) => {
                           value: field.title,
                           id: field.id,
                         };
-                        //console.log('Individual Fields:', field)
+                        console.log('Individual Fields:', field)
                         return (
                           <div key={field.key}>
                             <Form.Item

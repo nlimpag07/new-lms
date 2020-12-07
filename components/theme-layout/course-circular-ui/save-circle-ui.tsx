@@ -184,7 +184,7 @@ export const SaveUI: React.FC<IRadialProps> = (props) => {
     setCenterData(pie(data)[0]);
     let iconClass = data[0].iconClass?data[0].iconClass:"ams-floppy-disk";
     setOperation(iconClass)
-    console.log(data[0])
+    //console.log(data[0])
     //};
   }, []);
 

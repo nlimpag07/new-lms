@@ -39,12 +39,12 @@ const CourseWidgetDuration = (props) => {
         <Form.Item
           name="durationTime"
         >
-          <TimePicker
+          {/* <TimePicker
             format={format}
             showNow={false}
             placeholder="Select Time (H:M)"
-          />
-          
+          /> */}
+          <InputNumber min={1} placeholder="Enter Number" style={{width:"100%"}} />
         </Form.Item>
         <Form.Item
           name="durationType"

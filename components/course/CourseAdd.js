@@ -366,7 +366,7 @@ const CourseAdd = () => {
       ? data.append("description", encodeURI(decodeURI(values.description)))
       : errorList.push("Missing Course Description");
     !!values.durationTime
-      ? data.append("durationTime", values.durationTime.format("HH:mm"))
+      ? data.append("durationTime", values.durationTime) //values.durationTime.format("HH:mm")
       : errorList.push("Missing Course Duration Time");
     !!values.durationType
       ? data.append("durationType", values.durationType)

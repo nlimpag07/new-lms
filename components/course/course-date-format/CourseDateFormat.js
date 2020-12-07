@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { useCourseList } from "../../../providers/CourseProvider";
 
 const CourseDateFormat = (props) => {
-  const { course_id } = props;
+  const { course_id,updatedAt } = props;
   const { courseAllList } = useCourseList();
   const [currentDate, setCurrentDate] = useState("");
   //console.log(courseAllList);
@@ -13,6 +13,7 @@ const CourseDateFormat = (props) => {
       let theCourse = courseAllList.result.filter(
         (course) => course.id == course_id
       );
+      console.log(theCourse)
       let rawDate = new Date(theCourse[0].updatedAt);
       let newDate =
         rawDate.getFullYear() +
