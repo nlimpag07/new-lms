@@ -779,7 +779,7 @@ const CourseOutlines = ({ course_id }) => {
       let isSelected = outlineList.filter(
         (selectedOutline) => selectedOutline.id === curOutlineId[0].id
       );
-      console.log(isSelected[0]);
+      //console.log(isSelected[0]);
       let prerequisite = [];
       let currentPrerequisite = isSelected[0].courseOutlinePrerequisite;
       if (currentPrerequisite.length) {

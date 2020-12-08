@@ -1148,7 +1148,7 @@ const CourseEdit = ({ course_id }) => {
               >
                 <Row className="widget-header-row" justify="start">
                   <Col xs={24}>
-                    <CourseDateFormat updatedAt={updatedAt} course_id={course_id} />
+                    <CourseDateFormat course_id={course_id} />
                   </Col>
                 </Row>
                 <Row
