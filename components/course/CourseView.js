@@ -50,6 +50,7 @@ import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-Learnin
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
+import CoursePublish from "./course-publish/CoursePublish"
 import Cookies from "js-cookie";
 
 const { Meta } = Card;
@@ -61,8 +62,8 @@ const menulists = [
     title: "Save",
     icon: "&#xf055;",
     active: true,
-    url: "/${linkUrl}/[course]/edit",
-    urlAs: "/${linkUrl}/course/edit",
+    url: "#",
+    urlAs: "#",
     callback: "Save",
   },
 ];
@@ -195,7 +196,7 @@ const CourseView = ({ course_id }) => {
   } = courseDetails;
   featureImage = `${apidirectoryUrl}/Images/Course/${featureImage}`;
   featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
-  console.log("Course Details", courseDetails);
+  console.log("courseDetails", courseDetails);
   let lessons = courseOutline ? courseOutline.length : 0;
   const listData = [
     {
@@ -280,35 +281,7 @@ const CourseView = ({ course_id }) => {
               <h1 className="widget-title">{title}</h1>
             </Col>
             {linkUrl != "learner" && (
-              <Col xs={24} sm={12} md={6}>
-                <Row justify="end" align="middle" className="viewStatusReq">
-                  <Col xs={24} sm={4} md={12}>
-                    Current Status:{" "}
-                    {isPublished == 1 ? "Published" : "Unpublished"}
-                  </Col>
-                  <Col xs={24} sm={12} md={12}>
-                    {isPublished == 1 ? (
-                      <Button
-                        type="primary"
-                        shape="round"
-                        className="viewStatusReq-button"
-                        danger
-                      >
-                        Unpublish
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        shape="round"
-                        onClick={() => setPubModal2Visible(true)}
-                        className="viewStatusReq-button"
-                      >
-                        Publish
-                      </Button>
-                    )}
-                  </Col>
-                </Row>
-              </Col>
+              <CoursePublish isPublished={isPublished} title={title} course_id={course_id} />              
             )}
           </Row>
           <Row
@@ -426,21 +399,7 @@ const CourseView = ({ course_id }) => {
             </Col>
             {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
           </Row>
-        </Col>
-        <Modal
-          title="Publish Properties"
-          centered
-          visible={pubmodal2Visible}
-          onOk={() => setPubModal2Visible(false)}
-          onCancel={() => setPubModal2Visible(false)}
-          maskClosable={false}
-          destroyOnClose={true}
-          width={1000}
-        >
-          <p>some contents...</p>
-          <p>some contents...</p>
-          <p>some contents...</p>
-        </Modal>
+        </Col>        
         <Modal
           title={title}
           centered
