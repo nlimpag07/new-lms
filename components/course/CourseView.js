@@ -50,7 +50,7 @@ import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-Learnin
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
-import CoursePublish from "./course-publish/CoursePublish"
+import CoursePublish from "./course-publish/CoursePublish";
 import Cookies from "js-cookie";
 
 const { Meta } = Card;
@@ -138,7 +138,7 @@ const CourseView = ({ course_id }) => {
         axios.spread(
           (courseoutline, courseoutcome, competencies, enrollments) => {
             /* console.log('Course Outline: ',!!courseoutline.data.response)
-            console.log('Course Outline: ',courseoutline.data.result) */
+            console.log('Course Outline: ',courseoutline.data) */
             courseoutline.data.result
               ? setCourse_outline(courseoutline.data)
               : setCourse_outline(null);
@@ -197,7 +197,7 @@ const CourseView = ({ course_id }) => {
   featureImage = `${apidirectoryUrl}/Images/Course/${featureImage}`;
   featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
   console.log("courseDetails", courseDetails);
-  let lessons = courseOutline ? courseOutline.length : 0;
+  let lessons = course_outline ? course_outline.totalRecords : 0;
   const listData = [
     {
       title: `${
@@ -209,7 +209,7 @@ const CourseView = ({ course_id }) => {
       avatar: <FontAwesomeIcon icon={["fas", "video"]} size="3x" />,
     },
     {
-      title: `${lessons} Lessons`,
+      title: lessons > 1 ? `${lessons} Lessons` : `${lessons} Lesson`,
       avatar: <FontAwesomeIcon icon={["far", "list-alt"]} size="3x" />,
     },
     {
@@ -281,7 +281,11 @@ const CourseView = ({ course_id }) => {
               <h1 className="widget-title">{title}</h1>
             </Col>
             {linkUrl != "learner" && (
-              <CoursePublish isPublished={isPublished} title={title} course_id={course_id} />              
+              <CoursePublish
+                isPublished={isPublished}
+                title={title}
+                course_id={course_id}
+              />
             )}
           </Row>
           <Row
@@ -399,7 +403,7 @@ const CourseView = ({ course_id }) => {
             </Col>
             {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
           </Row>
-        </Col>        
+        </Col>
         <Modal
           title={title}
           centered
