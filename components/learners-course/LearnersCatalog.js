@@ -1,5 +1,6 @@
 import React, { Component, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Loader from "../theme-layout/loader/loader";
 
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
@@ -27,6 +28,7 @@ import {
   Drawer,
   Progress,
   Spin,
+  Empty,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -534,10 +536,10 @@ const GridType = (
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
-    return trimmedDesc+'...';
+    return trimmedDesc + "...";
   };
 
-  return courses ? (
+  return courses.length ? (
     <>
       {courses.map((course) => (
         <Col
@@ -603,9 +605,9 @@ const GridType = (
       ))}
     </>
   ) : (
-    <>
-      <p className="loading">..Loading</p>
-    </>
+    <Loader loading={loading}>
+      <Empty />
+    </Loader>
   );
 };
 

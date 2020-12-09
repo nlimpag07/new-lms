@@ -64,6 +64,7 @@ const RecentCourses = ({ courses }) => {
   const [loading, setLoading] = useState(true); 
   //console.log(RecentCoursesList)
   useEffect(() => {    
+    setLoading(false)
   }, []);
   return (
     <Col
@@ -227,13 +228,13 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-  //console.log('My Recent Courses:',courses)
+  console.log('My Recent Courses:',courses)
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
     return trimmedDesc+'...';
   };
-  return courses ? (
+  return courses.length ? (
     <>
       {courses.map((course, index) => (
         <Col
