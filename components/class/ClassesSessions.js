@@ -47,7 +47,7 @@ const ClassesSessions = ({ course_id }) => {
 
   const [sessionList, setSessionList] = useState("");
   const [calSessionModal, setCalSessionModal] = useState({
-    title:"",
+    title: "",
     date: "",
     visible: false,
     modalOperation: "general",
@@ -55,7 +55,7 @@ const ClassesSessions = ({ course_id }) => {
   });
   const [dateSessionList, setDateSessionList] = useState("");
   const [instructorsList, setInstructorsList] = useState("");
-  /*const [grid,setGrid] = useState(gridList);*/
+  const [courseType, setCourseType] = useState(0);
 
   useEffect(() => {
     var conf = {
@@ -79,8 +79,12 @@ const ClassesSessions = ({ course_id }) => {
             theRes.courseInstructor && theRes.courseInstructor.length
               ? setInstructorsList(theRes.courseInstructor)
               : setInstructorsList([]);
+            theRes.courseType && theRes.courseType.length
+              ? setCourseType(theRes.courseType[0].courseTypeId)
+              : setCourseType(0);
           } else {
             setInstructorsList([]);
+            setCourseType(0);
           }
         }
       } catch (error) {
@@ -297,7 +301,7 @@ const ClassesSessions = ({ course_id }) => {
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
-      title:"Sessions List",
+      title: "Sessions List",
       date: date.format("MM-DD-YYYY"),
       visible: true,
       width: "70%",
@@ -309,7 +313,7 @@ const ClassesSessions = ({ course_id }) => {
   const onCloseModal = (calSessionModal) => {
     //let sessModalArr = calSessionModal;
     setCalSessionModal({
-      title:"",
+      title: "",
       date: "",
       visible: false,
       modalOperation: "general",
@@ -345,12 +349,14 @@ const ClassesSessions = ({ course_id }) => {
             lg={24}
           >
             <h1>Sessions</h1>
-            <Calendar
-              dateCellRender={dateCellRender}
-              monthCellRender={monthCellRender}
-              onSelect={(date) => onOpenModal(date, calSessionModal)}
-              mode="month"
-            />
+            {courseType != 2 ? (
+              <Calendar
+                dateCellRender={dateCellRender}
+                monthCellRender={monthCellRender}
+                onSelect={(date) => onOpenModal(date, calSessionModal)}
+                mode="month"
+              />
+            ):(<div>You cannot set Sessions on Self-Paced type courses.</div>)}
           </Col>
         </motion.div>
       )}
@@ -369,13 +375,13 @@ const ClassesSessions = ({ course_id }) => {
       >
         {calSessionModal.modalOperation == "view" ? (
           <SessionView
-          course_id={course_id}
-          spin={spin}
-          setSpin={setSpin}
-          setCalSessionModal={setCalSessionModal}
-          calSessionModal={calSessionModal}
-          instructorsList={instructorsList}
-        />
+            course_id={course_id}
+            spin={spin}
+            setSpin={setSpin}
+            setCalSessionModal={setCalSessionModal}
+            calSessionModal={calSessionModal}
+            instructorsList={instructorsList}
+          />
         ) : calSessionModal.modalOperation == "add" ? (
           <SessionAdd
             course_id={course_id}

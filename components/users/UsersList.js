@@ -195,6 +195,7 @@ const UsersList = ({ userlist }) => {
       take: event.page.take,
     });
   };
+  console.log(Data)
   return (
     //GridType(gridList)
     <Row

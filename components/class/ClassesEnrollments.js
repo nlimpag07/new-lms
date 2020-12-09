@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { Row, Col, Modal, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
-import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui"
+import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
@@ -23,6 +23,7 @@ const EnrollmentsView = dynamic(() =>
 const EnrollmentsAdd = dynamic(() =>
   import("./EnrollmentOperations/EnrollmentsAdd")
 );
+
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
@@ -69,7 +70,7 @@ const ClassesEnrollments = ({ course_id }) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   var [enrollmentsModal, setEnrollmentsModal] = useState(false);
-
+  const [courseType, setCourseType] = useState(0);
   const [courseDetails, setCourseDetails] = useState("");
   const [enrollees, setEnrollees] = useState([]);
   const [spin, setSpin] = useState(true);
@@ -92,14 +93,22 @@ const ClassesEnrollments = ({ course_id }) => {
             let theRes = response.data;
 
             // wait for response if the verification is true
-            if (theRes && theRes.learner.length) {
-              console.log("Response", response.data.learner);
+            if (theRes) {
+              //console.log("Response", response.data.learner);
               //there are enrollees
               setCourseDetails(theRes);
-              setEnrollees(theRes.learner);
+              theRes.learner.length
+                ? setEnrollees(theRes.learner)
+                : setEnrollees([]);
+
+              theRes.courseType && theRes.courseType.length
+                ? setCourseType(theRes.courseType[0].courseTypeId)
+                : setCourseType(0);
               setSpin(false);
             } else {
               //no enrollees
+              setCourseType(0);
+              setCourseDetails("");
               setEnrollees([]);
               setSpin(false);
             }
@@ -177,6 +186,7 @@ const ClassesEnrollments = ({ course_id }) => {
                   showModal={showModal}
                   hideModal={hideModal}
                   setSpin={setSpin}
+                  courseType={courseType}
                 />
               </Col>
             </Row>
@@ -213,6 +223,7 @@ const ClassesEnrollments = ({ course_id }) => {
               courseDetails={courseDetails}
               hideModal={hideModal}
               setSpin={setSpin}
+              courseType={courseType}
             />
           ) : enrollmentsModal.modalOperation == "approve" ? (
             "HELLO Approve"
@@ -235,7 +246,6 @@ const ClassesEnrollments = ({ course_id }) => {
           iconColor="#8998BA"
           toggleModal={() => showModal("add")}
         />
-        
       </motion.div>
       <style jsx global>{`
         .ClassesEnrollments h1 {
@@ -254,31 +264,6 @@ const ClassesEnrollments = ({ course_id }) => {
         }
       `}</style>
     </Row>
-  );
-};
-
-const ActionRender = () => {
-  return (
-    <td>
-      <button
-        className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
-      >
-        ✔
-      </button>
-      &nbsp;
-      <button
-        className="k-button k-grid-remove-command"
-        /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
-      >
-        ✖
-      </button>
-    </td>
   );
 };
 

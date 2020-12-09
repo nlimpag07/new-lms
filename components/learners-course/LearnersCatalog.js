@@ -72,7 +72,7 @@ const LearnersCatalog = (props) => {
   const router = useRouter();
   //console.log(router);
   const [spinner, setSpinner] = useState(false);
-
+  const [loading, setLoading] = useState(true); 
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -86,7 +86,7 @@ const LearnersCatalog = (props) => {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       setCourseAllList(courselist);
     }
-
+    setLoading(false)
     /* var data = JSON.stringify({});
     var config = {
       method: "get",
@@ -225,7 +225,8 @@ const LearnersCatalog = (props) => {
             curGridStyle,
             setDrawer2Visible,
             setCourseDrawerDetails,
-            router
+            router,
+            loading
           )}
         </Row>
       </Col>
@@ -496,7 +497,8 @@ const GridType = (
   gridType,
   setDrawer2Visible,
   setCourseDrawerDetails,
-  router
+  router,
+  loading
 ) => {
   courses = courses ? courses.result : null;
   //console.log(router);
@@ -539,7 +541,7 @@ const GridType = (
     return trimmedDesc + "...";
   };
 
-  return courses.length ? (
+  return courses && courses.length ? (
     <>
       {courses.map((course) => (
         <Col

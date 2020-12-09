@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal, Spin, Button, Popconfirm } from "antd";
+import { Row, Col, Modal, Spin, Button, Popconfirm, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../../theme-layout/course-circular-ui/course-circular-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -46,6 +46,7 @@ const ClassesEnrollmentsList = ({
   showModal,
   hideModal,
   setSpin,
+  courseType,
 }) => {
   const router = useRouter();
 
@@ -65,6 +66,7 @@ const ClassesEnrollmentsList = ({
       rawDate.getDate();
     let newEnrollee = {
       id: dataItem.id,
+      courseId: dataItem.courseId,
       studentFullName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
       enrollmentType:
         dataItem.length && dataItem.enrollmentType == 1
@@ -75,6 +77,7 @@ const ClassesEnrollmentsList = ({
       status: dataItem ? dataItem.statusId : 0,
       isApproved: dataItem ? dataItem.isApproved : 0,
       learnerId: dataItem ? dataItem.id : 0,
+      userId: dataItem.userId,
     };
     return newEnrollee;
   });
@@ -159,7 +162,9 @@ const ClassesEnrollmentsList = ({
       <Column field="status" title="Status" cell={StatusRender} />
       <Column
         sortable={false}
-        cell={(props) => ActionRender(props, showModal, hideModal, setSpin)}
+        cell={(props) =>
+          ActionRender(props, showModal, hideModal, setSpin, courseType)
+        }
         field="action"
         title="Action"
       />
@@ -202,6 +207,7 @@ const StatusRender = (props) => {
   );
 };
 
+//Deleting for Courses enrollees
 function deleteConfirm(e, data, setSpin) {
   //console.log(e);
   //console.log("PopConfirm", data);
@@ -260,11 +266,109 @@ function deleteConfirm(e, data, setSpin) {
   fetchData(config);
 }
 
+//Approval for Self-Paced Courses enrollees
+const approveConfirm = (e, values, setSpin) => {
+  //console.log("PopConfirm", values);
+  var data = {};
+  //Standard Entry, Static atm
+  data.userGroupId = 3;
+  data.isAutoEnroll = 1;
+  data.isNotify = 1;
+  data.notificationDetails =
+    "Your Enrollment has been Approved. You may now take the course";
+  data.learner = [{ userId: values.userId }];
+   data = JSON.stringify(data);
+   //console.log('data',data)
+   var config = {
+      method: "put",
+      url: apiBaseUrl + "/enrollment/" + values.courseId,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    axios(config)
+      .then((res) => {
+        //console.log("res: ", res.data);
+        message.success(res.data.message);
+        setSpin(true);
+      })
+      .catch((err) => {
+        console.log("err: ", err.response.data);
+        message.error(
+          "Network Error on Submission, Contact Technical Support"
+        );
+        setSpin(true);
+      });
+};
+/* function approveConfirm(e, data, setSpin) {
+  //console.log(e);
+  console.log("PopConfirm", data);
+  setSpin(true);
+  var config = {
+    method: "patch",
+    url: apiBaseUrl + "/enrollment/" + data.learnerId,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+  async function fetchData(config) {
+    try {
+      const response = await axios(config);
+      if (response) {
+        //setOutcomeList(response.data.result);
+        let theRes = response.data.response;
+        //console.log("Response", response.data);
+        // wait for response if the verification is true
+        if (theRes) {
+          Modal.success({
+            title: "Enrollment Application successfully rejected",
+            content: "You have successfully rejected the selected application",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              visible: false;
+              setSpin(true);
+              //console.log("Should hide modal")
+            },
+          });
+        } else {
+        }
+      }
+    } catch (error) {
+      const { response } = error;
+      const { request, data } = response; // take everything but 'request'
+
+      console.log("Error Response", data.message);
+
+      Modal.error({
+        title: "Error: Unable to Start Lesson",
+        content: data.message + " Please contact Technical Support",
+        centered: true,
+        width: 450,
+        onOk: () => {
+          //setdrawerVisible(false);
+          setSpin(true);
+          visible: false;
+        },
+      });
+    }
+    //setLoading(false);
+  }
+  fetchData(config);
+} */
 function deleteCancel(e) {
   /* console.log(e);
   message.error('Click on No'); */
 }
-const ActionRender = (props, showModal, hideModal, setSpin) => {
+function approveCancel(e) {
+  /* console.log(e);
+  message.error('Click on No'); */
+}
+const ActionRender = (props, showModal, hideModal, setSpin, courseType) => {
   //console.log("props", props);
   const wasApproved = props.dataItem.isApproved === 1 ? true : false;
   const enrollDate = props.dataItem.enrollmentDate;
@@ -279,18 +383,34 @@ const ActionRender = (props, showModal, hideModal, setSpin) => {
     </td>
   ) : (
     <td>
-      <Button
-        shape="circle"
-        icon={<CheckOutlined />}
-        onClick={() => showModal("approve")}
-      />
+      {courseType == 2 ? (
+        <Popconfirm
+          title="Approve this enrollment?"
+          onConfirm={(e) => approveConfirm(e, props.dataItem, setSpin)}
+          onCancel={approveCancel}
+          okText="Confirm"
+          cancelText="Now Now"
+        >
+          <Button
+            shape="circle"
+            icon={<CheckOutlined />}
+            /* onClick={() => showModal("delete")} */
+          />
+        </Popconfirm>
+      ) : (
+        <Button
+          shape="circle"
+          icon={<CheckOutlined />}
+          onClick={() => showModal("approve")}
+        />
+      )}
       &nbsp;
       <Popconfirm
-        title="Are you sure to reject this enrollment?"
+        title="Reject this enrollment?"
         onConfirm={(e) => deleteConfirm(e, props.dataItem, setSpin)}
         onCancel={deleteCancel}
-        okText="Yes"
-        cancelText="No"
+        okText="Confirm"
+        cancelText="Not Now"
       >
         <Button
           shape="circle"

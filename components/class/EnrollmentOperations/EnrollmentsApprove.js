@@ -1,10 +1,14 @@
+/**Note: This file is used only for not Self-Paced Courses
+ * Approval for self-paced courses is in the ClassesEnrollmentList.js
+ 
+**/
+
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import EnrollmentsAddSelectLearners from "./EnrollmentsAddSelectLearners";
 import {
   Row,
   Col,
@@ -32,7 +36,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const EnrollmentsAdd = ({
+const EnrollmentsApprove = ({
   course_id,
   courseDetails,
   hideModal,
@@ -387,21 +391,7 @@ const EnrollmentsAdd = ({
           </p>
         )}
         <Form.Item name="learnersData">
-          {!spinning ? (
-            <EnrollmentsAddSelectLearners
-              setUnEnrolledLearners={setUnEnrolledLearners}
-              unEnrolledLearners={unEnrolledLearners}
-              course_id={course_id}
-              setSelectedUserId={setSelectedUserId}
-            />
-          ) : (
-            <Spin
-              size="small"
-              tip="Processing..."
-              spinning={spinning}
-              delay={10000}
-            ></Spin>
-          )}
+          
         </Form.Item>
 
         <Form.Item
@@ -420,4 +410,4 @@ const EnrollmentsAdd = ({
   );
 };
 
-export default EnrollmentsAdd;
+export default EnrollmentsApprove;

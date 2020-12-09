@@ -6,7 +6,7 @@ const CourseDateFormat = (props) => {
   const { course_id, updatedAt } = props;
   const { courseAllList } = useCourseList();
   const [currentDate, setCurrentDate] = useState("");
-  //console.log(courseAllList);
+  console.log(courseAllList);
   useEffect(() => {
     
     /* if (courseAllList) { */
