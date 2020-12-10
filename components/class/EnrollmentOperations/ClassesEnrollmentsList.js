@@ -13,6 +13,8 @@ import { orderBy } from "@progress/kendo-data-query";
 import Cookies from "js-cookie";
 import { color } from "d3";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import moment from "moment";
+
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
@@ -49,44 +51,47 @@ const ClassesEnrollmentsList = ({
   courseType,
 }) => {
   const router = useRouter();
+  const [Data, setData] = useState([]);
+  
+  useEffect(() => {
+    //console.log("learners List", enrollees_list);
+    enrollees_list =
+      enrollees_list && enrollees_list.length ? enrollees_list : [];
+    const newEnrolleesData = enrollees_list.map((dataItem) => {
+      let learnerInfo = dataItem.learner ? dataItem.learner[0] : null;
+      let enrollmentDate = learnerInfo
+        ? moment(learnerInfo.createdAt).format("YYYY/MM/DD")
+        : "None";
+      //console.log("dataItem", dataItem);
+      let newEnrollee = {
+        id: learnerInfo ? learnerInfo.id : null,
+        courseId: learnerInfo ? learnerInfo.courseId : null,
+        studentFullName: `${dataItem.firstName} ${dataItem.lastName}`,
+        enrollmentType:
+          learnerInfo && learnerInfo.enrollmentType == 1
+            ? "Manual"
+            : "Self-Enrolled",
+        enrollmentDate: enrollmentDate,
+        status: learnerInfo ? learnerInfo.statusId : 0,
+        isApproved: learnerInfo ? learnerInfo.isApproved : 0,
+        learnerId: learnerInfo ? learnerInfo.id : 0,
+        userId: learnerInfo ? learnerInfo.userId : 0,
+        learnerSession: dataItem.learnerSession,
+      };
+      return newEnrollee;
+    });
 
-  useEffect(() => {}, []);
+    const ddata = newEnrolleesData.map((dataItem) =>
+      Object.assign({ selected: false }, dataItem)
+    );
+    //console.log('ddata',ddata)
+    setData(ddata);
+  }, []);
 
   //console.log("Enrollees", enrollees_list);
-  enrollees_list =
-    enrollees_list && enrollees_list.length ? enrollees_list : [];
-  const newEnrolleesData = enrollees_list.map((dataItem) => {
-    let ItemLearner = dataItem ? dataItem.createdAt : null;
-    let rawDate = new Date(ItemLearner);
-    let newDate =
-      rawDate.getFullYear() +
-      "/" +
-      (rawDate.getMonth() + 1) +
-      "/" +
-      rawDate.getDate();
-    let newEnrollee = {
-      id: dataItem.id,
-      courseId: dataItem.courseId,
-      studentFullName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
-      enrollmentType:
-        dataItem.length && dataItem.enrollmentType == 1
-          ? "Manual"
-          : "Self-Enrolled",
-      userGroup: dataItem.user.groups ? dataItem.user.groups.name : "None",
-      enrollmentDate: ItemLearner ? newDate : "None",
-      status: dataItem ? dataItem.statusId : 0,
-      isApproved: dataItem ? dataItem.isApproved : 0,
-      learnerId: dataItem ? dataItem.id : 0,
-      userId: dataItem.userId,
-    };
-    return newEnrollee;
-  });
 
   var lastSelectedIndex = 0;
-  const ddata = newEnrolleesData.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  );
-  const [Data, setData] = useState(ddata);
+
   const [theSort, setTheSort] = useState({
     sort: [{ field: "studentFullName", dir: "asc" }],
   });
@@ -157,7 +162,6 @@ const ClassesEnrollmentsList = ({
       />
       <Column field="studentFullName" title="Name" width="300px" />
       <Column field="enrollmentType" title="Enrollment Type" />
-      <Column field="userGroup" title="User Group" />
       <Column field="enrollmentDate" title="Enrollment Date" />
       <Column field="status" title="Status" cell={StatusRender} />
       <Column
@@ -277,31 +281,29 @@ const approveConfirm = (e, values, setSpin) => {
   data.notificationDetails =
     "Your Enrollment has been Approved. You may now take the course";
   data.learner = [{ userId: values.userId }];
-   data = JSON.stringify(data);
-   //console.log('data',data)
-   var config = {
-      method: "put",
-      url: apiBaseUrl + "/enrollment/" + values.courseId,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
+  data = JSON.stringify(data);
+  //console.log('data',data)
+  var config = {
+    method: "put",
+    url: apiBaseUrl + "/enrollment/" + values.courseId,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
 
-    axios(config)
-      .then((res) => {
-        //console.log("res: ", res.data);
-        message.success(res.data.message);
-        setSpin(true);
-      })
-      .catch((err) => {
-        console.log("err: ", err.response.data);
-        message.error(
-          "Network Error on Submission, Contact Technical Support"
-        );
-        setSpin(true);
-      });
+  axios(config)
+    .then((res) => {
+      //console.log("res: ", res.data);
+      message.success(res.data.message);
+      setSpin(true);
+    })
+    .catch((err) => {
+      console.log("err: ", err.response.data);
+      message.error("Network Error on Submission, Contact Technical Support");
+      setSpin(true);
+    });
 };
 /* function approveConfirm(e, data, setSpin) {
   //console.log(e);
@@ -378,7 +380,7 @@ const ActionRender = (props, showModal, hideModal, setSpin, courseType) => {
         type="link"
         shape="circle"
         icon={<FontAwesomeIcon icon={["fas", `eye`]} size="lg" />}
-        onClick={() => showModal("view")}
+        onClick={() => showModal("view", props.dataItem)}
       />
     </td>
   ) : (

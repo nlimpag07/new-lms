@@ -22,6 +22,8 @@ import {
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
+import moment from "moment";
+
 
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -41,7 +43,7 @@ const EnrollmentsAdd = ({
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [courseSession, setCourseSession] = useState([]);
+  const [courseSessions, setCourseSessions] = useState([]);
   const [unEnrolledLearners, setUnEnrolledLearners] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState([]);
   const [hasError, setHasError] = useState("");
@@ -66,10 +68,10 @@ const EnrollmentsAdd = ({
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
-            setCourseSession(theRes);
+            setCourseSessions(theRes);
           } else {
             //no enrollees
-            setCourseSession([]);
+            setCourseSessions([]);
           }
         }
       } catch (error) {
@@ -88,6 +90,7 @@ const EnrollmentsAdd = ({
             visible: false;
           },
         });
+        setCourseSessions([]);
       }
       //setLoading(false);
     }
@@ -141,17 +144,6 @@ const EnrollmentsAdd = ({
     fetchUnEnrolled(config1);
   }, []);
 
-  //console.log("courseDetails", courseDetails);
-  const courseTypes =
-    courseDetails && courseDetails.courseType.length
-      ? courseDetails.courseType.filter(
-          (courseType) => courseType.courseTypeId === 2
-        )
-      : [];
-  //console.log("CourseTypes", courseTypes.length?"True":"False");
-  //If filtered courseTypes has Data
-  var isCourseType = courseTypes.length ? true : false;
-  //console.log(isCourseType);
   const selectInstructor =
     courseDetails && courseDetails.courseInstructor.length
       ? courseDetails.courseInstructor.map((instructor) => instructor)
@@ -168,12 +160,32 @@ const EnrollmentsAdd = ({
       })
     : [];
   //console.log("selectInstructor", selectInstructor);
+  //Generating Course Sessions
+  const sessionOptions = [];
+  if (courseSessions.length) {
+    for (let i = 0; i < courseSessions.length; i++) {
+    const sDate = moment(courseSessions[i].startDate).format('YYYY/MM/DD h:mm a');
+    const eDate = moment(courseSessions[i].endDate).format('YYYY/MM/DD h:mm a');
+
+       /*  console.log('courseSessions',element) */
+      sessionOptions.push(
+        <Option key={i} value={courseSessions[i].id}>{`${sDate} - ${eDate}` }</Option>
+      ); 
+    }
+    /*for (let i = 0; i <= courseSessions.length; i++) {
+      console.log('courseSessions',courseSessions[i])
+       children.push(
+        <Option key={i} value={courseSessions[i].id}>{`${courseSessions[i].startDate} - ${courseSessions[i].endDate}` }</Option>
+      ); 
+    }*/
+  }
+
   const onCancel = (form) => {
     form.resetFields();
     setSpinning(true);
     hideModal("add");
     setUnEnrolledLearners([]);
-    setCourseSession([]);
+    setCourseSessions([]);
     setSelectedUserId([]);
   };
   const onFinish = (values) => {
@@ -213,15 +225,16 @@ const EnrollmentsAdd = ({
       data.isAutoEnroll = 0;
     }
     if (!!values.learnerSession) {
-      let l_session = [];
-      learnerSession.map((session) => {
+      let l_session = [];      
+      values.learnerSession.map((session) => {        
         l_session.push({
           sessionId: session,
           //date is not sure if necessary for now
-          dateScheduled: now(),
+          dateScheduled: null,
         });
       });
       data.learnerSession = l_session;
+      //console.log(data.learnerSession)
     }
     if (!!values.notificationDetails) {
       data.notificationDetails = values.notificationDetails;
@@ -302,22 +315,25 @@ const EnrollmentsAdd = ({
           <Form.Item
             name="learnerSession"
             label="Session"
-            /* rules={[
+            style={{
+              display: "inline-block",
+              width: "calc(100%)",
+            }}
+            rules={[
               {
                 required: true,
                 message: "Please select Session!",
               },
-            ]} */
+            ]}
           >
             <Select
               mode="multiple"
-              options={courseSession}
               placeholder="Please select Session"
-            ></Select>
+            >{sessionOptions}</Select>
           </Form.Item>
         )}
         <Form.Item>
-          {isCourseType ? null : (
+          {courseType == 2 ? null : (
             <Form.Item
               style={{
                 marginBottom: 0,

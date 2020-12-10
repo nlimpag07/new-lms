@@ -23,7 +23,9 @@ const EnrollmentsView = dynamic(() =>
 const EnrollmentsAdd = dynamic(() =>
   import("./EnrollmentOperations/EnrollmentsAdd")
 );
-
+const EnrollmentsApprove = dynamic(() =>
+  import("./EnrollmentOperations/EnrollmentsApprove")
+);
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
@@ -76,39 +78,85 @@ const ClassesEnrollments = ({ course_id }) => {
   const [spin, setSpin] = useState(true);
 
   useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Courses/" + course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data;
+
+          // wait for response if the verification is true
+          if (theRes) {
+            //console.log("Response", response.data.learner);
+            //there are enrollees
+            setCourseDetails(theRes);
+
+            theRes.courseType && theRes.courseType.length
+              ? setCourseType(theRes.courseType[0].courseTypeId)
+              : setCourseType(0);
+            //setSpin(false);
+          } else {
+            //no enrollees
+            setCourseType(0);
+            setCourseDetails("");
+            //setSpin(false);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        const { request, data } = response; // take everything but 'request'
+
+        console.log("Error Response", data.message);
+
+        Modal.error({
+          title: "Error: Unable to Retrieve Course information",
+          content: data.message + " Please contact Technical Support",
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+        //setSpin(false);
+      }
+    }
+    fetchData(config);
+    //setSpin(false);
+  }, []);
+
+  useEffect(() => {
     if (spin) {
-      var config = {
+      var config1 = {
         method: "get",
-        url: apiBaseUrl + "/Courses/" + course_id,
+        url: apiBaseUrl + "/Enrollment/" + course_id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
       };
-      async function fetchData(config) {
+      async function getLearnersData(config1) {
         try {
-          const response = await axios(config);
+          const response = await axios(config1);
           if (response) {
             //setOutcomeList(response.data.result);
-            let theRes = response.data;
-
+            let theRes = response.data.result;
+            //console.log("Response", response.data);
             // wait for response if the verification is true
             if (theRes) {
-              //console.log("Response", response.data.learner);
               //there are enrollees
-              setCourseDetails(theRes);
-              theRes.learner.length
-                ? setEnrollees(theRes.learner)
-                : setEnrollees([]);
-
-              theRes.courseType && theRes.courseType.length
-                ? setCourseType(theRes.courseType[0].courseTypeId)
-                : setCourseType(0);
+              setEnrollees(theRes);
               setSpin(false);
             } else {
               //no enrollees
-              setCourseType(0);
-              setCourseDetails("");
               setEnrollees([]);
               setSpin(false);
             }
@@ -120,7 +168,7 @@ const ClassesEnrollments = ({ course_id }) => {
           console.log("Error Response", data.message);
 
           Modal.error({
-            title: "Error: Unable to Start Lesson",
+            title: "Error: Unable to retrieve enrollees list",
             content: data.message + " Please contact Technical Support",
             centered: true,
             width: 450,
@@ -132,15 +180,17 @@ const ClassesEnrollments = ({ course_id }) => {
           setSpin(false);
         }
       }
-      fetchData(config);
+      getLearnersData(config1);
       //setSpin(false);
     }
   }, [spin]);
 
-  const showModal = (modalOperation) => {
+  const showModal = (modalOperation, props) => {
+    console.log(props);
     setEnrollmentsModal({
       visible: true,
       modalOperation: modalOperation,
+      dataProps: props,
     });
     console.log(modalOperation);
   };
@@ -203,20 +253,27 @@ const ClassesEnrollments = ({ course_id }) => {
         )}
 
         <Modal
-          title="Enrollment"
+          title={`Enrollment - ${enrollmentsModal.modalOperation}`}
           centered
           visible={enrollmentsModal.visible}
           onOk={() => hideModal(enrollmentsModal.modalOperation)}
           onCancel={() => hideModal(enrollmentsModal.modalOperation)}
           maskClosable={false}
           destroyOnClose={true}
-          width="90%"
+          width="70%"
           cancelButtonProps={{ style: { display: "none" } }}
           okButtonProps={{ style: { display: "none" } }}
           className="enrollmentProcess"
         >
           {enrollmentsModal.modalOperation == "view" ? (
-            <EnrollmentsView />
+            <EnrollmentsView
+              course_id={course_id}
+              courseDetails={courseDetails}
+              hideModal={hideModal}
+              setSpin={setSpin}
+              courseType={courseType}
+              dataProps = {enrollmentsModal.dataProps}
+            />
           ) : enrollmentsModal.modalOperation == "add" ? (
             <EnrollmentsAdd
               course_id={course_id}
@@ -226,7 +283,13 @@ const ClassesEnrollments = ({ course_id }) => {
               courseType={courseType}
             />
           ) : enrollmentsModal.modalOperation == "approve" ? (
-            "HELLO Approve"
+            <EnrollmentsApprove
+              course_id={course_id}
+              courseDetails={courseDetails}
+              hideModal={hideModal}
+              setSpin={setSpin}
+              courseType={courseType}
+            />
           ) : enrollmentsModal.modalOperation == "delete" ? (
             "HELLO Delete"
           ) : (

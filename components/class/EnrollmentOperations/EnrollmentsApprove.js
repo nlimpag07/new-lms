@@ -2,7 +2,6 @@
  * Approval for self-paced courses is in the ClassesEnrollmentList.js
  
 **/
-
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
@@ -26,6 +25,8 @@ import {
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
+import moment from "moment";
+
 
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -66,7 +67,7 @@ const EnrollmentsApprove = ({
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          console.log("Session Response", response.data);
+          console.log("Session Response", response.data.result);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
@@ -145,17 +146,7 @@ const EnrollmentsApprove = ({
     fetchUnEnrolled(config1);
   }, []);
 
-  //console.log("courseDetails", courseDetails);
-  const courseTypes =
-    courseDetails && courseDetails.courseType.length
-      ? courseDetails.courseType.filter(
-          (courseType) => courseType.courseTypeId === 2
-        )
-      : [];
-  //console.log("CourseTypes", courseTypes.length?"True":"False");
-  //If filtered courseTypes has Data
-  var isCourseType = courseTypes.length ? true : false;
-  //console.log(isCourseType);
+  
   const selectInstructor =
     courseDetails && courseDetails.courseInstructor.length
       ? courseDetails.courseInstructor.map((instructor) => instructor)
@@ -321,7 +312,7 @@ const EnrollmentsApprove = ({
           </Form.Item>
         )}
         <Form.Item>
-          {isCourseType ? null : (
+          {courseType == 2 ? null : (
             <Form.Item
               style={{
                 marginBottom: 0,
