@@ -1,3 +1,11 @@
+/* Author: NLI
+  Description: This Page is the main component of the operations for Enrollments i.e: Lists, Add, View, Delete.
+  This page does not contain all the functionalities but the root constractors are in here.
+  Some constructors are being passed to submodules containing data for their execution. 
+  i.e: enrollees and setEnrollees are passed to ClassessEnrollmentsList for listings.
+  i.e: enrollmentsModal, setEnrollmentsModal are passed to  sub components for them to access/execute actions involving modal.
+ */
+
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
@@ -16,16 +24,11 @@ import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
 
 import ClassesEnrollmentsList from "./EnrollmentOperations/ClassesEnrollmentsList";
-//import EnrollmentsView from "./EnrollmentOperations/EnrollmentsView";
-const EnrollmentsView = dynamic(() =>
-  import("./EnrollmentOperations/EnrollmentsView")
-);
-const EnrollmentsAdd = dynamic(() =>
-  import("./EnrollmentOperations/EnrollmentsAdd")
-);
-const EnrollmentsApprove = dynamic(() =>
-  import("./EnrollmentOperations/EnrollmentsApprove")
-);
+import EnrollmentsApprove from "./EnrollmentOperations/EnrollmentsApprove";
+import EnrollmentsAdd from "./EnrollmentOperations/EnrollmentsAdd";
+import EnrollmentsView from "./EnrollmentOperations/EnrollmentsView";
+
+
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
@@ -186,20 +189,20 @@ const ClassesEnrollments = ({ course_id }) => {
   }, [spin]);
 
   const showModal = (modalOperation, props) => {
-    console.log(props);
+    
     setEnrollmentsModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
-    console.log(modalOperation);
+    
   };
   const hideModal = (modalOperation) => {
     setEnrollmentsModal({
       visible: false,
       modalOperation: modalOperation,
     });
-    console.log("modalOperation", modalOperation);
+    
   };
   //console.log("Spin", spin);
 
@@ -289,6 +292,7 @@ const ClassesEnrollments = ({ course_id }) => {
               hideModal={hideModal}
               setSpin={setSpin}
               courseType={courseType}
+              dataProps = {enrollmentsModal.dataProps}
             />
           ) : enrollmentsModal.modalOperation == "delete" ? (
             "HELLO Delete"

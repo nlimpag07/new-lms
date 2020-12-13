@@ -24,7 +24,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 
-
 /**TextArea declaration */
 const { TextArea } = Input;
 const { Option } = Select;
@@ -64,7 +63,6 @@ const EnrollmentsAdd = ({
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          console.log("Session Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
@@ -111,7 +109,6 @@ const EnrollmentsAdd = ({
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data;
-          //console.log("UnEnrolled Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
@@ -159,25 +156,24 @@ const EnrollmentsAdd = ({
         );
       })
     : [];
-  //console.log("selectInstructor", selectInstructor);
   //Generating Course Sessions
   const sessionOptions = [];
   if (courseSessions.length) {
     for (let i = 0; i < courseSessions.length; i++) {
-    const sDate = moment(courseSessions[i].startDate).format('YYYY/MM/DD h:mm a');
-    const eDate = moment(courseSessions[i].endDate).format('YYYY/MM/DD h:mm a');
+      const sDate = moment(courseSessions[i].startDate).format(
+        "YYYY/MM/DD h:mm a"
+      );
+      const eDate = moment(courseSessions[i].endDate).format(
+        "YYYY/MM/DD h:mm a"
+      );
 
-       /*  console.log('courseSessions',element) */
       sessionOptions.push(
-        <Option key={i} value={courseSessions[i].id}>{`${sDate} - ${eDate}` }</Option>
-      ); 
+        <Option
+          key={i}
+          value={courseSessions[i].id}
+        >{`${sDate} - ${eDate}`}</Option>
+      );
     }
-    /*for (let i = 0; i <= courseSessions.length; i++) {
-      console.log('courseSessions',courseSessions[i])
-       children.push(
-        <Option key={i} value={courseSessions[i].id}>{`${courseSessions[i].startDate} - ${courseSessions[i].endDate}` }</Option>
-      ); 
-    }*/
   }
 
   const onCancel = (form) => {
@@ -192,16 +188,11 @@ const EnrollmentsAdd = ({
     setHasError("");
     var data = {};
     var checker = [];
-    //console.log("Received values of form: ", values);
-    //console.log("Re-Evaluating UserIds====");
     if (!!values.learnersData) {
       //Standard undefined
-      //console.log("Learners Data Supplied");
     } else {
-      //console.log("Learners Data Undefined... Please Supply Data");
       if (selectedUserId.length) {
         let learnerUserId = [];
-        //console.log("Learners Data Supplied", selectedUserId);
         selectedUserId.map((userId) => {
           learnerUserId.push({ userId: userId });
         });
@@ -225,8 +216,8 @@ const EnrollmentsAdd = ({
       data.isAutoEnroll = 0;
     }
     if (!!values.learnerSession) {
-      let l_session = [];      
-      values.learnerSession.map((session) => {        
+      let l_session = [];
+      values.learnerSession.map((session) => {
         l_session.push({
           sessionId: session,
           //date is not sure if necessary for now
@@ -234,7 +225,6 @@ const EnrollmentsAdd = ({
         });
       });
       data.learnerSession = l_session;
-      //console.log(data.learnerSession)
     }
     if (!!values.notificationDetails) {
       data.notificationDetails = values.notificationDetails;
@@ -253,7 +243,6 @@ const EnrollmentsAdd = ({
 
       axios(config)
         .then((res) => {
-          //console.log("res: ", res.data);
           message.success(res.data.message);
           setSpin(true);
           hideModal("add");
@@ -326,10 +315,9 @@ const EnrollmentsAdd = ({
               },
             ]}
           >
-            <Select
-              mode="multiple"
-              placeholder="Please select Session"
-            >{sessionOptions}</Select>
+            <Select mode="multiple" placeholder="Please select Session">
+              {sessionOptions}
+            </Select>
           </Form.Item>
         )}
         <Form.Item>

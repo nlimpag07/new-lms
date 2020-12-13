@@ -1,7 +1,3 @@
-/**Note: This file is used only for not Self-Paced Courses
- * Approval for self-paced courses is in the ClassesEnrollmentList.js
- 
-**/
 import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
@@ -18,15 +14,13 @@ import {
   Form,
   Select,
   Radio,
-  Button,
   Switch,
-  Divider,
+  Button,
   message,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
-
 
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -43,16 +37,14 @@ const EnrollmentsApprove = ({
   hideModal,
   setSpin,
   courseType,
+  dataProps,
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [courseSession, setCourseSession] = useState([]);
-  const [unEnrolledLearners, setUnEnrolledLearners] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState([]);
-  const [hasError, setHasError] = useState("");
-  const [spinning, setSpinning] = useState(true);
+  const [courseSessions, setCourseSessions] = useState([]);
 
   useEffect(() => {
+    //fetching all the sessions created for the course and pass it to courseSessions for processing
     var config = {
       method: "get",
       url: apiBaseUrl + "/CourseSession/" + course_id,
@@ -67,14 +59,13 @@ const EnrollmentsApprove = ({
         if (response) {
           //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          console.log("Session Response", response.data.result);
           // wait for response if the verification is true
           if (theRes) {
             //there are enrollees
-            setCourseSession(theRes);
+            setCourseSessions(theRes);
           } else {
             //no enrollees
-            setCourseSession([]);
+            setCourseSessions([]);
           }
         }
       } catch (error) {
@@ -93,64 +84,20 @@ const EnrollmentsApprove = ({
             visible: false;
           },
         });
+        setCourseSessions([]);
       }
       //setLoading(false);
     }
     fetchData(config);
+  }, [course_id]);
 
-    //Fetching unenrolled learners
-    var config1 = {
-      method: "get",
-      url: apiBaseUrl + "/Enrollment/GetUnenrolledLearners/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchUnEnrolled(config1) {
-      try {
-        const response = await axios(config1);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data;
-          //console.log("UnEnrolled Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //there are enrollees
-            setUnEnrolledLearners(theRes);
-            setSpinning(false);
-          } else {
-            //no enrollees
-            setUnEnrolledLearners([]);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchUnEnrolled(config1);
-  }, []);
-
-  
+  //data source for display of instructor
   const selectInstructor =
     courseDetails && courseDetails.courseInstructor.length
       ? courseDetails.courseInstructor.map((instructor) => instructor)
       : [];
+  //setting instructors list in the select option
+  //not in use due to no clear reason on the UI.
   const selectInstructorOptions = selectInstructor.length
     ? selectInstructor.map((option, index) => {
         let insFullName = `${option.user.firstName} ${option.user.lastName}`;
@@ -162,41 +109,47 @@ const EnrollmentsApprove = ({
         );
       })
     : [];
-  //console.log("selectInstructor", selectInstructor);
+
+  //processing all the sessions of the course
+  const listSessions = [];
+  if (courseSessions.length) {
+    for (let i = 0; i < courseSessions.length; i++) {
+      const sDate = moment(courseSessions[i].startDate).format(
+        "YYYY/MM/DD h:mm a"
+      );
+      const eDate = moment(courseSessions[i].endDate).format(
+        "YYYY/MM/DD h:mm a"
+      );
+      listSessions.push(
+        <Option
+          key={i}
+          value={courseSessions[i].id}
+          label={`${sDate} - ${eDate}`}
+        >{`${sDate} - ${eDate}`}</Option>
+      );
+    }
+  }
+  //processing the assigned session(s) for the specific learner and set it to initial values via defaultLearnerSessions
+  var defaultLearnerSessions;
+  if (dataProps) {
+    let lSession = dataProps.learnerSession;
+    defaultLearnerSessions = lSession.map((session) => session.sessionId);
+  }
   const onCancel = (form) => {
     form.resetFields();
-    setSpinning(true);
-    hideModal("add");
-    setUnEnrolledLearners([]);
-    setCourseSession([]);
-    setSelectedUserId([]);
+    setCourseSessions("");
+    hideModal("approve");
   };
   const onFinish = (values) => {
-    setHasError("");
     var data = {};
     var checker = [];
-    //console.log("Received values of form: ", values);
-    //console.log("Re-Evaluating UserIds====");
-    if (!!values.learnersData) {
-      //Standard undefined
-      //console.log("Learners Data Supplied");
-    } else {
-      //console.log("Learners Data Undefined... Please Supply Data");
-      if (selectedUserId.length) {
-        let learnerUserId = [];
-        //console.log("Learners Data Supplied", selectedUserId);
-        selectedUserId.map((userId) => {
-          learnerUserId.push({ userId: userId });
-        });
-        data.learner = learnerUserId;
-      } else {
-        setHasError("* Please add at least 1 learner");
-        checker.push("Error");
-      }
-    }
+
+    let learnerUserId = [];
+    learnerUserId.push({ userId: dataProps.userId });
+    data.learner = learnerUserId;
+
     //Standard Entry, Static atm
     data.userGroupId = 3;
-
     if (!!values.isNotify) {
       values.isNotify ? (data.isNotify = 1) : (data.isNotify = 0);
     } else {
@@ -209,11 +162,11 @@ const EnrollmentsApprove = ({
     }
     if (!!values.learnerSession) {
       let l_session = [];
-      learnerSession.map((session) => {
+      values.learnerSession.map((session) => {
         l_session.push({
           sessionId: session,
           //date is not sure if necessary for now
-          dateScheduled: now(),
+          dateScheduled: null,
         });
       });
       data.learnerSession = l_session;
@@ -221,10 +174,11 @@ const EnrollmentsApprove = ({
     if (!!values.notificationDetails) {
       data.notificationDetails = values.notificationDetails;
     }
+
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
-        method: "post",
+        method: "put",
         url: apiBaseUrl + "/enrollment/" + course_id,
         headers: {
           Authorization: "Bearer " + token,
@@ -238,7 +192,7 @@ const EnrollmentsApprove = ({
           //console.log("res: ", res.data);
           message.success(res.data.message);
           setSpin(true);
-          hideModal("add");
+          hideModal("approve");
         })
         .catch((err) => {
           console.log("err: ", err.response.data);
@@ -252,17 +206,22 @@ const EnrollmentsApprove = ({
   };
 
   return (
+    //GridType(gridList)
+
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
       <Form
         form={form}
         onFinish={onFinish}
-        layout="horizontal"
-        name="enrollAdd"
+        layout="vertical"
+        name="approve-sendReminder"
         style={{ width: "100%" }}
         initialValues={{
           courseTitle: courseDetails.title,
           isAutoEnroll: false,
           isNotify: false,
+          /* courseInstructor: "Noel Limpag", */
+          studentFullName: dataProps ? dataProps.studentFullName : null,
+          learnerSession: defaultLearnerSessions,
         }}
       >
         <Form.Item style={{ marginBottom: 0 }}>
@@ -293,24 +252,42 @@ const EnrollmentsApprove = ({
             </Select>
           </Form.Item>
         </Form.Item>
-        {courseType == 2 ? null : (
+
+        <Form.Item style={{ marginBottom: 0 }}>
           <Form.Item
-            name="learnerSession"
-            label="Session"
-            /* rules={[
-              {
-                required: true,
-                message: "Please select Session!",
-              },
-            ]} */
+            name="studentFullName"
+            label="Student Full Name"
+            style={{ display: "inline-block", width: "calc(50% - 50px)" }}
           >
-            <Select
-              mode="multiple"
-              options={courseSession}
-              placeholder="Please select Session"
-            ></Select>
+            <Input readOnly />
           </Form.Item>
-        )}
+          {courseType == 2 ? null : (
+            <Form.Item
+              name="learnerSession"
+              label="Session"
+              style={{
+                display: "inline-block",
+                width: "calc(50%)",
+                margin: "0 0 0 50px",
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please select Session!",
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                placeholder="Please select Session"
+                optionLabelProp="label"
+              >
+                {listSessions}
+              </Select>
+            </Form.Item>
+          )}
+        </Form.Item>
+
         <Form.Item>
           {courseType == 2 ? null : (
             <Form.Item
@@ -355,36 +332,22 @@ const EnrollmentsApprove = ({
             </p>
           </Form.Item>
         </Form.Item>
-        <Divider dashed style={{ borderColor: "#999999", marginBottom: "0" }}>
-          Select Learners to Enroll
-        </Divider>
-        {hasError ? (
-          <p
-            style={{
-              color: "#ff4d4f",
-              textAlign: "right",
-              marginBottom: "0",
-              minHeight: "25px",
-            }}
-          >
-            {hasError}
-          </p>
-        ) : (
-          <p
-            style={{
-              color: "#ff4d4f",
-              textAlign: "right",
-              marginBottom: "0",
-              minHeight: "25px",
-            }}
-          >
-            {""}
-          </p>
-        )}
-        <Form.Item name="learnersData">
-          
+        <Form.Item
+          name="notificationDetails"
+          label="Reminder Message"
+          style={{
+            display: "inline-block",
+            width: "calc(100%)",
+          }}
+          rules={[
+            {
+              required: true,
+              message: "Please Add Reminder Message!",
+            },
+          ]}
+        >
+          <TextArea rows={3} placeholder="Reminder Message" />
         </Form.Item>
-
         <Form.Item
           wrapperCol={{
             span: 24,

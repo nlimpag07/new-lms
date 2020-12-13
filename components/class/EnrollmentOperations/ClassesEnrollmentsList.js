@@ -52,7 +52,7 @@ const ClassesEnrollmentsList = ({
 }) => {
   const router = useRouter();
   const [Data, setData] = useState([]);
-  
+
   useEffect(() => {
     //console.log("learners List", enrollees_list);
     enrollees_list =
@@ -371,7 +371,6 @@ function approveCancel(e) {
   message.error('Click on No'); */
 }
 const ActionRender = (props, showModal, hideModal, setSpin, courseType) => {
-  //console.log("props", props);
   const wasApproved = props.dataItem.isApproved === 1 ? true : false;
   const enrollDate = props.dataItem.enrollmentDate;
   return wasApproved ? (
@@ -391,7 +390,7 @@ const ActionRender = (props, showModal, hideModal, setSpin, courseType) => {
           onConfirm={(e) => approveConfirm(e, props.dataItem, setSpin)}
           onCancel={approveCancel}
           okText="Confirm"
-          cancelText="Now Now"
+          cancelText="Not Now"
         >
           <Button
             shape="circle"
@@ -403,7 +402,7 @@ const ActionRender = (props, showModal, hideModal, setSpin, courseType) => {
         <Button
           shape="circle"
           icon={<CheckOutlined />}
-          onClick={() => showModal("approve")}
+          onClick={() => showModal("approve", props.dataItem)}
         />
       )}
       &nbsp;
