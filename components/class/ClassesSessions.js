@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { Calendar, Badge, Row, Col, Modal, Drawer, Spin } from "antd";
+import moment from "moment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import dynamic from "next/dynamic";
@@ -110,67 +111,85 @@ const ClassesSessions = ({ course_id }) => {
   }, []);
 
   useEffect(() => {
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseSession/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: { courseId: course_id },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Session Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //console.log(theRes)
+    if (spin) {
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/CourseSession/" + course_id,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: { courseId: course_id },
+      };
+      async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            //setOutcomeList(response.data.result);
+            let theRes = response.data.result;
+            //console.log("Session Response", response.data);
+            // wait for response if the verification is true
+            if (theRes) {
+              //console.log(theRes)
 
-            const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : null;
-            setSessionList(ddata);
-            setSpin(false);
-          } else {
-            const ddata = userlist.result
-              ? userlist.result.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : null;
-            setSessionList(ddata);
-            setSpin(false);
+              const ddata = theRes.length
+                ? theRes.map((dataItem) =>
+                    Object.assign({ selected: false }, dataItem)
+                  )
+                : null;
+              setSessionList(ddata);
+              setSpin(false);
+            } else {
+              const ddata = userlist.result
+                ? userlist.result.map((dataItem) =>
+                    Object.assign({ selected: false }, dataItem)
+                  )
+                : null;
+              setSessionList(ddata);
+              setSpin(false);
+            }
           }
+        } catch (error) {
+          const { response } = error;
+          const { request, data } = response; // take everything but 'request'
+
+          console.log("Error Response", data.message);
+
+          Modal.error({
+            title: "Error: Unable to Retrieve data",
+            content: data.message + " Please contact Technical Support",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              //setdrawerVisible(false);
+              visible: false;
+            },
+          });
         }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
+        //setLoading(false);
       }
-      //setLoading(false);
+      fetchData(config);
     }
-    fetchData(config);
   }, [spin]);
 
   function getListData(value) {
-    let listData;
+    let cellDate = moment(value).format("YYYY/MM/DD");
+    let datalist;
+    if (sessionList.length) {
+      datalist = sessionList.filter((session, index) => {
+        //sd - startDate from api
+        //ed - endDate from api
+        const sd = moment(session.startDate).format("YYYY/MM/DD");
+        //const ed = moment(session.endDate).format("M/D");
+        //let sdm = sd.split('/');
+        if (cellDate == sd) {
+          return session;
+        }
+        //console.log(sd);
+      });
+    }
+    return datalist || [];
+    /* let listData;
     switch (value.date()) {
       case 8:
         listData = [
@@ -263,7 +282,8 @@ const ClassesSessions = ({ course_id }) => {
         break;
       default:
     }
-    return listData || [];
+    console.log('listData',listData)
+    return listData || []; */
   }
 
   function dateCellRender(value) {
@@ -356,7 +376,9 @@ const ClassesSessions = ({ course_id }) => {
                 onSelect={(date) => onOpenModal(date, calSessionModal)}
                 mode="month"
               />
-            ):(<div>You cannot set Sessions on Self-Paced type courses.</div>)}
+            ) : (
+              <div>You cannot set Sessions on Self-Paced type courses.</div>
+            )}
           </Col>
         </motion.div>
       )}
