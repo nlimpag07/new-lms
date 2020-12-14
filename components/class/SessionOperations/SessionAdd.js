@@ -41,6 +41,7 @@ const SessionAdd = ({
   calSessionModal,
   instructorsList,
 }) => {
+  //console.log('calSessionModal',calSessionModal)
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseSession, setCourseSession] = useState([]);
@@ -429,7 +430,7 @@ const SessionAdd = ({
           <p
             style={{
               color: "#ff4d4f",
-              textAlign: "right",
+              textAlign: "center",
               marginBottom: "0",
               minHeight: "25px",
             }}
@@ -440,7 +441,7 @@ const SessionAdd = ({
           <p
             style={{
               color: "#ff4d4f",
-              textAlign: "right",
+              textAlign: "center",
               marginBottom: "0",
               minHeight: "25px",
             }}

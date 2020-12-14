@@ -44,12 +44,12 @@ const SessionOperationOptions = ({
   calSessionModal,
   dateSessionList,
   setDateSessionList,
+  setSelectedRecord,
 }) => {
-  console.log(dateSessionList);
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {}, []);
 
-  const onAddEditView = (action) => {
+  const onAddEditView = (action, rec) => {
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
@@ -57,11 +57,12 @@ const SessionOperationOptions = ({
       modalOperation: action,
       width: "35%",
     });
+    action == "view" && setSelectedRecord(rec);
+    action == "add" && setSelectedRecord("");
     //console.log("On Add", sessModalArr);
   };
   //console.log(dateSessionList);
   const confirmDelete = (rec) => {
-    console.log(rec);
     var config = {
       method: "delete",
       url: apiBaseUrl + "/CourseSession/" + rec.id,
@@ -108,17 +109,18 @@ const SessionOperationOptions = ({
   const columns = [
     {
       title: "Running Date",
-      dataIndex: "dateTime",
-      key: "date",
+      dataIndex: "startDate",
+      key: "startDate",
       render: (date, record) => {
+        //console.log("record", record);
         return (
           <>
             <Tag color={`geekblue`} key={record.id}>
-              {date.format("YYYY-MM-DD HH:mm")}
+              {moment(date).format("YYYY-MM-DD HH:mm")}
             </Tag>
             {" => "}
             <Tag color={`volcano`} key={`nth${record.id}`}>
-              {date.format("YYYY-MM-DD HH:mm")}
+              {moment(record.endDate).format("YYYY-MM-DD HH:mm")}
             </Tag>
             {/* <Tag color={`geekblue`} key={record.index}>
               {date.format("YYYY-MM-DD HH:mm")}
@@ -140,9 +142,24 @@ const SessionOperationOptions = ({
     },
 
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      title: "Status",
+      dataIndex: "isActivetype",
+      key: "isActivetype",
+      render: (text, record) => {
+        return text == "success" ? (
+          <>
+            <Tag color={`green`} key={record.id}>
+              Active
+            </Tag>
+          </>
+        ) : (
+          <>
+            <Tag color={`volcano`} key={record.id}>
+              Inactive
+            </Tag>
+          </>
+        );
+      },
     },
 
     {
@@ -153,7 +170,7 @@ const SessionOperationOptions = ({
           <Button
             key={`view-${record.id}`}
             type="link"
-            onClick={() => onAddEditView("view")}
+            onClick={() => onAddEditView("view", record)}
           >
             View
           </Button>

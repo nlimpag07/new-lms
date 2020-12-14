@@ -390,18 +390,18 @@ a.ellipsis i {
   padding: 2rem;
   background-color: #efefef91;
 }
-
+/* 
 .ClassesSessions .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner,
 .ClassesSessions .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
   .ant-picker-cell-inner {
   background-color: #00000045;
 }
-.ClassesSessions .ant-picker-cell:hover/* :not(.ant-picker-cell-in-view) */
+.ClassesSessions .ant-picker-cell:hover
   .ant-picker-cell-inner::before,
-  .ClassesSessions .ant-picker-cell:hover/* :not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) */
+  .ClassesSessions .ant-picker-cell:hover
   .ant-picker-cell-inner::before {
   font-family: "ams-icons" !important;
-  content: "\e994"; /*cog \e994*/
+  content: "\e994";
   position: absolute;
   top: 40%;
   left: 45%;
@@ -410,3 +410,4 @@ a.ellipsis i {
 .ClassesSessions .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-value {
   font-size: 1.7rem;
 }
+ */

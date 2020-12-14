@@ -57,7 +57,7 @@ const ClassesSessions = ({ course_id }) => {
   const [dateSessionList, setDateSessionList] = useState("");
   const [instructorsList, setInstructorsList] = useState("");
   const [courseType, setCourseType] = useState(0);
-
+  const [selectedRecord, setSelectedRecord] = useState("");
   useEffect(() => {
     var conf = {
       method: "get",
@@ -73,10 +73,9 @@ const ClassesSessions = ({ course_id }) => {
         const response = await axios(conf);
         if (response) {
           let theRes = response.data;
-          console.log("Course", response.data);
+          //console.log("Course", response.data);
           // wait for response if the verification is true
           if (theRes) {
-            //console.log(theRes)
             theRes.courseInstructor && theRes.courseInstructor.length
               ? setInstructorsList(theRes.courseInstructor)
               : setInstructorsList([]);
@@ -91,9 +90,6 @@ const ClassesSessions = ({ course_id }) => {
       } catch (error) {
         const { response } = error;
         const { request, data } = response; // take everything but 'request'
-
-        //console.log("Error Response", data.message);
-
         Modal.error({
           title: "Error: Unable to Retrieve data",
           content: data.message + " Please contact Technical Support",
@@ -127,7 +123,7 @@ const ClassesSessions = ({ course_id }) => {
           if (response) {
             //setOutcomeList(response.data.result);
             let theRes = response.data.result;
-            //console.log("Session Response", response.data);
+            console.log("Session Response", response.data);
             // wait for response if the verification is true
             if (theRes) {
               //console.log(theRes)
@@ -173,16 +169,34 @@ const ClassesSessions = ({ course_id }) => {
   }, [spin]);
 
   function getListData(value) {
-    let cellDate = moment(value).format("YYYY/MM/DD");
+    let cellDate = moment(value).format("YYYY-MM-DD");
+    let nowDate = moment().format("YYYY-MM-DD");
     let datalist;
-    if (sessionList.length) {
+    if (sessionList && sessionList.length) {
       datalist = sessionList.filter((session, index) => {
         //sd - startDate from api
         //ed - endDate from api
-        const sd = moment(session.startDate).format("YYYY/MM/DD");
-        //const ed = moment(session.endDate).format("M/D");
-        //let sdm = sd.split('/');
-        if (cellDate == sd) {
+        let sd = moment(session.startDate).format("YYYY-MM-DD");
+        let ed = moment(session.endDate).format("YYYY-MM-DD");
+        /* if (cellDate == sd) {
+          let isActivetype;
+          moment(ed).isBefore(nowDate)
+            ? (isActivetype = "error")
+            : (isActivetype = "success");
+          session["isActivetype"] = isActivetype;
+
+          return session;
+        } */
+        if (
+          moment(cellDate).isSameOrAfter(sd) &&
+          moment(cellDate).isSameOrBefore(ed)
+        ) {
+          let isActivetype;
+          moment(ed).isBefore(nowDate)
+            ? (isActivetype = "error")
+            : (isActivetype = "success");
+          session["isActivetype"] = isActivetype;
+
           return session;
         }
         //console.log(sd);
@@ -291,8 +305,8 @@ const ClassesSessions = ({ course_id }) => {
     return (
       <ul className="events">
         {listData.map((item) => (
-          <li key={item.content}>
-            <Badge status={item.type} text={item.content} />
+          <li key={item.id}>
+            <Badge status={item.isActivetype} text={item.title} />
           </li>
         ))}
       </ul>
@@ -318,11 +332,12 @@ const ClassesSessions = ({ course_id }) => {
   //console.log(sessionList);
 
   const onOpenModal = (date, calSessionModal) => {
+    //console.log(date);
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
       title: "Sessions List",
-      date: date.format("MM-DD-YYYY"),
+      date: moment(date).format("YYYY-MM-DD HH:mm"),
       visible: true,
       width: "70%",
     });
@@ -340,9 +355,31 @@ const ClassesSessions = ({ course_id }) => {
       width: 0,
     });
     setDateSessionList("");
+    setSelectedRecord("");
   };
   //console.log(calSessionModal);
-
+  function dateFullCellRender(value) {
+    const listData = getListData(value);
+    return (
+      <div
+        className="ant-picker-cell-inner ant-picker-calendar-date"
+        onClick={() => onOpenModal(value, calSessionModal)}
+      >
+        <div className="ant-picker-calendar-date-value">
+          <h2>{value.date()}</h2>
+        </div>
+        <div className="ant-picker-calendar-date-content">
+          <ul className="events">
+            {listData.map((item) => (
+              <li key={item.id}>
+                <Badge status={item.isActivetype} text={item.title} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    );
+  }
   return (
     //GridType(gridList)
     <Row
@@ -371,9 +408,10 @@ const ClassesSessions = ({ course_id }) => {
             <h1>Sessions</h1>
             {courseType != 2 ? (
               <Calendar
-                dateCellRender={dateCellRender}
+                /*dateCellRender={dateCellRender}*/
+                dateFullCellRender={dateFullCellRender}
                 monthCellRender={monthCellRender}
-                onSelect={(date) => onOpenModal(date, calSessionModal)}
+                /* onSelect={(date) => onOpenModal(date, calSessionModal)} */
                 mode="month"
               />
             ) : (
@@ -403,6 +441,8 @@ const ClassesSessions = ({ course_id }) => {
             setCalSessionModal={setCalSessionModal}
             calSessionModal={calSessionModal}
             instructorsList={instructorsList}
+            selectedRecord={selectedRecord}
+            setSelectedRecord={setSelectedRecord}
           />
         ) : calSessionModal.modalOperation == "add" ? (
           <SessionAdd
@@ -426,6 +466,7 @@ const ClassesSessions = ({ course_id }) => {
             calSessionModal={calSessionModal}
             dateSessionList={dateSessionList}
             setDateSessionList={setDateSessionList}
+            setSelectedRecord={setSelectedRecord}
           />
         )}
       </Modal>
@@ -448,6 +489,13 @@ const ClassesSessions = ({ course_id }) => {
           background-color: #ffffff;
           padding: 34vh 0;
           width: 100%;
+        }
+        ul.events {
+          list-style: none;
+          padding: 0;
+        }
+        .ant-picker-calendar-date-value h2 {
+          font-size: 2rem;
         }
       `}</style>
     </Row>

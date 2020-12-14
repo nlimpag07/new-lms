@@ -40,7 +40,10 @@ const SessionView = ({
   setCalSessionModal,
   calSessionModal,
   instructorsList,
+  selectedRecord,
+  setSelectedRecord,
 }) => {
+  console.log("selectedRecord", selectedRecord);
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseSession, setCourseSession] = useState([]);
@@ -56,7 +59,7 @@ const SessionView = ({
       let insFullName = `${option.user.firstName} ${option.user.lastName}`;
       let insValue = option.id;
       return (
-        <Option key={index} value={insValue}>
+        <Option key={index} label={insFullName} value={insValue}>
           {insFullName}
         </Option>
       );
@@ -112,6 +115,7 @@ const SessionView = ({
   const onCancel = (form) => {
     form.resetFields();
     let sessModalArr = calSessionModal;
+    setSelectedRecord("");
     setCalSessionModal({
       ...sessModalArr,
       title: "Sessions List",
@@ -120,59 +124,45 @@ const SessionView = ({
     });
   };
   const onFinish = (values) => {
+    console.log("Submitted values", values);
     setSpinning(true);
     setHasError("");
     var data = {};
     var checker = [];
-
+    let id = selectedRecord ? selectedRecord.id : values.id;
     data.courseId = course_id;
+    data.id = id;
     if (!!values.sessionType) {
       data.sessionTypeId = values.sessionType;
     } else {
-      setHasError("* ERROR: On Session Type, Please review the field.");
-      checker.push("Error");
+      data.sessionTypeId = selectedRecord && selectedRecord.sessionTypeId;
     }
-    if (!!values.location) {
-      data.sessionLocation = values.location;
-    } else {
-      setHasError("* ERROR: On Session Location, Please review the field.");
-      checker.push("Error");
+    if (!!values.sessionLocation) {
+      data.sessionLocation = values.sessionLocation;
     }
     if (!!values.userGroup) {
       data.userGroupId = values.userGroup;
     } else {
-      setHasError("* ERROR: On Session User Group, Please review the field.");
-      checker.push("Error");
+      data.userGroupId = selectedRecord && selectedRecord.userGroupId;
     }
     if (!!values.capacity) {
       data.capacity = values.capacity;
-    } else {
-      setHasError("* ERROR: On Capacity, Please review the field.");
-      checker.push("Error");
     }
     if (!!values.startDate) {
       data.startDate = values.startDate.format("YYYY-MM-DD HH:mm");
     } else {
-      setHasError("* ERROR: On Capacity, Please review the field.");
-      checker.push("Error");
+      data.startDate = selectedRecord && selectedRecord.startDate;
     }
     if (!!values.endDate) {
       data.endDate = values.endDate.format("YYYY-MM-DD HH:mm");
     } else {
-      setHasError("* ERROR: On Capacity, Please review the field.");
-      checker.push("Error");
+      data.endDate = selectedRecord && selectedRecord.endDate;
     }
     if (!!values.duration) {
       data.duration = values.duration;
-    } else {
-      setHasError("* ERROR: On Duration, Please review the field.");
-      checker.push("Error");
     }
     if (!!values.sessionInstructorId) {
       data.courseInstructorId = values.sessionInstructorId;
-    } else {
-      setHasError("* ERROR: On Duration, Please review the field.");
-      checker.push("Error");
     }
     if (!!values.sessionTitle) {
       data.title = values.sessionTitle;
@@ -190,8 +180,8 @@ const SessionView = ({
     //console.log(data);
     if (!checker.length) {
       var config = {
-        method: "post",
-        url: apiBaseUrl + "/CourseSession",
+        method: "put",
+        url: apiBaseUrl + "/CourseSession/" + id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -225,19 +215,102 @@ const SessionView = ({
     }
   };
 
+  //Used only for PlaceHolders
+  function sessionTypeSwitch(id) {
+    let typeWord;
+    switch (id) {
+      case 1:
+        typeWord = "Webinar";
+        break;
+      case 2:
+        typeWord = "Classroom";
+        break;
+    }
+    return typeWord;
+  }
+  function userGroupSwitch(id) {
+    let groupWord;
+    switch (id) {
+      case 1:
+        groupWord = "Administrator";
+        break;
+      case 2:
+        groupWord = "Human Resources";
+        break;
+      case 3:
+        groupWord = "Manager";
+        break;
+    }
+    return groupWord;
+  }
+  const placeHolders = {
+    sessionType: selectedRecord
+      ? sessionTypeSwitch(selectedRecord.sessionTypeId)
+      : "Session Type",
+    startDate: selectedRecord
+      ? moment(selectedRecord.startDate).format("YYYY-MM-DD HH:mm")
+      : "Select Date",
+    sessionLocation: selectedRecord
+      ? selectedRecord.sessionLocation
+      : "Please Indicate Location",
+    userGroup: selectedRecord
+      ? userGroupSwitch(selectedRecord.userGroupId)
+      : "Please select User Group",
+    capacity: selectedRecord ? selectedRecord.capacity : "",
+    endDate: selectedRecord
+      ? moment(selectedRecord.endDate).format("YYYY-MM-DD HH:mm")
+      : "Select Date",
+    duration: selectedRecord ? selectedRecord.duration : "Duration",
+  };
+  //End of Used only for PlaceHolders
+
   return (
-    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
+    <Row
+      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      style={{ margin: "0" }}
+      className="sessionViewFormHolder"
+    >
       <Form
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="sessionAdd"
+        name="sessionView"
         style={{ width: "100%" }}
         initialValues={{
-          /*  courseTitle: courseDetails.title, */
-          startDate: moment(calSessionModal.date),
+          id: selectedRecord ? selectedRecord.id : "",
+          sessionInstructorId: selectedRecord
+            ? selectedRecord.courseInstructorId
+            : "",
+          sessionTitle: selectedRecord ? selectedRecord.title : "",
+          description: selectedRecord ? selectedRecord.description : "",
+          /* sessionType: selectedRecord ? selectedRecord.sessionTypeId : "",
+          startDate: selectedRecord
+            ? moment(selectedRecord.startDate, "YYYY-MM-DD HH:mm")
+            : moment().format("YYYY-MM-DD HH:mm"),
+          sessionLocation: selectedRecord ? selectedRecord.sessionLocation : "",
+          userGroup: selectedRecord ? selectedRecord.userGroupId : "",
+          capacity: selectedRecord ? selectedRecord.capacity : "",
+          endDate: selectedRecord
+            ? moment(selectedRecord.endDate, "YYYY-MM-DD HH:mm")
+            : moment().format("YYYY-MM-DD HH:mm"),
+          duration: selectedRecord ? selectedRecord.duration : "",
+          sessionInstructorId: selectedRecord
+            ? selectedRecord.courseInstructorId
+            : "",
+          sessionTitle: selectedRecord ? selectedRecord.title : "",
+          description: selectedRecord ? selectedRecord.description : "", */
         }}
       >
+        <Form.Item
+          style={{
+            display: "none",
+            width: "calc(50%)",
+            margin: "0 8px 0 0",
+          }}
+          name="id"
+        >
+          <Input />
+        </Form.Item>
         <Form.Item style={{ marginBottom: 0 }}>
           <Form.Item
             style={{
@@ -247,24 +320,25 @@ const SessionView = ({
             }}
             name="sessionType"
             label="Type"
-            rules={[
-              {
-                required: true,
-                message: "Please select Session Type!",
-              },
-            ]}
           >
-            <Select placeholder="Please select Type">
-              <Option value={1}>Webinar</Option>
-              <Option value={2}>Classroom</Option>
+            <Select
+              placeholder={placeHolders.sessionType}
+              optionLabelProp="label"
+            >
+              <Option label="Webinar" value={1}>
+                Webinar
+              </Option>
+              <Option label="Classroom" value={2}>
+                Classroom
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
-            name="location"
+            name="sessionLocation"
             label="Location"
             style={{ display: "inline-block", width: "calc(50% - 8px)" }}
           >
-            <Input placeholder="Please Indicate Location" />
+            <Input placeholder={placeHolders.sessionLocation} />
           </Form.Item>
         </Form.Item>
         <Form.Item style={{ marginBottom: 0 }}>
@@ -276,33 +350,30 @@ const SessionView = ({
             }}
             name="userGroup"
             label="User Group"
-            rules={[
-              {
-                required: true,
-                message: "Please select User Group!",
-              },
-            ]}
           >
-            <Select placeholder="Please select User Group">
-              <Option value="1">Administrator</Option>
-              <Option value="2">Human Resources</Option>
-              <Option value="3">Manager</Option>
+            <Select
+              placeholder={placeHolders.userGroup}
+              optionLabelProp="label"
+            >
+              <Option label="Administrator" value={1}>
+                Administrator
+              </Option>
+              <Option label="Human Resources" value={2}>
+                Human Resources
+              </Option>
+              <Option label="Manager" value={3}>
+                Manager
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
             name="capacity"
             label="Capacity"
             style={{ display: "inline-block", width: "calc(30% - 8px)" }}
-            rules={[
-              {
-                required: true,
-                message: "Please Indicate Capacity!",
-              },
-            ]}
           >
             <InputNumber
               min={1}
-              placeholder="Numbers Only"
+              placeholder={placeHolders.capacity}
               style={{ width: "100%" }}
             />
           </Form.Item>
@@ -316,20 +387,13 @@ const SessionView = ({
             }}
             name="startDate"
             label="Start Date"
-            rules={[
-              {
-                required: true,
-                message: "Please select Start Date!",
-              },
-            ]}
-            /* valuePropName="value" */
           >
             <DatePicker
               style={{ width: "100%" }}
               showTime={{
                 format: "HH:mm",
               }}
-              defaultPickerValue={moment(calSessionModal.date)}
+              placeholder={placeHolders.startDate}
             />
           </Form.Item>
           <Form.Item
@@ -340,34 +404,23 @@ const SessionView = ({
               width: "calc(40% - 8px)",
               margin: "0 8px 0 0",
             }}
-            rules={[
-              {
-                required: true,
-                message: "Please select End Date!",
-              },
-            ]}
           >
             <DatePicker
               style={{ width: "100%" }}
               showTime={{
                 format: "HH:mm",
-              }} /* onChange={onChange} onOk={onOk} */
+              }}
+              placeholder={placeHolders.endDate}
             />
           </Form.Item>
           <Form.Item
             name="duration"
             label="Duration"
             style={{ display: "inline-block", width: "calc(20% - 8px)" }}
-            rules={[
-              {
-                required: true,
-                message: "Please Indicate Duration!",
-              },
-            ]}
           >
             <InputNumber
               min={1}
-              placeholder="Duration"
+              placeholder={placeHolders.duration}
               style={{ width: "100%" }}
             />
           </Form.Item>
@@ -379,12 +432,6 @@ const SessionView = ({
           }}
           name="sessionInstructorId"
           label="Instructor"
-          rules={[
-            {
-              required: true,
-              message: "Please select Instructor!",
-            },
-          ]}
         >
           <Select placeholder="Please select Instructor">
             {selectInstructorOptions}
@@ -429,7 +476,7 @@ const SessionView = ({
           <p
             style={{
               color: "#ff4d4f",
-              textAlign: "right",
+              textAlign: "center",
               marginBottom: "0",
               minHeight: "25px",
             }}
@@ -440,7 +487,7 @@ const SessionView = ({
           <p
             style={{
               color: "#ff4d4f",
-              textAlign: "right",
+              textAlign: "center",
               marginBottom: "0",
               minHeight: "25px",
             }}
@@ -481,6 +528,19 @@ const SessionView = ({
           left: 0;
           background-color: #ffffff;
           padding: 45% 0;
+        }
+        .sessionViewFormHolder .ant-input::placeholder {
+          opacity: 1 !important;
+          color: #666666 !important;
+        }
+        .sessionViewFormHolder .ant-picker-input input::placeholder,
+        .sessionViewFormHolder .ant-input-number input::placeholder {
+          opacity: 1 !important;
+          color: #666666 !important;
+        }
+        .sessionViewFormHolder .ant-select-selection-placeholder {
+          opacity: 1 !important;
+          color: #666666 !important;
         }
       `}</style>
     </Row>
