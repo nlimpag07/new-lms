@@ -125,7 +125,7 @@ const CourseList = (props) => {
           </Col>
           <Col xs={4} className="widget-switchgrid-holder">
             <span>
-              {courseAllList.length ? courseAllList.length : 0} Results
+              {courseAllList ? courseAllList.totalRecords : 0} Results
             </span>{" "}
             <button
               className="switch-grid"

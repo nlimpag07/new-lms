@@ -72,7 +72,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
     var data = JSON.stringify({});
     var config = {
       method: "get",
-      url: apiBaseUrl + "/courses",
+      url: apiBaseUrl + "/dashboard",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -81,19 +81,15 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
     };
     async function fetchData(config) {
       const response = await axios(config);
-      if (response.data.result) {
-        //console.log(response)
-        //localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(response.data);
+      if (response.data) {
+        console.log(response.data)        
         setMyAuthoredCourses(
-          response.data.result.filter((course) => course.authorId == userId)
+          response.data.courses
         );
-      } else {
-        const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-        allCourses.length &&
+      } else {        
           setMyAuthoredCourses(
             allCourses.result.filter((course) => course.authorId == userId)
-          );
+          ); 
       }
       setLoading(false);
     }
