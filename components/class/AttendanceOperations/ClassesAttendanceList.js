@@ -52,9 +52,17 @@ const ClassesAttendanceList = ({ sessionData }) => {
   useEffect(() => {
     //console.log("Learners List", enrolleeList);
     const ddata = enrolleeList.length
-      ? enrolleeList.map((dataItem) =>
-          Object.assign({ selected: false,learnerName:dataItem.learner.user.firstName }, dataItem)
-        )
+      ? enrolleeList.map((dataItem) => {
+          let newDataSet = {
+            selected: false,
+            learnerName: dataItem.learner.user.firstName,
+          };
+          return Object.assign(newDataSet, dataItem);
+          /* Object.assign(
+            { selected: false, learnerName: dataItem.learner.user.firstName },
+            dataItem
+          ); */
+        })
       : [];
     console.log("Learners List", ddata);
     setData(ddata);
@@ -170,7 +178,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
   };
 
   const dateFormat = (props) => {
-    console.log("Props", props.dataItem);
+    //console.log("Props", props.dataItem);
     // const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
     return (
       <td>

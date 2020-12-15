@@ -117,8 +117,15 @@ const ClassesAttendance = ({ course_id }) => {
 
     if (sessOpt.length) {
       let theSession = sessOpt[0];
-      console.log("Selected Session",theSession)
+      console.log("Selected Session", theSession);
       const sessionName = `${theSession.title} - (${theSession.startDate} ${theSession.endDate})`;
+
+      /* For Update: Temporariy code */
+      console.log(courseDetails);
+      let courseName = courseDetails.title;
+      let courseId = course_id;
+      /* End of Temporariy code */
+
       let learnerList;
       //check if there are learners
       theSession.learnerSession && theSession.learnerSession.length
