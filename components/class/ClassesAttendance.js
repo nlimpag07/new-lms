@@ -11,6 +11,9 @@ import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 import Cookies from "js-cookie";
+import moment from "moment";
+
+import ClassessAttendanceList from "./AttendanceOperations/ClassesAttendanceList";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -43,204 +46,17 @@ const list = {
   },
 };
 
-const products = [
-  {
-    ProductID: 1,
-    ProductName: "Chai",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "10 boxes x 20 bags",
-    UnitPrice: 18.0,
-    UnitsInStock: 39,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 2,
-    ProductName: "Chang",
-    SupplierID: 1,
-    CategoryID: 1,
-    QuantityPerUnit: "24 - 12 oz bottles",
-    UnitPrice: 19.0,
-    UnitsInStock: 17,
-    UnitsOnOrder: 40,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 1,
-      CategoryName: "Beverages",
-      Description: "Soft drinks, coffees, teas, beers, and ales",
-    },
-  },
-  {
-    ProductID: 3,
-    ProductName: "Aniseed Syrup",
-    SupplierID: 1,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 550 ml bottles",
-    UnitPrice: 10.0,
-    UnitsInStock: 13,
-    UnitsOnOrder: 70,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 4,
-    ProductName: "Chef Anton's Cajun Seasoning",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "48 - 6 oz jars",
-    UnitPrice: 22.0,
-    UnitsInStock: 53,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 5,
-    ProductName: "Chef Anton's Gumbo Mix",
-    SupplierID: 2,
-    CategoryID: 2,
-    QuantityPerUnit: "36 boxes",
-    UnitPrice: 21.35,
-    UnitsInStock: 0,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: true,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 6,
-    ProductName: "Grandma's Boysenberry Spread",
-    SupplierID: 3,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 8 oz jars",
-    UnitPrice: 25.0,
-    UnitsInStock: 120,
-    UnitsOnOrder: 0,
-    ReorderLevel: 25,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 7,
-    ProductName: "Uncle Bob's Organic Dried Pears",
-    SupplierID: 3,
-    CategoryID: 7,
-    QuantityPerUnit: "12 - 1 lb pkgs.",
-    UnitPrice: 30.0,
-    UnitsInStock: 15,
-    UnitsOnOrder: 0,
-    ReorderLevel: 10,
-    Discontinued: false,
-    Category: {
-      CategoryID: 7,
-      CategoryName: "Produce",
-      Description: "Dried fruit and bean curd",
-    },
-  },
-  {
-    ProductID: 8,
-    ProductName: "Northwoods Cranberry Sauce",
-    SupplierID: 3,
-    CategoryID: 2,
-    QuantityPerUnit: "12 - 12 oz jars",
-    UnitPrice: 40.0,
-    UnitsInStock: 6,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 2,
-      CategoryName: "Condiments",
-      Description: "Sweet and savory sauces, relishes, spreads, and seasonings",
-    },
-  },
-  {
-    ProductID: 9,
-    ProductName: "Mishi Kobe Niku",
-    SupplierID: 4,
-    CategoryID: 6,
-    QuantityPerUnit: "18 - 500 g pkgs.",
-    UnitPrice: 97.0,
-    UnitsInStock: 29,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: true,
-    Category: {
-      CategoryID: 6,
-      CategoryName: "Meat/Poultry",
-      Description: "Prepared meats",
-    },
-  },
-  {
-    ProductID: 10,
-    ProductName: "Ikura",
-    SupplierID: 4,
-    CategoryID: 8,
-    QuantityPerUnit: "12 - 200 ml jars",
-    UnitPrice: 31.0,
-    UnitsInStock: 31,
-    UnitsOnOrder: 0,
-    ReorderLevel: 0,
-    Discontinued: false,
-    Category: {
-      CategoryID: 8,
-      CategoryName: "Seafood",
-      Description: "Seaweed and fish",
-    },
-  },
-  {
-    ProductID: 11,
-    ProductName: "Queso Cabrales",
-    SupplierID: 5,
-    CategoryID: 4,
-    QuantityPerUnit: "1 kg pkg.",
-    UnitPrice: 21.0,
-    UnitsInStock: 22,
-    UnitsOnOrder: 30,
-    ReorderLevel: 30,
-    Discontinued: false,
-    Category: {
-      CategoryID: 4,
-      CategoryName: "Dairy Products",
-      Description: "Cheeses",
-    },
-  },
-];
-
 const ClassesAttendance = ({ course_id }) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
   const [spin, setSpin] = useState(true);
-  const [Data, setData] = useState([]);
-
-  const [pagination, setPagination] = useState({ skip: 0, take: 5 });
+  const [sessionSelect, setSessionSelect] = useState("");
+  const [sessionData, setSessionData] = useState({
+    trigger: "",
+    sessionTitle: "",
+    enrolleeList: [],
+  });
 
   useEffect(() => {
     var config = {
@@ -256,22 +72,13 @@ const ClassesAttendance = ({ course_id }) => {
       try {
         const response = await axios(config);
         if (response) {
-          //setOutcomeList(response.data.result);
           let theRes = response.data.result;
-          console.log("Session Response", response.data);
-          // wait for response if the verification is true
+          // console.log("Session Response", response.data);
           if (theRes) {
-            //console.log(theRes)
-
-            const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : [];
-            setData(ddata);
+            setSessionSelect(theRes);
             setSpin(false);
-          } else {            
-            setData([]);
+          } else {
+            setSessionSelect("");
             setSpin(false);
           }
         }
@@ -284,7 +91,6 @@ const ClassesAttendance = ({ course_id }) => {
           centered: true,
           width: 450,
           onOk: () => {
-            //setdrawerVisible(false);
             visible: false;
           },
         });
@@ -293,57 +99,6 @@ const ClassesAttendance = ({ course_id }) => {
     }
     fetchData(config);
   }, []);
-
-  var lastSelectedIndex = 0;
-  /* const the_data = [];
-  const ddata = the_data.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  );
-  const [Data, setData] = useState(ddata); */
-  const [theSort, setTheSort] = useState({
-    sort: [{ field: "id", dir: "asc" }],
-  });
-  //console.log(Data)
-
-  const selectionChange = (event) => {
-    const theData = Data.map((item) => {
-      if (item.ProductID === event.dataItem.ProductID) {
-        item.selected = !event.dataItem.selected;
-      }
-      return item;
-    });
-    setData(theData);
-  };
-  const rowClick = (event) => {
-    let last = lastSelectedIndex;
-    const theData = [...Data];
-
-    const current = theData.findIndex(
-      (dataItem) => dataItem === event.dataItem
-    );
-
-    if (!event.nativeEvent.shiftKey) {
-      lastSelectedIndex = last = current;
-    }
-
-    if (!event.nativeEvent.ctrlKey) {
-      theData.forEach((item) => (item.selected = false));
-    }
-    const select = !event.dataItem.selected;
-    for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
-      theData[i].selected = select;
-    }
-    setData(theData);
-  };
-
-  const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  };
 
   useEffect(() => {
     let allCourses = JSON.parse(localStorage.getItem("courseAllList"));
@@ -354,7 +109,35 @@ const ClassesAttendance = ({ course_id }) => {
   }, []);
 
   function onChange(value) {
-    console.log(`selected ${value}`);
+    setSpin(true);
+    //console.log(`selected ${value}`);
+    const sessOpt =
+      sessionSelect.length &&
+      sessionSelect.filter((option) => option.id === value);
+
+    if (sessOpt.length) {
+      let theSession = sessOpt[0];
+      console.log("Selected Session",theSession)
+      const sessionName = `${theSession.title} - (${theSession.startDate} ${theSession.endDate})`;
+      let learnerList;
+      //check if there are learners
+      theSession.learnerSession && theSession.learnerSession.length
+        ? (learnerList = theSession.learnerSession)
+        : (learnerList = []);
+      setSessionData({
+        trigger: theSession.id,
+        sessionTitle: sessionName,
+        enrolleeList: learnerList,
+      });
+    } else {
+      //No session seen
+      setSessionData({
+        trigger: false,
+        sessionTitle: "",
+        enrolleeList: [],
+      });
+    }
+    setSpin(false);
   }
   function onBlur() {
     console.log("blur");
@@ -365,20 +148,30 @@ const ClassesAttendance = ({ course_id }) => {
   function onSearch(val) {
     console.log("search:", val);
   }
-  const pageChange = (event) => {
-    setPagination({
-      skip: event.page.skip,
-      take: event.page.take,
+
+  const sessionOptionList =
+    sessionSelect.length &&
+    sessionSelect.map((option, index) => {
+      const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
+      const eDate = moment(option.endDate).format("YYYY/MM/DD h:mm a");
+      let sessionNames = `${option.title} - (${sDate} - ${eDate})`;
+      let optValue = option.id;
+      return (
+        <Option key={index} label={sessionNames} value={optValue}>
+          {sessionNames}
+        </Option>
+      );
     });
-  };
+
   return (
     //GridType(gridList)
-    <Row
-      className="widget-container"
-      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      style={{ margin: "1rem 0" }}
-    >
-      <motion.div initial="hidden" animate="visible" variants={list}>
+
+    <motion.div initial="hidden" animate="visible" variants={list}>
+      <Row
+        className="widget-container"
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+        style={{ margin: "1rem 0" }}
+      >
         <Col
           className="gutter-row widget-holder-col ClassesAttendance"
           xs={24}
@@ -395,7 +188,7 @@ const ClassesAttendance = ({ course_id }) => {
               <Select
                 showSearch
                 style={{ width: "100%" }}
-                placeholder="Select View"
+                placeholder="Select Session"
                 optionFilterProp="children"
                 onChange={onChange}
                 onFocus={onFocus}
@@ -406,8 +199,7 @@ const ClassesAttendance = ({ course_id }) => {
                   0
                 }
               >
-                <Option value="Authored Courses">Authored Courses</Option>
-                <Option value="Categories">Categories</Option>
+                {sessionOptionList}
               </Select>
             </Col>
           </Row>
@@ -426,76 +218,18 @@ const ClassesAttendance = ({ course_id }) => {
                   ></Spin>
                 </div>
               ) : (
-                <Grid
-                  data={orderBy(
-                    Data.slice(
-                      pagination.skip,
-                      pagination.take + pagination.skip
-                    ),
-                    theSort.sort
-                  )}
-                  style={{ height: "550px" }}
-                  selectedField="selected"
-                  onSelectionChange={selectionChange}
-                  onHeaderSelectionChange={headerSelectionChange}
-                  onRowClick={rowClick}
-                  sortable
-                  sort={theSort.sort}
-                  onSortChange={(e) => {
-                    setTheSort({
-                      sort: e.sort,
-                    });
-                  }}
-                  skip={pagination.skip}
-                  take={pagination.take}
-                  total={Data.length}
-                  pageable={true}
-                  onPageChange={pageChange}
-                >
-                {/* <Grid
-                  data={orderBy(Data, theSort.sort)}
-                  style={{ height: "550px" }}
-                  selectedField="selected"
-                  onSelectionChange={selectionChange}
-                  onHeaderSelectionChange={headerSelectionChange}
-                  onRowClick={rowClick}
-                  sortable
-                  sort={theSort.sort}
-                  onSortChange={(e) => {
-                    setTheSort({
-                      sort: e.sort,
-                    });
-                  }}
-                > */}
-                  <Column
-                    field="selected"
-                    width="65px"
-                    headerSelectionValue={
-                      Data.findIndex(
-                        (dataItem) => dataItem.selected === false
-                      ) === -1
-                    }
+                <Col xs={24}>
+                  <ClassessAttendanceList
+                    sessionData={sessionData}
+                    setSpin={setSpin}
+                    spin={spin}
                   />
-                  <Column field="ProductName" title="Name" width="300px" />
-                  <Column field="UnitsInStock" title="Course" />
-                  <Column field="UnitsOnOrder" title="User Group" />
-                  <Column field="ReorderLevel" title="Date" />
-                  <Column field="Discontinued" title="Present" />
-                  <Column field="ReorderLevel" title="Late" />
-                  <Column field="Discontinued" title="Absent" />
-                  <Column field="Discontinued" title="Excused" />
-                  {/* <Column
-                  sortable={false}
-                  cell={ActionRender}
-                  field="SupplierID"
-                  title="Action"
-                /> */}
-                </Grid>
+                </Col>
               )}
             </Col>
           </Row>
         </Col>
-      </motion.div>
+      </Row>
       <Modal
         title="Publish Properties"
         centered
@@ -520,7 +254,7 @@ const ClassesAttendance = ({ course_id }) => {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
-          margin: 3rem 0;
+          margin: 2rem 0;
         }
         .spinHolder {
           text-align: center;
@@ -531,11 +265,10 @@ const ClassesAttendance = ({ course_id }) => {
           right: 0;
           left: 0;
           background-color: #ffffff;
-          padding: 34vh 0;
           width: 100%;
         }
       `}</style>
-    </Row>
+    </motion.div>
   );
 };
 
