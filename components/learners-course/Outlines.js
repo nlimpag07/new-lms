@@ -606,7 +606,7 @@ const GridType = (
         //Insert outlineStatusId to outline for Drawer Usage
         outline["outlineStatusId"] = outlineStatusId;
 
-        console.log(currentPercent);
+        //console.log(currentPercent);
         return (
           <Col
             key={outline.id}
@@ -633,7 +633,7 @@ const GridType = (
                 cover={
                   <img
                     alt="example"
-                    src={`${apidirectoryUrl}/Images/courseOutline/${outline.featureImage}`}
+                    src={`${apidirectoryUrl}/Images/courseOutline/thumbnail/${outline.featureImage}`}
                   />
                 }
                 actions={[

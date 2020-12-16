@@ -301,9 +301,11 @@ const OutlinesDrawerDetails = ({
       var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
       eventer(messageEvent, function (e) {
-        if (e.data == "1" && e.origin == "http://localhost:5001") {
-          //console.log("RUN API FETCH", e.origin);
+        if (e.data == "1" /* && e.origin == "http://localhost:5001" */) {
+          console.log("RUN API FETCH", e.origin);
           OnArticulateModalClose();
+        } else {
+          console.log("RUN API FETCH No value detected");
         }
       });
     }
@@ -527,7 +529,7 @@ const OutlinesDrawerDetails = ({
                 <h1>{title}</h1>
                 <img
                   alt="example"
-                  src={`${apidirectoryUrl}/Images/courseOutline/${featureImage}`}
+                  src={`${apidirectoryUrl}/Images/courseOutline/thumbnail/${featureImage}`}
                   style={{ width: "100%" }}
                 />
               </Col>
@@ -562,10 +564,12 @@ const OutlinesDrawerDetails = ({
               </Col>
             </Row>
             <Row>
-              <h2>In this lesson</h2>
-              <div className="course-desc">
-                <p>{decodeURI(description)}</p>
-              </div>
+              <Col xs={24} sm={24} md={24}>
+                <h2>In this lesson</h2>
+                <div className="course-desc">
+                  <p>{decodeURI(description)}</p>
+                </div>
+              </Col>
             </Row>
           </Col>
         </Row>
