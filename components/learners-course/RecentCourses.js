@@ -57,14 +57,14 @@ const linkUrl = Cookies.get("usertype");
 
 const RecentCourses = ({ courses }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
-//console.log('getCoursesFromLearner',courses)
+  //console.log('getCoursesFromLearner',courses)
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   //console.log(RecentCoursesList)
-  useEffect(() => {    
-    setLoading(false)
+  useEffect(() => {
+    setLoading(false);
   }, []);
   return (
     <Col
@@ -98,13 +98,7 @@ const RecentCourses = ({ courses }) => {
         gutter={[16, 16]}
         style={{ padding: "10px 0" }}
       >
-        {GridType(
-          courses,
-          curGridStyle,
-          setModal2Visible,
-          router,
-          loading
-        )}
+        {GridType(courses, curGridStyle, setModal2Visible, router, loading)}
       </Row>
       <Modal
         title="Publish Properties"
@@ -228,22 +222,18 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-  console.log('My Recent Courses:',courses)
+  console.log("My Recent Courses:", courses);
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
-    return trimmedDesc+'...';
+    return trimmedDesc + "...";
   };
   return courses.length ? (
     <>
       {courses.map((course, index) => (
-        <Col
-          key={index}
-          className={`gutter-row ${gridClass}`}
-          {...gridProps}
-        >
+        <Col key={index} className={`gutter-row ${gridClass}`} {...gridProps}>
           <motion.div initial="hidden" animate="visible" variants={list}>
-            <Card              
+            <Card
               className={
                 course.startDate ? "published-course" : "unpublished-course"
               }
@@ -264,12 +254,12 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   <a>
                     <img
                       alt={`${course.course.title}`}
-                      src={`${apidirectoryUrl}/Images/Course/${course.course.featureImage}`}
+                      src={`${apidirectoryUrl}/Images/Course/thumbnail/${course.course.featureImage}`}
                     />
                   </a>
                 </Link>
               }
-              actions={[                
+              actions={[
                 <Tooltip title="View">
                   <div
                     className="class-icon-holder"

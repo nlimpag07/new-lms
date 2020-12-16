@@ -72,7 +72,7 @@ const LearnersCatalog = (props) => {
   const router = useRouter();
   //console.log(router);
   const [spinner, setSpinner] = useState(false);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const { courseAllList, setCourseAllList } = useCourseList();
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -86,7 +86,7 @@ const LearnersCatalog = (props) => {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       setCourseAllList(courselist);
     }
-    setLoading(false)
+    setLoading(false);
     /* var data = JSON.stringify({});
     var config = {
       method: "get",
@@ -567,7 +567,7 @@ const GridType = (
               cover={
                 <img
                   alt="example"
-                  src={`${apidirectoryUrl}/Images/course/${course.featureImage}`}
+                  src={`${apidirectoryUrl}/Images/course/thumbnail/${course.featureImage}`}
                 />
               }
               actions={

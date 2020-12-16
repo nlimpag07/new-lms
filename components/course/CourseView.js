@@ -194,7 +194,7 @@ const CourseView = ({ course_id }) => {
     relatedCourse,
     isPublished,
   } = courseDetails;
-  featureImage = `${apidirectoryUrl}/Images/Course/${featureImage}`;
+  featureImage = `${apidirectoryUrl}/Images/Course/thumbnail/${featureImage}`;
   featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
   console.log("courseDetails", courseDetails);
   let lessons = course_outline ? course_outline.totalRecords : 0;
