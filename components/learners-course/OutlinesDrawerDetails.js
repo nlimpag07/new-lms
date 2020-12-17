@@ -307,7 +307,6 @@ const OutlinesDrawerDetails = ({
           OnArticulateModalClose();
         } else {
           console.log("No value from articulate detected. Exiting...");
-          OnArticulateModalClose();
         }
       });
     }
@@ -493,7 +492,8 @@ const OutlinesDrawerDetails = ({
 
     /* setArticulateModal2Visible(false);
     setdrawerVisible(false);
-
+   */
+   //Detect if there is Assessment assigned to the Outline
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
@@ -504,7 +504,7 @@ const OutlinesDrawerDetails = ({
       setOutlineFinishModal(true);
       //window.location.reload();
       //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
-    } */
+    }
   };
 
   return (
