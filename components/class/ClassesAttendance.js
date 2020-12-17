@@ -118,7 +118,9 @@ const ClassesAttendance = ({ course_id }) => {
     if (sessOpt.length) {
       let theSession = sessOpt[0];
       console.log("Selected Session", theSession);
-      const sessionName = `${theSession.title} - (${theSession.startDate} ${theSession.endDate})`;
+      let sDate = moment(theSession.startDate).format("YYYY/MM/DD h:mm a");
+      let eDate = moment(theSession.endDate).format("YYYY/MM/DD h:mm a");
+      const sessionName = `${theSession.title} - (${sDate} - ${eDate})`;
 
       /* For Update: Temporariy code */
       console.log(courseDetails);
@@ -128,9 +130,43 @@ const ClassesAttendance = ({ course_id }) => {
 
       let learnerList;
       //check if there are learners
+
       theSession.learnerSession && theSession.learnerSession.length
         ? (learnerList = theSession.learnerSession)
         : (learnerList = []);
+
+
+        /* var config = {
+          method: "get",
+          url: apiBaseUrl + "/Attendance/" + theSession.id,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          //data: { courseId: course_id },
+        };
+        async function fetchData(config) {
+          try {
+            const response = await axios(config);
+            if (response) {
+              let theRes = response.data;
+               console.log("Session Response", response.data);               
+              if (theRes) {
+                
+              } else {
+                
+              }
+            }
+          } catch (error) {
+            const { response } = error;
+            console.log("Error Response", response);   
+            
+          }
+          //setLoading(false);
+        }
+        fetchData(config); */
+
+      
       setSessionData({
         trigger: theSession.id,
         sessionTitle: sessionName,
@@ -147,13 +183,13 @@ const ClassesAttendance = ({ course_id }) => {
     setSpin(false);
   }
   function onBlur() {
-    console.log("blur");
+    //console.log("blur");
   }
   function onFocus() {
-    console.log("focus");
+    //console.log("focus");
   }
   function onSearch(val) {
-    console.log("search:", val);
+    //console.log("search:", val);
   }
 
   const sessionOptionList =

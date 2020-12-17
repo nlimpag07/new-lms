@@ -4,11 +4,12 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal, Select, Input, Divider, Spin } from "antd";
+import { Row, Col, Modal, Select, Input, Divider, Spin, Checkbox } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 import Cookies from "js-cookie";
+import moment from "moment";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -51,21 +52,56 @@ const ClassesAttendanceList = ({ sessionData }) => {
 
   useEffect(() => {
     //console.log("Learners List", enrolleeList);
-    const ddata = enrolleeList.length
+    if (trigger) {
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/Attendance/" + trigger,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        //data: { courseId: course_id },
+      };
+      async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            let theRes = response.data;
+            //console.log("Session Response", response.data);
+            let ddata;
+            if (theRes) {
+              ddata = theRes.map((dataItem) => {
+                let newDataSet = {
+                  selected: false,
+                  courseName: dataItem.course.title,
+                  sessionName: sessionTitle,
+                  learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
+                };
+                return Object.assign(newDataSet, dataItem);
+              });
+            } else {
+              ddata = [];
+            }
+            setData(ddata);
+          }
+        } catch (error) {
+          const { response } = error;
+          console.log("Error Response", response);
+          setData([]);
+        }
+      }
+      fetchData(config);
+      /* const ddata = enrolleeList.length
       ? enrolleeList.map((dataItem) => {
           let newDataSet = {
             selected: false,
             learnerName: dataItem.learner.user.firstName,
           };
-          return Object.assign(newDataSet, dataItem);
-          /* Object.assign(
-            { selected: false, learnerName: dataItem.learner.user.firstName },
-            dataItem
-          ); */
+          return Object.assign(newDataSet, dataItem);         
         })
       : [];
-    console.log("Learners List", ddata);
-    setData(ddata);
+    console.log("Learners List", ddata); */
+    }
     setLoading(false);
   }, [trigger]);
   /* useEffect(() => {
@@ -128,11 +164,9 @@ const ClassesAttendanceList = ({ sessionData }) => {
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
   });
-  //console.log(Data)
-
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
-      if (item.ProductID === event.dataItem.ProductID) {
+      if (item.id === event.dataItem.id) {
         item.selected = !event.dataItem.selected;
       }
       return item;
@@ -178,23 +212,146 @@ const ClassesAttendanceList = ({ sessionData }) => {
   };
 
   const dateFormat = (props) => {
-    //console.log("Props", props.dataItem);
-    // const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
+    //console.log("DateFormat", props.dataItem);
+    const dateSchedule = moment(props.dataItem.dateSchedule).format(
+      "YYYY/MM/DD h:mm a"
+    );
+    return <td>{dateSchedule}</td>;
+  };
+  const changeStatusOnClick = (props, statusToChange) => {
+    let dataItem = props.dataItem;
+    let statusSource;
+    let currentStatus = false;
+    switch (statusToChange) {
+      case "isPresent":
+        currentStatus = dataItem.isPresent;
+        statusSource = "isPresent";
+        break;
+      case "isLate":
+        currentStatus = dataItem.isLate;
+        statusSource = "isLate";
+        break;
+      case "isAbsent":
+        currentStatus = dataItem.isAbsent;
+        statusSource = "isAbsent";
+        break;
+      case "isExcused":
+        currentStatus = dataItem.isExcused;
+        statusSource = "isExcused";
+        break;
+    }
+    //console.log("DateFormat", props.dataItem);
+    const dateSchedule = moment(dataItem.dateSchedule).format(
+      "YYYY/MM/DD h:mm a"
+    );
+    const statusOnchange = (e, c, s, d) => {
+      //console.log("DataItem", d);
+      /*console.log("OnChange Status:", e.target.checked);
+      console.log("Old Status:", c);
+      console.log("statusSource:", s); */
+      const newData = Data.map((item) => {
+        if (item.id === d.id) {
+          item[s] = e.target.checked;
+          //console.log("EQUAL",`Item ID:${item[s]}=D ID:${d.id}` )
+        }
+        return item;
+      });
+      setData(newData);
+
+      //Now lets update the API
+      let endpoint = s.substring(2).toLowerCase();
+      //console.log(endpoint)
+      UpdateStatus(endpoint, d);
+    };
+    async function UpdateStatus(endpoint, d) {
+      console.log(endpoint);
+      console.log("DataItem", d);
+      //build the data
+      const { id, isPresent, isLate, isAbsent, isExcused } = d;
+      console.log("isPresent", isPresent);
+      let dataToSubmit = {
+        attendanceId: id,
+        isPresent: isPresent,
+        isLate: isLate,
+        isAbsent: isAbsent,
+        isExcused: isExcused,
+      };
+      var config = {
+        method: "patch",
+        url: apiBaseUrl + "/Attendance/" + endpoint,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(dataToSubmit),
+      };
+      //try to submit to api
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data;
+          console.log("Attendance Response", response.data);
+          /* let ddata;
+          if (theRes) {
+            ddata = theRes.map((dataItem) => {
+              let newDataSet = {
+                selected: false,
+                courseName: dataItem.course.title,
+                sessionName: sessionTitle,
+                learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
+              };
+              return Object.assign(newDataSet, dataItem);
+            });
+          } else {
+            ddata = [];
+          } */
+        }
+      } catch (error) {
+        const { response } = error;
+        console.log("Error Response", response);
+      }
+      /*async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            let theRes = response.data;
+            //console.log("Session Response", response.data);
+            let ddata;
+            if (theRes) {
+              ddata = theRes.map((dataItem) => {
+                let newDataSet = {
+                  selected: false,
+                  courseName: dataItem.course.title,
+                  sessionName: sessionTitle,
+                  learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
+                };
+                return Object.assign(newDataSet, dataItem);
+              });
+            } else {
+              ddata = [];
+            }
+            setData(ddata);
+          }
+        } catch (error) {
+          const { response } = error;
+          console.log("Error Response", response);
+          setData([]);
+        }
+      }
+      fetchData(config); */
+    }
     return (
       <td>
-        <button
-          className="k-primary k-button k-grid-edit-command"
-          /* onClick={() => {
-             edit(this.props.dataItem);
-           }} */
-        >
-          <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
-        </button>
+        <Checkbox
+          checked={currentStatus}
+          onChange={(e) =>
+            statusOnchange(e, currentStatus, statusSource, dataItem)
+          }
+        >{`${statusToChange} ${currentStatus}`}</Checkbox>
       </td>
     );
   };
   return (
-    //GridType(gridList)
     <>
       <Grid
         data={orderBy(
@@ -204,7 +361,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
         /* style={{ height: "550px" }} */
         selectedField="selected"
         onSelectionChange={selectionChange}
-        onHeaderSelectionChange={headerSelectionChange}
+        /* onHeaderSelectionChange={headerSelectionChange} */
         onRowClick={rowClick}
         sortable
         sort={theSort.sort}
@@ -219,36 +376,29 @@ const ClassesAttendanceList = ({ sessionData }) => {
         pageable={true}
         onPageChange={pageChange}
       >
-        {/* <Grid
-                  data={orderBy(Data, theSort.sort)}
-                  style={{ height: "550px" }}
-                  selectedField="selected"
-                  onSelectionChange={selectionChange}
-                  onHeaderSelectionChange={headerSelectionChange}
-                  onRowClick={rowClick}
-                  sortable
-                  sort={theSort.sort}
-                  onSortChange={(e) => {
-                    setTheSort({
-                      sort: e.sort,
-                    });
-                  }}
-                > */}
+        <Column field="learnerName" title="Name" />
+        <Column field="sessionName" title="Session Name" />
+        <Column field="dateSchedule" title="Attendace Date" cell={dateFormat} />
         <Column
-          field="selected"
-          width="65px"
-          headerSelectionValue={
-            Data.findIndex((dataItem) => dataItem.selected === false) === -1
-          }
+          field="isPresent"
+          title="Present"
+          cell={(e) => changeStatusOnClick(e, "isPresent")}
         />
-        <Column field="learnerName" title="Name" width="300px" />
-        <Column field="UnitsInStock" title="Course" />
-        <Column field="UnitsOnOrder" title="User Group" />
-        <Column field="updatedAt" title="Date" cell={dateFormat} />
-        <Column field="Discontinued" title="Present" />
-        <Column field="ReorderLevel" title="Late" />
-        <Column field="Discontinued" title="Absent" />
-        <Column field="Discontinued" title="Excused" />
+        <Column
+          field="isLate"
+          title="Late"
+          cell={(e) => changeStatusOnClick(e, "isLate")}
+        />
+        <Column
+          field="isAbsent"
+          title="Absent"
+          cell={(e) => changeStatusOnClick(e, "isAbsent")}
+        />
+        <Column
+          field="isExcused"
+          title="Excused"
+          cell={(e) => changeStatusOnClick(e, "isExcused")}
+        />
         {/* <Column
                   sortable={false}
                   cell={ActionRender}
