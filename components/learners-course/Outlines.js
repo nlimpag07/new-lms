@@ -75,7 +75,7 @@ const linkUrl = Cookies.get("usertype");
 const Outlines = (props) => {
   const router = useRouter();
   const { cDetails, course_id, learnerId, listOfOutlines } = props;
-  console.log("My outlines", cDetails);
+
   const [course, setCourse] = useState(cDetails);
   const [outlineList, setOutlineList] = useState(listOfOutlines);
   const [spinner, setSpinner] = useState(false);
@@ -91,6 +91,7 @@ const Outlines = (props) => {
 
   var myOutlineCount = 0;
   if (outlineList) myOutlineCount = outlineList.length;
+  
   useEffect(() => {
     //setOutlineList(listOfOutlines);
     //console.log("run SetLoading",loading)
@@ -127,10 +128,12 @@ const Outlines = (props) => {
         }
       }
       fetchData(config);
-      setSpinner(false);
+      setSpinner(false);     
     }
   }, [startOutline]);
 
+  /* console.log("StartOutline", startOutline);
+  console.log("My outlines", outlineList); */
   return (
     <Row
       className="widget-container learnerOutlines"

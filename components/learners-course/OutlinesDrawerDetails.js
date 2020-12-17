@@ -110,11 +110,11 @@ const OutlinesDrawerDetails = ({
   } = outlineDetails;
 
   useEffect(() => {}, [drawerVisible]);
-  useEffect(() => {
+  /* useEffect(() => {
     if (startOutline) {
       setArticulateModal2Visible(true);
     }
-  }, [startOutline]);
+  }, [startOutline]); */
 
   function onStartOrContinueLesson(e) {
     e.preventDefault();
@@ -147,9 +147,10 @@ const OutlinesDrawerDetails = ({
             // wait for response if the verification is true
             if (theRes) {
               //true
-              //setSpinner(true);
+              setSpinner(false);
+              setArticulateModal2Visible(true);
               setdrawerVisible(true);
-              setStartOutline(true);
+              /* setStartOutline(true); */
               //console.log()
               //Redirect to Course Outline
               /* router.push(
@@ -302,10 +303,11 @@ const OutlinesDrawerDetails = ({
 
       eventer(messageEvent, function (e) {
         if (e.data == "1" /* && e.origin == "http://localhost:5001" */) {
-          console.log("RUN API FETCH", e.origin);
+          /* console.log("RUN API FETCH", e.origin); */
           OnArticulateModalClose();
         } else {
-          console.log("RUN API FETCH No value detected");
+          console.log("No value from articulate detected. Exiting...");
+          OnArticulateModalClose();
         }
       });
     }
@@ -404,7 +406,7 @@ const OutlinesDrawerDetails = ({
         lrsConfig
       )
       .then((result) => {
-        //console.log(result);
+        //console.log("xapi result", result);
         var completion_time = null,
           time_spent = null,
           xapi = result.data.statements,
@@ -442,7 +444,7 @@ const OutlinesDrawerDetails = ({
 
         if (recordList && recordList.length) {
           let lastRecord = recordList[recordList.length - 1];
-          //console.log("Last Record",lastRecord)
+          //console.log("Completion Records", recordList);
           let data = JSON.stringify(lastRecord);
           //console.log("before Sent to LMS API",lastRecord)
           var postConfig = {
@@ -462,13 +464,12 @@ const OutlinesDrawerDetails = ({
       try {
         const response = await axios(postConfig);
         if (response) {
-          //let theRes = response.data.response;
+          //console.log("After Update Response", response);
           setStartOutline(true);
           setArticulateModal2Visible(false);
           setdrawerVisible(false);
           setOutlineFinishModal(false);
-          //console.log("Successfully Posted Data", response.data);
-          // wait for response if the verification is true
+          setSpinner(false);
         }
       } catch (error) {
         const { response } = error;
