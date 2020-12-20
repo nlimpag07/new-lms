@@ -24,7 +24,7 @@ const TemplateFooter = () => {
           height: 42px;
         }
         footer .footer-holder .gutter-row.filled {
-          background-color: #4d4d4d;
+          background-color: #4e4e4e;
           padding: 10px;
           color: #989898;
         }

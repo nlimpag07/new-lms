@@ -51,10 +51,10 @@ const CourseOutlines = ({ courseDetails }) => {
   var outlines = courseDetails.course
     ? courseDetails.course.courseOutline
     : null;
-    var competencies = courseDetails.course
+  var competencies = courseDetails.course
     ? courseDetails.course.courseCompetencies
     : null;
-    
+
   //console.log("cDetails", cDetails);
   //the pages to manage. If url query router.query.manage[0] is not listed,
   //redirect to 404
@@ -66,8 +66,6 @@ const CourseOutlines = ({ courseDetails }) => {
   var isApproved = courseDetails.course ? 1 : 0;
   /* var isApproved =
     courseDetails.course & (courseDetails.course.isApproved == 1) ? 1 : 0; */
-
-
 
   useEffect(() => {
     setTheLabel(theOutline);
@@ -110,11 +108,10 @@ const CourseOutlines = ({ courseDetails }) => {
     return <Error statusCode={404} />;
   } */
 
-  const onChangeTab=(activeKey)=>{
+  const onChangeTab = (activeKey) => {
     //console.log(activeKey)
     router.push(`/learner/my-courses/${courseId}/${activeKey}`);
-
-  }
+  };
   /* if (manageQueryLength == 2 && theOutline == "learning-outlines" && !isError) {
     let course_id = courseId;
     const parsed = parseInt(course_id);
@@ -203,7 +200,10 @@ const CourseOutlines = ({ courseDetails }) => {
 
   return (
     <MainThemeLayout>
-      <Layout className="main-content-holder courses-class" id="courses-class">
+      <Layout
+        className="main-content-holder outlinesDetailsTabber"
+        id="courses-class"
+      >
         <Row>
           <Col>
             <h2 className="widget-title">{cDetails.title}</h2>
@@ -214,20 +214,20 @@ const CourseOutlines = ({ courseDetails }) => {
             Content of Tab Pane 1
           </TabPane> */}
           <TabPane tab="Outlines" key="learning-outlines">
-          <LearnersMyCourseOutlines
-            cDetails={cDetails}
-            course_id={courseId}
-            learnerId={learnerId}
-            listOfOutlines={outlines}
-          />
+            <LearnersMyCourseOutlines
+              cDetails={cDetails}
+              course_id={courseId}
+              learnerId={learnerId}
+              listOfOutlines={outlines}
+            />
           </TabPane>
           <TabPane tab="Assessments" key="learning-assessments">
-          <CourseAssessmentsList
-            cDetails={cDetails}
-            course_id={courseId}
-            learnerId={learnerId}
-            listOfOutlines={outlines}
-          />
+            <CourseAssessmentsList
+              cDetails={cDetails}
+              course_id={courseId}
+              learnerId={learnerId}
+              listOfOutlines={outlines}
+            />
           </TabPane>
           <TabPane tab="Certificates" key="learning-certificates">
             Needs to be addressed
@@ -249,8 +249,17 @@ const CourseOutlines = ({ courseDetails }) => {
           padding: 15px 20px;
           font-weight: 500;
         }
-        .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+        .outlinesDetailsTabber .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
           height: 5px;
+          background-color: #f9ad48;
+        }
+        .outlinesDetailsTabber
+          .ant-tabs-tab.ant-tabs-tab-active
+          .ant-tabs-tab-btn {
+          color: #f9ad48;
+        }
+        .outlinesDetailsTabber .ant-tabs-tab:hover {
+          color: #f9ad48;
         }
       `}</style>
     </MainThemeLayout>

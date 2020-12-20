@@ -11,41 +11,40 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const CourseAssessmentDetails = ({
   modal2Visible,
   setModal2Visible,
-  transcriptDetails,
+  assessmentDetails,
 }) => {
   const router = useRouter();
-  const [userFullName, setUserFullName] = useState("");
-  //console.log("transcriptDetails", transcriptDetails);
+  const [assessmentTitle, setAssessmentTitle] = useState("");
+  console.log("assessmentDetails", assessmentDetails);
 
   useEffect(() => {
-    let userData = JSON.parse(localStorage.getItem("userDetails"));
+    /* let userData = JSON.parse(localStorage.getItem("userDetails"));
     const { firstName, lastName } = userData;
-    let theFullName = `${firstName}, ${lastName}`;
-    setUserFullName(theFullName);
+    let theFullName = `${firstName}, ${lastName}`; */
+    setAssessmentTitle(assessmentDetails ? assessmentDetails.title : "");
   }, [modal2Visible]);
 
   //console.log(userFullName);
-  var courseTitle;
   var courseInstructorsList;
   var courseCode;
   var rating;
   var courseOutlines;
-  if (transcriptDetails) {
-    courseTitle = transcriptDetails.courseTitle;
-    courseInstructorsList = transcriptDetails.course.courseInstructor.length
-      ? transcriptDetails.course.courseInstructor.map((instructor, index) => {
+  if (assessmentDetails) {
+    //assessmentTitle = assessmentDetails.title;
+    /* courseInstructorsList = assessmentDetails.course.courseInstructor && assessmentDetails.course.courseInstructor.length
+      ? assessmentDetails.course.courseInstructor.map((instructor, index) => {
           let instructorFullName =
             instructor.user.firstName + ", " + instructor.user.lastName;
 
           return <Tag key={index}>{instructorFullName}</Tag>;
         })
+      : null; */
+    courseCode = assessmentDetails.course
+      ? assessmentDetails.course.code
       : null;
-    courseCode = transcriptDetails.course
-      ? transcriptDetails.course.code
-      : null;
-    rating = transcriptDetails.result ? transcriptDetails.result : null;
-    courseOutlines = transcriptDetails.course.courseOutline.length
-      ? transcriptDetails.course.courseOutline.map((outline, index) => {
+    rating = assessmentDetails.result ? assessmentDetails.result : null;
+    /* courseOutlines = assessmentDetails.course.courseOutline.length
+      ? assessmentDetails.course.courseOutline.map((outline, index) => {
           let outlineNewDetails = {
             number: index + 1,
             outlineId: outline.id,
@@ -69,7 +68,7 @@ const CourseAssessmentDetails = ({
 
           return outlineNewDetails;
         })
-      : [];
+      : []; */
   }
   //console.log(courseOutlines);
 
@@ -108,7 +107,7 @@ const CourseAssessmentDetails = ({
     //GridType(gridList)
     <Row>
       <Modal
-        title={<h2 className="myTranscriptTitle">{userFullName}</h2>}
+        title={<h2 className="myTranscriptTitle">{assessmentTitle}</h2>}
         centered
         visible={modal2Visible}
         onOk={() => setModal2Visible(false)}
@@ -116,55 +115,18 @@ const CourseAssessmentDetails = ({
         maskClosable={false}
         destroyOnClose={true}
         width="50%"
-        className="transcriptDetailsModal"
+        className="assessmentDetailsModal"
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
       >
         <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
-          <Col xs={24}>
-            <h3>{courseTitle}</h3>
-          </Col>
-        </Row>
-        <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
-          <Col xs={24} sm={24} md={8} lg={8}>
-            <div className="divSeparator">
-              <span>
-                Rating: <Tag>{rating}</Tag>
-              </span>
-            </div>
-            <div className="divSeparator">
-              <span>Instructor: {courseInstructorsList}</span>
-            </div>
-            <div className="divSeparator">
-              <span>Code: {courseCode}</span>
-            </div>
-          </Col>
-          <Col
-            xs={24}
-            sm={24}
-            md={8}
-            lg={8}
-            offset={8}
-            style={{ textAlign: "left" }}
-          >
-            <div className="divSeparator">
-              Final Grade:{" "}
-              <span className="finalScoreBig">
-                {transcriptDetails.finalScore}
-              </span>
-            </div>
-            <div className="divSeparator">
-              Date of Completion:{" "}
-              <span className="finalScoreBig">
-                {transcriptDetails.finalScore}
-              </span>
-            </div>
-          </Col>
-        </Row>
-        <Divider dashed style={{ borderColor: "#999999", margin: "5px 0" }} />
-        <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
-          <Col xs={24} sm={24} md={24} lg={24}>
-            <Table columns={columns} dataSource={courseOutlines} size="small" />
+          <Col>
+            <p>
+              This is to know how much you have learned during the course. This
+              exam is consisting of 10 multiple choice questions. If you are
+              ready, click BEGIN.
+            </p>
+            <p>Good luck!</p>
           </Col>
         </Row>
       </Modal>
@@ -191,7 +153,7 @@ const CourseAssessmentDetails = ({
           margin-bottom: 10px;
           line-height: 2rem;
         }
-        .transcriptDetailsModal .ant-modal-footer {
+        .assessmentDetailsModal .ant-modal-footer {
           display: none;
         }
       `}</style>

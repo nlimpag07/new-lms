@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge, notification, Divider, List } from "antd";
+import { Badge, notification, Divider, List,Avatar } from "antd";
 import Cookies from "js-cookie";
 import axios from "axios";
 import DateFormatter from "../../dateFormatter/DateFormatter";
@@ -47,7 +47,6 @@ const Notifications = () => {
         setNotiList(ddata);
       }
     });
-    
   }, []);
 
   const openNotification = (e) => {
@@ -58,7 +57,7 @@ const Notifications = () => {
         <Divider style={{ marginTop: "0", marginBottom: "0" }} />
         <div className="notiListHolder">
           <List
-          className="Listcontainer"
+            className="Listcontainer"
             size="small"
             itemLayout="horizontal"
             dataSource={notiList}
@@ -75,7 +74,7 @@ const Notifications = () => {
                           : "default"
                       }
                       text={DateFormatter(item.createdAt)}
-                    />
+                    />                    
                   }
                   /* title={item.auditTrailDescription} */
                   description={<a>{item.auditTrailDescription}</a>}
@@ -99,13 +98,19 @@ const Notifications = () => {
       <Link href="#">
         <a onClick={openNotification}>
           <Badge size="small" count={notifCount} overflowCount={99}>
-            <FontAwesomeIcon icon={["fas", "bell"]} size="lg" />
+            <Avatar
+              icon={<FontAwesomeIcon icon={["far", "bell"]} size="1x" />}
+              style={{
+                color: '#ebebeb',
+                backgroundColor: '#707070',
+              }}
+            />
+            {/* <FontAwesomeIcon icon={["fas", "bell"]} size="lg" /> */}
           </Badge>
         </a>
       </Link>
 
       <style jsx global>{`
-        
         .ant-badge {
           display: inline;
         }
@@ -129,10 +134,9 @@ const Notifications = () => {
         .Listcontainer .ant-list-item {
           padding: 8px 0;
         }
-        .Listcontainer .ant-list-item span{
-          font-size:10px;
+        .Listcontainer .ant-list-item span {
+          font-size: 10px;
         }
-        
       `}</style>
     </>
   );

@@ -1,12 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Layout, Row, Col, Badge, Avatar, Menu, Dropdown, Modal } from "antd";
+import {
+  Layout,
+  Row,
+  Col,
+  Badge,
+  Avatar,
+  Menu,
+  Dropdown,
+  Modal,
+  Select,
+} from "antd";
 import { useIsAuthenticated, useAuth } from "../../../providers/Auth";
-import { DownOutlined, ProfileFilled, EyeFilled } from "@ant-design/icons";
+import {
+  DownOutlined,
+  ProfileFilled,
+  EyeFilled,
+  UserOutlined,
+} from "@ant-design/icons";
 import Notifications from "./Notifications";
+import { callbackify } from "util";
 
 //import UserRoleSwitcher from "../../user/UserRoleSwitcher";
+const { Option } = Select;
 
 const MainNavbar = ({ userRole }) => {
   const { isUsertype, setUsertype, userDetails } = useAuth();
@@ -20,11 +37,17 @@ const MainNavbar = ({ userRole }) => {
     const userData = JSON.parse(localStorage.getItem("userDetails"));
     console.log(userData);
   }, []); */
+  function handleChange(value) {
+    console.log(`selected ${value}`);
+  }
+
   return (
     <Layout>
       <Row className="header-nav-top">
         <Col className="nav-top-left" flex="1 1">
-          AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
+          <span className="navLocationContainer">
+            AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
+          </span>
         </Col>
         <Col className="nav-top-right" flex="0 1 25%">
           <ul>
@@ -39,12 +62,16 @@ const MainNavbar = ({ userRole }) => {
                       className="ant-dropdown-link"
                       onClick={(e) => e.preventDefault()}
                     >
-                      {/*  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> */}
-                      <FontAwesomeIcon
-                        icon={["fas", "user-circle"]}
-                        size="lg"
-                      />{" "}
-                      {userDetails.firstName} <DownOutlined />
+                      <Avatar
+                        icon={
+                          <FontAwesomeIcon icon={["fas", "user"]} size="1x" />
+                        }
+                        style={{
+                          color: "#ebebeb",
+                          backgroundColor: "#707070",
+                        }}
+                      />
+                      {/* <FontAwesomeIcon icon={["far", "user"]} size="lg" /> */}
                     </a>
                   </Dropdown>
                 </li>
@@ -63,7 +90,16 @@ const MainNavbar = ({ userRole }) => {
             <li className="lang">
               <Link href="/lang" passHref>
                 <a>
-                  <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" /> En
+                  <Avatar
+                    icon={
+                      <FontAwesomeIcon icon={["fas", "globe-asia"]} size="1x" />
+                    }
+                    style={{
+                      color: "#ebebeb",
+                      backgroundColor: "#707070",
+                    }}
+                  />
+                  {/* <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" />  En*/}
                 </a>
               </Link>
             </li>
@@ -75,7 +111,19 @@ const MainNavbar = ({ userRole }) => {
           LEFT Bottom NAV
         </Col>
         <Col className="nav-bot-right" flex="0 1 25%">
-          <Col className="right-shape">Right Bottom Nav</Col>
+          <Col className="right-shape">
+            <div>
+              GROUP {" "}
+              <Select
+                defaultValue="lucy"
+                style={{ width: "calc(90% - 20px)" }}
+                onChange={handleChange}
+              >
+                <Option value={1}>Branch 1</Option>
+                <Option value={2}>Branch 2</Option>
+              </Select>
+            </div>
+          </Col>
         </Col>
       </Row>
       {/* <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} /> */}
@@ -87,16 +135,18 @@ const MainNavbar = ({ userRole }) => {
           list-style: none;
           padding: 0;
           margin: 0;
+          text-align: right;
         }
         .ant-layout-header .header-nav-top {
           text-align: center;
         }
-        
-        .header-nav-top .nav-top-right .notif,.header-nav-top .nav-top-right .lang{
-          width:30%;
+
+        .header-nav-top .nav-top-right .notif,
+        .header-nav-top .nav-top-right .lang {
+          /*  width:30%; */
         }
-        .header-nav-top .nav-top-right .logout{
-          width:40%;
+        .header-nav-top .nav-top-right .logout {
+          /* width:40%; */
         }
         .header-nav-top .nav-top-right ul li {
           display: inline-block;
@@ -147,14 +197,14 @@ const profileMenu = (userRole) => {
           <Menu.Item key="1">
             <Link href={`/${userRole}/users`} as={`/${userRole}/users`}>
               <a>
-                <FontAwesomeIcon icon={["fas", "users"]} size="sm" /> Users
+                <FontAwesomeIcon icon={["fas", "users"]} size="1x" /> Users
               </a>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
             <Link href={`/${userRole}/picklists`} as={`/${userRole}/picklists`}>
               <a>
-                <FontAwesomeIcon icon={["fas", "sliders-h"]} size="sm" />{" "}
+                <FontAwesomeIcon icon={["fas", "sliders-h"]} size="1x" />{" "}
                 Picklists
               </a>
             </Link>

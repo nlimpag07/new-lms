@@ -42,7 +42,7 @@ const AssessmentsList = ({ listOfOutlines }) => {
   //console.log("outlineList", outlineList);
 
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  const [transcriptDetails, setCourseAssessmentDetails] = useState("");
+  const [assessmentDetails, setCourseAssessmentDetails] = useState("");
   const newAssessmentList = [];
   const newTranscripts =
     outlineList && outlineList.length
@@ -201,7 +201,7 @@ const AssessmentsList = ({ listOfOutlines }) => {
       <CourseAssessmentDetails
         modal2Visible={modal2Visible}
         setModal2Visible={setModal2Visible}
-        transcriptDetails={transcriptDetails}
+        assessmentDetails={assessmentDetails}
       />
 
       {/* <CourseCircularUi /> */}
