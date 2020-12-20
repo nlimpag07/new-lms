@@ -347,7 +347,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
           onChange={(e) =>
             statusOnchange(e, currentStatus, statusSource, dataItem)
           }
-        >{`${statusToChange} ${currentStatus}`}</Checkbox>
+        />{/* {`${statusToChange} ${currentStatus}`}</Checkbox> */}
       </td>
     );
   };

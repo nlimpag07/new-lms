@@ -222,7 +222,7 @@ const CourseOutlines = ({ course_id }) => {
         "Content-Type": "application/json",
       },
     };
-    async function fetchData(config) {
+    async function getOutlinesData(config) {
       const response = await axios(config);
       if (response) {
         /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
@@ -235,7 +235,7 @@ const CourseOutlines = ({ course_id }) => {
       }
       setLoading(false);
     }
-    fetchData(config);
+    getOutlinesData(config);
   }, [loading]);
 
   const showModal = (modaltitle, modalformname, modalbodycontent) => {
