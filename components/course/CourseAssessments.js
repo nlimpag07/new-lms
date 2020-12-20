@@ -453,11 +453,11 @@ const CourseAssessments = ({ course_id }) => {
           curAttempts != values.assessmentdetails.attempts
         ) {
           if (values.assessmentdetails.attempts > 0) {
-            data.isAttemptRequest='update';
+            data.isAttemptRequest=true;
             data.isAttempts = 1;
             data.attempts = values.assessmentdetails.attempts;
           } else {
-            data.isAttemptRequest='update';
+            data.isAttemptRequest=true;
             data.isAttempts = 0;
             data.attempts = 0;
           }

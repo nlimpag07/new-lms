@@ -122,6 +122,7 @@ const CoursePublish = ({ isPublished, title, course_id }) => {
               type="primary"
               shape="round"
               className="viewStatusReq-button"
+              onClick={() => setPubModal2Visible(true)}
               danger
             >
               Unpublish

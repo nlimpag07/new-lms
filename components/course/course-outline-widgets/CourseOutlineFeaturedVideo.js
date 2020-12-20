@@ -11,7 +11,7 @@ import {
   Collapse,
   Button,
   Upload,
-  Alert
+  Alert,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -39,7 +39,9 @@ const CourseOutlineFeaturedVideo = (props) => {
     defaultWidgetValues,
     setdefaultWidgetValues,
   } = props;
-  var featured_video = defaultWidgetValues.outlinefeaturedvideo?defaultWidgetValues.outlinefeaturedvideo:'';
+  var featured_video = defaultWidgetValues.outlinefeaturedvideo
+    ? defaultWidgetValues.outlinefeaturedvideo
+    : "";
 
   return (
     <>
@@ -57,10 +59,7 @@ const CourseOutlineFeaturedVideo = (props) => {
               <Form.List name={widgetFieldLabels.catFormName}>
                 {(fields, { add, remove }) => {
                   return (
-                    <Input.Group
-                      compact
-                      style={{ textAlign: "center" }}
-                    >
+                    <Input.Group compact style={{ textAlign: "center" }}>
                       {fields.map((field, index) => {
                         field = {
                           ...field,
@@ -118,10 +117,7 @@ const CourseOutlineFeaturedVideo = (props) => {
               <Form.List name={widgetFieldLabels.catFormName}>
                 {(fields, { add, remove }) => {
                   return (
-                    <Input.Group
-                      compact
-                      style={{ textAlign: "center" }}
-                    >
+                    <Input.Group compact style={{ textAlign: "center" }}>
                       <Form.Item
                         required={false}
                         key={`${widgetFieldLabels.catFormName}-0`}
@@ -208,10 +204,10 @@ const modalFormBody = () => {
   };
   const beforeUpload = (file) => {
     setLoading(true);
-    if (file.type !== 'application/x-zip-compressed') {
+    if (file.type !== "application/x-zip-compressed") {
       setalertMessage(`${file.name} is not a ZIP file`);
     }
-    return file.type === 'application/x-zip-compressed';
+    return file.type === "application/x-zip-compressed";
   };
   const uploadButton = (
     <div>
@@ -235,28 +231,32 @@ const modalFormBody = () => {
   return (
     <>
       {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
-    <Form.Item name="name">
-      <Dragger
-        onChange={handleChange}
-        multiple={false}
-        beforeUpload={beforeUpload}
-        fileList={fileList.fileList}
-        onRemove={onRemove}
-      >
-        {imageUrl ? (
-          <video
-          controls src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
-      </Dragger>
-      {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
+      <Form.Item name="name">
+        <Dragger
+          onChange={handleChange}
+          multiple={false}
+          beforeUpload={beforeUpload}
+          fileList={fileList.fileList}
+          onRemove={onRemove}
+        >
+          {imageUrl ? (
+            <video
+              controls
+              src={imageUrl}
+              alt="avatar"
+              style={{ width: "100%" }}
+            />
+          ) : (
+            uploadButton
+          )}
+        </Dragger>
+        {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
         <Button>
           <UploadOutlined /> Upload
         </Button>
       </Upload> */}
-      {/* <Input type="file" onChange={handleChange} /> */}
-    </Form.Item>
+        {/* <Input type="file" onChange={handleChange} /> */}
+      </Form.Item>
     </>
   );
 };

@@ -113,14 +113,14 @@ const MainNavbar = ({ userRole }) => {
         <Col className="nav-bot-right" flex="0 1 25%">
           <Col className="right-shape">
             <div>
-              GROUP {" "}
+              GROUP{" "}
               <Select
-                defaultValue="lucy"
+                defaultValue="Branch 1"
                 style={{ width: "calc(90% - 20px)" }}
                 onChange={handleChange}
               >
-                <Option value={1}>Branch 1</Option>
-                <Option value={2}>Branch 2</Option>
+                <Option value="Branch 1">Branch 1</Option>
+                <Option value="Branch 2">Branch 2</Option>
               </Select>
             </div>
           </Col>

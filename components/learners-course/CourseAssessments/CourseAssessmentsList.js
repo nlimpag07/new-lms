@@ -61,7 +61,7 @@ const AssessmentsList = ({ listOfOutlines }) => {
                 totalItems: at.courseAssessmentItem
                   ? at.courseAssessmentItem.length
                   : 0,
-                due: at.isImmediate == 1 ? "immediately" : toDate,
+                due: at.isImmediate == 1 ? "immediately" : at.toDate,
               };
               newAssessmentList.push(reArrayAss);
             });

@@ -212,7 +212,7 @@ const CourseOutlines = ({ course_id }) => {
     modalFormName: "",
     modalBodyContent: "",
   });
-  
+
   useEffect(() => {
     var config = {
       method: "get",
@@ -222,17 +222,24 @@ const CourseOutlines = ({ course_id }) => {
         "Content-Type": "application/json",
       },
     };
+
     async function getOutlinesData(config) {
-      const response = await axios(config);
-      if (response) {
-        /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
+      try {
+        const response = await axios(config);
+        if (response) {
+          /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
         setOutlineAllList(response.data); */
-        setOutlineList(response.data.result);
-        //console.log(response.data.result);
-      } else {
-        /* const userData = JSON.parse(localStorage.getItem("courseAllList"));
+          setOutlineList(response.data.result);
+          //console.log(response.data.result);
+        } else {
+          /* const userData = JSON.parse(localStorage.getItem("courseAllList"));
         setOutlineAllList(userData); */
+        }
+      } catch (error) {
+        const { response } = error;
+          console.log("Error Response", response);
       }
+
       setLoading(false);
     }
     getOutlinesData(config);
