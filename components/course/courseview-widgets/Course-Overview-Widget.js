@@ -9,10 +9,9 @@ const linkUrl = Cookies.get("usertype");
 const CourseOverviewWidget = ({ course_details }) => {
   const router = useRouter();
   var aspath = router.asPath.split("/");
-  aspath = `${aspath[2]}/${aspath[3]}`
+  aspath = `${aspath[2]}/${aspath[3]}`;
   const route = router.route;
 
-  
   //var pathname = router.asPath.split("/");
   /* var [courseId, setCourseId] = useState(course_id);
   const homeUrl = process.env.homeUrl;
@@ -29,7 +28,7 @@ const CourseOverviewWidget = ({ course_details }) => {
       <Row className="Course-Tags">
         <Col xs={24}>
           <p>{decodeURI(description)}</p>
-          <p>
+          {/* <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -57,7 +56,7 @@ const CourseOverviewWidget = ({ course_details }) => {
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
             culpa qui officia deserunt mollit anim id est laborum.
-          </p>
+          </p> */}
         </Col>
       </Row>
       <Row className="Course-Tags related-courses">
@@ -81,7 +80,10 @@ const CourseOverviewWidget = ({ course_details }) => {
           <h3>THE INSTRUCTOR</h3>
           {courseInstructor.length
             ? courseInstructor.map((instructor, index) => (
-              <span key={index}>{instructor.user.firstName}{" "}{instructor.user.lastName}{", "}</span>
+                <span key={index}>
+                  {instructor.user.firstName} {instructor.user.lastName}
+                  {", "}
+                </span>
                 /* <Link
                   key={index}
                   href={`${route}`}
