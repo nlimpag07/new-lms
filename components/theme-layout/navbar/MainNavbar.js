@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,8 +28,19 @@ import { callbackify } from "util";
 const { Option } = Select;
 
 const MainNavbar = ({ userRole }) => {
+  const router = useRouter();
+  const thePath = router.asPath;
+  var currentPage = thePath.split("/");
+  currentPage = currentPage[currentPage.length - 1];
+  currentPage =
+    currentPage == "administrator" ||
+    currentPage == "learner" ||
+    currentPage == "instructor"
+      ? "dashboard"
+      : currentPage;
+  //console.log('As Path',currentPage)
+
   const { isUsertype, setUsertype, userDetails } = useAuth();
-  console.log(userRole);
   const isAuthenticated = useIsAuthenticated();
   var [switchViewModal, setSwitchViewModal] = useState(
     (switchViewModal = false)
@@ -108,10 +121,10 @@ const MainNavbar = ({ userRole }) => {
       </Row>
       <Row className="header-nav-bot">
         <Col className="nav-bot-left" flex="1 1 200px">
-          <Row style={{height:"100%"}}>
+          <Row style={{ height: "100%" }}>
             <div className="pageHeaderHolder">
               <div className="pageHeaderTitle">
-                <span>Page Header</span>                
+                <span>{currentPage}</span>
               </div>
               <div className="phTitleIdentifier"></div>
             </div>
@@ -119,7 +132,7 @@ const MainNavbar = ({ userRole }) => {
         </Col>
         <Col className="nav-bot-right" flex="0 1 25%">
           <Row className="right-shape">
-            <div style={{width:"100%"}}>
+            <div style={{ width: "100%" }}>
               GROUP{" "}
               <Select
                 defaultValue="Branch 1"

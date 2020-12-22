@@ -430,6 +430,7 @@ a.ellipsis i {
 }
 .pageHeaderTitle {
   padding: 10px;
+  text-transform: capitalize;
 }
 .pageHeaderTitle span {
   padding-left: 30px;
