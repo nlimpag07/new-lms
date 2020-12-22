@@ -30,14 +30,32 @@ const { Option } = Select;
 const MainNavbar = ({ userRole }) => {
   const router = useRouter();
   const thePath = router.asPath;
-  var currentPage = thePath.split("/");
-  currentPage = currentPage[currentPage.length - 1];
-  currentPage =
-    currentPage == "administrator" ||
+  var currentPage;
+  var cPage = thePath.split("/");
+  cPage = cPage[cPage.length - 1];
+  switch (cPage) {
+    case "administrator":
+      currentPage = "dashboard";
+      break;
+    case "instructor":
+      currentPage = "dashboard";
+      break;
+    case "learner":
+      currentPage = "dashboard";
+      break;
+    case "profile":
+      currentPage = "profile";
+      break;
+    default:
+      currentPage = cPage;
+      break;
+  }
+  /* currentPage =
+    currentPage ==  ||
     currentPage == "learner" ||
     currentPage == "instructor"
       ? "dashboard"
-      : currentPage;
+      : currentPage; */
   //console.log('As Path',currentPage)
 
   const { isUsertype, setUsertype, userDetails } = useAuth();
@@ -208,7 +226,7 @@ const profileMenu = (userRole) => {
       menuItems = (
         <Menu>
           <Menu.Item key="0">
-            <Link href="/lang" passHref>
+            <Link href={`/${userRole}/profile`} as={`/${userRole}/profile`}>
               <a>
                 <ProfileFilled /> Profile
               </a>
@@ -244,7 +262,7 @@ const profileMenu = (userRole) => {
       menuItems = (
         <Menu>
           <Menu.Item key="0">
-            <Link href="/lang" passHref>
+            <Link href={`/${userRole}/profile`} as={`/${userRole}/profile`}>
               <a>
                 <ProfileFilled /> Profile
               </a>
@@ -265,7 +283,7 @@ const profileMenu = (userRole) => {
       menuItems = (
         <Menu>
           <Menu.Item key="0">
-            <Link href="/lang" passHref>
+            <Link href={`/${userRole}/profile`} as={`/${userRole}/profile`}>
               <a>
                 <ProfileFilled /> Profile
               </a>

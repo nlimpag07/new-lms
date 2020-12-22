@@ -46,6 +46,7 @@ export default withoutAuth(function Login() {
         : "learner";
     console.log(values) */
     var userType;
+    var uID;
     axios
       .post(apiBaseUrl + "/auth/authenticate", values)
       .then((result) => {
@@ -60,7 +61,7 @@ export default withoutAuth(function Login() {
           } else {
             userType = "learner";
           }
-
+          uID = _result.id;
           /* var params = {
             userType: userType,
             token: _result.token,
@@ -71,6 +72,11 @@ export default withoutAuth(function Login() {
             SameSite: "lax",
           });
           Cookies.set("usertype", userType, {
+            expires: 7,
+            path: "/",
+            SameSite: "lax",
+          });
+          Cookies.set("uID", uID, {
             expires: 7,
             path: "/",
             SameSite: "lax",
