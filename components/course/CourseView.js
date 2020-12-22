@@ -263,12 +263,12 @@ const CourseView = ({ course_id }) => {
     //console.log("The text:", copyText);
   }
   return course.length ? (
-    <Row
-      className="widget-container Course-View"
-      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      style={{ margin: "1rem 0px 4rem 0" }}
-    >
-      <motion.div initial="hidden" animate="visible" variants={framerEffect}>
+    <motion.div initial="hidden" animate="visible" variants={framerEffect}>
+      <Row
+        className="widget-container Course-View"
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+        style={{ margin: "1rem 0px 4rem 0" }}
+      >
         <Col
           className="gutter-row widget-holder-col"
           xs={24}
@@ -432,7 +432,7 @@ const CourseView = ({ course_id }) => {
         </Modal>
 
         {/* <CourseCircularUi /> */}
-      </motion.div>
+      </Row>
       <style jsx global>{`
         .Course-View .ImageWrapper img {
           width: 100%;
@@ -614,7 +614,7 @@ const CourseView = ({ course_id }) => {
           padding-left: 4rem !important;
         }
       `}</style>
-    </Row>
+    </motion.div>
   ) : (
     <Loader loading={loading}>
       <Empty />

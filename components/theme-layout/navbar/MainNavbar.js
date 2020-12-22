@@ -108,11 +108,18 @@ const MainNavbar = ({ userRole }) => {
       </Row>
       <Row className="header-nav-bot">
         <Col className="nav-bot-left" flex="1 1 200px">
-          LEFT Bottom NAV
+          <Row style={{height:"100%"}}>
+            <div className="pageHeaderHolder">
+              <div className="pageHeaderTitle">
+                <span>Page Header</span>                
+              </div>
+              <div className="phTitleIdentifier"></div>
+            </div>
+          </Row>
         </Col>
         <Col className="nav-bot-right" flex="0 1 25%">
-          <Col className="right-shape">
-            <div>
+          <Row className="right-shape">
+            <div style={{width:"100%"}}>
               GROUP{" "}
               <Select
                 defaultValue="Branch 1"
@@ -123,7 +130,7 @@ const MainNavbar = ({ userRole }) => {
                 <Option value="Branch 2">Branch 2</Option>
               </Select>
             </div>
-          </Col>
+          </Row>
         </Col>
       </Row>
       {/* <UserRoleSwitcher visible={switchViewModal} onCancel={() => setSwitchViewModal(false)} /> */}
@@ -166,10 +173,10 @@ const MainNavbar = ({ userRole }) => {
         .ant-layout-header .header-nav-bot .nav-bot-left {
           padding: 0 15px;
         }
-        .ant-layout-header .header-nav-bot .nav-bot-right .right-shape {
+        /* .ant-layout-header .header-nav-bot .nav-bot-right .right-shape {
           color: #000000;
           padding: 0 15px;
-        }
+        } */
         .notif .ant-badge {
           display: inline;
         }
