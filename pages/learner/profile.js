@@ -8,17 +8,25 @@ import dynamic from "next/dynamic";
 const LearnersMyProfile = dynamic(() =>
   import("../../components/learners-course/Outlines")
 );
-const CourseAssessmentsList = dynamic(() =>
-  import(
-    "../../components/learners-course/CourseAssessments/CourseAssessmentsList"
-  )
+const ProfileCourseList = dynamic(() =>
+  import("../../components/users/profile/ProfileCourseList")
 );
 /**End Of Imported Courses Components **/
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { Layout, Row, Col, Button, Card, Avatar, Tabs, Switch } from "antd";
+import {
+  Layout,
+  Row,
+  Col,
+  Button,
+  Card,
+  Avatar,
+  Tabs,
+  Switch,
+  Spin,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../hocs/withAuth";
@@ -26,6 +34,7 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import cookie from "cookie";
 import Cookies from "js-cookie";
+import moment from "moment";
 
 import {
   EditOutlined,
@@ -47,102 +56,54 @@ const Profile = ({ u, query }) => {
   /* Object.keys(query).length === 0 && query.constructor === Object
     ? console.log("Q", "Empty")
     : console.log("Q", query); */
-  console.log("U", u);
+  const [spin, setSpin] = useState(true);
+  /* console.log("U", u); */
   const router = useRouter();
   const [theLabel, setTheLabel] = useState("");
+  const [coursePage, setCoursePage] = useState("");
   const [myCourses, setMyCourses] = useState([]);
   const theKey = router.query.q ? router.query.q : "çourses";
   //console.log(theKey);
   useEffect(() => {
     var config = {
-      /* method: "get",
-      url: apiBaseUrl + "/courseoutline/" + course_id, */
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
     };
-    axios
-      .all([
-        axios.get(apiBaseUrl + "/Learner/MyCourse", config),
-        /* axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
-        axios.get(apiBaseUrl + "/coursecompetencies/" + course_id, config),
-        axios.get(apiBaseUrl + "/enrollment/" + course_id, config), */
-      ])
-      .then(
-        axios.spread((
-          mycourses /* , courseoutcome, competencies, enrollments */
-        ) => {
-          /* console.log('Course Outline: ',!!courseoutline.data.response)*/
-          console.log("Courses: ", mycourses.data);
-          mycourses.data ? setMyCourses(mycourses.data) : setMyCourses([]);
-          /*  courseoutcome.data.result
-              ? setCourse_outcome(courseoutcome.data)
-              : setCourse_outcome(null);
-            competencies.data.result
-              ? setCourse_competencies(competencies.data)
-              : setCourse_competencies(null);
-            enrollments.data.result
-              ? setCourse_enrollments(enrollments.data)
-              : setCourse_enrollments(null);
-            enrollments.data.result
-              ? setCourse_reviews(enrollments.data)
-              : setCourse_reviews(null); */
-        })
-      )
-      .catch((errors) => {
-        // react on errors.
+    async function fetchData(config) {
+      try {
+        const response = await axios.all([
+          axios.get(apiBaseUrl + "/Learner/MyCourse", config),
+          /* axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
+          axios.get(apiBaseUrl + "/coursecompetencies", config),*/
+        ]);
+        /* console.log("response", response); */
+        let courses = response[0];
+        setCoursePage(courses.data.currentPage);
+        setMyCourses(courses.data.result);
+        setSpin(false);
+      } catch (errors) {
         console.error(errors);
-      });
-    /* async function fetchData(config) {      
-      const response = await axios(config);
-      if (response) {
-        //localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        //setCourseAllList(response.data);
-        console.log(response.data);
-      } else {
-        //const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        //setCourseAllList(userData);
       }
     }
-    fetchData(config); */
-  }, [u.id]);
+    fetchData(config);
+  }, []);
 
-  /* 
-  //check if Err response
-  var isError = courseDetails.err ? true : false;
-  //console.log(isError);
-
-  var urlPath = router.asPath;
-  var theContent; //content assignment variable
-  let getlength = Object.keys(router.query).length;
-  //console.log(getlength);
-  //console.log("My Learner Course", courseDetails);
-  var cDetails = courseDetails.course ? courseDetails.course : null;
-  var outlines = courseDetails.course
-    ? courseDetails.course.courseOutline
-    : null;
-  var competencies = courseDetails.course
-    ? courseDetails.course.courseCompetencies
-    : null;
-
-
-  const learnerId = courseDetails.id;
-  const courseId = router.query.courseId;
-  const theOutline = router.query.outlines;
-  let manageQueryLength = router.query ? Object.keys(router.query).length : 0;
-  var isApproved = courseDetails.course ? 1 : 0;
-*/
   useEffect(() => {
     setTheLabel(theKey);
   }, []);
 
   const onChangeTab = (activeKey) => {
     //console.log(activeKey);
-    router.push(`/${linkUrl}/profile?q=${activeKey}`);
+    //router.push(`/${linkUrl}/profile?q=${activeKey}`);
   };
 
-  useEffect(() => {}, []);
+  /* useEffect(() => {
+    if (myCourses.length) {
+      setSpin(false);
+    }
+  }, [myCourses]); */
 
   return (
     <MainThemeLayout>
@@ -150,34 +111,102 @@ const Profile = ({ u, query }) => {
         className="main-content-holder outlinesDetailsTabber"
         id="courses-class"
       >
-        <Row>
+        {/* <Row>
           <Col>
-            <h2 className="widget-title">{`${u.firstName} ${u.lastName}`}</h2>
+            <h2 className="widget-title">PROFILE</h2>
+          </Col>
+        </Row> */}
+        <Row style={{marginBottom:"1rem"}}>
+          <Col xs={24} sm={24} md={24} lg={6}>
+            <div className="userThumbnail">
+              <img
+                alt="img"
+                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+              />
+            </div>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={18} className="userDetails">
+            <div className="userDetails-Holder">
+              <Row style={{ margin: "1rem 0" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Name:</span> {`${u.firstName} ${u.lastName}`}
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Registration Date:</span>{" "}
+                  {`${u.firstName} ${u.lastName}`}
+                </Col>
+              </Row>
+              <Row style={{ margin: "1rem 0" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Email:</span> {`${u.email}`}
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Birth Date (mm-dd-yyyy):</span>{" "}
+                  {`${moment(u.birthday).format("MM-DD-YYYY")}`}
+                </Col>
+              </Row>
+              <Row style={{ margin: "1rem 0" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Department:</span> {`${u.department}`}
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Position:</span> {`${u.position}`}
+                </Col>
+              </Row>
+              <Row style={{ margin: "1rem 0" }}>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>User Group:</span> {`${u.userGroup}`}
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12}>
+                  <span>Last Access:</span> {`${u.lastAccess}`}
+                </Col>
+              </Row>
+            </div>
           </Col>
         </Row>
-        <Tabs defaultActiveKey={theLabel} onChange={onChangeTab}>
-          <TabPane tab="Courses" key="courses">
-            <h1>Courses</h1>
-            {/* <LearnersMyProfile
+        <Row>
+          <Tabs
+            defaultActiveKey={theLabel}
+            onChange={onChangeTab}
+            className="profileTabs"
+          >
+            <TabPane tab="Courses" key="courses">
+              {spin ? (
+                <div className="spinHolder">
+                  <Spin
+                    size="small"
+                    tip="Retrieving data..."
+                    spinning={spin}
+                    delay={100}
+                  ></Spin>
+                </div>
+              ) : (
+                <ProfileCourseList
+                  myCourses={myCourses}
+                  coursePage={coursePage}
+                />
+              )}
+            </TabPane>
+            <TabPane tab="Assessments" key="assessments">
+              <h1>Assessments</h1>
+              {/* <CourseAssessmentsList
               cDetails={cDetails}
               course_id={courseId}
               learnerId={learnerId}
               listOfOutlines={outlines}
             /> */}
-          </TabPane>
-          <TabPane tab="Assessments" key="assessments">
-            <h1>Assessments</h1>
-            {/* <CourseAssessmentsList
-              cDetails={cDetails}
-              course_id={courseId}
-              learnerId={learnerId}
-              listOfOutlines={outlines}
-            /> */}
-          </TabPane>
-          <TabPane tab="Competencies" key="competencies">
-            <h1>Competencies</h1>
-          </TabPane>
-        </Tabs>
+            </TabPane>
+            <TabPane tab="Competencies" key="competencies">
+              <h1>Competencies</h1>
+            </TabPane>
+            <TabPane tab="Appraisals" key="Appraisals">
+              <h1>Appraisals</h1>
+            </TabPane>
+            <TabPane tab="Attendance" key="attendance">
+              <h1>Attendance</h1>
+            </TabPane>
+          </Tabs>
+        </Row>
       </Layout>
 
       <style jsx global>{`
@@ -205,6 +234,41 @@ const Profile = ({ u, query }) => {
         }
         .outlinesDetailsTabber .ant-tabs-tab:hover {
           color: #f9ad48;
+        }
+        .profileTabs .spinHolder {
+          text-align: center;
+          z-index: 100;
+          position: relative;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          background-color: #ffffff;
+          width: 100%;
+        }
+        .userThumbnail {
+          width: 100%;
+          padding: 1rem;
+        }
+        .userThumbnail img {
+          border-radius: 50%;
+          width: 300px;
+          height: 300px;
+        }
+        .userDetails {
+          font-size: 1.3rem;
+          font-weight: 500;
+        }
+        .userDetails span {
+          font-size: 1rem;
+          font-weight: 400;
+          vertical-align: middle;
+          margin-right: 0.5rem;
+        }
+        .userDetails-Holder{
+          padding: 2% 2%;
+          border: 1px dashed #dadada;
+          margin: 2% 2%;
         }
       `}</style>
     </MainThemeLayout>
