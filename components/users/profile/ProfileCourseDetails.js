@@ -11,40 +11,41 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const ProfileCourseDetails = ({
   modal2Visible,
   setModal2Visible,
-  assessmentDetails,
+  courseDetails,
 }) => {
   const router = useRouter();
-  const [assessmentTitle, setAssessmentTitle] = useState("");
-  console.log("assessmentDetails", assessmentDetails);
+  const [userFullName, setUserFullName] = useState("");
+  console.log("courseDetails", courseDetails);
 
   useEffect(() => {
-    /* let userData = JSON.parse(localStorage.getItem("userDetails"));
+    let userData = JSON.parse(localStorage.getItem("userDetails"));
     const { firstName, lastName } = userData;
-    let theFullName = `${firstName}, ${lastName}`; */
-    setAssessmentTitle(assessmentDetails ? assessmentDetails.title : "");
+    let theFullName = `${firstName}, ${lastName}`;
+    setUserFullName(theFullName);
   }, [modal2Visible]);
 
   //console.log(userFullName);
+  var courseTitle;
   var courseInstructorsList;
   var courseCode;
   var rating;
   var courseOutlines;
-  if (assessmentDetails) {
-    //assessmentTitle = assessmentDetails.title;
-    /* courseInstructorsList = assessmentDetails.course.courseInstructor && assessmentDetails.course.courseInstructor.length
-      ? assessmentDetails.course.courseInstructor.map((instructor, index) => {
+  if (courseDetails) {
+    courseTitle = courseDetails.title;
+    courseInstructorsList = courseDetails.course.courseInstructor.length
+      ? courseDetails.course.courseInstructor.map((instructor, index) => {
           let instructorFullName =
             instructor.user.firstName + ", " + instructor.user.lastName;
 
           return <Tag key={index}>{instructorFullName}</Tag>;
         })
-      : null; */
-    courseCode = assessmentDetails.course
-      ? assessmentDetails.course.code
       : null;
-    rating = assessmentDetails.result ? assessmentDetails.result : null;
-    /* courseOutlines = assessmentDetails.course.courseOutline.length
-      ? assessmentDetails.course.courseOutline.map((outline, index) => {
+    courseCode = courseDetails.course
+      ? courseDetails.course.code
+      : null;
+    rating = courseDetails.result ? courseDetails.result : null;
+    courseOutlines = courseDetails.course.courseOutline.length
+      ? courseDetails.course.courseOutline.map((outline, index) => {
           let outlineNewDetails = {
             number: index + 1,
             outlineId: outline.id,
@@ -68,27 +69,30 @@ const ProfileCourseDetails = ({
 
           return outlineNewDetails;
         })
-      : []; */
+      : [];
   }
-  //console.log(courseOutlines);
+  console.log(courseOutlines);
 
   const columns = [
     {
       title: "Step",
       dataIndex: "number",
+      key:"number",
     },
     {
       title: "Lesson",
       dataIndex: "title",
+      key:"title"
     },
     {
       title: "Result",
       dataIndex: "status",
-      render: (stat) =>
+      key:"status",
+      render: (stat, record) =>
         stat == "Passed" ? (
-          <Tag style={{ borderColor: "#85D871", color: "#85D871" }}>{stat}</Tag>
+          <Tag key={record.id} style={{ borderColor: "#85D871", color: "#85D871" }}>{stat}</Tag>
         ) : stat == "Failed" ? (
-          <Tag style={{ borderColor: "#E65050", color: "#E65050" }}>{stat}</Tag>
+          <Tag key={record.id} style={{ borderColor: "#E65050", color: "#E65050" }}>{stat}</Tag>
         ) : (
           "-"
         ),
@@ -96,10 +100,12 @@ const ProfileCourseDetails = ({
     {
       title: "Final Score",
       dataIndex: "score",
+      key:"score",
     },
     {
       title: "Hours Taken",
       dataIndex: "hoursTaken",
+      key:"hoursTaken",
     },
   ];
 
@@ -107,7 +113,7 @@ const ProfileCourseDetails = ({
     //GridType(gridList)
     <Row>
       <Modal
-        title={<h2 className="myTranscriptTitle">{assessmentTitle}</h2>}
+        title={<h2 className="myTranscriptTitle">{userFullName}</h2>}
         centered
         visible={modal2Visible}
         onOk={() => setModal2Visible(false)}
@@ -115,18 +121,55 @@ const ProfileCourseDetails = ({
         maskClosable={false}
         destroyOnClose={true}
         width="50%"
-        className="assessmentDetailsModal"
+        className="courseDetailsModal"
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
       >
         <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
-          <Col>
-            <p>
-              This is to know how much you have learned during the course. This
-              exam is consisting of 10 multiple choice questions. If you are
-              ready, click BEGIN.
-            </p>
-            <p>Good luck!</p>
+          <Col xs={24}>
+            <h3>{courseTitle}</h3>
+          </Col>
+        </Row>
+        <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <div className="divSeparator">
+              <span>
+                Rating: <Tag>{rating}</Tag>
+              </span>
+            </div>
+            <div className="divSeparator">
+              <span>Instructor: {courseInstructorsList}</span>
+            </div>
+            <div className="divSeparator">
+              <span>Code: {courseCode}</span>
+            </div>
+          </Col>
+          <Col
+            xs={24}
+            sm={24}
+            md={8}
+            lg={8}
+            offset={8}
+            style={{ textAlign: "left" }}
+          >
+            <div className="divSeparator">
+              Final Grade:{" "}
+              <span className="finalScoreBig">
+                {courseDetails.finalScore}
+              </span>
+            </div>
+            <div className="divSeparator">
+              Date of Completion:{" "}
+              <span className="finalScoreBig">
+                {courseDetails.finalScore}
+              </span>
+            </div>
+          </Col>
+        </Row>
+        <Divider dashed style={{ borderColor: "#999999", margin: "5px 0" }} />
+        <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
+          <Col xs={24} sm={24} md={24} lg={24}>
+            <Table columns={columns} dataSource={courseOutlines} size="small" rowKey="number" />
           </Col>
         </Row>
       </Modal>
@@ -153,7 +196,7 @@ const ProfileCourseDetails = ({
           margin-bottom: 10px;
           line-height: 2rem;
         }
-        .assessmentDetailsModal .ant-modal-footer {
+        .courseDetailsModal .ant-modal-footer {
           display: none;
         }
       `}</style>

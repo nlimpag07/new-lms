@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 import CourseAssessmentDetails from "./ProfileCourseDetails";
+import TranscriptDetails from "../../learners-transcript/TranscriptDetails";
+
 import moment from "moment";
 import { FileTextTwoTone } from "@ant-design/icons";
 
@@ -35,6 +37,7 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
                 key: index,
                 id: cl.id,
                 title: c.title,
+                course:c,
                 instructor: c.courseInstructor,
                 startDate: moment(cl.startDate).format("YYYY-MM-DD h:mm a"),
                 endDate: cl.endDate
@@ -180,7 +183,7 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
         modal2Visible={modal2Visible}
         setModal2Visible={setModal2Visible}
         courseDetails={courseDetails}
-      />
+      />      
 
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
@@ -189,7 +192,15 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
           font-weight: 700;
         }
         .ProfileCourseList .k-grid-header {
-          background-color: rgba(0, 0, 0, 0.05);
+          background-color: #4E4E4E;
+          color:#E9EBEE;
+          
+        }
+        .ProfileCourseList .k-grid-header th{
+          font-weight:400;
+        }
+        .ProfileCourseList .k-grid-header .k-sorted, .ProfileCourseList .k-grid-header .k-link:hover{
+          color:#D3D3D5;
         }
       `}</style>
     </Row>
@@ -226,6 +237,7 @@ const ResultRender = (props) => {
 };
 const ActionRender = (props, setModal2Visible, setCourseDetails) => {
   const setDetails = (props) => {
+    console.log("Props",props.dataItem)
     setCourseDetails(props.dataItem);
     setModal2Visible(true);
   };

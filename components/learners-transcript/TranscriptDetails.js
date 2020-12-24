@@ -77,19 +77,32 @@ const TranscriptDetails = ({
     {
       title: "Step",
       dataIndex: "number",
+      key: "number",
     },
     {
       title: "Lesson",
       dataIndex: "title",
+      key: "title",
     },
     {
       title: "Result",
       dataIndex: "status",
-      render: (stat) =>
+      key: "status",
+      render: (stat, record) =>
         stat == "Passed" ? (
-          <Tag style={{ borderColor: "#85D871", color: "#85D871" }}>{stat}</Tag>
+          <Tag
+            key={record.id}
+            style={{ borderColor: "#85D871", color: "#85D871" }}
+          >
+            {stat}
+          </Tag>
         ) : stat == "Failed" ? (
-          <Tag style={{ borderColor: "#E65050", color: "#E65050" }}>{stat}</Tag>
+          <Tag
+            key={record.id}
+            style={{ borderColor: "#E65050", color: "#E65050" }}
+          >
+            {stat}
+          </Tag>
         ) : (
           "-"
         ),
@@ -97,10 +110,12 @@ const TranscriptDetails = ({
     {
       title: "Final Score",
       dataIndex: "score",
+      key: "score",
     },
     {
       title: "Hours Taken",
       dataIndex: "hoursTaken",
+      key: "hoursTaken",
     },
   ];
 
@@ -164,7 +179,12 @@ const TranscriptDetails = ({
         <Divider dashed style={{ borderColor: "#999999", margin: "5px 0" }} />
         <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
           <Col xs={24} sm={24} md={24} lg={24}>
-            <Table columns={columns} dataSource={courseOutlines} size="small" />
+            <Table
+              columns={columns}
+              dataSource={courseOutlines}
+              size="small"
+              rowKey="number"
+            />
           </Col>
         </Row>
       </Modal>

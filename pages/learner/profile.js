@@ -215,13 +215,14 @@ const Profile = ({ u, query }) => {
           padding: 8px 0;
           min-height: 150px;
         } */
-        .ant-tabs-nav::before {
+        .profileTabs .ant-tabs-nav::before {
           /* border: 0 !important; */
         }
-        .ant-tabs-tab {
+        .profileTabs .ant-tabs-tab {
           /* background-color: #bcbcbc; */
           padding: 15px 20px;
           font-weight: 500;
+          font-size:1.1rem;
         }
         .outlinesDetailsTabber .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
           height: 5px;
