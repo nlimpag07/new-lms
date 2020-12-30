@@ -18,11 +18,13 @@ import {
   Switch,
   Divider,
   message,
+  Popover,
+  Avatar,
 } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CaretDownOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import moment from "moment";
-
+import { CompactPicker, AlphaPicker, CirclePicker } from "react-color";
 /**TextArea declaration */
 const { TextArea } = Input;
 const { Option } = Select;
@@ -46,6 +48,8 @@ const StatusAdd = ({
   const [selectedUserId, setSelectedUserId] = useState([]);
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
+  const [pOVisible, setPOVisible] = useState(false);
+  const [cPVisible, setCPVisible] = useState("#4caf50");
 
   useEffect(() => {
     var config = {
@@ -190,7 +194,14 @@ const StatusAdd = ({
         });
     } */
   };
-
+  const CPhandleChangeComplete = (color) => {
+    console.log("Color", color.hex);
+    setCPVisible(color.hex);
+    setPOVisible(false);
+  };
+  const popOverHandleVisibleChange = (visible) => {
+    setPOVisible(visible);
+  };
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
       <Form
@@ -200,9 +211,8 @@ const StatusAdd = ({
         name="AddPicklistStatus"
         initialValues={
           {
-            /* courseTitle: courseDetails.title, 
-          isAutoEnroll: false,
-          isNotify: false,*/
+            /*
+          colorPicker:"#ffffff",*/
           }
         }
       >
@@ -237,20 +247,49 @@ const StatusAdd = ({
           </Select>
         </Form.Item>
         <Form.Item
-          name="color"
+          label="Color"
           style={{
-            marginBottom: "1rem",
+            marginBottom: "0rem",
           }}
-          rules={[
-            {
-              required: true,
-              message: "Please Add Session Description!",
-            },
-          ]}
+          name="colorPicker"
+          valuePropName={cPVisible}
         >
-          <TextArea rows={3} placeholder="Session Description" />
+          <Popover
+            content={
+              <CirclePicker
+                className="Noel"
+                onChangeComplete={CPhandleChangeComplete}
+              />
+            }
+            /* content={
+              <CompactPicker className="Noel" onChangeComplete={CPhandleChangeComplete} />
+            } */
+            trigger="click"
+            placement="right"
+            visible={pOVisible}
+            onVisibleChange={popOverHandleVisibleChange}
+          >
+            <Avatar
+              className="colorAvatar"
+              shape="square"
+              size="small"
+              icon={
+                <CaretDownOutlined
+                  style={{
+                    fontSize: "8px",
+                    right: "0",
+                    bottom: "0",
+                    position: "absolute",
+                    color: "#4D4d4d",
+                  }}
+                />
+              }
+              style={{
+                backgroundColor: cPVisible,
+              }}
+            />
+          </Popover>
         </Form.Item>
-
         {hasError ? (
           <p
             style={{
@@ -298,6 +337,9 @@ const StatusAdd = ({
       </Form>
 
       <style jsx global>{`
+        .colorAvatar:hover {
+          cursor: pointer;
+        }
         #AddPicklistStatus {
           position: relative;
           width: 100%;

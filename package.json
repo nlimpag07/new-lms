@@ -43,6 +43,7 @@
     "moment": "^2.29.1",
     "next": "9.5.5",
     "react": "16.13.1",
+    "react-color": "^2.19.3",
     "react-dom": "16.13.1",
     "react-player": "^2.6.0",
     "styled-components": "^5.1.1"

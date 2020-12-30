@@ -287,7 +287,7 @@ const Statuses = ({ data, ps }) => {
         {statusesModal.modalOperation == "edit" ? (
           "Hello Edit"
         ) : statusesModal.modalOperation == "add" ? (
-          <StatusAdd />
+          <StatusAdd hideModal={hideModal} />
         ) : statusesModal.modalOperation == "approve" ? (
           "Hello Approve"
         ) : statusesModal.modalOperation == "delete" ? (
