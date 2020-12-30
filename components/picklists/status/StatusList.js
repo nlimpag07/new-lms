@@ -55,14 +55,22 @@ const list = {
   },
 };
 
-const StatusList = ({ statusData, page, setPage, setSpin, spin }) => {
+const StatusList = ({
+  statusData,
+  page,
+  setPage,
+  setSpin,
+  spin,
+  showModal,
+  hideModal,
+}) => {
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   //const [Data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  console.log(statusData);
+  //console.log(statusData);
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -174,7 +182,7 @@ const StatusList = ({ statusData, page, setPage, setSpin, spin }) => {
   };
 
   const dateFormat = (props) => {
-    console.log("DateFormat", props.dataItem);
+    //console.log("DateFormat", props.dataItem);
     const dateSchedule = moment(props.dataItem.dateSchedule).format(
       "YYYY/MM/DD h:mm a"
     );
@@ -324,6 +332,7 @@ const StatusList = ({ statusData, page, setPage, setSpin, spin }) => {
       </td>
     );
   };
+
   return (
     <>
       <Grid
@@ -354,26 +363,11 @@ const StatusList = ({ statusData, page, setPage, setSpin, spin }) => {
         <Column field="color" title="Color" cell={dateFormat} />
         <Column
           sortable={false}
-          cell={ActionRender}
+          cell={(props) => ActionRender(props, showModal, hideModal, setSpin)}
           field="SupplierID"
           title="Action"
         />
-      </Grid>
-
-      <Modal
-        title="Publish Properties"
-        centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        /* width={1000} */
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
+      </Grid>    
 
       <style jsx global>{`
         .StatusList h1 {
@@ -402,20 +396,81 @@ const StatusList = ({ statusData, page, setPage, setSpin, spin }) => {
     </>
   );
 };
+//Deleting Status
+function deleteConfirm(e, data, setSpin) {
+  //console.log(e);
+  //console.log("PopConfirm", data);
+  //setSpin(true);
+  var config = {
+    method: "delete",
+    url: apiBaseUrl + "/settings/status/" + data.id,
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  };
+  async function fetchData(config) {
+    try {
+      const response = await axios(config);
+      if (response) {
+        //setOutcomeList(response.data.result);
+        let theRes = response.data.response;
+        //console.log("Response", response.data);
+        // wait for response if the verification is true
+        if (theRes) {
+          Modal.success({
+            title: "Deletion Success",
+            content: "You have successfully deleted the status!",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              visible: false;
+              setSpin(true);
+              router.reload();
+              /* router.push(
+                "/administrator/picklists/status",
+                `/administrator/picklists/status`
+              ); */
+              //console.log("Should hide modal")
+            },
+          });
+        } else {
+        }
+      }
+    } catch (error) {
+      const { response } = error;
+      const { request, data } = response; // take everything but 'request'
 
-const ActionRender = () => {
+      console.log("Error Response", data.message);
+
+      Modal.error({
+        title: "Error: Unable to delete",
+        content: data.message,
+        centered: true,
+        width: 450,
+        onOk: () => {
+          //setdrawerVisible(false);
+          setSpin(true);
+          visible: false;
+        },
+      });
+    }
+    //setLoading(false);
+  }
+  fetchData(config);
+}
+
+const ActionRender = (props, showModal, hideModal, setSpin) => {
   return (
     <td>
       <Button
         icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+        onClick={() => showModal("edit", props.dataItem)}
       />{" "}
       <Popconfirm
         title="Delete this Status?"
-        /* onConfirm={(e) => deleteConfirm(e, props.dataItem, setSpin)}
-        onCancel={deleteCancel} */
+        onConfirm={(e) => deleteConfirm(e, props.dataItem, setSpin)}
+        /*onCancel={deleteCancel} */
         okText="Confirm"
         cancelText="Not Now"
       >

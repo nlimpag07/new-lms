@@ -7,12 +7,11 @@ import { motion } from "framer-motion";
 import { Row, Col, Modal, Select, Input, Divider, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { orderBy } from "@progress/kendo-data-query";
 import Cookies from "js-cookie";
 import moment from "moment";
-
+import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
 import StatusList from "./StatusList";
+import StatusAdd from "./StatusAdd";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -45,10 +44,29 @@ const list = {
   },
 };
 
+/*menulists used by radial menu */
+const menulists = [
+  {
+    title: "Add",
+    icon: "&#xf055;",
+    active: true,
+    url: "",
+    urlAs: "",
+    callback: "Save",
+    iconClass: "ams-plus-circle",
+  },
+];
+
 const Statuses = ({ data, ps }) => {
-  console.log(data);
+  //console.log(data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  var [statusesModal, setStatusesModal] = useState({
+    visible: false,
+    modalOperation: "",
+    dataProps: null,
+    width: "auto",
+  });
   const [statusDetails, setStatusDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [statusSelect, setStatusSelect] = useState("");
@@ -71,18 +89,34 @@ const Statuses = ({ data, ps }) => {
   } = data;
 
   useEffect(() => {
-    setPage({
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      totalRecords: totalRecords,
-      orderBy: orderBy,
-    });
-    setStatusData(result);
-    setSpin(false);
-  }, []);
+    if (spin) {
+      setPage({
+        currentPage: currentPage,
+        pageSize: pageSize,
+        totalPages: totalPages,
+        totalRecords: totalRecords,
+        orderBy: orderBy,
+      });
+      setStatusData(result);
+      setSpin(false);
+    }
+  }, [spin]);
 
   useEffect(() => {}, []);
+
+  const showModal = (modalOperation, props) => {
+    setStatusesModal({
+      visible: true,
+      modalOperation: modalOperation,
+      dataProps: props,
+    });
+  };
+  const hideModal = (modalOperation) => {
+    setStatusesModal({
+      visible: false,
+      modalOperation: modalOperation,
+    });
+  };
 
   function onChange(value) {
     setSpin(true);
@@ -228,6 +262,8 @@ const Statuses = ({ data, ps }) => {
                     setPage={setPage}
                     setSpin={setSpin}
                     spin={spin}
+                    showModal={showModal}
+                    hideModal={hideModal}
                   />
                 </Col>
               )}
@@ -236,20 +272,36 @@ const Statuses = ({ data, ps }) => {
         </Col>
       </Row>
       <Modal
-        title="Publish Properties"
+        title={`Status - ${statusesModal.modalOperation}`}
         centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
+        visible={statusesModal.visible}
+        onOk={() => hideModal(statusesModal.modalOperation)}
+        onCancel={() => hideModal(statusesModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={1000}
+        width={statusesModal.width}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okButtonProps={{ style: { display: "none" } }}
+        className="PicklistStatusesModal"
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
+        {statusesModal.modalOperation == "edit" ? (
+          "Hello Edit"
+        ) : statusesModal.modalOperation == "add" ? (
+          <StatusAdd />
+        ) : statusesModal.modalOperation == "approve" ? (
+          "Hello Approve"
+        ) : statusesModal.modalOperation == "delete" ? (
+          "HELLO Delete"
+        ) : (
+          "Default"
+        )}
       </Modal>
-
+      <SaveUI
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+        toggleModal={() => showModal("add")}
+      />
       <style jsx global>{`
         .PicklistStatuses {
           margin-top: 1rem;
@@ -275,23 +327,12 @@ const Statuses = ({ data, ps }) => {
           background-color: #ffffff;
           width: 100%;
         }
+        .PicklistStatusesModal .ant-modal-footer {
+          display: none;
+          opacity: 0;
+        }
       `}</style>
     </motion.div>
-  );
-};
-
-const ActionRender = () => {
-  return (
-    <td>
-      <button
-        className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
-      >
-        <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
-      </button>
-    </td>
   );
 };
 
