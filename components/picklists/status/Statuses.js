@@ -57,7 +57,7 @@ const menulists = [
   },
 ];
 
-const Statuses = ({ data, ps }) => {
+const Statuses = ({ data }) => {
   //console.log(data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
@@ -69,6 +69,7 @@ const Statuses = ({ data, ps }) => {
   });
   const [statusDetails, setStatusDetails] = useState("");
   const [spin, setSpin] = useState(true);
+  const [runSpin, setRunSpin] = useState(false);
   const [statusSelect, setStatusSelect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [statusData, setStatusData] = useState([]);
@@ -79,30 +80,75 @@ const Statuses = ({ data, ps }) => {
     totalRecords: 0,
     orderBy: "",
   });
-  const {
-    currentPage,
-    pageSize,
-    totalPages,
-    totalRecords,
-    orderBy,
-    result,
-  } = data;
 
   useEffect(() => {
-    if (spin) {
-      setPage({
-        currentPage: currentPage,
-        pageSize: pageSize,
-        totalPages: totalPages,
-        totalRecords: totalRecords,
-        orderBy: orderBy,
-      });
-      setStatusData(result);
-      setSpin(false);
+    if (runSpin) {
+      setSpin(true);
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/settings/status?orderBy=id&orderByDesc=true",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        //data: { courseId: course_id },
+      };
+      async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            let theRes = response.data;
+            console.log("Session Response", response.data);
+            if (theRes) {
+              const {
+                currentPage,
+                pageSize,
+                totalPages,
+                totalRecords,
+                orderBy,
+                result,
+              } = theRes;
+              setPage({
+                currentPage: currentPage,
+                pageSize: pageSize,
+                totalPages: totalPages,
+                totalRecords: totalRecords,
+                orderBy: orderBy,
+              });
+              setStatusData(result);
+              setSpin(false);
+            } else {
+            }
+          }
+        } catch (error) {
+          const { response } = error;
+          console.log("Error Response", response);
+        }
+      }
+      fetchData(config);
+      setRunSpin(false);
     }
-  }, [spin]);
+  }, [runSpin]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const {
+      currentPage,
+      pageSize,
+      totalPages,
+      totalRecords,
+      orderBy,
+      result,
+    } = data;
+    setPage({
+      currentPage: currentPage,
+      pageSize: pageSize,
+      totalPages: totalPages,
+      totalRecords: totalRecords,
+      orderBy: orderBy,
+    });
+    setStatusData(result);
+    setSpin(false);
+  }, []);
 
   const showModal = (modalOperation, props) => {
     setStatusesModal({
@@ -260,7 +306,7 @@ const Statuses = ({ data, ps }) => {
                     statusData={statusData}
                     page={page}
                     setPage={setPage}
-                    setSpin={setSpin}
+                    setRunSpin={setRunSpin}
                     spin={spin}
                     showModal={showModal}
                     hideModal={hideModal}
@@ -287,7 +333,7 @@ const Statuses = ({ data, ps }) => {
         {statusesModal.modalOperation == "edit" ? (
           "Hello Edit"
         ) : statusesModal.modalOperation == "add" ? (
-          <StatusAdd hideModal={hideModal} />
+          <StatusAdd hideModal={hideModal} setRunSpin={setRunSpin} />
         ) : statusesModal.modalOperation == "approve" ? (
           "Hello Approve"
         ) : statusesModal.modalOperation == "delete" ? (

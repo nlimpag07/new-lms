@@ -30,7 +30,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const PicklistStatusIndex = ({ data, ps, token, apiBaseUrl }) => {
+const PicklistStatusIndex = ({ data, token, apiBaseUrl }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
@@ -42,7 +42,7 @@ const PicklistStatusIndex = ({ data, ps, token, apiBaseUrl }) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <Statuses data={data} ps={ps} />
+        <Statuses data={data} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -57,7 +57,6 @@ const PicklistStatusIndex = ({ data, ps, token, apiBaseUrl }) => {
 PicklistStatusIndex.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
-  var pageSize = 20;
   var userData;
   var res;
   const request = ctx.req;
@@ -72,7 +71,7 @@ PicklistStatusIndex.getInitialProps = async (ctx) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/settings/status?pageSize=" + pageSize,
+    url: apiBaseUrl + "/settings/status?orderByDesc=true",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -85,7 +84,6 @@ PicklistStatusIndex.getInitialProps = async (ctx) => {
 
   return {
     data: data,
-    ps: pageSize,
     token: token,
     apiBaseUrl: apiBaseUrl,
   };

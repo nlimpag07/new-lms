@@ -38,7 +38,7 @@ const StatusAdd = ({
   course_id,
   courseDetails,
   hideModal,
-  setSpin,
+  setRunSpin,
   courseType,
 }) => {
   const router = useRouter();
@@ -49,7 +49,7 @@ const StatusAdd = ({
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [pOVisible, setPOVisible] = useState(false);
-  const [cPVisible, setCPVisible] = useState("#4caf50");
+  const [cPColor, setCPColor] = useState("#4caf50");
 
   useEffect(() => {
     var config = {
@@ -122,55 +122,35 @@ const StatusAdd = ({
   const onFinish = (values) => {
     setSpinning(true);
     console.log("Values", values);
+    console.log("Color", cPColor);
     setHasError("");
     var data = {};
     var checker = [];
-    /* if (!!values.learnersData) {
-      //Standard undefined
-    } else {
-      if (selectedUserId.length) {
-        let learnerUserId = [];
-        selectedUserId.map((userId) => {
-          learnerUserId.push({ userId: userId });
-        });
-        data.learner = learnerUserId;
-      } else {
-        setHasError("* Please add at least 1 learner");
-        checker.push("Error");
-      }
-    }
-    //Standard Entry, Static atm
-    data.userGroupId = 3;
 
-    if (!!values.isNotify) {
-      values.isNotify ? (data.isNotify = 1) : (data.isNotify = 0);
+    if (!!values.statusName) {
+      data.name = values.statusName;
     } else {
-      data.isNotify = 0;
+      setHasError("* Please Input Status Name");
+      checker.push("Error");
     }
-    if (!!values.isAutoEnroll) {
-      values.isAutoEnroll ? (data.isAutoEnroll = 1) : (data.isAutoEnroll = 0);
+    if (!!values.category) {
+      data.category = values.category;
     } else {
-      data.isAutoEnroll = 0;
+      setHasError("* Please Select Category");
+      checker.push("Error");
     }
-    if (!!values.learnerSession) {
-      let l_session = [];
-      values.learnerSession.map((session) => {
-        l_session.push({
-          sessionId: session,
-          //date is not sure if necessary for now
-          dateScheduled: null,
-        });
-      });
-      data.learnerSession = l_session;
+    if (cPColor) {
+      data.color = cPColor;
+    } else {
+      setHasError("* Please Select Colour");
+      checker.push("Error");
     }
-    if (!!values.notificationDetails) {
-      data.notificationDetails = values.notificationDetails;
-    }
+
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/enrollment/" + course_id,
+        url: apiBaseUrl + "/Settings/status",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -181,22 +161,24 @@ const StatusAdd = ({
       axios(config)
         .then((res) => {
           message.success(res.data.message);
-          setSpin(true);
+          setSpinning(false);
+          setRunSpin(true);
           hideModal("add");
         })
         .catch((err) => {
-          console.log("err: ", err.response.data);
+          console.log("err: ", err);
           message.error(
             "Network Error on Submission, Contact Technical Support"
           );
-          setSpin(true);
-          //hideModal("add");
+          setSpinning(false);
+          setRunSpin(true);
+          hideModal("add");
         });
-    } */
+    }
   };
   const CPhandleChangeComplete = (color) => {
     console.log("Color", color.hex);
-    setCPVisible(color.hex);
+    setCPColor(color.hex);
     setPOVisible(false);
   };
   const popOverHandleVisibleChange = (visible) => {
@@ -238,13 +220,14 @@ const StatusAdd = ({
           rules={[
             {
               required: true,
-              message: "Please select Category!",
+              message: "Please input category!",
             },
           ]}
         >
-          <Select placeholder="Please select Category">
+          <Input placeholder="Please input Category" />
+          {/* <Select placeholder="Please select Category">
             {selectCategoryOptions}
-          </Select>
+          </Select> */}
         </Form.Item>
         <Form.Item
           label="Color"
@@ -252,7 +235,7 @@ const StatusAdd = ({
             marginBottom: "0rem",
           }}
           name="colorPicker"
-          valuePropName={cPVisible}
+          valuePropName={cPColor}
         >
           <Popover
             content={
@@ -261,9 +244,6 @@ const StatusAdd = ({
                 onChangeComplete={CPhandleChangeComplete}
               />
             }
-            /* content={
-              <CompactPicker className="Noel" onChangeComplete={CPhandleChangeComplete} />
-            } */
             trigger="click"
             placement="right"
             visible={pOVisible}
@@ -285,7 +265,7 @@ const StatusAdd = ({
                 />
               }
               style={{
-                backgroundColor: cPVisible,
+                backgroundColor: cPColor,
               }}
             />
           </Popover>

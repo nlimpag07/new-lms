@@ -59,7 +59,7 @@ const StatusList = ({
   statusData,
   page,
   setPage,
-  setSpin,
+  setRunSpin,
   spin,
   showModal,
   hideModal,
@@ -132,7 +132,7 @@ const StatusList = ({
   );
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
-    sort: [{ field: "category", dir: "asc" }],
+    sort: [{ field: "id", dir: "desc" }],
   });
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
@@ -363,7 +363,7 @@ const StatusList = ({
         <Column field="color" title="Color" cell={dateFormat} />
         <Column
           sortable={false}
-          cell={(props) => ActionRender(props, showModal, hideModal, setSpin)}
+          cell={(props) => ActionRender(props, showModal, hideModal, setRunSpin)}
           field="SupplierID"
           title="Action"
         />
@@ -397,7 +397,7 @@ const StatusList = ({
   );
 };
 //Deleting Status
-function deleteConfirm(e, data, setSpin) {
+function deleteConfirm(e, data, setRunSpin) {
   //console.log(e);
   //console.log("PopConfirm", data);
   //setSpin(true);
@@ -425,8 +425,7 @@ function deleteConfirm(e, data, setSpin) {
             width: 450,
             onOk: () => {
               visible: false;
-              setSpin(true);
-              router.reload();
+              setRunSpin(true);              
               /* router.push(
                 "/administrator/picklists/status",
                 `/administrator/picklists/status`
@@ -450,7 +449,7 @@ function deleteConfirm(e, data, setSpin) {
         width: 450,
         onOk: () => {
           //setdrawerVisible(false);
-          setSpin(true);
+          setRunSpin(true);
           visible: false;
         },
       });
@@ -460,7 +459,7 @@ function deleteConfirm(e, data, setSpin) {
   fetchData(config);
 }
 
-const ActionRender = (props, showModal, hideModal, setSpin) => {
+const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   return (
     <td>
       <Button
@@ -469,7 +468,7 @@ const ActionRender = (props, showModal, hideModal, setSpin) => {
       />{" "}
       <Popconfirm
         title="Delete this Status?"
-        onConfirm={(e) => deleteConfirm(e, props.dataItem, setSpin)}
+        onConfirm={(e) => deleteConfirm(e, props.dataItem, setRunSpin)}
         /*onCancel={deleteCancel} */
         okText="Confirm"
         cancelText="Not Now"
