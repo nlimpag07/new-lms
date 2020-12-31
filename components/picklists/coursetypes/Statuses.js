@@ -12,7 +12,6 @@ import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
 import StatusList from "./StatusList";
 import StatusAdd from "./StatusAdd";
-import StatusEdit from "./StatusEdit";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -165,6 +164,78 @@ const Statuses = ({ data }) => {
     });
   };
 
+  function onChange(value) {
+    setSpin(true);
+    //console.log(`selected ${value}`);
+    const sessOpt =
+      statusSelect.length &&
+      statusSelect.filter((option) => option.id === value);
+
+    if (sessOpt.length) {
+      let theSession = sessOpt[0];
+      console.log("Selected Session", theSession);
+      let sDate = moment(theSession.startDate).format("YYYY/MM/DD h:mm a");
+      let eDate = moment(theSession.endDate).format("YYYY/MM/DD h:mm a");
+      const sessionName = `${theSession.title} - (${sDate} - ${eDate})`;
+
+      /* For Update: Temporariy code */
+      console.log(statusDetails);
+      let courseName = statusDetails.title;
+      let courseId = course_id;
+      /* End of Temporariy code */
+
+      let learnerList;
+      //check if there are learners
+
+      theSession.learnerSession && theSession.learnerSession.length
+        ? (learnerList = theSession.learnerSession)
+        : (learnerList = []);
+
+      /* var config = {
+          method: "get",
+          url: apiBaseUrl + "/Attendance/" + theSession.id,
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          //data: { courseId: course_id },
+        };
+        async function fetchData(config) {
+          try {
+            const response = await axios(config);
+            if (response) {
+              let theRes = response.data;
+               console.log("Session Response", response.data);               
+              if (theRes) {
+                
+              } else {
+                
+              }
+            }
+          } catch (error) {
+            const { response } = error;
+            console.log("Error Response", response);   
+            
+          }
+          //setLoading(false);
+        }
+        fetchData(config); */
+
+      setStatusData({
+        trigger: theSession.id,
+        title: sessionName,
+        enrolleeList: learnerList,
+      });
+    } else {
+      //No session seen
+      setStatusData({
+        trigger: false,
+        title: "",
+        enrolleeList: [],
+      });
+    }
+    setSpin(false);
+  }
   function onBlur() {
     //console.log("blur");
   }
@@ -189,7 +260,7 @@ const Statuses = ({ data }) => {
         </Option>
       );
     }); */
-    //console.log('statusesModal.dataProps',statusesModal.dataProps)
+
   return (
     //GridType(gridList)
 
@@ -237,7 +308,6 @@ const Statuses = ({ data }) => {
                     setPage={setPage}
                     setRunSpin={setRunSpin}
                     spin={spin}
-                    dataProps = {statusesModal.dataProps}
                     showModal={showModal}
                     hideModal={hideModal}
                   />
@@ -261,7 +331,7 @@ const Statuses = ({ data }) => {
         className="PicklistStatusesModal"
       >
         {statusesModal.modalOperation == "edit" ? (
-          <StatusEdit dataProps={statusesModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
+          "Hello Edit"
         ) : statusesModal.modalOperation == "add" ? (
           <StatusAdd hideModal={hideModal} setRunSpin={setRunSpin} />
         ) : statusesModal.modalOperation == "approve" ? (

@@ -181,7 +181,7 @@ const StatusList = ({
     });
   };
 
-  const colorFormat = (props) => {
+  const dateFormat = (props) => {
     //console.log("DateFormat", props.dataItem);
     const dateSchedule = moment(props.dataItem.dateSchedule).format(
       "YYYY/MM/DD h:mm a"
@@ -195,6 +195,140 @@ const StatusList = ({
             backgroundColor: props.dataItem.color,
           }}
         />
+      </td>
+    );
+  };
+  const changeStatusOnClick = (props, statusToChange) => {
+    let dataItem = props.dataItem;
+    let statusSource;
+    let currentStatus = false;
+    switch (statusToChange) {
+      case "isPresent":
+        currentStatus = dataItem.isPresent;
+        statusSource = "isPresent";
+        break;
+      case "isLate":
+        currentStatus = dataItem.isLate;
+        statusSource = "isLate";
+        break;
+      case "isAbsent":
+        currentStatus = dataItem.isAbsent;
+        statusSource = "isAbsent";
+        break;
+      case "isExcused":
+        currentStatus = dataItem.isExcused;
+        statusSource = "isExcused";
+        break;
+    }
+    //console.log("DateFormat", props.dataItem);
+    const dateSchedule = moment(dataItem.dateSchedule).format(
+      "YYYY/MM/DD h:mm a"
+    );
+    const statusOnchange = (e, c, s, d) => {
+      //console.log("DataItem", d);
+      /*console.log("OnChange Status:", e.target.checked);
+      console.log("Old Status:", c);
+      console.log("statusSource:", s); */
+      const newData = Data.map((item) => {
+        if (item.id === d.id) {
+          item[s] = e.target.checked;
+          //console.log("EQUAL",`Item ID:${item[s]}=D ID:${d.id}` )
+        }
+        return item;
+      });
+      setData(newData);
+
+      //Now lets update the API
+      let endpoint = s.substring(2).toLowerCase();
+      //console.log(endpoint)
+      UpdateStatus(endpoint, d);
+    };
+    async function UpdateStatus(endpoint, d) {
+      console.log(endpoint);
+      console.log("DataItem", d);
+      //build the data
+      const { id, isPresent, isLate, isAbsent, isExcused } = d;
+      console.log("isPresent", isPresent);
+      let dataToSubmit = {
+        attendanceId: id,
+        isPresent: isPresent,
+        isLate: isLate,
+        isAbsent: isAbsent,
+        isExcused: isExcused,
+      };
+      var config = {
+        method: "patch",
+        url: apiBaseUrl + "/Attendance/" + endpoint,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(dataToSubmit),
+      };
+      //try to submit to api
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data;
+          console.log("Attendance Response", response.data);
+          /* let ddata;
+          if (theRes) {
+            ddata = theRes.map((dataItem) => {
+              let newDataSet = {
+                selected: false,
+                courseName: dataItem.course.title,
+                sessionName: sessionTitle,
+                learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
+              };
+              return Object.assign(newDataSet, dataItem);
+            });
+          } else {
+            ddata = [];
+          } */
+        }
+      } catch (error) {
+        const { response } = error;
+        console.log("Error Response", response);
+      }
+      /*async function fetchData(config) {
+        try {
+          const response = await axios(config);
+          if (response) {
+            let theRes = response.data;
+            //console.log("Session Response", response.data);
+            let ddata;
+            if (theRes) {
+              ddata = theRes.map((dataItem) => {
+                let newDataSet = {
+                  selected: false,
+                  courseName: dataItem.course.title,
+                  sessionName: sessionTitle,
+                  learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
+                };
+                return Object.assign(newDataSet, dataItem);
+              });
+            } else {
+              ddata = [];
+            }
+            setData(ddata);
+          }
+        } catch (error) {
+          const { response } = error;
+          console.log("Error Response", response);
+          setData([]);
+        }
+      }
+      fetchData(config); */
+    }
+    return (
+      <td>
+        <Checkbox
+          checked={currentStatus}
+          onChange={(e) =>
+            statusOnchange(e, currentStatus, statusSource, dataItem)
+          }
+        />
+        {/* {`${statusToChange} ${currentStatus}`}</Checkbox> */}
       </td>
     );
   };
@@ -226,16 +360,14 @@ const StatusList = ({
       >
         <Column field="name" title="Name" />
         <Column field="category" title="Category" />
-        <Column field="color" title="Color" cell={colorFormat} />
+        <Column field="color" title="Color" cell={dateFormat} />
         <Column
           sortable={false}
-          cell={(props) =>
-            ActionRender(props, showModal, hideModal, setRunSpin)
-          }
+          cell={(props) => ActionRender(props, showModal, hideModal, setRunSpin)}
           field="SupplierID"
           title="Action"
         />
-      </Grid>
+      </Grid>    
 
       <style jsx global>{`
         .StatusList h1 {
@@ -278,40 +410,50 @@ function deleteConfirm(e, data, setRunSpin) {
     },
   };
   async function fetchData(config) {
-    await axios(config)
-        .then((res) => {
-          message.success(res.data.message);
-          setRunSpin(true);
-        })
-        .catch((err) => {
-          console.log("err: ", err.response);
-          message.error(err.response.data.message);
-          setRunSpin(true);
-        });
-    /* try {
+    try {
       const response = await axios(config);
       if (response) {
         //setOutcomeList(response.data.result);
         let theRes = response.data.response;
-        console.log("Response", response);
+        //console.log("Response", response.data);
         // wait for response if the verification is true
         if (theRes) {
-          message.success(theRes.data.message);
-          setRunSpin(true);         
+          Modal.success({
+            title: "Deletion Success",
+            content: "You have successfully deleted the status!",
+            centered: true,
+            width: 450,
+            onOk: () => {
+              visible: false;
+              setRunSpin(true);              
+              /* router.push(
+                "/administrator/picklists/status",
+                `/administrator/picklists/status`
+              ); */
+              //console.log("Should hide modal")
+            },
+          });
         } else {
         }
       }
     } catch (error) {
       const { response } = error;
-      const { data } = response; // take everything but 'request'
-      let msg = data.message;
-      let resp = data.response;
-      let code = data.statusCode;
-      
-      console.log("error: ", data);
-      message.error(code + ": " + msg);
-      setRunSpin(true);
-    } */
+      const { request, data } = response; // take everything but 'request'
+
+      console.log("Error Response", data.message);
+
+      Modal.error({
+        title: "Error: Unable to delete",
+        content: data.message,
+        centered: true,
+        width: 450,
+        onOk: () => {
+          //setdrawerVisible(false);
+          setRunSpin(true);
+          visible: false;
+        },
+      });
+    }
     //setLoading(false);
   }
   fetchData(config);
@@ -322,7 +464,7 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
     <td>
       <Button
         icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
-        onClick={() => showModal("edit", props.dataItem, setRunSpin)}
+        onClick={() => showModal("edit", props.dataItem)}
       />{" "}
       <Popconfirm
         title="Delete this Status?"
