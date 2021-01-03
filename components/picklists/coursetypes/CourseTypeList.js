@@ -55,8 +55,8 @@ const list = {
   },
 };
 
-const StatusList = ({
-  statusData,
+const CourseTypeList = ({
+  courseTypeData,
   page,
   setPage,
   setRunSpin,
@@ -70,7 +70,7 @@ const StatusList = ({
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  //console.log(statusData);
+  //console.log(courseTypeData);
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -126,7 +126,7 @@ const StatusList = ({
     fetchData(config);
   }, []); */
   var lastSelectedIndex = 0;
-  const the_data = statusData && statusData.length ? statusData : [];
+  const the_data = courseTypeData && courseTypeData.length ? courseTypeData : [];
   const ddata = the_data.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)
   );
@@ -181,23 +181,7 @@ const StatusList = ({
     });
   };
 
-  const dateFormat = (props) => {
-    //console.log("DateFormat", props.dataItem);
-    const dateSchedule = moment(props.dataItem.dateSchedule).format(
-      "YYYY/MM/DD h:mm a"
-    );
-    return (
-      <td>
-        <Avatar
-          shape="square"
-          size="small"
-          style={{
-            backgroundColor: props.dataItem.color,
-          }}
-        />
-      </td>
-    );
-  };
+  
   const changeStatusOnClick = (props, statusToChange) => {
     let dataItem = props.dataItem;
     let statusSource;
@@ -359,8 +343,7 @@ const StatusList = ({
         onPageChange={pageChange}
       >
         <Column field="name" title="Name" />
-        <Column field="category" title="Category" />
-        <Column field="color" title="Color" cell={dateFormat} />
+        {/* <Column field="category" title="Category" /> */}
         <Column
           sortable={false}
           cell={(props) => ActionRender(props, showModal, hideModal, setRunSpin)}
@@ -370,11 +353,11 @@ const StatusList = ({
       </Grid>    
 
       <style jsx global>{`
-        .StatusList h1 {
+        .CourseTypeList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .StatusList .k-grid-header {
+        .CourseTypeList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -484,4 +467,4 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   );
 };
 
-export default StatusList;
+export default CourseTypeList;

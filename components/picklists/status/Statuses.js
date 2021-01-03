@@ -73,6 +73,8 @@ const Statuses = ({ data }) => {
   const [runSpin, setRunSpin] = useState(false);
   const [statusSelect, setStatusSelect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
+  const [allStatusData, setAllStatusData] = useState([]);
+
   const [statusData, setStatusData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
@@ -116,6 +118,7 @@ const Statuses = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
+              setAllStatusData(result);
               setStatusData(result);
               setSpin(false);
             } else {
@@ -147,6 +150,7 @@ const Statuses = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
+    setAllStatusData(result);
     setStatusData(result);
     setSpin(false);
   }, []);
@@ -173,8 +177,22 @@ const Statuses = ({ data }) => {
   }
   function onSearch(val) {
     console.log("search:", val);
-    setSearchLoading(!searchLoading);
+    setSpin(true);
+    setSearchLoading(true);
+    let searchedData = allStatusData.filter((d) =>
+      d.name.toLowerCase().includes(val.toLowerCase())
+    );
+   /*  searchedData && searchedData.length
+      ? setCourseTypeData(searchedData)
+      : setCourseTypeData(allCourseTypeData); */
+      setStatusData(searchedData)
   }
+  useEffect(() => {
+    if (searchLoading) {
+      setSpin(false);
+      setSearchLoading(false);
+    }
+  }, [searchLoading]);
 
   /* const sessionOptionList =
     statusSelect.length &&
@@ -226,7 +244,7 @@ const Statuses = ({ data }) => {
                     size="small"
                     tip="Retrieving data..."
                     spinning={spin}
-                    delay={100}
+                    delay={10000}
                   ></Spin>
                 </div>
               ) : (

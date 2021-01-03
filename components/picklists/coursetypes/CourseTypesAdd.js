@@ -34,7 +34,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const StatusAdd = ({
+const CourseTypesAdd = ({
   course_id,
   courseDetails,
   hideModal,
@@ -43,63 +43,18 @@ const StatusAdd = ({
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [statusCategories, setStatusCategories] = useState([]);
-  const [unEnrolledLearners, setUnEnrolledLearners] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState([]);
+  const [courseTypeCategories, setCourseTypeCategories] = useState([]);
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [pOVisible, setPOVisible] = useState(false);
   const [cPColor, setCPColor] = useState("#4caf50");
 
   useEffect(() => {
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/Picklist/category/",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          console.log(response.data.result);
-          let theRes = response.data.result;
-          // wait for response if the verification is true
-          if (theRes) {
-            //there are enrollees
-            setStatusCategories(theRes);
-          } else {
-            //no enrollees
-            setStatusCategories([]);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-        setStatusCategories([]);
-      }
-    }
-    fetchData(config);
   }, []);
 
   const selectCategory =
-    statusCategories && statusCategories.length
-      ? statusCategories.map((c) => c)
+    courseTypeCategories && courseTypeCategories.length
+      ? courseTypeCategories.map((c) => c)
       : [];
   const selectCategoryOptions = selectCategory.length
     ? selectCategory.map((option, index) => {
@@ -115,9 +70,6 @@ const StatusAdd = ({
     form.resetFields();
     setSpinning(true);
     hideModal("add");
-    setUnEnrolledLearners([]);
-    setStatusCategories([]);
-    setSelectedUserId([]);
   };
   const onFinish = (values) => {
     setSpinning(true);
@@ -190,7 +142,7 @@ const StatusAdd = ({
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="AddPicklistStatus"
+        name="AddPicklistCourseType"
         initialValues={
           {
             /*
@@ -199,77 +151,20 @@ const StatusAdd = ({
         }
       >
         <Form.Item
-          name="statusName"
+          name="courseTypeName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Status Name!",
+              message: "Please input Course Type Name!",
             },
           ]}
         >
-          <Input placeholder="Status Name" />
-        </Form.Item>
-        <Form.Item
-          name="category"
-          style={{
-            marginBottom: "1rem",
-          }}
-          rules={[
-            {
-              required: true,
-              message: "Please input category!",
-            },
-          ]}
-        >
-          <Input placeholder="Please input Category" />
-          {/* <Select placeholder="Please select Category">
-            {selectCategoryOptions}
-          </Select> */}
-        </Form.Item>
-        <Form.Item
-          label="Color"
-          style={{
-            marginBottom: "0rem",
-          }}
-          name="colorPicker"
-          valuePropName={cPColor}
-        >
-          <Popover
-            content={
-              <CirclePicker
-                className="Noel"
-                onChangeComplete={CPhandleChangeComplete}
-              />
-            }
-            trigger="click"
-            placement="right"
-            visible={pOVisible}
-            onVisibleChange={popOverHandleVisibleChange}
-          >
-            <Avatar
-              className="colorAvatar"
-              shape="square"
-              size="small"
-              icon={
-                <CaretDownOutlined
-                  style={{
-                    fontSize: "8px",
-                    right: "0",
-                    bottom: "0",
-                    position: "absolute",
-                    color: "#4D4d4d",
-                  }}
-                />
-              }
-              style={{
-                backgroundColor: cPColor,
-              }}
-            />
-          </Popover>
-        </Form.Item>
+          <Input placeholder="Course Type Name" />
+        </Form.Item>       
+        
         {hasError ? (
           <p
             style={{
@@ -320,7 +215,7 @@ const StatusAdd = ({
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistStatus {
+        #AddPicklistCourseTypes {
           position: relative;
           width: 100%;
         }
@@ -340,4 +235,4 @@ const StatusAdd = ({
   );
 };
 
-export default StatusAdd;
+export default CourseTypesAdd;

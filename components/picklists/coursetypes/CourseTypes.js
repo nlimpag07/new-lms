@@ -10,8 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
-import StatusList from "./StatusList";
-import StatusAdd from "./StatusAdd";
+import CourseTypeList from "./CourseTypeList";
+import CourseTypesAdd from "./CourseTypesAdd";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -57,22 +57,24 @@ const menulists = [
   },
 ];
 
-const Statuses = ({ data }) => {
-  //console.log(data);
+const CourseTypes = ({ data }) => {
+  console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  var [statusesModal, setStatusesModal] = useState({
+  var [courseTypesModal, setCourseTypesModal] = useState({
     visible: false,
     modalOperation: "",
     dataProps: null,
     width: "auto",
   });
-  const [statusDetails, setStatusDetails] = useState("");
+  const [courseTypeDetails, setCourseTypeDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [runSpin, setRunSpin] = useState(false);
-  const [statusSelect, setStatusSelect] = useState("");
+  const [courseTypeSelect, setCourseTypeSelect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
-  const [statusData, setStatusData] = useState([]);
+  const [searchResults, setSearchResults] = useState("");
+  const [allCourseTypeData, setAllCourseTypeData] = useState([]);
+  const [courseTypeData, setCourseTypeData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
     pageSize: 0,
@@ -86,7 +88,7 @@ const Statuses = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/settings/status?orderBy=id&orderByDesc=true",
+        url: apiBaseUrl + "/picklist/coursetype",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -115,7 +117,8 @@ const Statuses = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
-              setStatusData(result);
+              setAllCourseTypeData(result);
+              setCourseTypeData(result);
               setSpin(false);
             } else {
             }
@@ -146,96 +149,25 @@ const Statuses = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
-    setStatusData(result);
+    setAllCourseTypeData(result);
+    setCourseTypeData(result);
     setSpin(false);
   }, []);
 
   const showModal = (modalOperation, props) => {
-    setStatusesModal({
+    setCourseTypesModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
   };
   const hideModal = (modalOperation) => {
-    setStatusesModal({
+    setCourseTypesModal({
       visible: false,
       modalOperation: modalOperation,
     });
   };
 
-  function onChange(value) {
-    setSpin(true);
-    //console.log(`selected ${value}`);
-    const sessOpt =
-      statusSelect.length &&
-      statusSelect.filter((option) => option.id === value);
-
-    if (sessOpt.length) {
-      let theSession = sessOpt[0];
-      console.log("Selected Session", theSession);
-      let sDate = moment(theSession.startDate).format("YYYY/MM/DD h:mm a");
-      let eDate = moment(theSession.endDate).format("YYYY/MM/DD h:mm a");
-      const sessionName = `${theSession.title} - (${sDate} - ${eDate})`;
-
-      /* For Update: Temporariy code */
-      console.log(statusDetails);
-      let courseName = statusDetails.title;
-      let courseId = course_id;
-      /* End of Temporariy code */
-
-      let learnerList;
-      //check if there are learners
-
-      theSession.learnerSession && theSession.learnerSession.length
-        ? (learnerList = theSession.learnerSession)
-        : (learnerList = []);
-
-      /* var config = {
-          method: "get",
-          url: apiBaseUrl + "/Attendance/" + theSession.id,
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-          //data: { courseId: course_id },
-        };
-        async function fetchData(config) {
-          try {
-            const response = await axios(config);
-            if (response) {
-              let theRes = response.data;
-               console.log("Session Response", response.data);               
-              if (theRes) {
-                
-              } else {
-                
-              }
-            }
-          } catch (error) {
-            const { response } = error;
-            console.log("Error Response", response);   
-            
-          }
-          //setLoading(false);
-        }
-        fetchData(config); */
-
-      setStatusData({
-        trigger: theSession.id,
-        title: sessionName,
-        enrolleeList: learnerList,
-      });
-    } else {
-      //No session seen
-      setStatusData({
-        trigger: false,
-        title: "",
-        enrolleeList: [],
-      });
-    }
-    setSpin(false);
-  }
   function onBlur() {
     //console.log("blur");
   }
@@ -244,12 +176,25 @@ const Statuses = ({ data }) => {
   }
   function onSearch(val) {
     console.log("search:", val);
-    setSearchLoading(!searchLoading);
+    setSpin(true);
+    setSearchLoading(true);
+    let searchedData = allCourseTypeData.filter((d) =>
+      d.name.toLowerCase().includes(val.toLowerCase())
+    );
+   /*  searchedData && searchedData.length
+      ? setCourseTypeData(searchedData)
+      : setCourseTypeData(allCourseTypeData); */
+      setCourseTypeData(searchedData)
   }
-
+  useEffect(() => {
+    if (searchLoading) {
+      setSpin(false);
+      setSearchLoading(false);
+    }
+  }, [searchLoading]);
   /* const sessionOptionList =
-    statusSelect.length &&
-    statusSelect.map((option, index) => {
+    courseTypeSelect.length &&
+    courseTypeSelect.map((option, index) => {
       const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
       const eDate = moment(option.endDate).format("YYYY/MM/DD h:mm a");
       let sessionNames = `${option.title} - (${sDate} - ${eDate})`;
@@ -271,17 +216,17 @@ const Statuses = ({ data }) => {
         style={{ margin: "1rem 0" }}
       >
         <Col
-          className="gutter-row widget-holder-col Statuses"
+          className="gutter-row widget-holder-col CourseTypes"
           xs={24}
           sm={24}
           md={24}
           lg={24}
         >
-          <h1>Picklists: Status</h1>
+          <h1>Picklists: Course Types</h1>
           <Row className="widget-header-row" justify="start">
             <Col xs={24} xs={24} sm={12} md={8} lg={8}>
               <Search
-                placeholder="Search a Status"
+                placeholder="Search Course Type"
                 enterButton="Search"
                 size="large"
                 loading={searchLoading}
@@ -289,7 +234,7 @@ const Statuses = ({ data }) => {
               />
             </Col>
           </Row>
-          <Row className="PicklistStatuses">
+          <Row className="PicklistCourseTypes">
             <Col xs={24}>
               {spin ? (
                 <div className="spinHolder">
@@ -302,8 +247,9 @@ const Statuses = ({ data }) => {
                 </div>
               ) : (
                 <Col xs={24}>
-                  <StatusList
-                    statusData={statusData}
+                  <CourseTypeList
+                    courseTypeData={courseTypeData
+                    }
                     page={page}
                     setPage={setPage}
                     setRunSpin={setRunSpin}
@@ -318,25 +264,25 @@ const Statuses = ({ data }) => {
         </Col>
       </Row>
       <Modal
-        title={`Status - ${statusesModal.modalOperation}`}
+        title={`Course Types - ${courseTypesModal.modalOperation}`}
         centered
-        visible={statusesModal.visible}
-        onOk={() => hideModal(statusesModal.modalOperation)}
-        onCancel={() => hideModal(statusesModal.modalOperation)}
+        visible={courseTypesModal.visible}
+        onOk={() => hideModal(courseTypesModal.modalOperation)}
+        onCancel={() => hideModal(courseTypesModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={statusesModal.width}
+        width={courseTypesModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistStatusesModal"
+        className="PicklistCourseTypesModal"
       >
-        {statusesModal.modalOperation == "edit" ? (
+        {courseTypesModal.modalOperation == "edit" ? (
           "Hello Edit"
-        ) : statusesModal.modalOperation == "add" ? (
-          <StatusAdd hideModal={hideModal} setRunSpin={setRunSpin} />
-        ) : statusesModal.modalOperation == "approve" ? (
+        ) : courseTypesModal.modalOperation == "add" ? (
+          <CourseTypesAdd hideModal={hideModal} setRunSpin={setRunSpin} />
+        ) : courseTypesModal.modalOperation == "approve" ? (
           "Hello Approve"
-        ) : statusesModal.modalOperation == "delete" ? (
+        ) : courseTypesModal.modalOperation == "delete" ? (
           "HELLO Delete"
         ) : (
           "Default"
@@ -349,14 +295,14 @@ const Statuses = ({ data }) => {
         toggleModal={() => showModal("add")}
       />
       <style jsx global>{`
-        .PicklistStatuses {
+        .PicklistCourseTypes {
           margin-top: 1rem;
         }
-        .Statuses h1 {
+        .CourseTypes h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .Statuses .k-grid-header {
+        .CourseTypes .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -373,7 +319,7 @@ const Statuses = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistStatusesModal .ant-modal-footer {
+        .PicklistCourseTypesModal .ant-modal-footer {
           display: none;
           opacity: 0;
         }
@@ -382,4 +328,4 @@ const Statuses = ({ data }) => {
   );
 };
 
-export default Statuses;
+export default CourseTypes;

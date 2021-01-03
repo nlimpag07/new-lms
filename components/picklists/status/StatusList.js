@@ -200,7 +200,7 @@ const StatusList = ({
   };
 
   return (
-    <>
+    <motion.div initial="hidden" animate="visible" variants={list}>
       <Grid
         data={orderBy(
           Data.slice(pagination.skip, pagination.take + pagination.skip),
@@ -261,7 +261,7 @@ const StatusList = ({
           width: 100%;
         }
       `}</style>
-    </>
+    </motion.div>
   );
 };
 //Deleting Status
@@ -279,40 +279,15 @@ function deleteConfirm(e, data, setRunSpin) {
   };
   async function fetchData(config) {
     await axios(config)
-        .then((res) => {
-          message.success(res.data.message);
-          setRunSpin(true);
-        })
-        .catch((err) => {
-          console.log("err: ", err.response);
-          message.error(err.response.data.message);
-          setRunSpin(true);
-        });
-    /* try {
-      const response = await axios(config);
-      if (response) {
-        //setOutcomeList(response.data.result);
-        let theRes = response.data.response;
-        console.log("Response", response);
-        // wait for response if the verification is true
-        if (theRes) {
-          message.success(theRes.data.message);
-          setRunSpin(true);         
-        } else {
-        }
-      }
-    } catch (error) {
-      const { response } = error;
-      const { data } = response; // take everything but 'request'
-      let msg = data.message;
-      let resp = data.response;
-      let code = data.statusCode;
-      
-      console.log("error: ", data);
-      message.error(code + ": " + msg);
-      setRunSpin(true);
-    } */
-    //setLoading(false);
+      .then((res) => {
+        message.success(res.data.message);
+        setRunSpin(true);
+      })
+      .catch((err) => {
+        console.log("err: ", err.response);
+        message.error(err.response.data.message);
+        setRunSpin(true);
+      });
   }
   fetchData(config);
 }
