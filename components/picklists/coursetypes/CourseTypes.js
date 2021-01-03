@@ -12,6 +12,7 @@ import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
 import CourseTypeList from "./CourseTypeList";
 import CourseTypesAdd from "./CourseTypesAdd";
+import CourseTypesEdit from "./CourseTypesEdit";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -181,10 +182,10 @@ const CourseTypes = ({ data }) => {
     let searchedData = allCourseTypeData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-   /*  searchedData && searchedData.length
+    /*  searchedData && searchedData.length
       ? setCourseTypeData(searchedData)
       : setCourseTypeData(allCourseTypeData); */
-      setCourseTypeData(searchedData)
+    setCourseTypeData(searchedData);
   }
   useEffect(() => {
     if (searchLoading) {
@@ -192,19 +193,6 @@ const CourseTypes = ({ data }) => {
       setSearchLoading(false);
     }
   }, [searchLoading]);
-  /* const sessionOptionList =
-    courseTypeSelect.length &&
-    courseTypeSelect.map((option, index) => {
-      const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
-      const eDate = moment(option.endDate).format("YYYY/MM/DD h:mm a");
-      let sessionNames = `${option.title} - (${sDate} - ${eDate})`;
-      let optValue = option.id;
-      return (
-        <Option key={index} label={sessionNames} value={optValue}>
-          {sessionNames}
-        </Option>
-      );
-    }); */
 
   return (
     //GridType(gridList)
@@ -248,8 +236,7 @@ const CourseTypes = ({ data }) => {
               ) : (
                 <Col xs={24}>
                   <CourseTypeList
-                    courseTypeData={courseTypeData
-                    }
+                    courseTypeData={courseTypeData}
                     page={page}
                     setPage={setPage}
                     setRunSpin={setRunSpin}
@@ -277,7 +264,7 @@ const CourseTypes = ({ data }) => {
         className="PicklistCourseTypesModal"
       >
         {courseTypesModal.modalOperation == "edit" ? (
-          "Hello Edit"
+          <CourseTypesEdit dataProps={courseTypesModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
         ) : courseTypesModal.modalOperation == "add" ? (
           <CourseTypesAdd hideModal={hideModal} setRunSpin={setRunSpin} />
         ) : courseTypesModal.modalOperation == "approve" ? (

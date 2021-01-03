@@ -74,57 +74,7 @@ const CourseTypeList = ({
   useEffect(() => {
     setLoading(false);
   }, []);
-  /* useEffect(() => {
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseSession/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: { courseId: course_id },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Session Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //console.log(theRes)
-            setSessionSelect(theRes);
-            const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : [];
-            setData(ddata);
-            setSpin(false);
-          } else {
-            setData([]);
-            setSpin(false);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        console.log("Error Response", response);
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: response + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config);
-  }, []); */
+  
   var lastSelectedIndex = 0;
   const the_data = courseTypeData && courseTypeData.length ? courseTypeData : [];
   const ddata = the_data.map((dataItem) =>
@@ -179,143 +129,7 @@ const CourseTypeList = ({
       skip: event.page.skip,
       take: event.page.take,
     });
-  };
-
-  
-  const changeStatusOnClick = (props, statusToChange) => {
-    let dataItem = props.dataItem;
-    let statusSource;
-    let currentStatus = false;
-    switch (statusToChange) {
-      case "isPresent":
-        currentStatus = dataItem.isPresent;
-        statusSource = "isPresent";
-        break;
-      case "isLate":
-        currentStatus = dataItem.isLate;
-        statusSource = "isLate";
-        break;
-      case "isAbsent":
-        currentStatus = dataItem.isAbsent;
-        statusSource = "isAbsent";
-        break;
-      case "isExcused":
-        currentStatus = dataItem.isExcused;
-        statusSource = "isExcused";
-        break;
-    }
-    //console.log("DateFormat", props.dataItem);
-    const dateSchedule = moment(dataItem.dateSchedule).format(
-      "YYYY/MM/DD h:mm a"
-    );
-    const statusOnchange = (e, c, s, d) => {
-      //console.log("DataItem", d);
-      /*console.log("OnChange Status:", e.target.checked);
-      console.log("Old Status:", c);
-      console.log("statusSource:", s); */
-      const newData = Data.map((item) => {
-        if (item.id === d.id) {
-          item[s] = e.target.checked;
-          //console.log("EQUAL",`Item ID:${item[s]}=D ID:${d.id}` )
-        }
-        return item;
-      });
-      setData(newData);
-
-      //Now lets update the API
-      let endpoint = s.substring(2).toLowerCase();
-      //console.log(endpoint)
-      UpdateStatus(endpoint, d);
-    };
-    async function UpdateStatus(endpoint, d) {
-      console.log(endpoint);
-      console.log("DataItem", d);
-      //build the data
-      const { id, isPresent, isLate, isAbsent, isExcused } = d;
-      console.log("isPresent", isPresent);
-      let dataToSubmit = {
-        attendanceId: id,
-        isPresent: isPresent,
-        isLate: isLate,
-        isAbsent: isAbsent,
-        isExcused: isExcused,
-      };
-      var config = {
-        method: "patch",
-        url: apiBaseUrl + "/Attendance/" + endpoint,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify(dataToSubmit),
-      };
-      //try to submit to api
-      try {
-        const response = await axios(config);
-        if (response) {
-          let theRes = response.data;
-          console.log("Attendance Response", response.data);
-          /* let ddata;
-          if (theRes) {
-            ddata = theRes.map((dataItem) => {
-              let newDataSet = {
-                selected: false,
-                courseName: dataItem.course.title,
-                sessionName: sessionTitle,
-                learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
-              };
-              return Object.assign(newDataSet, dataItem);
-            });
-          } else {
-            ddata = [];
-          } */
-        }
-      } catch (error) {
-        const { response } = error;
-        console.log("Error Response", response);
-      }
-      /*async function fetchData(config) {
-        try {
-          const response = await axios(config);
-          if (response) {
-            let theRes = response.data;
-            //console.log("Session Response", response.data);
-            let ddata;
-            if (theRes) {
-              ddata = theRes.map((dataItem) => {
-                let newDataSet = {
-                  selected: false,
-                  courseName: dataItem.course.title,
-                  sessionName: sessionTitle,
-                  learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
-                };
-                return Object.assign(newDataSet, dataItem);
-              });
-            } else {
-              ddata = [];
-            }
-            setData(ddata);
-          }
-        } catch (error) {
-          const { response } = error;
-          console.log("Error Response", response);
-          setData([]);
-        }
-      }
-      fetchData(config); */
-    }
-    return (
-      <td>
-        <Checkbox
-          checked={currentStatus}
-          onChange={(e) =>
-            statusOnchange(e, currentStatus, statusSource, dataItem)
-          }
-        />
-        {/* {`${statusToChange} ${currentStatus}`}</Checkbox> */}
-      </td>
-    );
-  };
+  }; 
 
   return (
     <>
@@ -386,7 +200,7 @@ function deleteConfirm(e, data, setRunSpin) {
   //setSpin(true);
   var config = {
     method: "delete",
-    url: apiBaseUrl + "/settings/status/" + data.id,
+    url: apiBaseUrl + "/picklist/coursetype/" + data.id,
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -403,7 +217,7 @@ function deleteConfirm(e, data, setRunSpin) {
         if (theRes) {
           Modal.success({
             title: "Deletion Success",
-            content: "You have successfully deleted the status!",
+            content: "You have successfully deleted a course type!",
             centered: true,
             width: 450,
             onOk: () => {
