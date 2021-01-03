@@ -34,7 +34,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
+const CategoriesAdd = ({ hideModal, setRunSpin }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseTypeCategories, setCourseTypeCategories] = useState([]);
@@ -45,19 +45,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
 
   useEffect(() => {}, []);
 
-  const selectCategory =
-    courseTypeCategories && courseTypeCategories.length
-      ? courseTypeCategories.map((c) => c)
-      : [];
-  const selectCategoryOptions = selectCategory.length
-    ? selectCategory.map((option, index) => {
-        return (
-          <Option key={index} value={option.id}>
-            {option.name}
-          </Option>
-        );
-      })
-    : [];
+  
 
   const onCancel = (form) => {
     form.resetFields();
@@ -81,7 +69,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/picklist/coursetype",
+        url: apiBaseUrl + "/picklist/category",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -206,4 +194,4 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
   );
 };
 
-export default CourseTypesAdd;
+export default CategoriesAdd;

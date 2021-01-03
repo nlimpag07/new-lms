@@ -47,9 +47,8 @@ const CourseTypesEdit = ({ dataProps, hideModal, setRunSpin }) => {
 
   const onCancel = (form) => {
     form.resetFields();
-    setSpinning(true);
+    setSpinning(false);
     hideModal("edit");
-    setStatusCategories([]);
   };
   const onFinish = (values) => {
     setSpinning(true);
