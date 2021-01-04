@@ -85,8 +85,8 @@ const PickLists = ({ userlist }) => {
               >
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/picklists"
-                    as={`/administrator/picklists`}
+                    href="/administrator/picklists/department"
+                    as={`/administrator/picklists/department`}
                   >
                     <a>
                       <FontAwesomeIcon icon={["fas", "cube"]} size="3x" />{" "}

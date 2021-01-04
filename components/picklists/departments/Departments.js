@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
-import CategoriesList from "./CategoriesList";
-import CategoriesAdd from "./CategoriesAdd";
-import CategoriesEdit from "./CategoriesEdit";
+import DepartmentsList from "./DepartmentsList";
+import DepartmentsAdd from "./DepartmentsAdd";
+import DepartmentsEdit from "./DepartmentsEdit";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -59,23 +59,22 @@ const menulists = [
 ];
 
 const Categories = ({ data }) => {
-  console.log("data", data);
+  //console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  var [courseTypesModal, setCategoriesModal] = useState({
+  var [departmentsModal, setDepartmentsModal] = useState({
     visible: false,
     modalOperation: "",
     dataProps: null,
     width: "auto",
   });
-  const [courseTypeDetails, setCourseTypeDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [runSpin, setRunSpin] = useState(false);
-  const [courseTypeSelect, setCourseTypeSelect] = useState("");
+  const [deparmentSelect, setDepartmentSelect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState("");
-  const [allCourseTypeData, setAllCourseTypeData] = useState([]);
-  const [courseTypeData, setCourseTypeData] = useState([]);
+  const [allDepartmentsData, setAllDepartmentsData] = useState([]);
+  const [departmentData, setDepartmentData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
     pageSize: 0,
@@ -89,7 +88,7 @@ const Categories = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/picklist/category",
+        url: apiBaseUrl + "/picklist/department",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -118,8 +117,8 @@ const Categories = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
-              setAllCourseTypeData(result);
-              setCourseTypeData(result);
+              setAllDepartmentsData(result);
+              setDepartmentData(result);
               setSpin(false);
             } else {
             }
@@ -150,20 +149,20 @@ const Categories = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
-    setAllCourseTypeData(result);
-    setCourseTypeData(result);
+    setAllDepartmentsData(result);
+    setDepartmentData(result);
     setSpin(false);
   }, []);
 
   const showModal = (modalOperation, props) => {
-    setCategoriesModal({
+    setDepartmentsModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
   };
   const hideModal = (modalOperation) => {
-    setCategoriesModal({
+    setDepartmentsModal({
       visible: false,
       modalOperation: modalOperation,
     });
@@ -179,13 +178,13 @@ const Categories = ({ data }) => {
     console.log("search:", val);
     setSpin(true);
     setSearchLoading(true);
-    let searchedData = allCourseTypeData.filter((d) =>
+    let searchedData = allDepartmentsData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
     /*  searchedData && searchedData.length
-      ? setCourseTypeData(searchedData)
-      : setCourseTypeData(allCourseTypeData); */
-    setCourseTypeData(searchedData);
+      ? setDepartmentData(searchedData)
+      : setDepartmentData(allDepartmentsData); */
+    setDepartmentData(searchedData);
   }
   useEffect(() => {
     if (searchLoading) {
@@ -210,11 +209,11 @@ const Categories = ({ data }) => {
           md={24}
           lg={24}
         >
-          <h1>Picklists: Categories</h1>
+          <h1>Picklists: Departments</h1>
           <Row className="widget-header-row" justify="start">
             <Col xs={24} xs={24} sm={12} md={8} lg={8}>
               <Search
-                placeholder="Search Category"
+                placeholder="Search Department"
                 enterButton="Search"
                 size="large"
                 loading={searchLoading}
@@ -222,7 +221,7 @@ const Categories = ({ data }) => {
               />
             </Col>
           </Row>
-          <Row className="PicklistCategories">
+          <Row className="PicklistDepartments">
             <Col xs={24}>
               {spin ? (
                 <div className="spinHolder">
@@ -235,8 +234,8 @@ const Categories = ({ data }) => {
                 </div>
               ) : (
                 <Col xs={24}>
-                  <CategoriesList
-                    courseTypeData={courseTypeData}
+                  <DepartmentsList
+                    departmentData={departmentData}
                     page={page}
                     setPage={setPage}
                     setRunSpin={setRunSpin}
@@ -251,25 +250,25 @@ const Categories = ({ data }) => {
         </Col>
       </Row>
       <Modal
-        title={`Course Types - ${courseTypesModal.modalOperation}`}
+        title={`Departments - ${departmentsModal.modalOperation}`}
         centered
-        visible={courseTypesModal.visible}
-        onOk={() => hideModal(courseTypesModal.modalOperation)}
-        onCancel={() => hideModal(courseTypesModal.modalOperation)}
+        visible={departmentsModal.visible}
+        onOk={() => hideModal(departmentsModal.modalOperation)}
+        onCancel={() => hideModal(departmentsModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={courseTypesModal.width}
+        width={departmentsModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistCategoriesModal"
+        className="PicklistdepartmentsModal"
       >
-        {courseTypesModal.modalOperation == "edit" ? (
-          <CategoriesEdit dataProps={courseTypesModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
-        ) : courseTypesModal.modalOperation == "add" ? (
-          <CategoriesAdd hideModal={hideModal} setRunSpin={setRunSpin} />
-        ) : courseTypesModal.modalOperation == "approve" ? (
+        {departmentsModal.modalOperation == "edit" ? (
+          <DepartmentsEdit dataProps={departmentsModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
+        ) : departmentsModal.modalOperation == "add" ? (
+          <DepartmentsAdd hideModal={hideModal} setRunSpin={setRunSpin} />
+        ) : departmentsModal.modalOperation == "approve" ? (
           "Hello Approve"
-        ) : courseTypesModal.modalOperation == "delete" ? (
+        ) : departmentsModal.modalOperation == "delete" ? (
           "HELLO Delete"
         ) : (
           "Default"
@@ -282,7 +281,7 @@ const Categories = ({ data }) => {
         toggleModal={() => showModal("add")}
       />
       <style jsx global>{`
-        .PicklistCategories {
+        .PicklistDepartments {
           margin-top: 1rem;
         }
         .Categories h1 {
@@ -306,7 +305,7 @@ const Categories = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistCategoriesModal .ant-modal-footer {
+        .PicklistdepartmentsModal .ant-modal-footer {
           display: none;
           opacity: 0;
         }

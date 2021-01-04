@@ -34,13 +34,15 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
+const CategoriesAdd = ({ hideModal, setRunSpin }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {}, []);
+
+  
 
   const onCancel = (form) => {
     form.resetFields();
@@ -53,10 +55,16 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.courseTypeName) {
-      data.name = values.courseTypeName;
+    if (!!values.DepartmentName) {
+      data.name = values.DepartmentName;
     } else {
-      setHasError("* Please Input Status Name");
+      setHasError("* Please Input Department Name");
+      checker.push("Error");
+    }
+    if (!!values.DepartmentCode) {
+      data.code = values.DepartmentCode;
+    } else {
+      setHasError("* Please Input Department Code");
       checker.push("Error");
     }
 
@@ -64,7 +72,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/picklist/coursetype",
+        url: apiBaseUrl + "/picklist/department",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -97,7 +105,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="AddPicklistCourseType"
+        name="AddPicklistDepartment"
         initialValues={
           {
             /*
@@ -106,18 +114,32 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         }
       >
         <Form.Item
-          name="courseTypeName"
+          name="DepartmentName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Department Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Course Department Name" />
+        </Form.Item>
+        <Form.Item
+          name="DepartmentCode"
+          style={{
+            marginBottom: "1rem",
+          }}
+          rules={[
+            {
+              required: true,
+              message: "Please input Department Code!",
+            },
+          ]}
+        >
+          <Input placeholder="Course Department Code" />
         </Form.Item>
         {hasError ? (
           <p
@@ -169,7 +191,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistCourseType {
+        #AddPicklistDepartment {
           position: relative;
           width: 100%;
         }
@@ -189,4 +211,4 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
   );
 };
 
-export default CourseTypesAdd;
+export default CategoriesAdd;

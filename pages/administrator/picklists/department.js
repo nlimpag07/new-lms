@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import Categories from "../../../components/picklists/coursecategories/Categories";
+import Departments from "../../../components/picklists/departments/Departments";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -30,7 +30,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const PicklistCategoriesIndex = ({ data, token, apiBaseUrl }) => {
+const PicklistDepartmentIndex = ({ data, token, apiBaseUrl }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
@@ -42,7 +42,7 @@ const PicklistCategoriesIndex = ({ data, token, apiBaseUrl }) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <Categories data={data} />
+        <Departments data={data} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -54,7 +54,7 @@ const PicklistCategoriesIndex = ({ data, token, apiBaseUrl }) => {
     </MainThemeLayout>
   );
 };
-PicklistCategoriesIndex.getInitialProps = async (ctx) => {
+PicklistDepartmentIndex.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -71,7 +71,7 @@ PicklistCategoriesIndex.getInitialProps = async (ctx) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/Picklist/category",
+    url: apiBaseUrl + "/Picklist/department",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -89,4 +89,4 @@ PicklistCategoriesIndex.getInitialProps = async (ctx) => {
   };
 };
 
-export default withAuth(PicklistCategoriesIndex);
+export default withAuth(PicklistDepartmentIndex);
