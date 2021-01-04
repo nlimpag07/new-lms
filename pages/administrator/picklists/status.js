@@ -3,7 +3,7 @@
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
-import CourseTypes from "../../../../components/picklists/coursetypes/CourseTypes";
+import Statuses from "../../../components/picklists/status/Statuses";
 /**End Of Imported Courses Components **/
 import cookie from "cookie";
 
@@ -12,9 +12,9 @@ import axios from "axios";
 import Link from "next/link";
 import { Layout, Row, Col, Button, Card, Avatar } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MainThemeLayout from "../../../../components/theme-layout/MainThemeLayout";
-import withAuth from "../../../../hocs/withAuth";
-import { useAuth } from "../../../../providers/Auth";
+import MainThemeLayout from "../../../components/theme-layout/MainThemeLayout";
+import withAuth from "../../../hocs/withAuth";
+import { useAuth } from "../../../providers/Auth";
 //import { CourseListProvider } from "../../../providers/CourseProvider";
 
 import Error from "next/error";
@@ -30,7 +30,7 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 
-const PicklistCourseTypesIndex = ({ data, token, apiBaseUrl }) => {
+const PicklistStatusIndex = ({ data, token, apiBaseUrl }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
@@ -42,7 +42,7 @@ const PicklistCourseTypesIndex = ({ data, token, apiBaseUrl }) => {
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
-        <CourseTypes data={data} />
+        <Statuses data={data} />
       </Layout>
       <style jsx global>{`
         /* .status-col {
@@ -54,7 +54,7 @@ const PicklistCourseTypesIndex = ({ data, token, apiBaseUrl }) => {
     </MainThemeLayout>
   );
 };
-PicklistCourseTypesIndex.getInitialProps = async (ctx) => {
+PicklistStatusIndex.getInitialProps = async (ctx) => {
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -71,7 +71,7 @@ PicklistCourseTypesIndex.getInitialProps = async (ctx) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/Picklist/coursetype?orderByDesc=true",
+    url: apiBaseUrl + "/settings/status?orderByDesc=true",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -89,4 +89,4 @@ PicklistCourseTypesIndex.getInitialProps = async (ctx) => {
   };
 };
 
-export default withAuth(PicklistCourseTypesIndex);
+export default withAuth(PicklistStatusIndex);
