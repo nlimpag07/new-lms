@@ -34,7 +34,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
+const LevelsAdd = ({ hideModal, setRunSpin }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -53,10 +53,10 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.courseTypeName) {
-      data.name = values.courseTypeName;
+    if (!!values.LevelName) {
+      data.name = values.LevelName;
     } else {
-      setHasError("* Please Input Course Type Name");
+      setHasError("* Please Input Level Name");
       checker.push("Error");
     }
 
@@ -64,7 +64,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/picklist/coursetype",
+        url: apiBaseUrl + "/picklist/courselevel",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="AddPicklistCourseType"
+        name="AddPicklistLevels"
         initialValues={
           {
             /*
@@ -106,19 +106,20 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         }
       >
         <Form.Item
-          name="courseTypeName"
+          name="LevelName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Course Level Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Course Level Name" />
         </Form.Item>
+
         {hasError ? (
           <p
             style={{
@@ -169,7 +170,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistCourseType {
+        #AddPicklistLevels {
           position: relative;
           width: 100%;
         }
@@ -189,4 +190,4 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
   );
 };
 
-export default CourseTypesAdd;
+export default LevelsAdd;

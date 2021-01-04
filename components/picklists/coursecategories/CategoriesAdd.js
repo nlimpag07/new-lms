@@ -45,8 +45,6 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
 
   useEffect(() => {}, []);
 
-  
-
   const onCancel = (form) => {
     form.resetFields();
     setSpinning(true);
@@ -58,10 +56,10 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.courseTypeName) {
-      data.name = values.courseTypeName;
+    if (!!values.CategoriesName) {
+      data.name = values.CategoriesName;
     } else {
-      setHasError("* Please Input Status Name");
+      setHasError("* Please Input Category Name");
       checker.push("Error");
     }
 
@@ -102,7 +100,7 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="AddPicklistCourseType"
+        name="AddPicklistCategories"
         initialValues={
           {
             /*
@@ -111,18 +109,18 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
         }
       >
         <Form.Item
-          name="courseTypeName"
+          name="CategoriesName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Category Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Category Name" />
         </Form.Item>
         {hasError ? (
           <p
@@ -174,7 +172,7 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistCourseType {
+        #AddPicklistCategories {
           position: relative;
           width: 100%;
         }

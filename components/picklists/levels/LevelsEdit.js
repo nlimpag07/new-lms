@@ -34,7 +34,9 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
+const LevelsEdit = ({ dataProps, hideModal, setRunSpin }) => {
+  console.log("dataProps", dataProps);
+  const { name, id, code } = dataProps;
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -44,27 +46,26 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
 
   const onCancel = (form) => {
     form.resetFields();
-    setSpinning(true);
-    hideModal("add");
+    setSpinning(false);
+    hideModal("edit");
   };
   const onFinish = (values) => {
     setSpinning(true);
     setHasError("");
     var data = {};
     var checker = [];
-
-    if (!!values.courseTypeName) {
-      data.name = values.courseTypeName;
+    data.id = id;
+    if (!!values.LevelName) {
+      data.name = values.LevelName;
     } else {
-      setHasError("* Please Input Course Type Name");
-      checker.push("Error");
-    }
+      data.name = name;
+    }    
 
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
-        method: "post",
-        url: apiBaseUrl + "/picklist/coursetype",
+        method: "put",
+        url: apiBaseUrl + "/picklist/courselevel/" + id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -77,16 +78,14 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
           message.success(res.data.message);
           setSpinning(false);
           setRunSpin(true);
-          hideModal("add");
+          hideModal("edit");
         })
         .catch((err) => {
-          console.log("err: ", err);
-          message.error(
-            "Network Error on Submission, Contact Technical Support"
-          );
+          console.log("err: ", err.response);
+          message.error(err.response.data.message);
           setSpinning(false);
           setRunSpin(true);
-          hideModal("add");
+          hideModal("edit");
         });
     }
   };
@@ -97,28 +96,26 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="AddPicklistCourseType"
-        initialValues={
-          {
-            /*
-          colorPicker:"#ffffff",*/
-          }
-        }
+        name="EditPicklistCourseLevels"
+        initialValues={{
+          LevelName: name,
+        }}
       >
         <Form.Item
-          name="courseTypeName"
+          name="LevelName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Course Level Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Course Level Name" />
         </Form.Item>
+        
         {hasError ? (
           <p
             style={{
@@ -169,7 +166,7 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistCourseType {
+        #EditPicklistCourseLevels {
           position: relative;
           width: 100%;
         }
@@ -189,4 +186,4 @@ const CourseTypesAdd = ({ hideModal, setRunSpin }) => {
   );
 };
 
-export default CourseTypesAdd;
+export default LevelsEdit;

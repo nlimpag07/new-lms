@@ -42,8 +42,7 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
 
-  useEffect(() => {
-  }, []); 
+  useEffect(() => {}, []);
 
   const onCancel = (form) => {
     form.resetFields();
@@ -56,12 +55,11 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.courseTypeName) {
-      data.name = values.courseTypeName;
+    if (!!values.categoryName) {
+      data.name = values.categoryName;
     } else {
       data.name = name;
     }
-    
 
     data = JSON.stringify(data);
     if (!checker.length) {
@@ -98,27 +96,26 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="EditPicklistCourseTypes"
+        name="EditPicklistCategories"
         initialValues={{
-          courseTypeName: name,
+          categoryName: name,
         }}
       >
         <Form.Item
-          name="courseTypeName"
+          name="categoryName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Category Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Category Name" />
         </Form.Item>
-        
-        
+
         {hasError ? (
           <p
             style={{
@@ -169,7 +166,7 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #EditPicklistCourseTypes {
+        #EditPicklistCategories {
           position: relative;
           width: 100%;
         }

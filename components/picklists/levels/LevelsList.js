@@ -55,8 +55,8 @@ const list = {
   },
 };
 
-const CategoriesList = ({
-  courseTypeData,
+const LevelsList = ({
+  levelsData,
   page,
   setPage,
   setRunSpin,
@@ -70,20 +70,20 @@ const CategoriesList = ({
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  //console.log(courseTypeData);
+  //console.log(levelsData);
   useEffect(() => {
     setLoading(false);
   }, []);
 
   var lastSelectedIndex = 0;
   const the_data =
-    courseTypeData && courseTypeData.length ? courseTypeData : [];
+    levelsData && levelsData.length ? levelsData : [];
   const ddata = the_data.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)
   );
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
-    sort: [{ field: "id", dir: "desc" }],
+    sort: [{ field: "id", dir: "asc" }],
   });
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
@@ -162,7 +162,8 @@ const CategoriesList = ({
         pageable={true}
         onPageChange={pageChange}
       >
-        <Column field="name" title="Category Name" />
+        <Column field="id" title="ID" width="85px" />
+        <Column field="name" title="Level Name" />
         <Column field="isEditable" title="Editable?" cell={colorFormat} />
         <Column
           sortable={false}
@@ -171,15 +172,16 @@ const CategoriesList = ({
           }
           field="SupplierID"
           title="Action"
+          width="150px"
         />
       </Grid>
 
       <style jsx global>{`
-        .CategoriesList h1 {
+        .LevelsList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .CategoriesList .k-grid-header {
+        .LevelsList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -208,7 +210,7 @@ function deleteConfirm(e, data, setRunSpin) {
   //setSpin(true);
   var config = {
     method: "delete",
-    url: apiBaseUrl + "/picklist/category/" + data.id,
+    url: apiBaseUrl + "/picklist/courselevel/" + data.id,
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -289,4 +291,4 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   );
 };
 
-export default CategoriesList;
+export default LevelsList;
