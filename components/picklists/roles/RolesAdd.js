@@ -34,9 +34,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
-  console.log("dataProps", dataProps);
-  const { name, id, code } = dataProps;
+const RolesAdd = ({ hideModal, setRunSpin }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -46,31 +44,27 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
 
   const onCancel = (form) => {
     form.resetFields();
-    setSpinning(false);
-    hideModal("edit");
+    setSpinning(true);
+    hideModal("add");
   };
   const onFinish = (values) => {
     setSpinning(true);
     setHasError("");
     var data = {};
     var checker = [];
-    data.id = id;
-    if (!!values.DepartmentName) {
-      data.name = values.DepartmentName;
+
+    if (!!values.RoleName) {
+      data.name = values.RoleName;
     } else {
-      data.name = name;
-    }
-    if (!!values.DepartmentCode) {
-      data.code = values.DepartmentCode;
-    } else {
-      data.code = code;
-    }
+      setHasError("* Please Input Role Name");
+      checker.push("Error");
+    }    
 
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
-        method: "put",
-        url: apiBaseUrl + "/picklist/department/" + id,
+        method: "post",
+        url: apiBaseUrl + "/Settings/usergroup",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -83,14 +77,16 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
           message.success(res.data.message);
           setSpinning(false);
           setRunSpin(true);
-          hideModal("edit");
+          hideModal("add");
         })
         .catch((err) => {
-          console.log("err: ", err.response);
-          message.error(err.response.data.message);
+          console.log("err: ", err);
+          message.error(
+            "Network Error on Submission, Contact Technical Support"
+          );
           setSpinning(false);
           setRunSpin(true);
-          hideModal("edit");
+          hideModal("add");
         });
     }
   };
@@ -101,39 +97,27 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="EditPicklistCourseTypes"
-        initialValues={{
-          DepartmentName: name,
-          DepartmentCode: code,
-        }}
+        name="AddPicklistRoles"
+        initialValues={
+          {
+            /*
+          colorPicker:"#ffffff",*/
+          }
+        }
       >
         <Form.Item
-          name="DepartmentName"
+          name="RoleName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Department Name!",
+              message: "Please input Role Name!",
             },
           ]}
         >
-          <Input placeholder="Department Name" />
-        </Form.Item>
-        <Form.Item
-          name="DepartmentCode"
-          style={{
-            marginBottom: "1rem",
-          }}
-          rules={[
-            {
-              required: true,
-              message: "Please input Department Code!",
-            },
-          ]}
-        >
-          <Input placeholder="Department Code" />
+          <Input placeholder="Role Name" />
         </Form.Item>
         {hasError ? (
           <p
@@ -185,7 +169,7 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #EditPicklistCourseTypes {
+        #AddPicklistRoles {
           position: relative;
           width: 100%;
         }
@@ -205,4 +189,4 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
   );
 };
 
-export default CategoriesEdit;
+export default RolesAdd;

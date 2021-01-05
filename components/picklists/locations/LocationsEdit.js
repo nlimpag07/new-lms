@@ -34,7 +34,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
+const LocationsEdit = ({ dataProps, hideModal, setRunSpin }) => {
   console.log("dataProps", dataProps);
   const { name, id, code } = dataProps;
   const router = useRouter();
@@ -55,13 +55,13 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
     data.id = id;
-    if (!!values.DepartmentName) {
-      data.name = values.DepartmentName;
+    if (!!values.LocationName) {
+      data.name = values.LocationName;
     } else {
       data.name = name;
     }
-    if (!!values.DepartmentCode) {
-      data.code = values.DepartmentCode;
+    if (!!values.LocationCode) {
+      data.code = values.LocationCode;
     } else {
       data.code = code;
     }
@@ -70,7 +70,7 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
     if (!checker.length) {
       var config = {
         method: "put",
-        url: apiBaseUrl + "/picklist/department/" + id,
+        url: apiBaseUrl + "/picklist/location/" + id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -101,40 +101,41 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="EditPicklistCourseTypes"
+        name="EditPicklistLocations"
         initialValues={{
-          DepartmentName: name,
-          DepartmentCode: code,
+          LocationName: name,
+          LocationCode: code,
         }}
       >
         <Form.Item
-          name="DepartmentName"
+          name="LocationName"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Department Name!",
+              message: "Please input Location Name!",
             },
           ]}
         >
-          <Input placeholder="Department Name" />
+          <Input placeholder="Location Name" />
         </Form.Item>
         <Form.Item
-          name="DepartmentCode"
+          name="LocationCode"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Department Code!",
+              message: "Please input Location Code!",
             },
           ]}
         >
-          <Input placeholder="Department Code" />
+          <Input placeholder="Location Code" />
         </Form.Item>
+
         {hasError ? (
           <p
             style={{
@@ -185,7 +186,7 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #EditPicklistCourseTypes {
+        #EditPicklistLocations {
           position: relative;
           width: 100%;
         }
@@ -205,4 +206,4 @@ const CategoriesEdit = ({ dataProps, hideModal, setRunSpin }) => {
   );
 };
 
-export default CategoriesEdit;
+export default LocationsEdit;

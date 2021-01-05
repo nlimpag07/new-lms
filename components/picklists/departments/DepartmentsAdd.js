@@ -139,7 +139,7 @@ const CategoriesAdd = ({ hideModal, setRunSpin }) => {
             },
           ]}
         >
-          <Input placeholder="Course Department Code" />
+          <Input placeholder="Department Code" />
         </Form.Item>
         {hasError ? (
           <p

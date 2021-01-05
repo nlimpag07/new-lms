@@ -117,7 +117,7 @@ const LanguagesAdd = ({ hideModal, setRunSpin }) => {
             },
           ]}
         >
-          <Input placeholder="Course Language Name" />
+          <Input placeholder="Language Name" />
         </Form.Item>
 
         {hasError ? (

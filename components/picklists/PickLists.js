@@ -96,8 +96,8 @@ const PickLists = ({ userlist }) => {
                 </Col>
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/picklists"
-                    as={`/administrator/picklists`}
+                    href="/administrator/picklists/locations"
+                    as={`/administrator/picklists/locations`}
                   >
                     <a>
                       <FontAwesomeIcon
@@ -110,8 +110,8 @@ const PickLists = ({ userlist }) => {
                 </Col>
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/picklists/language"
-                    as={`/administrator/picklists/language`}
+                    href="/administrator/picklists/languages"
+                    as={`/administrator/picklists/languages`}
                   >
                     <a>
                       <FontAwesomeIcon icon={["fas", "language"]} size="3x" />{" "}
@@ -196,8 +196,8 @@ const PickLists = ({ userlist }) => {
               >
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/picklists"
-                    as={`/administrator/picklists`}
+                    href="/administrator/picklists/roles"
+                    as={`/administrator/picklists/roles`}
                   >
                     <a>
                       <FontAwesomeIcon

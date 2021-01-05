@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
-import LanguagesList from "./LanguagesList";
-import LanguagesAdd from "./LanguagesAdd";
-import LanguagesEdit from "./LanguagesEdit";
+import LocationsList from "./LocationsList";
+import LocationsAdd from "./LocationsAdd";
+import LocationsEdit from "./LocationsEdit";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -58,11 +58,11 @@ const menulists = [
   },
 ];
 
-const Languages = ({ data }) => {
+const Locations = ({ data }) => {
   //console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  var [languagesModal, setLanguagesModal] = useState({
+  var [locationsModal, setLocationsModal] = useState({
     visible: false,
     modalOperation: "",
     dataProps: null,
@@ -72,8 +72,8 @@ const Languages = ({ data }) => {
   const [runSpin, setRunSpin] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState("");
-  const [allLanguagesData, setAllLanguagesData] = useState([]);
-  const [languagesData, setLanguagesData] = useState([]);
+  const [allLocationsData, setAllLocationsData] = useState([]);
+  const [locationsData, setLocationsData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
     pageSize: 0,
@@ -87,7 +87,7 @@ const Languages = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/picklist/language",
+        url: apiBaseUrl + "/picklist/location",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -116,8 +116,8 @@ const Languages = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
-              setAllLanguagesData(result);
-              setLanguagesData(result);
+              setAllLocationsData(result);
+              setLocationsData(result);
               setSpin(false);
             } else {
             }
@@ -148,20 +148,20 @@ const Languages = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
-    setAllLanguagesData(result);
-    setLanguagesData(result);
+    setAllLocationsData(result);
+    setLocationsData(result);
     setSpin(false);
   }, []);
 
   const showModal = (modalOperation, props) => {
-    setLanguagesModal({
+    setLocationsModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
   };
   const hideModal = (modalOperation) => {
-    setLanguagesModal({
+    setLocationsModal({
       visible: false,
       modalOperation: modalOperation,
     });
@@ -177,13 +177,13 @@ const Languages = ({ data }) => {
     console.log("search:", val);
     setSpin(true);
     setSearchLoading(true);
-    let searchedData = allLanguagesData.filter((d) =>
+    let searchedData = allLocationsData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
     /*  searchedData && searchedData.length
-      ? setLanguagesData(searchedData)
-      : setLanguagesData(allLanguagesData); */
-    setLanguagesData(searchedData);
+      ? setLocationsData(searchedData)
+      : setLocationsData(allLocationsData); */
+    setLocationsData(searchedData);
   }
   useEffect(() => {
     if (searchLoading) {
@@ -202,17 +202,17 @@ const Languages = ({ data }) => {
         style={{ margin: "1rem 0" }}
       >
         <Col
-          className="gutter-row widget-holder-col Languages"
+          className="gutter-row widget-holder-col Locations"
           xs={24}
           sm={24}
           md={24}
           lg={24}
         >
-          <h1>Picklists: Languages</h1>
+          <h1>Picklists: Locations</h1>
           <Row className="widget-header-row" justify="start">
             <Col xs={24} xs={24} sm={12} md={8} lg={8}>
               <Search
-                placeholder="Search Language"
+                placeholder="Search Location"
                 enterButton="Search"
                 size="large"
                 loading={searchLoading}
@@ -220,7 +220,7 @@ const Languages = ({ data }) => {
               />
             </Col>
           </Row>
-          <Row className="PicklistLanguages">
+          <Row className="PicklistLocations">
             <Col xs={24}>
               {spin ? (
                 <div className="spinHolder">
@@ -233,8 +233,8 @@ const Languages = ({ data }) => {
                 </div>
               ) : (
                 <Col xs={24}>
-                  <LanguagesList
-                    languagesData={languagesData}
+                  <LocationsList
+                    locationsData={locationsData}
                     page={page}
                     setPage={setPage}
                     setRunSpin={setRunSpin}
@@ -249,29 +249,25 @@ const Languages = ({ data }) => {
         </Col>
       </Row>
       <Modal
-        title={`Languages - ${languagesModal.modalOperation}`}
+        title={`Locations - ${locationsModal.modalOperation}`}
         centered
-        visible={languagesModal.visible}
-        onOk={() => hideModal(languagesModal.modalOperation)}
-        onCancel={() => hideModal(languagesModal.modalOperation)}
+        visible={locationsModal.visible}
+        onOk={() => hideModal(locationsModal.modalOperation)}
+        onCancel={() => hideModal(locationsModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={languagesModal.width}
+        width={locationsModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistlanguagesModal"
+        className="PicklistlocationsModal"
       >
-        {languagesModal.modalOperation == "edit" ? (
-          <LanguagesEdit
-            dataProps={languagesModal.dataProps}
-            hideModal={hideModal}
-            setRunSpin={setRunSpin}
-          />
-        ) : languagesModal.modalOperation == "add" ? (
-          <LanguagesAdd hideModal={hideModal} setRunSpin={setRunSpin} />
-        ) : languagesModal.modalOperation == "approve" ? (
+        {locationsModal.modalOperation == "edit" ? (
+          <LocationsEdit dataProps={locationsModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
+        ) : locationsModal.modalOperation == "add" ? (
+          <LocationsAdd hideModal={hideModal} setRunSpin={setRunSpin} />
+        ) : locationsModal.modalOperation == "approve" ? (
           "Hello Approve"
-        ) : languagesModal.modalOperation == "delete" ? (
+        ) : locationsModal.modalOperation == "delete" ? (
           "HELLO Delete"
         ) : (
           "Default"
@@ -284,14 +280,14 @@ const Languages = ({ data }) => {
         toggleModal={() => showModal("add")}
       />
       <style jsx global>{`
-        .PicklistLanguages {
+        .PicklistLocations {
           margin-top: 1rem;
         }
-        .Languages h1 {
+        .Locations h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .Languages .k-grid-header {
+        .Locations .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -308,7 +304,7 @@ const Languages = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistlanguagesModal .ant-modal-footer {
+        .PicklistlocationsModal .ant-modal-footer {
           display: none;
           opacity: 0;
         }
@@ -317,4 +313,4 @@ const Languages = ({ data }) => {
   );
 };
 
-export default Languages;
+export default Locations;
