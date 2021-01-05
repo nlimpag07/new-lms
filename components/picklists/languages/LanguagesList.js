@@ -55,8 +55,8 @@ const list = {
   },
 };
 
-const LevelsList = ({
-  levelsData,
+const LanguagesList = ({
+  languagesData,
   page,
   setPage,
   setRunSpin,
@@ -70,13 +70,13 @@ const LevelsList = ({
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  //console.log(levelsData);
+  //console.log(languagesData);
   useEffect(() => {
     setLoading(false);
   }, []);
 
   var lastSelectedIndex = 0;
-  const the_data = levelsData && levelsData.length ? levelsData : [];
+  const the_data = languagesData && languagesData.length ? languagesData : [];
   const ddata = the_data.map((dataItem) =>
     Object.assign({ selected: false }, dataItem)
   );
@@ -162,7 +162,7 @@ const LevelsList = ({
         onPageChange={pageChange}
       >
         <Column field="id" title="ID" width="85px" />
-        <Column field="name" title="Level Name" />
+        <Column field="name" title="Language Name" />
         <Column field="isEditable" title="Editable?" cell={colorFormat} />
         <Column
           sortable={false}
@@ -176,11 +176,11 @@ const LevelsList = ({
       </Grid>
 
       <style jsx global>{`
-        .LevelsList h1 {
+        .LanguagesList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .LevelsList .k-grid-header {
+        .LanguagesList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -209,7 +209,7 @@ function deleteConfirm(e, data, setRunSpin) {
   //setSpin(true);
   var config = {
     method: "delete",
-    url: apiBaseUrl + "/picklist/courselevel/" + data.id,
+    url: apiBaseUrl + "/picklist/language/" + data.id,
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -226,7 +226,7 @@ function deleteConfirm(e, data, setRunSpin) {
         if (theRes) {
           Modal.success({
             title: "Deletion Success",
-            content: "You have successfully deleted a Level!",
+            content: "You have successfully deleted a Language!",
             centered: true,
             width: 450,
             onOk: () => {
@@ -273,7 +273,7 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
         onClick={() => showModal("edit", props.dataItem)}
       />{" "}
       <Popconfirm
-        title="Delete this Level?"
+        title="Delete this Language?"
         onConfirm={(e) => deleteConfirm(e, props.dataItem, setRunSpin)}
         /*onCancel={deleteCancel} */
         okText="Confirm"
@@ -290,4 +290,4 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   );
 };
 
-export default LevelsList;
+export default LanguagesList;
