@@ -37,15 +37,11 @@ import {
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = (props) => {
-  //console.log("props From DashBoard GetInitialProps", props);
+  console.log("props From DashBoard GetInitialProps", props);
   const { courses, learner, user } = props;
-
-  const [curGridStyle, setCurGridStyle] = useState("grid");
-  const { courseAllList, setCourseAllList } = useCourseList();
+  
   useEffect(() => {
-    //setCourseAllList(courselist);
   }, []);
-  //console.log(courseAllList);
   useEffect(() => {}, []);
  
   return (

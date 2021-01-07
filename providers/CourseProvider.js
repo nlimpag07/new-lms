@@ -27,18 +27,6 @@ export const CourseListProvider = ({ children, courselist }) => {
   const [courseAllList, setCourseAllList] = useState(courselist);
   const isAuthenticated = useIsAuthenticated();
 
-  /* useEffect(() => {
-    if (isAuthenticated) {
-      localStorage.setItem("courseAllList", JSON.stringify(courseAllList));
-    } else {
-      if (isAuthenticated) {
-        const courseListData = JSON.parse(localStorage.getItem("courseAllList"));
-        //console.log(courseListData);
-        setCourseAllList(courseListData);
-      }
-    }
-  }, [courseAllList]); */
-
   useEffect(() => {
     if (isAuthenticated) {
       var data = JSON.stringify({});

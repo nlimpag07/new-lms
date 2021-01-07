@@ -74,57 +74,7 @@ const StatusList = ({
   useEffect(() => {
     setLoading(false);
   }, []);
-  /* useEffect(() => {
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseSession/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: { courseId: course_id },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Session Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //console.log(theRes)
-            setSessionSelect(theRes);
-            const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : [];
-            setData(ddata);
-            setSpin(false);
-          } else {
-            setData([]);
-            setSpin(false);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        console.log("Error Response", response);
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: response + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config);
-  }, []); */
+  
   var lastSelectedIndex = 0;
   const the_data = statusData && statusData.length ? statusData : [];
   const ddata = the_data.map((dataItem) =>

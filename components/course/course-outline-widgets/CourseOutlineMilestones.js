@@ -47,31 +47,7 @@ const CourseOutlineMilestones = (props) => {
   } = props;
   const [allMilestones, setAllMilestones] = useState();
   const chosenRows = defaultWidgetValues.outlinemilestones;
-  //console.log(chosenRows)
-  /* useEffect(() => {
-    var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/picklist/coursetype",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        setAllMilestones(response.data.result);
-        //console.log(response.data)
-      } else {
-        console.log(
-          "Network Error: Please contact your administrator to fix this issue."
-        );
-      }
-    }
-    fetchData(config);
-  }, []); */
+  
 
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);

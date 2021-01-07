@@ -38,27 +38,7 @@ const MyCourse = ({ mycourses }) => {
   var urlPath = router.asPath;
   var urlquery = router.query.course;
 
-  /* useEffect(() => {
-    setCourseAllList(courselist)
-    var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    axios(config)
-      .then(function (response) {
-        //console.log(JSON.stringify(response.data));
-        setAllCourses(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []); */
+  
 
   return (
     <MainThemeLayout>

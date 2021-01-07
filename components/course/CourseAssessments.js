@@ -205,14 +205,7 @@ const CourseAssessments = ({ course_id }) => {
   });
 
   useEffect(() => {
-    /* var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseAssessment/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    }; */
+   
 
     var config = {
       headers: {

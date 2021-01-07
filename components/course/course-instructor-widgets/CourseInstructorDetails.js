@@ -47,14 +47,7 @@ const CourseInstructorDetails = (props) => {
         "Content-Type": "application/json",
       },
     };
-    /* var config = {
-      method: "get",
-      url: apiBaseUrl + "/Settings/usergroup",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    }; */
+    
     async function fetchData(config) {
       axios
         .all([

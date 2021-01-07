@@ -305,63 +305,7 @@ const approveConfirm = (e, values, setSpin) => {
       setSpin(true);
     });
 };
-/* function approveConfirm(e, data, setSpin) {
-  //console.log(e);
-  console.log("PopConfirm", data);
-  setSpin(true);
-  var config = {
-    method: "patch",
-    url: apiBaseUrl + "/enrollment/" + data.learnerId,
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    },
-  };
-  async function fetchData(config) {
-    try {
-      const response = await axios(config);
-      if (response) {
-        //setOutcomeList(response.data.result);
-        let theRes = response.data.response;
-        //console.log("Response", response.data);
-        // wait for response if the verification is true
-        if (theRes) {
-          Modal.success({
-            title: "Enrollment Application successfully rejected",
-            content: "You have successfully rejected the selected application",
-            centered: true,
-            width: 450,
-            onOk: () => {
-              visible: false;
-              setSpin(true);
-              //console.log("Should hide modal")
-            },
-          });
-        } else {
-        }
-      }
-    } catch (error) {
-      const { response } = error;
-      const { request, data } = response; // take everything but 'request'
 
-      console.log("Error Response", data.message);
-
-      Modal.error({
-        title: "Error: Unable to Start Lesson",
-        content: data.message + " Please contact Technical Support",
-        centered: true,
-        width: 450,
-        onOk: () => {
-          //setdrawerVisible(false);
-          setSpin(true);
-          visible: false;
-        },
-      });
-    }
-    //setLoading(false);
-  }
-  fetchData(config);
-} */
 function deleteCancel(e) {
   /* console.log(e);
   message.error('Click on No'); */

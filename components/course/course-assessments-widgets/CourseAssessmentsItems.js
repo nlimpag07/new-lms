@@ -50,39 +50,7 @@ const CourseAssessmentsItems = (props) => {
   //console.log("Base Type: ", assessBaseType);
   var assItemList = defaultWidgetValues.assessmentConstItems;
   var chosenRows = defaultWidgetValues.assessmentitems;
-  /* if(chosenRows.length){
-    let choosed = chosenRows.map((chosen,index)=>{
-      let newOutline = assItemList.filter((outline)=>chosen.preRequisiteId == outline.id)
-      chosen['title']= newOutline[0].title;
-      return chosen;
-    })
-    chosenRows = choosed;
-  } */
-  //console.log('Chosen Rows',chosenRows);
-  /* useEffect(() => {
-    var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/picklist/outline",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        setassItemList(response.data.result);
-        //console.log(response.data)
-      } else {
-        console.log(
-          "Network Error: Please contact your administrator to fix this issue."
-        );
-      }
-    }
-    fetchData(config);
-  }, []); */
+  
 
   const onRemove = (name) => {
     let newValues = chosenRows.filter((value) => value.name !== name);

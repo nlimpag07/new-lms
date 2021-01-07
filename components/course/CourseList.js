@@ -71,39 +71,7 @@ const CourseList = (props) => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
 
-  useEffect(() => {
-    /* var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(response.data);
-        //console.log(response.data);
-      } else {
-        const allCourses = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(allCourses);
-      }
-    }
-    fetchData(
-      config
-    );  */
-    /* 
-    if (!courseAllList) {
-      const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-      //console.log(userData);
-      setCourseAllList(courselist);
-    } else {
-      //put additional Filtration here
-    } */
+  useEffect(() => {    
     setLoading(false);
   }, []);
   return (

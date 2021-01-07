@@ -41,40 +41,7 @@ const CourseOutlinePrerequisite = (props) => {
   //console.log('List: ',outlineList);
   //const [outlineList, setoutlineList] = useState();
   var chosenRows = defaultWidgetValues.outlineprerequisite;
-  /* if(chosenRows.length){
-    let choosed = chosenRows.map((chosen,index)=>{
-      let newOutline = outlineList.filter((outline)=>chosen.preRequisiteId == outline.id)
-      chosen['title']= newOutline[0].title;
-      return chosen;
-    })
-    chosenRows = choosed;
-  } */
-  //console.log(chosenRows)
-  /* useEffect(() => {
-    var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/picklist/outline",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        setoutlineList(response.data.result);
-        //console.log(response.data)
-      } else {
-        console.log(
-          "Network Error: Please contact your administrator to fix this issue."
-        );
-      }
-    }
-    fetchData(config);
-  }, []); */
-
+  
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({

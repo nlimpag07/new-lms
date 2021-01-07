@@ -86,33 +86,7 @@ const LearnersCatalog = (props) => {
       const courselist = JSON.parse(localStorage.getItem("courseAllList"));
       setCourseAllList(courselist);
     }
-    setLoading(false);
-    /* var data = JSON.stringify({});
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setCourseAllList(
-          response.data
-        );
-        //console.log(response.data);
-      } else {
-        const courselist = JSON.parse(localStorage.getItem("courseAllList"));
-        setCourseAllList(
-          courselist
-        );
-      }
-    }
-    fetchData(config); */
+    setLoading(false);    
   }, []);
   useEffect(() => {
     if (spinner) {

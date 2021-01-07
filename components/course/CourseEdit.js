@@ -227,33 +227,7 @@ const CourseEdit = ({ course_id }) => {
       (getCourse) => getCourse.id == course_id
     );
     setCourse(theCourse);
-
-    /* let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
-    let theCourse = allCourse.result.filter(
-      (getCourse) => getCourse.id == course_id
-    );
-    //setCourse(allCourse.filter((getCourse) => getCourse.id == course_id));
-    if (theCourse.length) {
-      //console.log("In Course: ", theCourse);
-      setCourse(theCourse);
-    } else {
-      var config = {
-        method: "get",
-        url: apiBaseUrl + "/courses/" + course_id,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      };
-      async function fetchData(config) {
-        const response = await axios(config);
-        if (response) {          
-          setCourse(response.data.result);
-        } else {          
-        }
-      }
-      fetchData(config);
-    } */
+    
   }, [course_id]);
 
   useEffect(() => {
