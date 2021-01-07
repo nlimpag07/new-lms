@@ -168,9 +168,9 @@ export default withoutAuth(function Login() {
   }, []);
   return (
     <Loader loading={loading}>
-      <Layout className="login" style={{ minHeight: "100vh" }}>
-        <Row style={{ minHeight: "100vh" }}>
-          <Col className="logo-container" xs={24} sm={24} md={12}>
+      <Layout className="login" /* style={{ minHeight: "100vh" }} */>
+        <Row style={{ minHeight: "100vh" }} justify="space-around">
+          <Col className="logo-container" xs={{span: 0}} sm={{span: 0}} md={12}>
             <div className="logo-holder">
               <img
                 id="left-logo"
@@ -179,7 +179,7 @@ export default withoutAuth(function Login() {
               />
             </div>
           </Col>
-          <Col className="loginform-container" xs={24} sm={12} md={12}>
+          <Col className="loginform-container" xs={24} sm={24} md={12}>
             <div className="loginform-banner">
               <img src="/images/fastrax-logo-white.svg" alt="Fastrax Logo" />
             </div>

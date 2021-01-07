@@ -88,7 +88,7 @@ export default function MainThemeLayout({ children }) {
     //MainNav = <MainNavbar />;
   }
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
     setLoading(false);
