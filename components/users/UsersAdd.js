@@ -73,34 +73,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
     id: undefined,
   });
   const [hasError, setHasError] = useState("");
-  /* const props = {
-    fileList,
-    beforeUpload: (file) => {
-      setSpinning(true);
-      if (
-        file.type !=
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ) {
-        message.error(`${file.name} is not an XLS file`);
-      }
-      return (
-        file.type ==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      );      
-    },
-    onChange: (info) => {
-      //setSpinning(true);
-      console.log(info.fileList);
-      // file.status is empty when beforeUpload return false
-      updateFileList(info.fileList.filter((file) => !!file.status));
-    },
-    progress: "line",
-    multiple: false,
-    onClick: () => {
-      setSpinning(true);
-    },
-  }; */
-
+  const dateFormat = 'DD-MMM-YYYY';
   useEffect(() => {}, []);
 
   const onCancel = (form) => {
@@ -187,21 +160,31 @@ const UsersAdd = ({ hideModal, setSpin }) => {
 
       axios(config)
         .then((res) => {
-          //console.log("res: ", res.data);
-          message.success(res.data.message);
-          setSpinning(false);
-          setSpin(true);
-          hideModal("add");
+          openMessage(res.data.message, res.data.response);
         })
-        .catch((err) => {
-          console.log("err: ", err.response.data);
-          message.error(err.response.data.message);
-         
-          setSpinning(false);
-          setSpin(false);
-          //hideModal("add");
+        .catch((error) => {
+          console.log("error Response: ", error);
+          error.response && error.response.data
+            ? openMessage(error.response.data.message, false)
+            : openMessage(`Error:${error}`, false);
         });
     }
+  };
+  const openMessage = (msg, resp) => {
+    const key = "updatable";
+    message.loading({ content: "Processing...", key });
+    setTimeout(() => {
+      if (resp) {
+        message.success({ content: msg, key, duration: 2 });
+        setSpinning(false);
+        //setSpin(true);
+        hideModal("add");
+      } else {
+        message.error({ content: msg, key, duration: 2 });
+        setSpinning(false);
+        setSpin(false);
+      }
+    }, 500);
   };
 
   //For Update: emailCheck // THis needs a new API endpoint
@@ -248,9 +231,10 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             }
           }
         } catch (error) {
-          const { response } = error;
-          const { request, data } = response;
-          console.log("Error Response", data.message);
+          console.log("Error Response", error);
+          error.response && error.response.data
+            ? openMessage(error.response.data.message, false)
+            : openMessage(`Error:${error}`, false);
         }
       }
       fetchEmail(config1);
@@ -280,9 +264,10 @@ const UsersAdd = ({ hideModal, setSpin }) => {
           }
         }
       } catch (error) {
-        const { response } = error;
-        const { request, data } = response;
-        console.log("Error Response", data.message);
+        console.log("Error Response", error);
+        error.response && error.response.data
+          ? openMessage(error.response.data.message, false)
+          : openMessage(`Error:${error}`, false);
       }
     }
     fetchData(config);
@@ -311,7 +296,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
   };
   function disabledDate(current) {
     // Can not select days before today and today
-    return current && current > moment().endOf('day');
+    return current && current > moment().endOf("day");
   }
   const options = positionData.data.length
     ? positionData.data.map((d) => (
@@ -383,7 +368,12 @@ const UsersAdd = ({ hideModal, setSpin }) => {
               margin: "0 0 0 8px",
             }}
           >
-            <DatePicker placeholder="Birthday" style={{ width: "100%" }} disabledDate={disabledDate} />
+            <DatePicker
+              placeholder="Birthday"
+              style={{ width: "100%" }}
+              disabledDate={disabledDate}
+              format={dateFormat}
+            />
           </Form.Item>
         </Form.Item>
         <Divider dashed style={{ marginTop: "0" }} />

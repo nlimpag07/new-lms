@@ -55,7 +55,9 @@ const menulists = [
 
 const UsersList = ({ userlist }) => {
   //userlist = userlist.result;
-  const [userslist, setUsersList] = useState(userlist.result);
+  const [userslist, setUsersList] = useState(
+    userlist && userlist.length ? userlist.result : null
+  );
   const [Data, setData] = useState("");
   const router = useRouter();
   //console.log(userlist);
@@ -79,17 +81,27 @@ const UsersList = ({ userlist }) => {
       try {
         const response = await axios(config);
         if (response) {
-          //setOutcomeList(response.data.result);
           let theRes = response.data.result;
           console.log("Session Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
-            //console.log(theRes)
-
             const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
+              ? theRes.map((dataItem) => {
+                  let isAdmin = dataItem.isAdministrator;
+                  let isInstructor = dataItem.isInstructor;
+                  let isLearner = dataItem.isLearner;
+                  let userType =
+                    isAdmin === 1
+                      ? "Administrator"
+                      : isInstructor === 1
+                      ? "Instructor"
+                      : "Learner";
+
+                  return Object.assign(
+                    { selected: false, userType: userType },
+                    dataItem
+                  );
+                })
               : null;
             setData(ddata);
             setUsersList(ddata);
@@ -106,14 +118,14 @@ const UsersList = ({ userlist }) => {
           }
         }
       } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
+        console.log("Error Response", error);
+        let errContent;
+        error.response && error.response.data
+          ? (errContent = error.response.data.message)
+          : (errContent = `${error}, Please contact Technical Support`);
         Modal.error({
           title: "Error: Unable to Retrieve data",
-          content: data.message + " Please contact Technical Support",
+          content: errContent,
           centered: true,
           width: 450,
           onOk: () => {
@@ -122,20 +134,14 @@ const UsersList = ({ userlist }) => {
           },
         });
       }
-      //setLoading(false);
     }
     fetchData(config);
   }, [spin]);
 
   var lastSelectedIndex = 0;
-  /* const ddata = userslist.length
-    ? userslist.map((dataItem) => Object.assign({ selected: false }, dataItem))
-    : null; 
-  const [Data, setData] = useState(userslist);*/
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
   });
-  //console.log("Data", Data);
 
   const selectionChange = (event) => {
     const theData = Data.map((item) => {
@@ -195,7 +201,7 @@ const UsersList = ({ userlist }) => {
       take: event.page.take,
     });
   };
-  console.log(Data)
+  //console.log(Data);
   return (
     //GridType(gridList)
     <Row
@@ -260,8 +266,12 @@ const UsersList = ({ userlist }) => {
                     }
                   />
                   <Column field="empId" title="Emp ID" width="100px" />
-                  <Column field="firstName" title="Name" width="300px" />
-                  <Column field="lastName" title="Enrollment Type" />
+                  <Column field="firstName" title="First Name" width="300px" />
+                  <Column field="lastName" title="Last Name" width="300px" />
+                  <Column
+                    field="userType"
+                    title="User Type"                    
+                  />
                   <Column field="email" title="Email" />
 
                   <Column field="isActive" title="Active Status" />
@@ -335,11 +345,9 @@ const UsersList = ({ userlist }) => {
     </Row>
   );
 };
-
 const removeSelected = (item) => {
-  
   console.log("onRemove", item.id);
-  
+
   var config = {
     method: "delete",
     url: apiBaseUrl + "/Users/" + item.id,
@@ -354,13 +362,13 @@ const removeSelected = (item) => {
       const response = await axios(config);
       if (response) {
         //setAssessmentList(response.data.result);
-        console.log("Response", response.data);        
+        console.log("Response", response.data);
         message.success(response.data.message);
         setSpin(true);
       }
     } catch (error) {
       const { response } = error;
-      //const { request, ...errorObject } = response; // take everything but 'request'      
+      //const { request, ...errorObject } = response; // take everything but 'request'
       console.log(response.data.message);
       Modal.error({
         title: "Unable to Delete",
