@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
+import moment from "moment";
 import {
   Row,
   Col,
@@ -308,6 +309,10 @@ const UsersAdd = ({ hideModal, setSpin }) => {
   const handleChange = (value) => {
     setPositionData({ ...positionData, value: value });
   };
+  function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current > moment().endOf('day');
+  }
   const options = positionData.data.length
     ? positionData.data.map((d) => (
         <Option key={d.id} value={d.id}>
@@ -358,7 +363,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         >
           <Input placeholder="Input Last Name" />
         </Form.Item>
-        <Form.Item label="Other Details" style={{ marginBottom: "0" }}>
+        <Form.Item label="Other Details" style={{ marginBottom: "0" }} required>
           <Form.Item
             name="gender"
             rules={[{ required: true, message: "Gender is required" }]}
@@ -378,11 +383,11 @@ const UsersAdd = ({ hideModal, setSpin }) => {
               margin: "0 0 0 8px",
             }}
           >
-            <DatePicker placeholder="Birthday" style={{ width: "100%" }} />
+            <DatePicker placeholder="Birthday" style={{ width: "100%" }} disabledDate={disabledDate} />
           </Form.Item>
         </Form.Item>
         <Divider dashed style={{ marginTop: "0" }} />
-        <Form.Item label="Login Details" style={{ marginBottom: 0 }}>
+        <Form.Item label="Login Details" style={{ marginBottom: 0 }} required>
           <Form.Item
             name="username"
             rules={[{ required: true, message: "Username is required" }]}
@@ -402,7 +407,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             <Input.Password placeholder="Input Password" />
           </Form.Item>
         </Form.Item>
-        <Form.Item label="Email Address" style={{ marginBottom: 0 }}>
+        <Form.Item label="Email Address" style={{ marginBottom: 0 }} required>
           <Form.Item
             name="email"
             id="email"
