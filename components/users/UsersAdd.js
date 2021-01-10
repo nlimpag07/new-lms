@@ -361,7 +361,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
           </Form.Item>
           <Form.Item
             name="birthday"
-            rules={[{ required: true, message: "Birthday is required" }]}
+            rules={[{ required: true, message: "Date of Birth is required" }]}
             style={{
               display: "inline-block",
               width: "calc(70% - 8px)",
@@ -369,7 +369,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             }}
           >
             <DatePicker
-              placeholder="Birthday"
+              placeholder="Date of Birth"
               style={{ width: "100%" }}
               disabledDate={disabledDate}
               format={dateFormat}
