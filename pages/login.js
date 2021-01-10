@@ -36,15 +36,6 @@ export default withoutAuth(function Login() {
   const [form] = Form.useForm();
 
   const submitHandler = async (values) => {
-    //event.preventDefault();
-
-    /*const userType =
-       values.username == "admin"
-        ? "admin"
-        : values.username == "instructor"
-        ? "instructor"
-        : "learner";
-    console.log(values) */
     var userType;
     var uID;
     axios
@@ -53,7 +44,6 @@ export default withoutAuth(function Login() {
         var _result = result.data;
         //console.log(_result)
         if (_result) {
-          
           if (_result.isAdministrator == 1) {
             userType = "administrator";
           } else if (_result.isInstructor == 1) {
@@ -62,10 +52,6 @@ export default withoutAuth(function Login() {
             userType = "learner";
           }
           uID = _result.id;
-          /* var params = {
-            userType: userType,
-            token: _result.token,
-          }; */
           Cookies.set("session", "1", {
             expires: 7,
             path: "/",
@@ -112,16 +98,6 @@ export default withoutAuth(function Login() {
           setAuthenticated(true);
           setUsertype(userType);
           setUserDetails(_result);
-          //console.log(params)
-          /* axios.post("/api/login", params).then((res) => {
-            var _res = res.data;
-            //console.log(_res)
-            if (_res.status === 200) {
-              setAuthenticated(true);
-              setUsertype(userType);
-              setUserDetails(_result);
-            }
-          }); */
         } else {
           onFinishFailed(values);
           setError(
@@ -131,26 +107,12 @@ export default withoutAuth(function Login() {
       })
       .catch(function (error) {
         // handle error
-        console.log(error.response.data);
-        setError("Login Failed: " + error.response.data.message);
+        console.log(error);
+        error.response && error.response.data
+          ? setError("Login Failed: " + error.response.data.message)
+          : setError("Login Failed: " + error);
         //form.resetFields();
       });
-    /* const response = await fetch("/api/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ...values, userType }),
-    });
-    
-    if (response.status === 200) {
-      setAuthenticated(true);
-      setUsertype(userType);
-
-    } else {
-      console.error("Login error", response);
-    } */
   };
   const onFinish = (values) => {
     submitHandler(values);
@@ -170,7 +132,12 @@ export default withoutAuth(function Login() {
     <Loader loading={loading}>
       <Layout className="login" /* style={{ minHeight: "100vh" }} */>
         <Row style={{ minHeight: "100vh" }} justify="space-around">
-          <Col className="logo-container" xs={{span: 0}} sm={{span: 0}} md={12}>
+          <Col
+            className="logo-container"
+            xs={{ span: 0 }}
+            sm={{ span: 0 }}
+            md={12}
+          >
             <div className="logo-holder">
               <img
                 id="left-logo"
