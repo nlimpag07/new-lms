@@ -47,7 +47,15 @@ const MainNavbar = ({ userRole }) => {
       currentPage = "profile";
       break;
     default:
-      currentPage = cPage;
+      const parsed = parseInt(cPage);
+      if (!isNaN(parsed)) {
+        let pathSplit = thePath.split("/");
+        let curPageMinus2 = pathSplit[pathSplit.length - 2];
+        currentPage = curPageMinus2;
+      } else {
+        currentPage = cPage;
+      }
+
       break;
   }
   /* currentPage =

@@ -89,7 +89,6 @@ const UsersList = ({ userlist }) => {
               ? theRes.map((dataItem) => {
                   let isAdmin = dataItem.isAdministrator;
                   let isInstructor = dataItem.isInstructor;
-                  let isLearner = dataItem.isLearner;
                   let userType =
                     isAdmin === 1
                       ? "Administrator"
@@ -108,9 +107,21 @@ const UsersList = ({ userlist }) => {
             setSpin(false);
           } else {
             const ddata = userlist.result
-              ? userlist.result.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
+              ? userlist.result.map((dataItem) => {
+                  let isAdmin = dataItem.isAdministrator;
+                  let isInstructor = dataItem.isInstructor;
+                  let userType =
+                    isAdmin === 1
+                      ? "Administrator"
+                      : isInstructor === 1
+                      ? "Instructor"
+                      : "Learner";
+
+                  return Object.assign(
+                    { selected: false, userType: userType },
+                    dataItem
+                  );
+                })
               : null;
             setData(ddata);
             setUsersList(ddata);
@@ -268,10 +279,7 @@ const UsersList = ({ userlist }) => {
                   <Column field="empId" title="Emp ID" width="100px" />
                   <Column field="firstName" title="First Name" width="300px" />
                   <Column field="lastName" title="Last Name" width="300px" />
-                  <Column
-                    field="userType"
-                    title="User Type"                    
-                  />
+                  <Column field="userType" title="User Type" />
                   <Column field="email" title="Email" />
 
                   <Column field="isActive" title="Active Status" />
