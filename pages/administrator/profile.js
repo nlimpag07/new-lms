@@ -142,7 +142,9 @@ const Profile = ({ u, query }) => {
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <span>Birth Date (mm-dd-yyyy):</span>{" "}
-                  {`${moment(u.birthday).format("MM-DD-YYYY")}`}
+                  {`${
+                    u.birthday ? moment(u.birthday).format("MM-DD-YYYY") : null
+                  }`}
                 </Col>
               </Row>
               <Row style={{ margin: "1rem 0" }}>

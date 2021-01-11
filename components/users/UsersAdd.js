@@ -73,7 +73,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
     id: undefined,
   });
   const [hasError, setHasError] = useState("");
-  const dateFormat = 'DD-MMM-YYYY';
+  const dateFormat = "DD-MMM-YYYY";
   useEffect(() => {}, []);
 
   const onCancel = (form) => {
@@ -167,6 +167,9 @@ const UsersAdd = ({ hideModal, setSpin }) => {
           error.response && error.response.data
             ? openMessage(error.response.data.message, false)
             : openMessage(`Error:${error}`, false);
+        })
+        .then(() => {
+          setSpin(true);
         });
     }
   };
