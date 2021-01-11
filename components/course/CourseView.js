@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
+import RadialUI from "../theme-layout/course-circular-ui/RadialUI";
 import axios from "axios";
 import Link from "next/link";
 import Loader from "../../components/theme-layout/loader/loader";

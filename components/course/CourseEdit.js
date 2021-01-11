@@ -1,7 +1,7 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
 
-import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
+import SaveUI from "../theme-layout/course-circular-ui/saveCircleUI";
 import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -1328,9 +1328,7 @@ const CourseEdit = ({ course_id }) => {
                   border-radius: 0.5rem;
                   border: 1px solid #888787;
                 }
-                .course-management .ant-form-item textarea.ant-input {
-                  background-color: #eeeeee;
-                }
+                
                 .course-management .cm-main-right .widget-header-row {
                   text-align: end;
                 }

@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom";
-import RadialUI from "../theme-layout/course-circular-ui/radial-ui";
+import SaveUI from "../theme-layout/course-circular-ui/saveCircleUI";
+
 import axios from "axios";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -66,6 +67,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
+    iconClass:"ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -766,12 +768,12 @@ const CourseAdd = () => {
               spinning={spinner}
               delay={100}
             ></Spin>
-            <RadialUI
-              listMenu={menulists}
-              position="bottom-right"
-              iconColor="#8998BA"
-              toggleModal={showModal}
-            />
+            <SaveUI
+                listMenu={menulists}
+                position="bottom-right"
+                iconColor="#8998BA"
+                toggleModal={showModal}
+              />            
             <style jsx global>{`
               .greyBackground {
                 background-color: #eeeeee;
@@ -798,9 +800,7 @@ const CourseAdd = () => {
                 border-radius: 0.5rem;
                 border: 1px solid #888787;
               }
-              .course-management .ant-form-item textarea.ant-input {
-                background-color: #eeeeee;
-              }
+              
               .course-management .cm-main-right .widget-header-row {
                 text-align: end;
               }

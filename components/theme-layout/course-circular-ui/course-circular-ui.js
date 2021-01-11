@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Row, Col, Affix, Button, Modal } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 /***Radial Import***/
-import RadialUI from "./radial-ui";
+import RadialUI from "./RadialUI";
 import Cookies from "js-cookie";
 const linkUrl = Cookies.get("usertype");
 

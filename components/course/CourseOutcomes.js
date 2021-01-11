@@ -650,9 +650,7 @@ const CourseOutcomes = ({ course_id }) => {
               border-radius: 0.5rem;
               border: 1px solid #888787;
             }
-            .course-management .ant-form-item textarea.ant-input {
-              background-color: #eeeeee;
-            }
+            
             .course-management .cm-main-right .widget-header-row {
               text-align: end;
             }
