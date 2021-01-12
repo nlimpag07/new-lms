@@ -67,7 +67,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -122,6 +122,8 @@ const ModalForm = ({
   onCancel,
   okText,
   onFinish,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled,
 }) => {
   const [form] = Form.useForm();
   useResetFormOnCloseModal({
@@ -141,6 +143,7 @@ const ModalForm = ({
     width = 750;
   } else {
     adProps = {
+      okButtonProps: { disabled: isOkButtonDisabled },
       onOk: () => {
         form.submit();
         modalFormName === "picklistrelatedcourses" && form.resetFields();
@@ -149,6 +152,7 @@ const ModalForm = ({
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
         modalFormName === "picklisttags" && form.resetFields();
+        setIsOkButtonDisabled(true);
         //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
       },
     };
@@ -180,6 +184,7 @@ const ModalForm = ({
 const CourseAdd = () => {
   const router = useRouter();
   const [spinner, setSpinner] = useState(false);
+  const [isOkButtonDisabled, setIsOkButtonDisabled] = useState(true);
   const [dataProcessModal, setDataProcessModal] = useState({
     isvisible: false,
     title: "",
@@ -223,6 +228,7 @@ const CourseAdd = () => {
       modalFormName: "",
       modalBodyContent: "",
     });
+    setIsOkButtonDisabled(true);
   };
 
   const onFormFinishProcess = (name, { values, forms }) => {
@@ -622,6 +628,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel header="CATEGORY" key="2" className="greyBackground">
@@ -633,6 +641,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel header="TYPE" key="3" className="greyBackground">
@@ -643,6 +653,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel
@@ -658,6 +670,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel header="DURATION" key="5" className="greyBackground">
@@ -680,6 +694,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel header="TAGS" key="7" className="greyBackground">
@@ -690,6 +706,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel
@@ -705,6 +723,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                       <CourseWidgetFeaturedVideo
                         shouldUpdate={(prevValues, curValues) =>
@@ -714,6 +734,8 @@ const CourseAdd = () => {
                         showModal={showModal}
                         defaultWidgetValues={defaultWidgetValues}
                         setdefaultWidgetValues={setdefaultWidgetValues}
+                        isOkButtonDisabled={isOkButtonDisabled}
+                        setIsOkButtonDisabled={setIsOkButtonDisabled}
                       />
                     </Panel>
                     <Panel
@@ -761,6 +783,8 @@ const CourseAdd = () => {
                 key: "submit",
                 htmlType: "submit",
               }}
+              isOkButtonDisabled={isOkButtonDisabled}
+              setIsOkButtonDisabled={setIsOkButtonDisabled}
             />
             <Spin
               size="large"
@@ -769,11 +793,11 @@ const CourseAdd = () => {
               delay={100}
             ></Spin>
             <SaveUI
-                listMenu={menulists}
-                position="bottom-right"
-                iconColor="#8998BA"
-                toggleModal={showModal}
-              />            
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
             <style jsx global>{`
               .greyBackground {
                 background-color: #eeeeee;
@@ -800,7 +824,7 @@ const CourseAdd = () => {
                 border-radius: 0.5rem;
                 border: 1px solid #888787;
               }
-              
+
               .course-management .cm-main-right .widget-header-row {
                 text-align: end;
               }

@@ -36,6 +36,8 @@ const CourseWidgetTags = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allCourseTags, setAllCourseTags] = useState();
   const chosenRows = defaultWidgetValues.coursetag;
@@ -212,7 +214,13 @@ const CourseWidgetTags = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allCourseTags, chosenRows)
+              () =>
+                modalFormBody(
+                  allCourseTags,
+                  chosenRows,
+                  isOkButtonDisabled,
+                  setIsOkButtonDisabled
+                )
             )
           }
         />
@@ -222,7 +230,12 @@ const CourseWidgetTags = (props) => {
     </>
   );
 };
-const modalFormBody = (allCourseTags, chosenRows) => {
+const modalFormBody = (
+  allCourseTags,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   /* allCourseTags.map((tag, index) => {
@@ -256,6 +269,12 @@ const modalFormBody = (allCourseTags, chosenRows) => {
       return entry;
     });
     setSelectedRows(rowData);
+    //enable or disable the submit button
+    if (chosenRows.length || selectedRowKeys.length) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
     //setSelectedRows(selectedRows);
     //console.log(rowData);
   };
@@ -335,10 +354,7 @@ const modalFormBody = (allCourseTags, chosenRows) => {
                     key={`tag-${field.key}`}
                     hidden
                   >
-                    <Input
-                      placeholder="Course Tag Title"
-                      value={field.title}
-                    />
+                    <Input placeholder="Course Tag Title" value={field.title} />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "tagId"]}
@@ -377,4 +393,3 @@ const modalFormBody = (allCourseTags, chosenRows) => {
   );
 };
 export default CourseWidgetTags;
-

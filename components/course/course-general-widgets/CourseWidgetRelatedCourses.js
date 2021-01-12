@@ -30,6 +30,8 @@ const CourseWidgetRelatedCourses = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const { courseAllList, setCourseAllList } = useCourseList();
   const chosenRows = defaultWidgetValues.relatedcourses;
@@ -185,7 +187,13 @@ const CourseWidgetRelatedCourses = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(courseAllList, chosenRows)
+              () =>
+                modalFormBody(
+                  courseAllList,
+                  chosenRows,
+                  isOkButtonDisabled,
+                  setIsOkButtonDisabled
+                )
             )
           }
         />
@@ -195,7 +203,12 @@ const CourseWidgetRelatedCourses = (props) => {
     </>
   );
 };
-const modalFormBody = (courseAllList, chosenRows) => {
+const modalFormBody = (
+  courseAllList,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   const [sourceData, setsourceData] = useState([]);
 
   var data = [];
@@ -229,6 +242,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [fileList, seFileList] = useState("");
   const [loading, setLoading] = useState(false);
+  const [u, setU] = useState(false);
   const [form] = Form.useForm();
   const columns = [
     {
@@ -238,12 +252,18 @@ const modalFormBody = (courseAllList, chosenRows) => {
     {
       title: "Pre-requisite",
       dataIndex: "isreq",
-      render: (dataIndex, record, index) => (
-        <Switch
-          onChange={() => onSwitchChange(record, index)}
-          defaultChecked={dataIndex}
-        />
-      ),
+      render: (dataIndex, record, index) => {
+        let isdisabled = record && record.isticked ? false : true;
+        let isChecked = dataIndex === 1 ? true : false;
+        return (
+          <Switch
+            onChange={() => onSwitchChange(record, index)}
+            checked={isChecked}
+            defaultChecked={dataIndex}
+            disabled={isdisabled}
+          />
+        );
+      },
     },
   ];
 
@@ -278,7 +298,7 @@ const modalFormBody = (courseAllList, chosenRows) => {
           key: index,
           id: theChosen.length ? theChosen[0].id : 0,
           title: course.title,
-          isreq: theChosen.length ? theChosen[0].isreq:0,
+          isreq: theChosen.length ? theChosen[0].isreq : 0,
           courseRelatedId: course.id,
           isticked: theChosen.length ? true : false,
         };
@@ -342,21 +362,48 @@ const modalFormBody = (courseAllList, chosenRows) => {
     //onSelectChange(selectedRowKeys,theRecords);
   };
   const onSelectChange = (selectedRowKeys, selectedRows) => {
+    /*manipulate the sourcedata
+      check in every key of object(sd) from the sourceData is included
+      in the selectedRowkeys. If yes, then set isticked =true. If not
+      set isticked=false and isreq=0 to reset the switch button.
+    */
+    const theSource = sourceData;
+    let resData = [];
+    for (const sd of theSource) {
+      let isIncluded = selectedRowKeys.includes(sd.key);
+      if (isIncluded) {
+        sd.isticked = true;
+      } else {
+        sd.isticked = false;
+        sd.isreq = 0;
+      }
+      resData.push(sd);
+    }
+    //update the sourceData to re-render
+    setsourceData(resData);
+    //set the selectedRowKeys
     setSelectedRowKeys(selectedRowKeys);
+    //manipulate the data in selectedRows and set
     let rowData = selectedRows.map((entry, index) => {
       entry.isticked = true;
       return entry;
-    });
+    });   
+    //update the selectedRows to re-render
     setSelectedRows(rowData);
+    //enable or disable the submit button
+    if (chosenRows.length || selectedRowKeys.length) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
     //setSelectedRows(selectedRows);
-    //console.log(rowData);
   };
   const rowSelection = {
     selectedRowKeys,
     selectedRows,
     onChange: onSelectChange,
   };
-  /*console.log("Updata Data List: ", data);
+  /*console.log("Updata Data List: ", sourceData);
   console.log("=========================");
   console.log("Selected Rows:", selectedRows);*/
   return (
@@ -401,7 +448,10 @@ const modalFormBody = (courseAllList, chosenRows) => {
                     key={`courseRelatedId-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="courseRelatedId Title" value={field.courseRelatedId} />
+                    <Input
+                      placeholder="courseRelatedId Title"
+                      value={field.courseRelatedId}
+                    />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "isticked"]}

@@ -40,6 +40,8 @@ const CourseWidgetLevel = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allCourseLevel, setAllCourseLevel] = useState();
   const chosenRows = defaultWidgetValues.courselevel;
@@ -136,8 +138,14 @@ const CourseWidgetLevel = (props) => {
                                     showModal(
                                       widgetFieldLabels.catname,
                                       widgetFieldLabels.catValueLabel,
-                                      () => modalFormBody(allCourseLevel, thisPicklist)
-                                    )
+                                      () =>
+                                        modalFormBody(
+                                          allCourseLevel,
+                                          thisPicklist,
+                                          isOkButtonDisabled,
+                                          setIsOkButtonDisabled
+                                        )
+                                    );
                                   }}
                                 />
                               ) : null}
@@ -202,8 +210,14 @@ const CourseWidgetLevel = (props) => {
                                       showModal(
                                         widgetFieldLabels.catname,
                                         widgetFieldLabels.catValueLabel,
-                                        () => modalFormBody(allCourseLevel, chosenRows)
-                                      )
+                                        () =>
+                                          modalFormBody(
+                                            allCourseLevel,
+                                            chosenRows,
+                                            isOkButtonDisabled,
+                                            setIsOkButtonDisabled
+                                          )
+                                      );
                                     }}
                                   />
                                 ) : null}
@@ -227,7 +241,13 @@ const CourseWidgetLevel = (props) => {
               showModal(
                 widgetFieldLabels.catname,
                 widgetFieldLabels.catValueLabel,
-                () => modalFormBody(allCourseLevel, chosenRows)
+                () =>
+                  modalFormBody(
+                    allCourseLevel,
+                    chosenRows,
+                    isOkButtonDisabled,
+                    setIsOkButtonDisabled
+                  )
               )
             }
           />
@@ -237,7 +257,12 @@ const CourseWidgetLevel = (props) => {
     </>
   );
 };
-const modalFormBody = (allCourseLevel, chosenRows) => {
+const modalFormBody = (
+  allCourseLevel,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   /* allCourseLevel.map((level, index) => {
@@ -284,7 +309,13 @@ const modalFormBody = (allCourseLevel, chosenRows) => {
     let rowData = [];
     rowData.push({ ...selected, isticked: true });
     setSelectedRows(rowData);
-    console.log("selected", selectedRows);
+    //enable or disable the submit button
+    if (chosenRows.length || selected) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
+    //console.log("selected", selectedRows);
   };
   const rowSelection = {
     selectedRowKeys,

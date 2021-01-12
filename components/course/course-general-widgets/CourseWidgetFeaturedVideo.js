@@ -38,6 +38,8 @@ const CourseWidgetFeaturedVideo = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   var featured_video = defaultWidgetValues.featuredvideo
     ? defaultWidgetValues.featuredvideo
@@ -103,7 +105,11 @@ const CourseWidgetFeaturedVideo = (props) => {
                             showModal(
                               widgetFieldLabels.catname,
                               widgetFieldLabels.catFormName,
-                              modalFormBody
+                              () =>
+                                modalFormBody(
+                                  isOkButtonDisabled,
+                                  setIsOkButtonDisabled
+                                )
                             )
                           }
                         >
@@ -153,7 +159,11 @@ const CourseWidgetFeaturedVideo = (props) => {
                             showModal(
                               widgetFieldLabels.catname,
                               widgetFieldLabels.catFormName,
-                              modalFormBody
+                              () =>
+                                modalFormBody(
+                                  isOkButtonDisabled,
+                                  setIsOkButtonDisabled
+                                )
                             )
                           }
                         >
@@ -172,7 +182,7 @@ const CourseWidgetFeaturedVideo = (props) => {
     </>
   );
 };
-const modalFormBody = () => {
+const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
   const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -197,17 +207,20 @@ const modalFormBody = () => {
         setImageUrl(imageUrl);
         setalertMessage("");
         setLoading(false);
+        setIsOkButtonDisabled(false);
       });
     } else {
       setFileList("");
       setImageUrl("");
       setLoading(false);
+      setIsOkButtonDisabled(true);
     }
   };
   const onRemove = (info) => {
     setFileList("");
     setImageUrl("");
     setLoading(false);
+    setIsOkButtonDisabled(true);
   };
   const beforeUpload = (file) => {
     setLoading(true);

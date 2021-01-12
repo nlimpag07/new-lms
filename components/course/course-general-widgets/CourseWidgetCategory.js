@@ -36,6 +36,8 @@ const CourseWidgetCategory = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allCourseCategory, setAllCourseCategory] = useState();
   const chosenRows = defaultWidgetValues.coursecategory;
@@ -215,7 +217,13 @@ const CourseWidgetCategory = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allCourseCategory, chosenRows)
+              () =>
+                modalFormBody(
+                  allCourseCategory,
+                  chosenRows,
+                  isOkButtonDisabled,
+                  setIsOkButtonDisabled
+                )
             )
           }
         />
@@ -225,7 +233,12 @@ const CourseWidgetCategory = (props) => {
     </>
   );
 };
-const modalFormBody = (allCourseCategory, chosenRows) => {
+const modalFormBody = (
+  allCourseCategory,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   /* allCourseCategory.map((category, index) => {
@@ -259,6 +272,12 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
       return entry;
     });
     setSelectedRows(rowData);
+    //enable or disable the submit button
+    if (chosenRows.length || selectedRowKeys.length) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
     //setSelectedRows(selectedRows);
     //console.log(rowData);
   };
@@ -346,7 +365,10 @@ const modalFormBody = (allCourseCategory, chosenRows) => {
                     key={`categoryId-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="categoryId Title" value={field.categoryId} />
+                    <Input
+                      placeholder="categoryId Title"
+                      value={field.categoryId}
+                    />
                   </Form.Item>
                   <Form.Item
                     name={[field.name, "isticked"]}

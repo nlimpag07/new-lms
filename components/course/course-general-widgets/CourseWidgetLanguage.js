@@ -36,6 +36,8 @@ const CourseWidgetLanguage = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allCourseLanguage, setAllCourseLanguage] = useState();
   const chosenRows = defaultWidgetValues.courselanguage;
@@ -99,7 +101,7 @@ const CourseWidgetLanguage = (props) => {
                           value: field.title,
                           id: field.id,
                         };
-                        console.log('Individual Fields:', field)
+                        console.log("Individual Fields:", field);
                         return (
                           <div key={field.key}>
                             <Form.Item
@@ -215,7 +217,13 @@ const CourseWidgetLanguage = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allCourseLanguage, chosenRows)
+              () =>
+                modalFormBody(
+                  allCourseLanguage,
+                  chosenRows,
+                  isOkButtonDisabled,
+                  setIsOkButtonDisabled
+                )
             )
           }
         />
@@ -225,7 +233,12 @@ const CourseWidgetLanguage = (props) => {
     </>
   );
 };
-const modalFormBody = (allCourseLanguage, chosenRows) => {
+const modalFormBody = (
+  allCourseLanguage,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   const [selectedRows, setSelectedRows] = useState([]);
@@ -251,6 +264,12 @@ const modalFormBody = (allCourseLanguage, chosenRows) => {
       return entry;
     });
     setSelectedRows(rowData);
+    //enable or disable the submit button
+    if (chosenRows.length || selectedRowKeys.length) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
     //setSelectedRows(selectedRows);
     //console.log(rowData);
   };

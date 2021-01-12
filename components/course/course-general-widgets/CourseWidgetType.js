@@ -12,7 +12,11 @@ import {
   Table,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PlusOutlined, MinusCircleOutlined,SettingFilled } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  MinusCircleOutlined,
+  SettingFilled,
+} from "@ant-design/icons";
 import { useCourseList } from "../../../providers/CourseProvider";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -36,6 +40,8 @@ const CourseWidgetType = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allCourseType, setAllCourseType] = useState();
   const chosenRows = defaultWidgetValues.coursetype;
@@ -132,8 +138,14 @@ const CourseWidgetType = (props) => {
                                     showModal(
                                       widgetFieldLabels.catname,
                                       widgetFieldLabels.catValueLabel,
-                                      () => modalFormBody(allCourseType, thisPicklist)
-                                    )
+                                      () =>
+                                        modalFormBody(
+                                          allCourseType,
+                                          thisPicklist,
+                                          isOkButtonDisabled,
+                                          setIsOkButtonDisabled
+                                        )
+                                    );
                                   }}
                                 />
                               ) : null}
@@ -198,8 +210,14 @@ const CourseWidgetType = (props) => {
                                       showModal(
                                         widgetFieldLabels.catname,
                                         widgetFieldLabels.catValueLabel,
-                                        () => modalFormBody(allCourseType, chosenRows)
-                                      )
+                                        () =>
+                                          modalFormBody(
+                                            allCourseType,
+                                            chosenRows,
+                                            isOkButtonDisabled,
+                                            setIsOkButtonDisabled
+                                          )
+                                      );
                                     }}
                                   />
                                 ) : null}
@@ -217,25 +235,27 @@ const CourseWidgetType = (props) => {
         }}
       </Form.Item>
       {chosenRows.length < 1 ? (
-      <span>
-        <PlusOutlined
-          onClick={() =>
-            showModal(
-              widgetFieldLabels.catname,
-              widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allCourseType, chosenRows)
-            )
-          }
-        />
-      </span>
+        <span>
+          <PlusOutlined
+            onClick={() =>
+              showModal(
+                widgetFieldLabels.catname,
+                widgetFieldLabels.catValueLabel,
+                () => modalFormBody(allCourseType, chosenRows,isOkButtonDisabled,
+                  setIsOkButtonDisabled,)
+              )
+            }
+          />
+        </span>
       ) : null}
       <style jsx global>{``}</style>
     </>
   );
 };
-const modalFormBody = (allCourseType, chosenRows) => {
-  console.log('AllCourseType',allCourseType)
-  console.log('chosen',chosenRows)
+const modalFormBody = (allCourseType, chosenRows,isOkButtonDisabled,
+  setIsOkButtonDisabled,) => {
+  console.log("AllCourseType", allCourseType);
+  console.log("chosen", chosenRows);
   const [sourceData, setsourceData] = useState([]);
   const data = [];
   /* allCourseType.map((type, index) => {
@@ -274,9 +294,15 @@ const modalFormBody = (allCourseType, chosenRows) => {
   //For single selection Code
   const onSelectRow = (selected, selectedRows, changeRows) => {
     setSelectedRowKeys([selected.key]);
-    let rowData=[]
-    rowData.push({ ...selected, isticked: true });    
+    let rowData = [];
+    rowData.push({ ...selected, isticked: true });
     setSelectedRows(rowData);
+     //enable or disable the submit button
+     if (chosenRows.length || selected) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
     //console.log("selected", rowData);
   };
   const rowSelection = {

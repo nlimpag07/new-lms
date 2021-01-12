@@ -52,7 +52,7 @@ import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeat
 
 import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
-import CourseDateFormat from "./course-date-format/CourseDateFormat"
+import CourseDateFormat from "./course-date-format/CourseDateFormat";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -70,7 +70,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -125,6 +125,8 @@ const ModalForm = ({
   onCancel,
   okText,
   onFinish,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled,
 }) => {
   const [form] = Form.useForm();
   useResetFormOnCloseModal({
@@ -144,6 +146,7 @@ const ModalForm = ({
     width = 750;
   } else {
     adProps = {
+      okButtonProps: { disabled: isOkButtonDisabled },
       onOk: () => {
         form.submit();
         modalFormName === "picklistrelatedcourses" && form.resetFields();
@@ -152,6 +155,7 @@ const ModalForm = ({
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
         modalFormName === "picklisttags" && form.resetFields();
+        setIsOkButtonDisabled(true);
         //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
       },
     };
@@ -186,6 +190,7 @@ const CourseEdit = ({ course_id }) => {
 
   //const courseId = router.query.manage[1];
   //console.log(props);
+  const [isOkButtonDisabled, setIsOkButtonDisabled] = useState(true);
   const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [course, setCourse] = useState("");
   const [spinner, setSpinner] = useState(false);
@@ -227,7 +232,6 @@ const CourseEdit = ({ course_id }) => {
       (getCourse) => getCourse.id == course_id
     );
     setCourse(theCourse);
-    
   }, [course_id]);
 
   useEffect(() => {
@@ -1043,8 +1047,7 @@ const CourseEdit = ({ course_id }) => {
       passingGrade: passingGrade,
     },
   };
-  
-  
+
   /* console.log("Const Default Values ", constDefaultValues.courselevel);
   console.log("=========================================");
   console.log("Widget Values ", defaultWidgetValues.courselevel); */
@@ -1140,6 +1143,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel
@@ -1155,6 +1160,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel header="TYPE" key="3" className="greyBackground">
@@ -1165,6 +1172,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel
@@ -1180,6 +1189,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel
@@ -1210,6 +1221,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel header="TAGS" key="7" className="greyBackground">
@@ -1220,6 +1233,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel
@@ -1235,6 +1250,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                         <CourseWidgetFeaturedVideo
                           shouldUpdate={(prevValues, curValues) =>
@@ -1244,6 +1261,8 @@ const CourseEdit = ({ course_id }) => {
                           showModal={showModal}
                           defaultWidgetValues={defaultWidgetValues}
                           setdefaultWidgetValues={setdefaultWidgetValues}
+                          isOkButtonDisabled={isOkButtonDisabled}
+                          setIsOkButtonDisabled={setIsOkButtonDisabled}
                         />
                       </Panel>
                       <Panel
@@ -1291,6 +1310,8 @@ const CourseEdit = ({ course_id }) => {
                   key: "submit",
                   htmlType: "submit",
                 }}
+                isOkButtonDisabled={isOkButtonDisabled}
+                setIsOkButtonDisabled={setIsOkButtonDisabled}
               />
               <Spin
                 size="large"
@@ -1319,7 +1340,7 @@ const CourseEdit = ({ course_id }) => {
                   margin-bottom: 0;
                   text-transform: uppercase;
                 }
-                
+
                 .widget-holder-col .widget-header-row {
                   padding: 5px 0;
                   color: #e69138;
@@ -1328,7 +1349,7 @@ const CourseEdit = ({ course_id }) => {
                   border-radius: 0.5rem;
                   border: 1px solid #888787;
                 }
-                
+
                 .course-management .cm-main-right .widget-header-row {
                   text-align: end;
                 }
