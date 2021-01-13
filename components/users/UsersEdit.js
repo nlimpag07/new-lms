@@ -67,10 +67,16 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
     lastName,
     birthday,
     gender,
+    /* username,
+    password, */
     isActive,
     isAdministrator,
     isInstructor,
     isLearner,
+    userType,
+    departmentId,
+    email,
+    positionId,
   } = dataProps;
   const router = useRouter();
   const [form] = Form.useForm();
@@ -101,7 +107,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
     var errorList = [];
     console.log("Received values of form: ", values);
     //console.log("Re-Evaluating UserIds====");
-
+    data.id = id;
     !!values.firstName
       ? (data.firstName = values.firstName)
       : errorList.push("Missing First Name");
@@ -118,12 +124,12 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
       ? (data.birthday = values.birthday.format("YYYY-MM-DD"))
       : errorList.push("Missing Birthdate");
 
-    !!values.username
+    /* !!values.username
       ? (data.username = values.username)
       : errorList.push("Missing Username");
     !!values.password
       ? (data.password = values.password)
-      : errorList.push("Missing Password");
+      : errorList.push("Missing Password"); */
     !!values.email
       ? (data.email = values.email)
       : errorList.push("Missing Email Address");
@@ -131,7 +137,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
     !!values.positionId
       ? (data.positionId = values.positionId)
       : errorList.push("Missing Position");
-    if (!!values.userRole) {
+    /* if (!!values.userRole) {
       switch (values.userRole) {
         case "1":
           data.isLearner = 1;
@@ -156,15 +162,15 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
       }
     } else {
       errorList.push("Missing User Role");
-    }
+    } */
 
     data = JSON.stringify(data);
     console.log(data);
 
     if (!errorList.length) {
       var config = {
-        method: "post",
-        url: apiBaseUrl + "/Users",
+        method: "put",
+        url: apiBaseUrl + "/Users/" + id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -317,12 +323,12 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
   }
   const options = positionData.data.length
     ? positionData.data.map((d) => (
-        <Option key={d.id} value={d.id}>
+        <Option label={d.name} key={d.id} value={d.id}>
           {d.name}
         </Option>
       ))
     : positionOptions.map((d) => (
-        <Option key={d.id} value={d.id}>
+        <Option label={d.name} key={d.id} value={d.id}>
           {d.name}
         </Option>
       ));
@@ -333,14 +339,19 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="usersAdd"
+        name="usersEdit"
         style={{ width: "100%" }}
         initialValues={{
           firstName: firstName,
-    middleInitial: middleInitial,
-    lastName:lastName,
-    birthday:moment(birthday),
-    gender:gender,
+          middleInitial: middleInitial,
+          lastName: lastName,
+          birthday: moment(birthday),
+          gender: gender,
+          /* username: username,
+          password: password, */
+          email: email,
+          userRole: userType,
+          positionId: positionId,
         }}
         className="addUsers"
         labelCol={{ span: 6 }}
@@ -374,8 +385,12 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
             style={{ display: "inline-block", width: "calc(30%)" }}
           >
             <Select placeholder="Gender" optionLabelProp="label">
-              <Option value={0} label="Female">Female</Option>
-              <Option value={1} label="Male">Male</Option>
+              <Option value={0} label="Female">
+                Female
+              </Option>
+              <Option value={1} label="Male">
+                Male
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -391,16 +406,17 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
               placeholder="Date of Birth"
               style={{ width: "100%" }}
               disabledDate={disabledDate}
-              format={dateFormat}              
+              format={dateFormat}
               defaultPickerValue={moment(birthday)}
+              allowClear={false}
             />
           </Form.Item>
         </Form.Item>
         <Divider dashed style={{ marginTop: "0" }} />
-        <Form.Item label="Login Details" style={{ marginBottom: 0 }} required>
+        {/* <Form.Item label="Login Details" style={{ marginBottom: 0 }} required>
           <Form.Item
             name="username"
-            rules={[{ required: true, message: "Username is required" }]}
+            
             style={{ display: "inline-block", width: "calc(50%)" }}
           >
             <Input placeholder="Input Username" />
@@ -416,7 +432,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
           >
             <Input.Password placeholder="Input Password" />
           </Form.Item>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="Email Address" style={{ marginBottom: 0 }} required>
           <Form.Item
             name="email"
@@ -465,11 +481,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
             <Button icon={<UploadOutlined />}>Upload XLS File Only</Button>
           </Upload>
         </Form.Item> */}
-        <Form.Item
-          name="positionId"
-          label="Position"
-          rules={[{ required: true, message: "Gender is required" }]}
-        >
+        <Form.Item name="positionId" label="Position">
           <Select
             showSearch
             value={positionData.value}
@@ -480,20 +492,18 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
             onSearch={handleSearch}
             onChange={handleChange}
             notFoundContent={null}
+            optionLabelProp="label"
           >
             {options}
           </Select>
         </Form.Item>
-        <Form.Item
-          name="userRole"
-          label="User Role"
-          rules={[{ required: true, message: "User Role is required" }]}
-        >
-          <Select placeholder="User Role">
+        <Form.Item name="userRole" label="User Role">
+          {/* <Select placeholder="User Role">
             <Option value="3">Administrator</Option>
             <Option value="2">Instructor</Option>
             <Option value="1">learner</Option>
-          </Select>
+          </Select> */}
+          <Input disabled />
         </Form.Item>
         <Divider style={{ border: "none" }} />
         <Form.Item

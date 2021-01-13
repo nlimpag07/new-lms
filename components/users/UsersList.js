@@ -5,7 +5,17 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal, Spin, Popconfirm, Button, Tooltip } from "antd";
+import {
+  Row,
+  Col,
+  Modal,
+  Spin,
+  Popconfirm,
+  Button,
+  Tooltip,
+  message,
+  Tag,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -218,7 +228,11 @@ const UsersList = ({ userlist }) => {
   //console.log(Data);
   const AciveStatusRender = (props) => {
     const userStatus =
-      props.dataItem && props.dataItem.isActive !== 1 ? "Active" : "Inactive";
+      props.dataItem && props.dataItem.isActive !== 1 ? (
+        <Tag color="green">Active</Tag>
+      ) : (
+        <Tag color="red">Inactive</Tag>
+      );
     return <td>{userStatus}</td>;
   };
 
@@ -324,7 +338,11 @@ const UsersList = ({ userlist }) => {
         className="UsersAddForm"
       >
         {userModal.modalOperation == "edit" ? (
-          <UsersEdit dataProps={userModal.dataProps} hideModal={hideModal} setSpin={setSpin} />
+          <UsersEdit
+            dataProps={userModal.dataProps}
+            hideModal={hideModal}
+            setSpin={setSpin}
+          />
         ) : userModal.modalOperation == "add" ? (
           <UsersAdd hideModal={hideModal} setSpin={setSpin} />
         ) : userModal.modalOperation == "approve" ? (
@@ -368,59 +386,71 @@ const UsersList = ({ userlist }) => {
     </Row>
   );
 };
-const removeSelected = (item) => {
-  console.log("onRemove", item.id);
-
+const activationProcessSelected = (item, setSpin) => {
+  const key = "updatable";
+  message.loading({ content: "Processing...", key });
+  //console.log("activationProcessSelected", item);
+  //if item.isActive is currently 1, means current status is inactive
+  //so the activate value must be set to true to make the user active.
+  //if item.isActive is currently 0, it means current status is active
+  //so the activate value must be set to false to make the user inactive.
+  let uStatus = item.isActive === 1 ? true : false;
   var config = {
-    method: "delete",
-    url: apiBaseUrl + "/Users/" + item.id,
+    method: "put",
+    url: apiBaseUrl + "/Users/Activation",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
-    data: { id: item.id },
+    data: { userId: item.id, activate: uStatus },
   };
-  async function fetchData(config) {
-    try {
-      const response = await axios(config);
-      if (response) {
-        //setAssessmentList(response.data.result);
-        console.log("Response", response.data);
-        message.success(response.data.message);
-        setSpin(true);
+  axios(config)
+    .then((res) => {
+      openMessage(res.data.message, res.data.response, key);
+    })
+    .catch((error) => {
+      console.log("error Response: ", error);
+      error.response && error.response.data
+        ? openMessage(error.response.data.message, false, key)
+        : openMessage(`Error:${error}`, false, key);
+    })
+    .then(() => {
+      setSpin(true);
+    });
+
+  const openMessage = (msg, resp, key) => {
+    /*const key = "updatable";
+     message.loading({ content: "Processing...", key }); */
+    setTimeout(() => {
+      if (resp) {
+        message.success({ content: msg, key, duration: 5 });
+        /* setSpinning(false); */
+        //setSpin(true);
+      } else {
+        message.error({ content: msg, key, duration: 5 });
+        /* setSpinning(false);
+        setSpin(false); */
       }
-    } catch (error) {
-      const { response } = error;
-      //const { request, ...errorObject } = response; // take everything but 'request'
-      console.log(response.data.message);
-      Modal.error({
-        title: "Unable to Delete",
-        content: response.data.message,
-        centered: true,
-        width: 450,
-      });
-    }
-    //setLoading(false);
-  }
-  fetchData(config);
+    }, 100);
+  };
 };
 
 const ActionRender = (item, showModal, hideModal, setSpin) => {
   const userStatus = item.dataItem.isActive;
   let iconDynamic = userStatus === 1 ? "unlock" : "lock";
   let ttText = userStatus === 1 ? "Activate" : "Deactivate";
+  let btnClass = userStatus === 1 ? "activateClass" : "deactivateClass";
   //console.log(list)
   return (
     <td>
       <Tooltip
         trigger="hover"
         title="View/Edit"
-        color="#2db7f5"
         destroyTooltipOnHide={true}
         placement="bottom"
       >
         <Button
-          icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
+          icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="sm" />}
           onClick={() => showModal("edit", item.dataItem)}
         />
       </Tooltip>
@@ -428,7 +458,6 @@ const ActionRender = (item, showModal, hideModal, setSpin) => {
       <Tooltip
         trigger="hover"
         title={ttText}
-        color="#2db7f5"
         destroyTooltipOnHide={true}
         placement="bottom"
       >
@@ -436,14 +465,35 @@ const ActionRender = (item, showModal, hideModal, setSpin) => {
           title={`Are you sure to ${ttText}?`}
           okText="Yes"
           cancelText="No"
-          onConfirm={() => removeSelected(item.dataItem)}
+          onConfirm={() => activationProcessSelected(item.dataItem, setSpin)}
         >
           <Button
-            icon={<FontAwesomeIcon icon={["fas", iconDynamic]} size="lg" />}
+            icon={<FontAwesomeIcon icon={["fas", iconDynamic]} size="sm" />}
             alt="Submit"
+            className={btnClass}
           />
         </Popconfirm>
       </Tooltip>
+      <style jsx global>{`
+        .activateClass {
+          color: #87d068;
+          border-color: #87d0687a;
+        }
+        .deactivateClass {
+          color: #f50;
+          border-color: #ff55004a;
+        }
+        .ant-btn.deactivateClass:hover,
+        .ant-btn.deactivateClass:focus {
+          color: #ca6f41;
+          border-color: #ff5500a8;
+        }
+        .ant-btn.activateClass:hover,
+        .ant-btn.activateClass:focus {
+          color: #86b970;
+          border-color: #87d068;
+        }
+      `}</style>
     </td>
   );
 };
