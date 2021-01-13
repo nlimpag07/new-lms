@@ -5,12 +5,13 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Col, Modal, Spin, Popconfirm } from "antd";
+import { Row, Col, Modal, Spin, Popconfirm, Button, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
 import { orderBy } from "@progress/kendo-data-query";
 import UsersAdd from "./UsersAdd";
+import UsersEdit from "./UsersEdit";
 import Cookies from "js-cookie";
 
 const apiBaseUrl = process.env.apiBaseUrl;
@@ -66,7 +67,7 @@ const UsersList = ({ userlist }) => {
   var [userModal, setUserModal] = useState(false);
   const [courseDetails, setCourseDetails] = useState("");
   const [spin, setSpin] = useState(true);
-  const [pagination, setPagination] = useState({ skip: 0, take: 5 });
+  const [pagination, setPagination] = useState({ skip: 0, take: 10 });
 
   useEffect(() => {
     var config = {
@@ -194,16 +195,18 @@ const UsersList = ({ userlist }) => {
     setData(theData);
   };
 
-  const showModal = (modalOperation) => {
+  const showModal = (modalOperation, props) => {
     setUserModal({
       visible: true,
       modalOperation: modalOperation,
+      dataProps: props,
     });
   };
   const hideModal = (modalOperation) => {
     setUserModal({
       visible: false,
       modalOperation: modalOperation,
+      dataProps: null,
     });
   };
   const pageChange = (event) => {
@@ -213,6 +216,12 @@ const UsersList = ({ userlist }) => {
     });
   };
   //console.log(Data);
+  const AciveStatusRender = (props) => {
+    const userStatus =
+      props.dataItem && props.dataItem.isActive !== 1 ? "Active" : "Inactive";
+    return <td>{userStatus}</td>;
+  };
+
   return (
     //GridType(gridList)
     <Row
@@ -282,10 +291,16 @@ const UsersList = ({ userlist }) => {
                   <Column field="userType" title="User Type" />
                   <Column field="email" title="Email" />
 
-                  <Column field="isActive" title="Active Status" />
+                  <Column
+                    field="isActive"
+                    title="Active Status"
+                    cell={AciveStatusRender}
+                  />
                   <Column
                     sortable={false}
-                    cell={ActionRender}
+                    cell={(item) =>
+                      ActionRender(item, showModal, hideModal, setSpin)
+                    }
                     field=""
                     title="Action"
                   />
@@ -308,8 +323,8 @@ const UsersList = ({ userlist }) => {
         okButtonProps={{ style: { display: "none" } }}
         className="UsersAddForm"
       >
-        {userModal.modalOperation == "view" ? (
-          "HELLO View"
+        {userModal.modalOperation == "edit" ? (
+          <UsersEdit dataProps={userModal.dataProps} hideModal={hideModal} setSpin={setSpin} />
         ) : userModal.modalOperation == "add" ? (
           <UsersAdd hideModal={hideModal} setSpin={setSpin} />
         ) : userModal.modalOperation == "approve" ? (
@@ -390,33 +405,45 @@ const removeSelected = (item) => {
   fetchData(config);
 };
 
-const ActionRender = (item) => {
+const ActionRender = (item, showModal, hideModal, setSpin) => {
+  const userStatus = item.dataItem.isActive;
+  let iconDynamic = userStatus === 1 ? "unlock" : "lock";
+  let ttText = userStatus === 1 ? "Activate" : "Deactivate";
   //console.log(list)
   return (
     <td>
-      <button
-        className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => showModal("view")} */
+      <Tooltip
+        trigger="hover"
+        title="View/Edit"
+        color="#2db7f5"
+        destroyTooltipOnHide={true}
+        placement="bottom"
       >
-        <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
-      </button>
+        <Button
+          icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
+          onClick={() => showModal("edit", item.dataItem)}
+        />
+      </Tooltip>
       &nbsp;
-      <Popconfirm
-        title="Are you sure？"
-        okText="Yes"
-        cancelText="No"
-        onConfirm={() => removeSelected(item.dataItem)}
+      <Tooltip
+        trigger="hover"
+        title={ttText}
+        color="#2db7f5"
+        destroyTooltipOnHide={true}
+        placement="bottom"
       >
-        <button
-          className="k-button k-grid-remove-command"
-          /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
+        <Popconfirm
+          title={`Are you sure to ${ttText}?`}
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => removeSelected(item.dataItem)}
         >
-          ✖
-        </button>
-      </Popconfirm>
+          <Button
+            icon={<FontAwesomeIcon icon={["fas", iconDynamic]} size="lg" />}
+            alt="Submit"
+          />
+        </Popconfirm>
+      </Tooltip>
     </td>
   );
 };

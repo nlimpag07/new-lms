@@ -57,9 +57,24 @@ const list = {
 const { TextArea } = Input;
 const { Option } = Select;
 
-const UsersAdd = ({ hideModal, setSpin }) => {
+const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
+  console.log("dataProps", dataProps);
+  const {
+    id,
+    empId,
+    firstName,
+    middleInitial,
+    lastName,
+    birthday,
+    gender,
+    isActive,
+    isAdministrator,
+    isInstructor,
+    isLearner,
+  } = dataProps;
   const router = useRouter();
   const [form] = Form.useForm();
+  const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [fileList, updateFileList] = useState([]);
   const [positionOptions, setPositionOptions] = useState([]);
@@ -72,13 +87,12 @@ const UsersAdd = ({ hideModal, setSpin }) => {
     help: undefined,
     id: undefined,
   });
-  const [hasError, setHasError] = useState("");
   const dateFormat = "DD-MMM-YYYY";
   useEffect(() => {}, []);
 
   const onCancel = (form) => {
     form.resetFields();
-    hideModal("add");
+    hideModal("edit");
   };
   const onFinish = (values) => {
     setSpinning(true);
@@ -181,7 +195,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         message.success({ content: msg, key, duration: 2 });
         setSpinning(false);
         //setSpin(true);
-        hideModal("add");
+        hideModal("edit");
       } else {
         message.error({ content: msg, key, duration: 2 });
         setSpinning(false);
@@ -322,9 +336,11 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         name="usersAdd"
         style={{ width: "100%" }}
         initialValues={{
-          /* courseTitle: "hey",
-          isAutoEnroll: false,
-          isNotify: false, */
+          firstName: firstName,
+    middleInitial: middleInitial,
+    lastName:lastName,
+    birthday:moment(birthday),
+    gender:gender,
         }}
         className="addUsers"
         labelCol={{ span: 6 }}
@@ -357,9 +373,9 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             rules={[{ required: true, message: "Gender is required" }]}
             style={{ display: "inline-block", width: "calc(30%)" }}
           >
-            <Select placeholder="Gender">
-              <Option value="0">Female</Option>
-              <Option value="1">Male</Option>
+            <Select placeholder="Gender" optionLabelProp="label">
+              <Option value={0} label="Female">Female</Option>
+              <Option value={1} label="Male">Male</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -375,7 +391,8 @@ const UsersAdd = ({ hideModal, setSpin }) => {
               placeholder="Date of Birth"
               style={{ width: "100%" }}
               disabledDate={disabledDate}
-              format={dateFormat}
+              format={dateFormat}              
+              defaultPickerValue={moment(birthday)}
             />
           </Form.Item>
         </Form.Item>
@@ -525,4 +542,4 @@ const UsersAdd = ({ hideModal, setSpin }) => {
   );
 };
 
-export default UsersAdd;
+export default UsersEdit;
