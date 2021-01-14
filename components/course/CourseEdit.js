@@ -8,26 +8,18 @@ import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 
 import {
-  Layout,
   Row,
   Col,
   Button,
   Modal,
-  Divider,
   Card,
-  Avatar,
-  Menu,
-  Dropdown,
   Select,
   Input,
-  InputNumber,
   Form,
-  Cascader,
   Collapse,
-  Typography,
-  Upload,
   Spin,
   Empty,
+  Result,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -53,11 +45,12 @@ import CourseWidgetFeaturedVideo from "./course-general-widgets/CourseWidgetFeat
 import CourseWidgetPassingGrade from "./course-general-widgets/CourseWidgetPassingGrade";
 import CourseWidgetCapacity from "./course-general-widgets/CourseWidgetCapacity";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
 import { useCourseList } from "../../providers/CourseProvider";
-
+import { useCourseDetails } from "../../providers/CourseDStatuses";
 const { Meta } = Card;
 /**TextArea declaration */
 const { TextArea } = Input;
@@ -187,6 +180,7 @@ const ModalForm = ({
 const CourseEdit = ({ course_id }) => {
   const router = useRouter();
   const { courseAllList, setCourseAllList } = useCourseList();
+  const { courseDetails, setCourseDetails } = useCourseDetails();
 
   //const courseId = router.query.manage[1];
   //console.log(props);
@@ -231,7 +225,7 @@ const CourseEdit = ({ course_id }) => {
     let theCourse = courseAllList.result.filter(
       (getCourse) => getCourse.id == course_id
     );
-    setCourse(theCourse);
+    theCourse.length && setCourse(theCourse[0]);
   }, [course_id]);
 
   useEffect(() => {
@@ -911,8 +905,8 @@ const CourseEdit = ({ course_id }) => {
     capacity,
     passingGrade,
     updatedAt,
-  } = course[0] || "";
-  console.log(course[0]);
+  } = course || "";
+  //console.log(course);
   useEffect(() => {
     //setdefaultWidgetValues(defaultWidgetValues);
     let {
@@ -930,7 +924,7 @@ const CourseEdit = ({ course_id }) => {
 
     if (relatedCourse) {
       /* console.log("============");*/
-      console.log("Related Course:", relatedCourse);
+      //console.log("Related Course:", relatedCourse);
       relateds = relatedCourse.map((c_related, index) => {
         let list = {
           id: c_related.id,
@@ -1051,325 +1045,334 @@ const CourseEdit = ({ course_id }) => {
   /* console.log("Const Default Values ", constDefaultValues.courselevel);
   console.log("=========================================");
   console.log("Widget Values ", defaultWidgetValues.courselevel); */
-
+  console.log("course", course);
   return (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       {course ? (
         <Form.Provider onFormFinish={onFormFinishProcess}>
-          <Form
-            {...formItemLayout}
-            style={{ width: "100%" }}
-            name="basicForm"
-            hideRequiredMark={true}
-            onFinish={onFinish}
-            validateMessages={validateMessages}
-            {...formInitialValues}
-            /* initialValues={{
-              residence: ['zhejiang', 'hangzhou', 'xihu'],
-              prefix: '86',
-              email:'noellimpag@yahoo.com',
-            }} */
-          >
-            <Row
-              className="widget-container course-management"
-              gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-              style={{ margin: "0" }}
+          {course.isPublished === 1 ? (
+            <CourseProhibit
+              title="Editing Published Course Is Prohibited"
+              subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+              url={`/${linkUrl}/[course]/[...manage]`}
+              asUrl={`/${linkUrl}/course/view/${course.id}`}
+            />
+          ) : (
+            <Form
+              {...formItemLayout}
+              style={{ width: "100%" }}
+              name="basicForm"
+              hideRequiredMark={true}
+              onFinish={onFinish}
+              validateMessages={validateMessages}
+              {...formInitialValues}
             >
-              <Col
-                className="gutter-row widget-holder-col cm-main-left"
-                xs={24}
-                sm={24}
-                md={24}
-                lg={16}
+              <Row
+                className="widget-container course-management"
+                gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+                style={{ margin: "0" }}
               >
-                <Row className="widget-header-row" justify="start">
-                  <Col xs={24}>
-                    <h3 className="widget-title">Edit Course</h3>
-                  </Col>
-                </Row>
-                <Row
-                  className="cm-main-content"
-                  gutter={[16, 16]}
-                  style={{ padding: "10px 0" }}
+                <Col
+                  className="gutter-row widget-holder-col cm-main-left"
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={16}
                 >
-                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <Form.Item
-                      name="title"
-                      label="Course Title"
-                      /* rules={[
+                  <Row className="widget-header-row" justify="start">
+                    <Col xs={24}>
+                      <h3 className="widget-title">Edit Course</h3>
+                    </Col>
+                  </Row>
+                  <Row
+                    className="cm-main-content"
+                    gutter={[16, 16]}
+                    style={{ padding: "10px 0" }}
+                  >
+                    <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                      <Form.Item
+                        name="title"
+                        label="Course Title"
+                        /* rules={[
                         {
                           required: true,
                         },
                       ]} */
-                    >
-                      <Input placeholder={`${title}`} allowClear />
-                    </Form.Item>
+                      >
+                        <Input placeholder={`${title}`} allowClear />
+                      </Form.Item>
 
-                    <Form.Item label="Course Description" name="description">
-                      <TextArea
-                        rows={10}
-                        placeholder={`${decodeURI(description)}`}
-                        allowClear
-                        /* onChange={onChange} */
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-              <Col
-                className="gutter-row widget-holder-col cm-main-right"
-                xs={24}
-                sm={24}
-                md={24}
-                lg={8}
-              >
-                <Row className="widget-header-row" justify="start">
-                  <Col xs={24}>
-                    <CourseDateFormat course_id={course_id} />
-                  </Col>
-                </Row>
-                <Row
-                  className="cm-main-right-content"
-                  gutter={[16, 16]}
-                  style={{ padding: "10px 0" }}
+                      <Form.Item label="Course Description" name="description">
+                        <TextArea
+                          rows={10}
+                          placeholder={`${decodeURI(description)}`}
+                          allowClear
+                          /* onChange={onChange} */
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col
+                  className="gutter-row widget-holder-col cm-main-right"
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={8}
                 >
-                  <Col xs={24}>
-                    <Collapse accordion expandIconPosition={"right"}>
-                      <Panel header="LEVEL" key="1" className="greyBackground">
-                        <CourseWidgetLevel
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistlevel !== curValues.picklistlevel
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel
-                        header="CATEGORY"
-                        key="2"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetCategory
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistcategory !==
-                            curValues.picklistcategory
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel header="TYPE" key="3" className="greyBackground">
-                        <CourseWidgetType
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklisttype !== curValues.picklisttype
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel
-                        header="RELATED COURSES"
-                        key="4"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetRelatedCourses
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistrelatedcourses !==
-                            curValues.picklistrelatedcourses
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel
-                        header="DURATION"
-                        key="5"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetDuration
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistduration !==
-                            curValues.picklistduration
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </Panel>
-                      <Panel
-                        header="LANGUAGE"
-                        key="6"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetLanguage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistlanguage !==
-                            curValues.picklistlanguage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel header="TAGS" key="7" className="greyBackground">
-                        <CourseWidgetTags
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklisttags !== curValues.picklisttags
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel
-                        header="FEATURED MEDIA"
-                        key="8"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetFeaturedImage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistfeaturedimage !==
-                            curValues.picklistfeaturedimage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                        <CourseWidgetFeaturedVideo
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistfeaturedvideo !==
-                            curValues.picklistfeaturedvideo
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          isOkButtonDisabled={isOkButtonDisabled}
-                          setIsOkButtonDisabled={setIsOkButtonDisabled}
-                        />
-                      </Panel>
-                      <Panel
-                        header="PASSING GRADE"
-                        key="9"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetPassingGrade
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistpassinggrade !==
-                            curValues.picklistpassinggrade
-                          }
-                          showModal={showModal}
-                        />
-                      </Panel>
-                      <Panel
-                        header="CAPACITY"
-                        key="10"
-                        className="greyBackground"
-                      >
-                        <CourseWidgetCapacity
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.picklistcapacity !==
-                            curValues.picklistcapacity
-                          }
-                          showModal={showModal}
-                        />
-                      </Panel>
-                    </Collapse>
-                  </Col>
-                </Row>
-              </Col>
+                  <Row className="widget-header-row" justify="start">
+                    <Col xs={24}>
+                      <CourseDateFormat course_id={course_id} />
+                    </Col>
+                  </Row>
+                  <Row
+                    className="cm-main-right-content"
+                    gutter={[16, 16]}
+                    style={{ padding: "10px 0" }}
+                  >
+                    <Col xs={24}>
+                      <Collapse accordion expandIconPosition={"right"}>
+                        <Panel
+                          header="LEVEL"
+                          key="1"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetLevel
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistlevel !==
+                              curValues.picklistlevel
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel
+                          header="CATEGORY"
+                          key="2"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetCategory
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistcategory !==
+                              curValues.picklistcategory
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel header="TYPE" key="3" className="greyBackground">
+                          <CourseWidgetType
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklisttype !== curValues.picklisttype
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel
+                          header="RELATED COURSES"
+                          key="4"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetRelatedCourses
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistrelatedcourses !==
+                              curValues.picklistrelatedcourses
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel
+                          header="DURATION"
+                          key="5"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetDuration
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistduration !==
+                              curValues.picklistduration
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </Panel>
+                        <Panel
+                          header="LANGUAGE"
+                          key="6"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetLanguage
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistlanguage !==
+                              curValues.picklistlanguage
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel header="TAGS" key="7" className="greyBackground">
+                          <CourseWidgetTags
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklisttags !== curValues.picklisttags
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel
+                          header="FEATURED MEDIA"
+                          key="8"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetFeaturedImage
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistfeaturedimage !==
+                              curValues.picklistfeaturedimage
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                          <CourseWidgetFeaturedVideo
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistfeaturedvideo !==
+                              curValues.picklistfeaturedvideo
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
+                          />
+                        </Panel>
+                        <Panel
+                          header="PASSING GRADE"
+                          key="9"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetPassingGrade
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistpassinggrade !==
+                              curValues.picklistpassinggrade
+                            }
+                            showModal={showModal}
+                          />
+                        </Panel>
+                        <Panel
+                          header="CAPACITY"
+                          key="10"
+                          className="greyBackground"
+                        >
+                          <CourseWidgetCapacity
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.picklistcapacity !==
+                              curValues.picklistcapacity
+                            }
+                            showModal={showModal}
+                          />
+                        </Panel>
+                      </Collapse>
+                    </Col>
+                  </Row>
+                </Col>
 
-              <ModalForm
-                title={courseActionModal.modalTitle}
-                modalFormName={courseActionModal.modalFormName}
-                modalBodyContent={courseActionModal.modalBodyContent}
-                visible={courseActionModal.StateModal}
-                onCancel={hideModal}
-                okText={`${
-                  courseActionModal.modalTitle != "Save" ? "Add" : "Ok"
-                }`}
-                onFinish={{
-                  form: "basicForm",
-                  key: "submit",
-                  htmlType: "submit",
-                }}
-                isOkButtonDisabled={isOkButtonDisabled}
-                setIsOkButtonDisabled={setIsOkButtonDisabled}
-              />
-              <Spin
-                size="large"
-                tip="Processing..."
-                spinning={spinner}
-                delay={100}
-              ></Spin>
-              <SaveUI
-                listMenu={menulists}
-                position="bottom-right"
-                iconColor="#8998BA"
-                toggleModal={showModal}
-              />
-              <style jsx global>{`
-                .greyBackground {
-                  background-color: #eeeeee;
-                  text-transform: uppercase;
-                  font-weight: bold;
-                }
-                .greyBackground p {
-                  font-weight: normal;
-                  text-transform: initial;
-                }
-                .widget-holder-col .widget-title {
-                  color: #e69138;
-                  margin-bottom: 0;
-                  text-transform: uppercase;
-                }
+                <ModalForm
+                  title={courseActionModal.modalTitle}
+                  modalFormName={courseActionModal.modalFormName}
+                  modalBodyContent={courseActionModal.modalBodyContent}
+                  visible={courseActionModal.StateModal}
+                  onCancel={hideModal}
+                  okText={`${
+                    courseActionModal.modalTitle != "Save" ? "Add" : "Ok"
+                  }`}
+                  onFinish={{
+                    form: "basicForm",
+                    key: "submit",
+                    htmlType: "submit",
+                  }}
+                  isOkButtonDisabled={isOkButtonDisabled}
+                  setIsOkButtonDisabled={setIsOkButtonDisabled}
+                />
+                <Spin
+                  size="large"
+                  tip="Processing..."
+                  spinning={spinner}
+                  delay={100}
+                ></Spin>
+                <SaveUI
+                  listMenu={menulists}
+                  position="bottom-right"
+                  iconColor="#8998BA"
+                  toggleModal={showModal}
+                />
+                <style jsx global>{`
+                  .greyBackground {
+                    background-color: #eeeeee;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                  }
+                  .greyBackground p {
+                    font-weight: normal;
+                    text-transform: initial;
+                  }
+                  .widget-holder-col .widget-title {
+                    color: #e69138;
+                    margin-bottom: 0;
+                    text-transform: uppercase;
+                  }
 
-                .widget-holder-col .widget-header-row {
-                  padding: 5px 0;
-                  color: #e69138;
-                }
-                .course-management .ant-input-affix-wrapper {
-                  border-radius: 0.5rem;
-                  border: 1px solid #888787;
-                }
+                  .widget-holder-col .widget-header-row {
+                    padding: 5px 0;
+                    color: #e69138;
+                  }
+                  .course-management .ant-input-affix-wrapper {
+                    border-radius: 0.5rem;
+                    border: 1px solid #888787;
+                  }
 
-                .course-management .cm-main-right .widget-header-row {
-                  text-align: end;
-                }
-                .course-management .ant-form-item-label {
-                  display: none;
-                }
-                .courses-class .ant-spin-spinning {
-                  position: fixed;
-                  display: block;
-                  top: 0;
-                  bottom: 0;
-                  left: 0;
-                  right: 0;
-                  background-color: #ffffff9e;
-                  z-index: 3;
-                  padding: 23% 0;
-                }
-              `}</style>
-            </Row>
-          </Form>
+                  .course-management .cm-main-right .widget-header-row {
+                    text-align: end;
+                  }
+                  .course-management .ant-form-item-label {
+                    display: none;
+                  }
+                  .courses-class .ant-spin-spinning {
+                    position: fixed;
+                    display: block;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background-color: #ffffff9e;
+                    z-index: 3;
+                    padding: 23% 0;
+                  }
+                `}</style>
+              </Row>
+            </Form>
+          )}
         </Form.Provider>
       ) : (
         <Empty

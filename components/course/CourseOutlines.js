@@ -50,6 +50,8 @@ import CourseOutlineMediaFiles from "./course-outline-widgets/CourseOutlineMedia
 import CourseOutlineMilestones from "./course-outline-widgets/CourseOutlineMilestones";
 import CourseOutlineDuration from "./course-outline-widgets/CourseOutlineDuration";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
+import { useCourseDetails } from "../../providers/CourseDStatuses";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 
 import Error from "next/error";
 
@@ -178,6 +180,8 @@ const ModalForm = ({
 };
 
 const CourseOutlines = ({ course_id }) => {
+  const { courseDetails, setCourseDetails } = useCourseDetails();
+
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -237,7 +241,7 @@ const CourseOutlines = ({ course_id }) => {
         }
       } catch (error) {
         const { response } = error;
-          console.log("Error Response", response);
+        console.log("Error Response", response);
       }
 
       setLoading(false);
@@ -1099,7 +1103,7 @@ const CourseOutlines = ({ course_id }) => {
               border-radius: 0.5rem;
               border: 1px solid #888787;
             }
-            
+
             .course-management .cm-main-right .widget-header-row {
               text-align: end;
             }

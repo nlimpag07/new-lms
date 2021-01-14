@@ -3,9 +3,12 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 //importing ant
 import { Menu } from "antd";
+const apiBaseUrl = process.env.apiBaseUrl;
+const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const CourseManagementMenu = (props) => {
@@ -13,7 +16,7 @@ const CourseManagementMenu = (props) => {
   const aspath = router.asPath;
   const q = router.query;
   var selectedKey = "";
-  //console.log(linkUrl);
+  console.log("q", q);
 
   if (q.manage[0] == "view") {
     selectedKey = "view";
@@ -24,21 +27,6 @@ const CourseManagementMenu = (props) => {
   if (q.manage[0] == "edit" && q.manage.length === 2) {
     selectedKey = "general";
   }
-  /*if (q.manage[0] == "edit" && q.manage.length === 3) {
-     aspath.endsWith("course-outline")
-      ? (selectedKey = "course-outline")
-      : aspath.endsWith("learning-outcomes")
-      ? (selectedKey = "learning-outcomes")
-      : aspath.endsWith("assessments")
-      ? (selectedKey = "assessments")
-      : aspath.endsWith("instructors")
-      ? (selectedKey = "instructors")
-      : aspath.endsWith("competencies")
-      ? (selectedKey = "competencies")
-      : aspath.endsWith("evaluations")
-      ? (selectedKey = "evaluations")
-      : ""; 
-  }*/
   if (aspath.endsWith("course-outline")) {
     //console.log("course-outline");
     selectedKey = "course-outline";
@@ -57,17 +45,45 @@ const CourseManagementMenu = (props) => {
     selectedKey = "general";
   }
   const [goback, setGoback] = useState(false);
+  const [courseDetails, setCourseDetails] = useState({
+    course_id: null,
+    isPublished: null,
+  });
+
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Courses/" + q.manage[1],
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      data: { id: q.manage[1] },
+    };
+    axios(config)
+      .then((res) => {
+        const { data } = res;
+        data &&
+          setCourseDetails({
+            course_id: data.id,
+            isPublished: data.isPublished,
+          });
+      })
+      .catch((error) => {
+        console.log("error Response: ", error);
+      });
+  }, []);
+  //console.log(aspath);
+  //console.log(q)
   useEffect(() => {
     if (goback) {
       router.back();
     }
   }, [goback]);
-  //console.log(aspath);
-  //console.log(q)
-  return CmMenuView(q, selectedKey, setGoback);
+  return CmMenuView(q, selectedKey, setGoback, courseDetails);
 };
 
-const CmMenuView = (q, selectedKey, setGoback) => {
+const CmMenuView = (q, selectedKey, setGoback, courseDetails) => {
   return q.course == "course" && q.manage[0] == "view" ? (
     <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
       <Menu.Item
@@ -104,7 +120,7 @@ const CmMenuView = (q, selectedKey, setGoback) => {
         </Link>
       </Menu.Item>
     </Menu>
-  ) : (
+  ) : q.manage[0] == "edit" && courseDetails.isPublished !== 1 ? (
     <Menu theme="light" defaultSelectedKeys={selectedKey} mode="inline">
       <Menu.Item
         key={`/${linkUrl}/[course]`}
@@ -115,7 +131,6 @@ const CmMenuView = (q, selectedKey, setGoback) => {
           <a>Back to Courses</a>
         </Link>
       </Menu.Item>
-
       <Menu.Item
         key={`general`}
         icon={<FontAwesomeIcon icon={["fas", "palette"]} size="lg" />}
@@ -200,6 +215,18 @@ const CmMenuView = (q, selectedKey, setGoback) => {
           background-color: #ffffff;
         }
       `}</style>
+    </Menu>
+  ) : (
+    <Menu theme="light" defaultSelectedKeys={`${selectedKey}`} mode="inline">
+      <Menu.Item
+        key={`/${linkUrl}/[course]`}
+        icon={<FontAwesomeIcon icon={["fas", "arrow-left"]} size="lg" />}
+      >
+        {/* <span onClick={() => setGoback(true)}>Back</span> */}
+        <Link href={`/${linkUrl}/[course]`} as={`/${linkUrl}/course`}>
+          <a>Back to Courses</a>
+        </Link>
+      </Menu.Item>
     </Menu>
   );
 };
