@@ -19,7 +19,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SaveUI from "../theme-layout/course-circular-ui/save-circle-ui";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
-import { orderBy } from "@progress/kendo-data-query";
+import { orderBy, filterBy } from "@progress/kendo-data-query";
 import UsersAdd from "./UsersAdd";
 import UsersEdit from "./UsersEdit";
 import Cookies from "js-cookie";
@@ -69,7 +69,8 @@ const UsersList = ({ userlist }) => {
   const [userslist, setUsersList] = useState(
     userlist && userlist.length ? userlist.result : null
   );
-  const [Data, setData] = useState("");
+  const [Data, setData] = useState({data: userslist,
+    filter: undefined});
   const router = useRouter();
   //console.log(userlist);
 
@@ -93,7 +94,7 @@ const UsersList = ({ userlist }) => {
         const response = await axios(config);
         if (response) {
           let theRes = response.data.result;
-          console.log("Session Response", response.data);
+          //console.log("Session Response", response.data);
           // wait for response if the verification is true
           if (theRes) {
             const ddata = theRes.length
@@ -113,7 +114,7 @@ const UsersList = ({ userlist }) => {
                   );
                 })
               : null;
-            setData(ddata);
+            setData({data:ddata});
             setUsersList(ddata);
             setSpin(false);
           } else {
@@ -134,7 +135,7 @@ const UsersList = ({ userlist }) => {
                   );
                 })
               : null;
-            setData(ddata);
+            setData({data:ddata});
             setUsersList(ddata);
             setSpin(false);
           }
@@ -162,21 +163,21 @@ const UsersList = ({ userlist }) => {
 
   var lastSelectedIndex = 0;
   const [theSort, setTheSort] = useState({
-    sort: [{ field: "id", dir: "asc" }],
+    sort: [{ field: "id", dir: "desc" }],
   });
 
   const selectionChange = (event) => {
-    const theData = Data.map((item) => {
+    const theData = Data.data.map((item) => {
       if (item.id === event.dataItem.id) {
         item.selected = !event.dataItem.selected;
       }
       return item;
     });
-    setData(theData);
+    setData({data:theData});
   };
   const rowClick = (event) => {
     let last = lastSelectedIndex;
-    const theData = [...Data];
+    const theData = [...Data.data];
 
     const current = theData.findIndex(
       (dataItem) => dataItem === event.dataItem
@@ -193,16 +194,16 @@ const UsersList = ({ userlist }) => {
     for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
       theData[i].selected = select;
     }
-    setData(theData);
+    setData({data:theData});
   };
 
   const headerSelectionChange = (event) => {
     const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
+    const theData = Data.data.map((item) => {
       item.selected = checked;
       return item;
     });
-    setData(theData);
+    setData({data:theData});
   };
 
   const showModal = (modalOperation, props) => {
@@ -235,7 +236,12 @@ const UsersList = ({ userlist }) => {
       );
     return <td>{userStatus}</td>;
   };
-
+  const filterChange = event => {
+    setData({
+      data: filterBy(userslist, event.filter),
+      filter: event.filter
+    });
+  };
   return (
     //GridType(gridList)
     <Row
@@ -266,7 +272,7 @@ const UsersList = ({ userlist }) => {
               ) : (
                 <Grid
                   data={orderBy(
-                    Data.slice(
+                    Data.data.slice(
                       pagination.skip,
                       pagination.take + pagination.skip
                     ),
@@ -286,29 +292,34 @@ const UsersList = ({ userlist }) => {
                   }}
                   skip={pagination.skip}
                   take={pagination.take}
-                  total={Data.length}
+                  total={Data.data.length}
                   pageable={true}
                   onPageChange={pageChange}
+                  filterable={true}
+        filter={Data.filter}
+        onFilterChange={filterChange}
                 >
                   <Column
                     field="selected"
                     width="65px"
                     headerSelectionValue={
-                      Data.findIndex(
+                      Data.data.findIndex(
                         (dataItem) => dataItem.selected === false
                       ) === -1
                     }
+                    filterable={false}
                   />
-                  <Column field="empId" title="Emp ID" width="100px" />
-                  <Column field="firstName" title="First Name" width="300px" />
+                  <Column field="empId" title="Emp ID" width="100px" filter={'numeric'} filterable={false} />
+                  <Column field="firstName" title="First Name" width="300px"  />
                   <Column field="lastName" title="Last Name" width="300px" />
-                  <Column field="userType" title="User Type" />
+                  <Column field="userType" title="User Type"  />
                   <Column field="email" title="Email" />
 
                   <Column
                     field="isActive"
                     title="Active Status"
                     cell={AciveStatusRender}
+                    filterable={false}
                   />
                   <Column
                     sortable={false}
@@ -317,6 +328,7 @@ const UsersList = ({ userlist }) => {
                     }
                     field=""
                     title="Action"
+                    filterable={false}
                   />
                 </Grid>
               )}

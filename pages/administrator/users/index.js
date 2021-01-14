@@ -34,7 +34,6 @@ const Users = ({ userslist, error, token, apiBaseUrl }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
-
   useEffect(() => {
     //setLoading(false);
     if (error) {
