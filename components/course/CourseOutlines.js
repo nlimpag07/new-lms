@@ -124,6 +124,8 @@ const ModalForm = ({
   onCancel,
   okText,
   onFinish,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled,
 }) => {
   const [form] = Form.useForm();
   useResetFormOnCloseModal({
@@ -143,6 +145,7 @@ const ModalForm = ({
     width = 750;
   } else {
     adProps = {
+      okButtonProps: { disabled: isOkButtonDisabled },
       onOk: () => {
         form.submit();
         modalFormName === "outlineprerequisite" && form.resetFields();
@@ -151,6 +154,7 @@ const ModalForm = ({
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
         modalFormName === "picklisttags" && form.resetFields();
+        setIsOkButtonDisabled(true);
         //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
       },
     };
@@ -185,6 +189,8 @@ const CourseOutlines = ({ course_id }) => {
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
+  const [isOkButtonDisabled, setIsOkButtonDisabled] = useState(true);
+
   const [loading, setLoading] = useState(true);
   const [loadingSpinner, setLoadingSpinner] = useState(false);
   const [outlineList, setOutlineList] = useState("");
@@ -989,6 +995,8 @@ const CourseOutlines = ({ course_id }) => {
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}
                             setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
                           />
                           <CourseOutlineFeaturedVideo
                             shouldUpdate={(prevValues, curValues) =>
@@ -998,6 +1006,8 @@ const CourseOutlines = ({ course_id }) => {
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}
                             setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
                           />
                         </div>
                       </Panel>
@@ -1033,6 +1043,8 @@ const CourseOutlines = ({ course_id }) => {
                             showModal={showModal}
                             defaultWidgetValues={defaultWidgetValues}
                             setdefaultWidgetValues={setdefaultWidgetValues}
+                            isOkButtonDisabled={isOkButtonDisabled}
+                            setIsOkButtonDisabled={setIsOkButtonDisabled}
                           />
                         </div>
                       </Panel>
@@ -1085,6 +1097,8 @@ const CourseOutlines = ({ course_id }) => {
                 key: "submit",
                 htmlType: "submit",
               }}
+              isOkButtonDisabled={isOkButtonDisabled}
+              setIsOkButtonDisabled={setIsOkButtonDisabled}
             />
             <Spin
               size="large"

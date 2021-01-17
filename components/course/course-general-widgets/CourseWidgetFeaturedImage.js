@@ -274,12 +274,7 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
             uploadButton
           )}
         </Dragger>
-        {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
-        <Button>
-          <UploadOutlined /> Upload
-        </Button>
-      </Upload> */}
-        {/* <Input type="file" onChange={handleChange} /> */}
+        
       </Form.Item>
     </>
   );

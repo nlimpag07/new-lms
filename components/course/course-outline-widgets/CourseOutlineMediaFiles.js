@@ -11,6 +11,7 @@ import {
   Collapse,
   Upload,
   Table,
+  Alert,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -44,10 +45,12 @@ const CourseOutlineMediaFiles = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   const [allMediaFiles, setAllMediaFiles] = useState();
   const chosenRows = defaultWidgetValues.outlinemediafiles;
-  
+
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
@@ -220,7 +223,13 @@ const CourseOutlineMediaFiles = (props) => {
             showModal(
               widgetFieldLabels.catname,
               widgetFieldLabels.catValueLabel,
-              () => modalFormBody(allMediaFiles, chosenRows)
+              () =>
+                modalFormBody(
+                  allMediaFiles,
+                  chosenRows,
+                  isOkButtonDisabled,
+                  setIsOkButtonDisabled
+                )
             )
           }
         />
@@ -232,11 +241,17 @@ const CourseOutlineMediaFiles = (props) => {
 };
 
 //Image
-const modalFormBody = (allMediaFiles, chosenRows) => {
+const modalFormBody = (
+  allMediaFiles,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   //console.log(chosenRows);
   const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alertMessage, setalertMessage] = useState("");
 
   const dataList = [];
   if (chosenRows.length) {
@@ -277,35 +292,48 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
     //return false;
   }; */
   const handleChange = (info) => {
-    /* setLoading(true);    
+    setLoading(true);
+    setFileList(info.fileList.filter((file) => !!file.status));
+    //setFileList(info);
+    info.fileList = info.fileList.filter((file) => !!file.status);
     let thefileList = [...info.fileList];
-    thefileList = thefileList.slice(-1); */
-
-    info.fileList.map((list, index) => {
-      if (!list.id) {
-        list["id"] = 0;
-      }
-      return list;
-    });
-    //console.log("Handle Change: ", [...info.fileList]);
-    setFileList(info);
-    /* if (Array.isArray(thefileList) && thefileList.length) {
-      getBase64(thefileList[0].originFileObj, (imageUrl) => {
-        setImageUrl(imageUrl);
-        setLoading(false);
+    if (Array.isArray(thefileList) && thefileList.length) {
+      info.fileList.map((list, index) => {
+        if (!list.id) {
+          list["id"] = 0;
+        }
+        return list;
       });
+      setLoading(false);
+      setFileList(info);
+      //setalertMessage("");
     } else {
       setFileList("");
       setImageUrl("");
       setLoading(false);
-    } */
+    }
   };
 
-  const beforeUpload = () => {
+  const beforeUpload = (file) => {
     setLoading(true);
-    return false;
+    if (
+      file.type !== "application/pdf" ||
+      file.type !== "application/msword" ||
+      file.type !==
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      setalertMessage(
+        `Unsupported file detected. Files not supported are not added to the list.`
+      );
+    }
+    return (
+      file.type === "application/pdf" ||
+      file.type === "application/msword" ||
+      file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    );
   };
-  const uploadButton = (
+  /* const uploadButton = (
     <div>
       {loading ? (
         <LoadingOutlined />
@@ -324,23 +352,39 @@ const modalFormBody = (allMediaFiles, chosenRows) => {
       )}
     </div>
   );
-  //console.log(loading);
+  console.log(alertMessage) */;
   return (
-    <Form.Item name="outlinemedia">
-      <Dragger
-        onChange={handleChange}
-        multiple={true}
-        /* beforeUpload={beforeUpload} */
-        fileList={fileList.fileList}
-        /* onRemove={onRemove} */
-      >
-        {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
-      </Dragger>
-    </Form.Item>
+    <>
+      {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
+      <Form.Item name="outlinemedia">
+        <Dragger
+          onChange={handleChange}
+          multiple={true}
+          beforeUpload={beforeUpload}
+          fileList={fileList.fileList}
+          onClick={() => setalertMessage("")}
+          /* onRemove={onRemove} */
+        >
+          <div>
+            {loading ? (
+              <LoadingOutlined />
+            ) : (
+              <div className="ant-upload-text">
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  Click or drag doc, docx, pdf file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Please upload doc, docx, pdf file only.
+                </p>
+              </div>
+            )}
+          </div>
+        </Dragger>
+      </Form.Item>
+    </>
   );
 };
 
