@@ -15,8 +15,7 @@ const CourseManagementMenu = (props) => {
   const router = useRouter();
   const aspath = router.asPath;
   const q = router.query;
-  var selectedKey = "";
-  console.log("q", q);
+  var selectedKey = "";  
 
   if (q.manage[0] == "view") {
     selectedKey = "view";

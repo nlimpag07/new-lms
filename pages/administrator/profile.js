@@ -43,6 +43,7 @@ import {
   CloudUploadOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import { upperCase, upperFirst } from "lodash";
 
 const apidirectoryUrl = process.env.directoryUrl;
 const homeUrl = process.env.homeUrl;
@@ -63,31 +64,86 @@ const Profile = ({ u, query }) => {
   const [coursePage, setCoursePage] = useState("");
   const [myCourses, setMyCourses] = useState([]);
   const theKey = router.query.q ? router.query.q : "çourses";
+  const [user, setUser] = useState("");
+
   //console.log(theKey);
   useEffect(() => {
-    var config = {
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios.all([
-          axios.get(apiBaseUrl + "/Learner/MyCourse", config),
-          /* axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
+    if (linkUrl == "learner") {
+      var config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      async function fetchData(config) {
+        try {
+          const response = await axios.all([
+            axios.get(apiBaseUrl + "/Learner/MyCourse", config),
+            /* axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
           axios.get(apiBaseUrl + "/coursecompetencies", config),*/
-        ]);
-        /* console.log("response", response); */
-        let courses = response[0];
-        setCoursePage(courses.data.currentPage);
-        setMyCourses(courses.data.result);
-        setSpin(false);
-      } catch (errors) {
-        console.error(errors);
+          ]);
+          /* console.log("response", response); */
+          let courses = response[0];
+          setCoursePage(courses.data.currentPage);
+          setMyCourses(courses.data.result);
+          setSpin(false);
+        } catch (errors) {
+          console.error(errors);
+        }
       }
+      fetchData(config);
     }
-    fetchData(config);
+
+    if (u.id) {
+      var pconfig = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: { id: u.positionId },
+      };
+      var dconfig = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: { id: u.departmentId },
+      };
+
+      axios
+        .all([
+          axios.get(apiBaseUrl + "/Picklist/position/" + u.positionId, pconfig),
+          axios.get(
+            apiBaseUrl + "/Picklist/department/" + u.departmentId,
+            dconfig
+          ),
+        ])
+        .then(
+          axios.spread((position, department) => {
+            //console.log(position)
+            let up = u;
+            u = {
+              ...up,
+              position: position.data.name,
+              department: department.data.name,
+              userGroup: upperFirst(linkUrl),
+            };
+            setUser(u);
+          })
+        )
+        /* .then((res) => {
+          console.info(res);
+          let up = u;
+          u = { ...up, position: res.data.name };
+          setUser(u);
+        }) */
+        .catch((error) => {
+          console.log("error Response: ", error);
+          /* error.response && error.response.data
+            ? openMessage(error.response.data.message, false)
+            : openMessage(`Error:${error}`, false); */
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -104,7 +160,7 @@ const Profile = ({ u, query }) => {
       setSpin(false);
     }
   }, [myCourses]); */
-
+  console.log("User", user);
   return (
     <MainThemeLayout>
       <Layout
@@ -129,38 +185,40 @@ const Profile = ({ u, query }) => {
             <div className="userDetails-Holder">
               <Row style={{ margin: "1rem 0" }}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Name:</span> {`${u.firstName} ${u.lastName}`}
+                  <span>Name:</span> {`${user.firstName} ${user.lastName}`}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
                   <span>Registration Date:</span>{" "}
-                  {`${u.firstName} ${u.lastName}`}
+                  {`${user.firstName} ${user.lastName}`}
                 </Col>
               </Row>
               <Row style={{ margin: "1rem 0" }}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Email:</span> {`${u.email}`}
+                  <span>Email:</span> {`${user.email}`}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Birth Date (mm-dd-yyyy):</span>{" "}
+                  <span>Birth Date:</span>{" "}
                   {`${
-                    u.birthday ? moment(u.birthday).format("MM-DD-YYYY") : null
+                    user.birthday
+                      ? moment(u.birthday).format("DD-MMM-YYYY")
+                      : null
                   }`}
                 </Col>
               </Row>
               <Row style={{ margin: "1rem 0" }}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Department:</span> {`${u.department}`}
+                  <span>Department:</span> {`${user.department}`}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Position:</span> {`${u.position}`}
+                  <span>Position:</span> {`${user.position}`}
                 </Col>
               </Row>
               <Row style={{ margin: "1rem 0" }}>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>User Group:</span> {`${u.userGroup}`}
+                  <span>User Group:</span> {`${user.userGroup}`}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Last Access:</span> {`${u.lastAccess}`}
+                  <span>Last Access:</span> {`${user.lastAccess}`}
                 </Col>
               </Row>
             </div>
