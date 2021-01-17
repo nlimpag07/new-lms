@@ -43,7 +43,8 @@ import {
 import CourseOutcomeList from "./course-outcome-widgets/CourseOutcomeList";
 import CourseOutcomeDetails from "./course-outcome-widgets/CourseOutcomeDetails";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
-
+import { useCourseDetails } from "../../providers/CourseDStatuses";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 /* import CourseOutcomeFeaturedImage from "./course-outcome-widgets/CourseOutcomeFeaturedImage";
 import CourseOutcomeFeaturedVideo from "./course-outcome-widgets/CourseOutcomeFeaturedVideo";
 import CourseOutcomePrerequisite from "./course-outcome-widgets/CourseOutcomePrerequisite";
@@ -172,6 +173,8 @@ const ModalForm = ({
 };
 
 const CourseOutcomes = ({ course_id }) => {
+  const { courseDetails, setCourseDetails } = useCourseDetails();
+
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -517,6 +520,14 @@ const CourseOutcomes = ({ course_id }) => {
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
+      {courseDetails.isPublished === 1 ? (
+          <CourseProhibit
+            title="Editing Published Course Is Prohibited"
+            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+            url={`/${linkUrl}/[course]/[...manage]`}
+            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+          />
+        ) : (
         <Row
           className="widget-container course-management"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -683,6 +694,7 @@ const CourseOutcomes = ({ course_id }) => {
             }
           `}</style>
         </Row>
+        )}
       </Form.Provider>
     </motion.div>
   ) : (

@@ -45,6 +45,8 @@ import CourseCompetenciesDetails from "./course-competencies-widgets/CourseCompe
 import CourseCompetenciesCertificates from "./course-competencies-widgets/CourseCompetenciesCertificates";
 import CourseCompetenciesMetrics from "./course-competencies-widgets/CourseCompetenciesMetrics";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
+import { useCourseDetails } from "../../providers/CourseDStatuses";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 import Error from "next/error";
 
 import { useRouter } from "next/router";
@@ -61,7 +63,7 @@ const menulists = [
     url: "", //"/instructor/[course]/edit"
     urlAs: "", //"/instructor/course/edit"
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -172,6 +174,7 @@ const ModalForm = ({
 };
 
 const CourseCompetencies = ({ course_id }) => {
+  const { courseDetails, setCourseDetails } = useCourseDetails();
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -235,7 +238,6 @@ const CourseCompetencies = ({ course_id }) => {
   const onFormFinishProcess = (name, { values, forms }) => {
     const { basicForm } = forms;
     const picklistFields = basicForm.getFieldValue(name) || [];
-       
 
     if (name === "competencycertificates") {
       var value = values.name ? values : "";
@@ -251,11 +253,6 @@ const CourseCompetencies = ({ course_id }) => {
       //setFeatureMedia({ image: values.name });
       console.log("competencycertificates Image: ", value);
     }
-    
-
-    
-
-    
 
     setCompetencyActionModal({
       StateModal: false,
@@ -316,15 +313,24 @@ const CourseCompetencies = ({ course_id }) => {
 
       if (values.competencymetrics) {
         if (values.competencymetrics.assessmentsSubmitted) {
-          data.append("assessmentsSubmitted", values.competencymetrics.assessmentsSubmitted);
+          data.append(
+            "assessmentsSubmitted",
+            values.competencymetrics.assessmentsSubmitted
+          );
           isNotAllEmpty.push("Not Empty");
         }
         if (values.competencymetrics.lessonCompleted) {
-          data.append("lessonCompleted", values.competencymetrics.lessonCompleted);
+          data.append(
+            "lessonCompleted",
+            values.competencymetrics.lessonCompleted
+          );
           isNotAllEmpty.push("Not Empty");
         }
         if (values.competencymetrics.milestonesReached) {
-          data.append("milestonesReached", values.competencymetrics.milestonesReached);
+          data.append(
+            "milestonesReached",
+            values.competencymetrics.milestonesReached
+          );
           isNotAllEmpty.push("Not Empty");
         }
         if (values.competencymetrics.final) {
@@ -333,7 +339,8 @@ const CourseCompetencies = ({ course_id }) => {
         }
       }
 
-      if (values.competencycertificates &&
+      if (
+        values.competencycertificates &&
         values.competencycertificates.length
       ) {
         values.competencycertificates.map((media) => {
@@ -341,7 +348,7 @@ const CourseCompetencies = ({ course_id }) => {
           //console.log(media)
         });
         isNotAllEmpty.push("Not Empty");
-      }      
+      }
 
       //data = JSON.stringify(data);
       if (errorList.length) {
@@ -386,10 +393,7 @@ const CourseCompetencies = ({ course_id }) => {
           : errorList.push("Missing Competency Title");
 
         !!values.competencydetails.description
-          ? data.append(
-              "description",
-              values.competencydetails.description
-            )
+          ? data.append("description", values.competencydetails.description)
           : errorList.push("Missing Competency Description");
 
         !!values.competencydetails.usergroup
@@ -422,21 +426,18 @@ const CourseCompetencies = ({ course_id }) => {
           : errorList.push("Missing Competency Milestones to Reach");
 
         !!values.competencymetrics.final
-          ? data.append(
-              "final",
-              values.competencymetrics.final
-            )
+          ? data.append("final", values.competencymetrics.final)
           : errorList.push("Missing Competency Final Grade");
       } else {
         errorList.push("Missing Competency Metrics");
       }
 
       !!values.competencycertificates && values.competencycertificates.length
-          ? values.competencycertificates.map((image, index) => {
-              data.append(`attachment`, image.fileList[0].originFileObj);
-            })
-          : errorList.push("Missing Competency Certificate");
-      
+        ? values.competencycertificates.map((image, index) => {
+            data.append(`attachment`, image.fileList[0].originFileObj);
+          })
+        : errorList.push("Missing Competency Certificate");
+
       //data = JSON.stringify(data);
       if (errorList.length) {
         console.log("ERRORS: ", errorList);
@@ -573,7 +574,12 @@ const CourseCompetencies = ({ course_id }) => {
             final: isSelected[0].final,
           },
         ],
-        competencycertificates: {attachment:isSelected[0].attachment,fileName:isSelected[0].fileName,fileSize:isSelected[0].fileSize,fileType:isSelected[0].fileType,}
+        competencycertificates: {
+          attachment: isSelected[0].attachment,
+          fileName: isSelected[0].fileName,
+          fileSize: isSelected[0].fileSize,
+          fileType: isSelected[0].fileType,
+        },
       });
     } else {
       setdefaultWidgetValues({
@@ -594,209 +600,226 @@ const CourseCompetencies = ({ course_id }) => {
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
+        {courseDetails.isPublished === 1 ? (
+          <CourseProhibit
+            title="Editing Published Course Is Prohibited"
+            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+            url={`/${linkUrl}/[course]/[...manage]`}
+            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+          />
+        ) : (
+          <Row
+            className="widget-container course-management"
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            style={{ margin: "0" }}
           >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Add/Edit Course Competencies</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              /* style={{ padding: "10px 0" }} */
+            <Col
+              className="gutter-row widget-holder-col cm-main-left"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
             >
-              {" "}
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseCompetenciesList
-                  competencyList={competencyList}
-                  setCompetencyList={setCompetencyList}
-                  curCompetencyId={curCompetencyId}
-                  setcurCompetencyId={setcurCompetencyId}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-              <CourseDateFormat course_id={course_id} />
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "0" }}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <h3 className="widget-title">Add/Edit Course Competencies</h3>
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-content"
+                gutter={[16, 16]}
+                /* style={{ padding: "10px 0" }} */
+              >
+                {" "}
+                <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                  <CourseCompetenciesList
+                    competencyList={competencyList}
+                    setCompetencyList={setCompetencyList}
+                    curCompetencyId={curCompetencyId}
+                    setcurCompetencyId={setcurCompetencyId}
+                    loading={loading}
+                    setLoading={setLoading}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              className="gutter-row widget-holder-col cm-main-right"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
             >
-              <Col xs={24}>
-                <Form
-                  style={{ width: "100%" }}
-                  name="basicForm"
-                  hideRequiredMark={true}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  {...formInitialValues}
-                >
-                  <Collapse
-                    defaultActiveKey={["1"]}
-                    expandIconPosition={"right"}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <CourseDateFormat course_id={course_id} />
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-right-content"
+                gutter={[16, 16]}
+                style={{ padding: "0" }}
+              >
+                <Col xs={24}>
+                  <Form
+                    style={{ width: "100%" }}
+                    name="basicForm"
+                    hideRequiredMark={true}
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                    {...formInitialValues}
                   >
-                    <Panel header="Details" key="1" className="greyBackground">
-                      <div className="competencyWidgetHolder">
-                        <CourseCompetenciesDetails
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.competencydetails !==
-                            curValues.competencydetails
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel header="Metrics" key="2" className="greyBackground">
-                      <div className="competencyWidgetHolder">
-                        <CourseCompetenciesMetrics
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.competencymetrics !==
-                            curValues.competencymetrics
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel
-                      header="Certificate"
-                      key="3"
-                      className="greyBackground"
+                    <Collapse
+                      defaultActiveKey={["1"]}
+                      expandIconPosition={"right"}
                     >
-                      <div className="competencyWidgetHolder">
-                        <CourseCompetenciesCertificates
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.competencycertificates !==
-                            curValues.competencycertificates
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Form>
-              </Col>
-            </Row>
-          </Col>
+                      <Panel
+                        header="Details"
+                        key="1"
+                        className="greyBackground"
+                      >
+                        <div className="competencyWidgetHolder">
+                          <CourseCompetenciesDetails
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.competencydetails !==
+                              curValues.competencydetails
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel
+                        header="Metrics"
+                        key="2"
+                        className="greyBackground"
+                      >
+                        <div className="competencyWidgetHolder">
+                          <CourseCompetenciesMetrics
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.competencymetrics !==
+                              curValues.competencymetrics
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel
+                        header="Certificate"
+                        key="3"
+                        className="greyBackground"
+                      >
+                        <div className="competencyWidgetHolder">
+                          <CourseCompetenciesCertificates
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.competencycertificates !==
+                              curValues.competencycertificates
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                    </Collapse>
+                  </Form>
+                </Col>
+              </Row>
+            </Col>
 
-          <ModalForm
-            title={competencyActionModal.modalTitle}
-            modalFormName={competencyActionModal.modalFormName}
-            modalBodyContent={competencyActionModal.modalBodyContent}
-            visible={competencyActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${
-              competencyActionModal.modalTitle != "Save" ? "Add" : "Ok"
-            }`}
-            onFinish={{
-              form: "basicForm",
-              key: "submit",
-              htmlType: "submit",
-            }}
-          />
-          <Spin
-            size="large"
-            tip="Processing..."
-            spinning={spinner}
-            delay={100}
-          ></Spin>
-          <SaveUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-          <style jsx global>{`
-            .greyBackground .ant-collapse-header {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 1rem 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label {
-              display: none;
-            }
-            .courses-class .ant-spin-spinning {
-              position: fixed;
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              background-color: #ffffff9e;
-              z-index: 3;
-              padding: 23% 0;
-            }
+            <ModalForm
+              title={competencyActionModal.modalTitle}
+              modalFormName={competencyActionModal.modalFormName}
+              modalBodyContent={competencyActionModal.modalBodyContent}
+              visible={competencyActionModal.StateModal}
+              onCancel={hideModal}
+              okText={`${
+                competencyActionModal.modalTitle != "Save" ? "Add" : "Ok"
+              }`}
+              onFinish={{
+                form: "basicForm",
+                key: "submit",
+                htmlType: "submit",
+              }}
+            />
+            <Spin
+              size="large"
+              tip="Processing..."
+              spinning={spinner}
+              delay={100}
+            ></Spin>
+            <SaveUI
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
+            <style jsx global>{`
+              .greyBackground .ant-collapse-header {
+                background-color: #eeeeee;
+                text-transform: uppercase;
+                font-weight: bold;
+              }
+              .greyBackground p {
+                font-weight: normal;
+                text-transform: initial;
+              }
+              .widget-holder-col .widget-title {
+                color: #e69138;
+                margin-bottom: 0;
+                text-transform: uppercase;
+              }
+              .widget-holder-col .widget-header-row {
+                padding: 1rem 0;
+                color: #e69138;
+              }
+              .course-management .ant-input-affix-wrapper {
+                border-radius: 0.5rem;
+                border: 1px solid #888787;
+              }
 
-            .competencyWidgetHolder {
-              padding: 10px 0;
-            }
-            .competencyWidgetHolder
-              .competencyWithValue
-              .ant-select-selection-placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .competencyWithValue .ant-input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .competencyWithValue .ant-picker-input input::placeholder,
-            .competencyWithValue .ant-input-number input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-          `}</style>
-        </Row>
+              .course-management .cm-main-right .widget-header-row {
+                text-align: end;
+              }
+              .course-management .ant-form-item-label {
+                display: none;
+              }
+              .courses-class .ant-spin-spinning {
+                position: fixed;
+                display: block;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #ffffff9e;
+                z-index: 3;
+                padding: 23% 0;
+              }
+
+              .competencyWidgetHolder {
+                padding: 10px 0;
+              }
+              .competencyWidgetHolder
+                .competencyWithValue
+                .ant-select-selection-placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+              .competencyWithValue .ant-input::placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+              .competencyWithValue .ant-picker-input input::placeholder,
+              .competencyWithValue .ant-input-number input::placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+            `}</style>
+          </Row>
+        )}
       </Form.Provider>
     </motion.div>
   ) : (

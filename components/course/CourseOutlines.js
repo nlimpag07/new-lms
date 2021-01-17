@@ -893,138 +893,150 @@ const CourseOutlines = ({ course_id }) => {
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
+        {courseDetails.isPublished === 1 ? (
+          <CourseProhibit
+            title="Editing Published Course Is Prohibited"
+            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+            url={`/${linkUrl}/[course]/[...manage]`}
+            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+          />
+        ) : (
+          <Row
+            className="widget-container course-management"
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            style={{ margin: "0" }}
           >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Add/Edit Course Outline</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              /* style={{ padding: "10px 0" }} */
+            <Col
+              className="gutter-row widget-holder-col cm-main-left"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
             >
-              {" "}
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseOutlineList
-                  outlineList={outlineList}
-                  setOutlineList={setOutlineList}
-                  curOutlineId={curOutlineId}
-                  setcurOutlineId={setcurOutlineId}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <CourseDateFormat course_id={course_id} />
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "0" }}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <h3 className="widget-title">Add/Edit Course Outline</h3>
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-content"
+                gutter={[16, 16]}
+                /* style={{ padding: "10px 0" }} */
+              >
+                {" "}
+                <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                  <CourseOutlineList
+                    outlineList={outlineList}
+                    setOutlineList={setOutlineList}
+                    curOutlineId={curOutlineId}
+                    setcurOutlineId={setcurOutlineId}
+                    loading={loading}
+                    setLoading={setLoading}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              className="gutter-row widget-holder-col cm-main-right"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
             >
-              <Col xs={24}>
-                <Form
-                  style={{ width: "100%" }}
-                  name="basicForm"
-                  hideRequiredMark={true}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  {...formInitialValues}
-                >
-                  <Collapse
-                    defaultActiveKey={["1"]}
-                    expandIconPosition={"right"}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <CourseDateFormat course_id={course_id} />
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-right-content"
+                gutter={[16, 16]}
+                style={{ padding: "0" }}
+              >
+                <Col xs={24}>
+                  <Form
+                    style={{ width: "100%" }}
+                    name="basicForm"
+                    hideRequiredMark={true}
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                    {...formInitialValues}
                   >
-                    <Panel header="Details" key="1" className="greyBackground">
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineDetails
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinedetails !==
-                            curValues.outlinedetails
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseOutlineFeaturedImage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinefeaturedimage !==
-                            curValues.outlinefeaturedimage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseOutlineFeaturedVideo
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinefeaturedvideo !==
-                            curValues.outlinefeaturedvideo
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel
-                      header="Prerequisite"
-                      key="2"
-                      className="greyBackground"
+                    <Collapse
+                      defaultActiveKey={["1"]}
+                      expandIconPosition={"right"}
                     >
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlinePrerequisite
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlineprerequisite !==
-                            curValues.outlineprerequisite
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          outlineList={outlineList}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel
-                      header="Media Files"
-                      key="3"
-                      className="greyBackground"
-                    >
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineMediaFiles
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlinemediafiles !==
-                            curValues.outlinemediafiles
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                    {/* <Panel header="Milestones" key="4" className="greyBackground">
+                      <Panel
+                        header="Details"
+                        key="1"
+                        className="greyBackground"
+                      >
+                        <div className="outlineWidgetHolder">
+                          <CourseOutlineDetails
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlinedetails !==
+                              curValues.outlinedetails
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                          <CourseOutlineFeaturedImage
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlinefeaturedimage !==
+                              curValues.outlinefeaturedimage
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                          <CourseOutlineFeaturedVideo
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlinefeaturedvideo !==
+                              curValues.outlinefeaturedvideo
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel
+                        header="Prerequisite"
+                        key="2"
+                        className="greyBackground"
+                      >
+                        <div className="outlineWidgetHolder">
+                          <CourseOutlinePrerequisite
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlineprerequisite !==
+                              curValues.outlineprerequisite
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                            outlineList={outlineList}
+                          />
+                        </div>
+                      </Panel>
+                      <Panel
+                        header="Media Files"
+                        key="3"
+                        className="greyBackground"
+                      >
+                        <div className="outlineWidgetHolder">
+                          <CourseOutlineMediaFiles
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlinemediafiles !==
+                              curValues.outlinemediafiles
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                      {/* <Panel header="Milestones" key="4" className="greyBackground">
                     <div className="outlineWidgetHolder">
                       <CourseOutlineMilestones
                         shouldUpdate={(prevValues, curValues) =>
@@ -1036,106 +1048,113 @@ const CourseOutlines = ({ course_id }) => {
                       />
                       </div>
                     </Panel>  */}
-                    <Panel header="DURATION" key="5" className="greyBackground">
-                      <div className="outlineWidgetHolder">
-                        <CourseOutlineDuration
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outlineduration !==
-                            curValues.outlineduration
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Form>
-              </Col>
-            </Row>
-          </Col>
+                      <Panel
+                        header="DURATION"
+                        key="5"
+                        className="greyBackground"
+                      >
+                        <div className="outlineWidgetHolder">
+                          <CourseOutlineDuration
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.outlineduration !==
+                              curValues.outlineduration
+                            }
+                            showModal={showModal}
+                            defaultWidgetValues={defaultWidgetValues}
+                            setdefaultWidgetValues={setdefaultWidgetValues}
+                          />
+                        </div>
+                      </Panel>
+                    </Collapse>
+                  </Form>
+                </Col>
+              </Row>
+            </Col>
 
-          <ModalForm
-            title={outlineActionModal.modalTitle}
-            modalFormName={outlineActionModal.modalFormName}
-            modalBodyContent={outlineActionModal.modalBodyContent}
-            visible={outlineActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${outlineActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
-            onFinish={{
-              form: "basicForm",
-              key: "submit",
-              htmlType: "submit",
-            }}
-          />
-          <Spin
-            size="large"
-            tip="Processing..."
-            spinning={spinner}
-            delay={100}
-          ></Spin>
-          <SaveUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-          <style jsx global>{`
-            .greyBackground .ant-collapse-header {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 1rem 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
+            <ModalForm
+              title={outlineActionModal.modalTitle}
+              modalFormName={outlineActionModal.modalFormName}
+              modalBodyContent={outlineActionModal.modalBodyContent}
+              visible={outlineActionModal.StateModal}
+              onCancel={hideModal}
+              okText={`${
+                outlineActionModal.modalTitle != "Save" ? "Add" : "Ok"
+              }`}
+              onFinish={{
+                form: "basicForm",
+                key: "submit",
+                htmlType: "submit",
+              }}
+            />
+            <Spin
+              size="large"
+              tip="Processing..."
+              spinning={spinner}
+              delay={100}
+            ></Spin>
+            <SaveUI
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
+            <style jsx global>{`
+              .greyBackground .ant-collapse-header {
+                background-color: #eeeeee;
+                text-transform: uppercase;
+                font-weight: bold;
+              }
+              .greyBackground p {
+                font-weight: normal;
+                text-transform: initial;
+              }
+              .widget-holder-col .widget-title {
+                color: #e69138;
+                margin-bottom: 0;
+                text-transform: uppercase;
+              }
+              .widget-holder-col .widget-header-row {
+                padding: 1rem 0;
+                color: #e69138;
+              }
+              .course-management .ant-input-affix-wrapper {
+                border-radius: 0.5rem;
+                border: 1px solid #888787;
+              }
 
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label {
-              display: none;
-            }
-            .courses-class .ant-spin-spinning {
-              position: fixed;
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              background-color: #ffffff9e;
-              z-index: 3;
-              padding: 23% 0;
-            }
-            .outlineWidgetHolder {
-              padding: 10px 0;
-            }
-            .outlineWidgetHolder
-              .outlineWithValue
-              .ant-select-selection-placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .outlineWithValue .ant-input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-          `}</style>
-        </Row>
+              .course-management .cm-main-right .widget-header-row {
+                text-align: end;
+              }
+              .course-management .ant-form-item-label {
+                display: none;
+              }
+              .courses-class .ant-spin-spinning {
+                position: fixed;
+                display: block;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #ffffff9e;
+                z-index: 3;
+                padding: 23% 0;
+              }
+              .outlineWidgetHolder {
+                padding: 10px 0;
+              }
+              .outlineWidgetHolder
+                .outlineWithValue
+                .ant-select-selection-placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+              .outlineWithValue .ant-input::placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+            `}</style>
+          </Row>
+        )}
       </Form.Provider>
     </motion.div>
   ) : (

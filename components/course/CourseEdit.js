@@ -1050,12 +1050,12 @@ const CourseEdit = ({ course_id }) => {
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       {course ? (
         <Form.Provider onFormFinish={onFormFinishProcess}>
-          {course.isPublished === 1 ? (
+          {courseDetails.isPublished === 1 ? (
             <CourseProhibit
               title="Editing Published Course Is Prohibited"
               subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
               url={`/${linkUrl}/[course]/[...manage]`}
-              asUrl={`/${linkUrl}/course/view/${course.id}`}
+              asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
             />
           ) : (
             <Form

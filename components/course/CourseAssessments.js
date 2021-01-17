@@ -44,11 +44,10 @@ import {
 import CourseAssessmentsList from "./course-assessments-widgets/CourseAssessmentsList";
 import CourseAssessmentsDetails from "./course-assessments-widgets/CourseAssessmentsDetails";
 import CourseAssessmentsDuration from "./course-assessments-widgets/CourseAssessmentsDuration";
-/* import CourseAssessmentsFeaturedImage from "./course-assessment-widgets/CourseAssessmentsFeaturedImage";
-import CourseAssessmentsFeaturedVideo from "./course-assessment-widgets/CourseAssessmentsFeaturedVideo"; */
 import CourseAssessmentsItems from "./course-assessments-widgets/CourseAssessmentsItems";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
-import Error from "next/error";
+import { useCourseDetails } from "../../providers/CourseDStatuses";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 
 import { useRouter } from "next/router";
 
@@ -64,7 +63,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -175,6 +174,8 @@ const ModalForm = ({
 };
 
 const CourseAssessments = ({ course_id }) => {
+  const { courseDetails, setCourseDetails } = useCourseDetails();
+
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -205,8 +206,6 @@ const CourseAssessments = ({ course_id }) => {
   });
 
   useEffect(() => {
-   
-
     var config = {
       headers: {
         Authorization: "Bearer " + token,
@@ -446,11 +445,11 @@ const CourseAssessments = ({ course_id }) => {
           curAttempts != values.assessmentdetails.attempts
         ) {
           if (values.assessmentdetails.attempts > 0) {
-            data.isAttemptRequest=true;
+            data.isAttemptRequest = true;
             data.isAttempts = 1;
             data.attempts = values.assessmentdetails.attempts;
           } else {
-            data.isAttemptRequest=true;
+            data.isAttemptRequest = true;
             data.isAttempts = 0;
             data.attempts = 0;
           }
@@ -935,242 +934,255 @@ const CourseAssessments = ({ course_id }) => {
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
+        {courseDetails.isPublished === 1 ? (
+          <CourseProhibit
+            title="Editing Published Course Is Prohibited"
+            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+            url={`/${linkUrl}/[course]/[...manage]`}
+            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+          />
+        ) : (
+          <Row
+            className="widget-container course-management"
+            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            style={{ margin: "0" }}
           >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Course Assessments</h3>
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              /* style={{ padding: "10px 0" }} */
+            <Col
+              className="gutter-row widget-holder-col cm-main-left"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={16}
             >
-              {" "}
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseAssessmentsList
-                  assessmentList={assessmentList}
-                  setAssessmentList={setAssessmentList}
-                  curAssessmentId={curAssessmentId}
-                  setcurAssessmentId={setcurAssessmentId}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-              <CourseDateFormat course_id={course_id} />
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "0" }}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <h3 className="widget-title">Course Assessments</h3>
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-content"
+                gutter={[16, 16]}
+                /* style={{ padding: "10px 0" }} */
+              >
+                {" "}
+                <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                  <CourseAssessmentsList
+                    assessmentList={assessmentList}
+                    setAssessmentList={setAssessmentList}
+                    curAssessmentId={curAssessmentId}
+                    setcurAssessmentId={setcurAssessmentId}
+                    loading={loading}
+                    setLoading={setLoading}
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col
+              className="gutter-row widget-holder-col cm-main-right"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={8}
             >
-              <Col xs={24}>
-                {allOutlines ? (
-                  <Form
-                    style={{ width: "100%" }}
-                    name="basicForm"
-                    hideRequiredMark={true}
-                    onFinish={onFinish}
-                    validateMessages={validateMessages}
-                    {...formInitialValues}
-                  >
-                    <Collapse
-                      defaultActiveKey={["1"]}
-                      expandIconPosition={"right"}
+              <Row className="widget-header-row" justify="start">
+                <Col xs={24}>
+                  <CourseDateFormat course_id={course_id} />
+                </Col>
+              </Row>
+              <Row
+                className="cm-main-right-content"
+                gutter={[16, 16]}
+                style={{ padding: "0" }}
+              >
+                <Col xs={24}>
+                  {allOutlines ? (
+                    <Form
+                      style={{ width: "100%" }}
+                      name="basicForm"
+                      hideRequiredMark={true}
+                      onFinish={onFinish}
+                      validateMessages={validateMessages}
+                      {...formInitialValues}
                     >
-                      <Panel
-                        header="Details"
-                        key="1"
-                        className="greyBackground"
+                      <Collapse
+                        defaultActiveKey={["1"]}
+                        expandIconPosition={"right"}
                       >
-                        <div className="assessmentWidgetHolder">
-                          <CourseAssessmentsDetails
-                            shouldUpdate={(prevValues, curValues) =>
-                              prevValues.assessmentdetails !==
-                              curValues.assessmentdetails
-                            }
-                            showModal={showModal}
-                            defaultWidgetValues={defaultWidgetValues}
-                            setdefaultWidgetValues={setdefaultWidgetValues}
-                            course_id={course_id}
-                            allOutlines={allOutlines}
-                            userGroupList={userGroupList}
-                          />
-                        </div>
-                      </Panel>
-                      <Panel
-                        header="Assessment Duration"
-                        key="2"
-                        className="greyBackground"
-                      >
-                        <div className="assessmentWidgetHolder">
-                          <CourseAssessmentsDuration
-                            shouldUpdate={(prevValues, curValues) =>
-                              prevValues.assessmentduration !==
-                              curValues.assessmentduration
-                            }
-                            showModal={showModal}
-                            defaultWidgetValues={defaultWidgetValues}
-                            setdefaultWidgetValues={setdefaultWidgetValues}
-                            assessmentList={assessmentList}
-                            setAssessBaseType={setAssessBaseType}
-                          />
-                        </div>
-                      </Panel>
-                      <Panel header="Items" key="3" className="greyBackground">
-                        <div className="assessmentWidgetHolder">
-                          <CourseAssessmentsItems
-                            shouldUpdate={(prevValues, curValues) =>
-                              prevValues.assessmentitems !==
-                              curValues.assessmentitems
-                            }
-                            showModal={showModal}
-                            defaultWidgetValues={defaultWidgetValues}
-                            setdefaultWidgetValues={setdefaultWidgetValues}
-                            assessmentList={assessmentList}
-                            assessBaseType={assessBaseType}
-                          />
-                        </div>
-                      </Panel>
-                    </Collapse>
-                  </Form>
-                ) : (
-                  <Empty
-                    description={
-                      <span>
-                        No Course Outline detected, Please create on first.
-                      </span>
-                    }
-                  >
-                    <Button
-                      type="primary"
-                      onClick={() =>
-                        router.push(
-                          `/${linkUrl}/course/edit/${course_id}/course-outline`
-                        )
+                        <Panel
+                          header="Details"
+                          key="1"
+                          className="greyBackground"
+                        >
+                          <div className="assessmentWidgetHolder">
+                            <CourseAssessmentsDetails
+                              shouldUpdate={(prevValues, curValues) =>
+                                prevValues.assessmentdetails !==
+                                curValues.assessmentdetails
+                              }
+                              showModal={showModal}
+                              defaultWidgetValues={defaultWidgetValues}
+                              setdefaultWidgetValues={setdefaultWidgetValues}
+                              course_id={course_id}
+                              allOutlines={allOutlines}
+                              userGroupList={userGroupList}
+                            />
+                          </div>
+                        </Panel>
+                        <Panel
+                          header="Assessment Duration"
+                          key="2"
+                          className="greyBackground"
+                        >
+                          <div className="assessmentWidgetHolder">
+                            <CourseAssessmentsDuration
+                              shouldUpdate={(prevValues, curValues) =>
+                                prevValues.assessmentduration !==
+                                curValues.assessmentduration
+                              }
+                              showModal={showModal}
+                              defaultWidgetValues={defaultWidgetValues}
+                              setdefaultWidgetValues={setdefaultWidgetValues}
+                              assessmentList={assessmentList}
+                              setAssessBaseType={setAssessBaseType}
+                            />
+                          </div>
+                        </Panel>
+                        <Panel
+                          header="Items"
+                          key="3"
+                          className="greyBackground"
+                        >
+                          <div className="assessmentWidgetHolder">
+                            <CourseAssessmentsItems
+                              shouldUpdate={(prevValues, curValues) =>
+                                prevValues.assessmentitems !==
+                                curValues.assessmentitems
+                              }
+                              showModal={showModal}
+                              defaultWidgetValues={defaultWidgetValues}
+                              setdefaultWidgetValues={setdefaultWidgetValues}
+                              assessmentList={assessmentList}
+                              assessBaseType={assessBaseType}
+                            />
+                          </div>
+                        </Panel>
+                      </Collapse>
+                    </Form>
+                  ) : (
+                    <Empty
+                      description={
+                        <span>
+                          No Course Outline detected, Please create on first.
+                        </span>
                       }
                     >
-                      Create Now
-                    </Button>
-                  </Empty>
-                )}
-              </Col>
-            </Row>
-          </Col>
+                      <Button
+                        type="primary"
+                        onClick={() =>
+                          router.push(
+                            `/${linkUrl}/course/edit/${course_id}/course-outline`
+                          )
+                        }
+                      >
+                        Create Now
+                      </Button>
+                    </Empty>
+                  )}
+                </Col>
+              </Row>
+            </Col>
 
-          <ModalForm
-            title={assessmentActionModal.modalTitle}
-            modalFormName={assessmentActionModal.modalFormName}
-            modalBodyContent={assessmentActionModal.modalBodyContent}
-            visible={assessmentActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${
-              assessmentActionModal.modalTitle != "Save" ? "Add" : "Ok"
-            }`}
-            onFinish={{
-              form: "basicForm",
-              key: "submit",
-              htmlType: "submit",
-            }}
-          />
-          <Spin
-            size="large"
-            tip="Processing..."
-            spinning={spinner}
-            delay={100}
-          ></Spin>
-          {allOutlines && (
-            <SaveUI
-              listMenu={menulists}
-              position="bottom-right"
-              iconColor="#8998BA"
-              toggleModal={showModal}
+            <ModalForm
+              title={assessmentActionModal.modalTitle}
+              modalFormName={assessmentActionModal.modalFormName}
+              modalBodyContent={assessmentActionModal.modalBodyContent}
+              visible={assessmentActionModal.StateModal}
+              onCancel={hideModal}
+              okText={`${
+                assessmentActionModal.modalTitle != "Save" ? "Add" : "Ok"
+              }`}
+              onFinish={{
+                form: "basicForm",
+                key: "submit",
+                htmlType: "submit",
+              }}
             />
-          )}
-          <style jsx global>{`
-            .greyBackground .ant-collapse-header {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 1rem 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label {
-              display: none;
-            }
-            .courses-class .ant-spin-spinning {
-              position: fixed;
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              background-color: #ffffff9e;
-              z-index: 3;
-              padding: 23% 0;
-            }
-            .assessmentWidgetHolder {
-              padding: 10px 0;
-            }
-            .assessmentWidgetHolder
-              .assessmentWithValue
-              .ant-select-selection-placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .assessmentWithValue .ant-input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .assessmentWithValue .ant-picker-input input::placeholder,
-            .assessmentWithValue .ant-input-number input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-          `}</style>
-        </Row>
+            <Spin
+              size="large"
+              tip="Processing..."
+              spinning={spinner}
+              delay={100}
+            ></Spin>
+            {allOutlines && (
+              <SaveUI
+                listMenu={menulists}
+                position="bottom-right"
+                iconColor="#8998BA"
+                toggleModal={showModal}
+              />
+            )}
+            <style jsx global>{`
+              .greyBackground .ant-collapse-header {
+                background-color: #eeeeee;
+                text-transform: uppercase;
+                font-weight: bold;
+              }
+              .greyBackground p {
+                font-weight: normal;
+                text-transform: initial;
+              }
+              .widget-holder-col .widget-title {
+                color: #e69138;
+                margin-bottom: 0;
+                text-transform: uppercase;
+              }
+              .widget-holder-col .widget-header-row {
+                padding: 1rem 0;
+                color: #e69138;
+              }
+              .course-management .ant-input-affix-wrapper {
+                border-radius: 0.5rem;
+                border: 1px solid #888787;
+              }
+
+              .course-management .cm-main-right .widget-header-row {
+                text-align: end;
+              }
+              .course-management .ant-form-item-label {
+                display: none;
+              }
+              .courses-class .ant-spin-spinning {
+                position: fixed;
+                display: block;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #ffffff9e;
+                z-index: 3;
+                padding: 23% 0;
+              }
+              .assessmentWidgetHolder {
+                padding: 10px 0;
+              }
+              .assessmentWidgetHolder
+                .assessmentWithValue
+                .ant-select-selection-placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+              .assessmentWithValue .ant-input::placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+              .assessmentWithValue .ant-picker-input input::placeholder,
+              .assessmentWithValue .ant-input-number input::placeholder {
+                opacity: 1 !important;
+                color: #000000 !important;
+              }
+            `}</style>
+          </Row>
+        )}
       </Form.Provider>
     </motion.div>
   ) : (

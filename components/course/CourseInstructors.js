@@ -43,6 +43,8 @@ import {
 import CourseInstructorList from "./course-instructor-widgets/CourseInstructorList";
 import CourseInstructorDetails from "./course-instructor-widgets/CourseInstructorDetails";
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
+import { useCourseDetails } from "../../providers/CourseDStatuses";
+import CourseProhibit from "../course/course-prohibit/CourseProhibit";
 
 import Error from "next/error";
 
@@ -171,6 +173,8 @@ const ModalForm = ({
 };
 
 const CourseInstructors = ({ course_id }) => {
+  const { courseDetails, setCourseDetails } = useCourseDetails();
+
   const router = useRouter();
   //const courseId = router.query.manage[1];
   //console.log(course_id);
@@ -509,6 +513,14 @@ const CourseInstructors = ({ course_id }) => {
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Form.Provider onFormFinish={onFormFinishProcess}>
+      {courseDetails.isPublished === 1 ? (
+          <CourseProhibit
+            title="Editing Published Course Is Prohibited"
+            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+            url={`/${linkUrl}/[course]/[...manage]`}
+            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+          />
+        ) : (
         <Row
           className="widget-container course-management"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
@@ -699,6 +711,7 @@ const CourseInstructors = ({ course_id }) => {
             }
           `}</style>
         </Row>
+        )}
       </Form.Provider>
     </motion.div>
   ) : (
