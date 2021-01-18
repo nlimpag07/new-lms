@@ -218,7 +218,7 @@ const Profile = ({ u, query }) => {
                   <span>User Group:</span> {`${user.userGroup}`}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Last Access:</span> {`${user.lastAccess}`}
+                  <span>Last Access:</span> {`${ moment().format("DD-MMM-YYYY")}`}
                 </Col>
               </Row>
             </div>
