@@ -134,7 +134,7 @@ const StatusList = ({
   const colorFormat = (props) => {
     //console.log("DateFormat", props.dataItem);
     const dateSchedule = moment(props.dataItem.dateSchedule).format(
-      "YYYY/MM/DD h:mm a"
+      "YYYY-MM-DD h:mm a"
     );
     return (
       <td>

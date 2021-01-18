@@ -214,7 +214,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
   const dateFormat = (props) => {
     //console.log("DateFormat", props.dataItem);
     const dateSchedule = moment(props.dataItem.dateSchedule).format(
-      "YYYY/MM/DD h:mm a"
+      "YYYY-MM-DD h:mm a"
     );
     return <td>{dateSchedule}</td>;
   };
@@ -242,7 +242,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
     }
     //console.log("DateFormat", props.dataItem);
     const dateSchedule = moment(dataItem.dateSchedule).format(
-      "YYYY/MM/DD h:mm a"
+      "YYYY-MM-DD h:mm a"
     );
     const statusOnchange = (e, c, s, d) => {
       //console.log("DataItem", d);
@@ -378,26 +378,30 @@ const ClassesAttendanceList = ({ sessionData }) => {
       >
         <Column field="learnerName" title="Name" />
         <Column field="sessionName" title="Session Name" />
-        <Column field="dateSchedule" title="Attendace Date" cell={dateFormat} />
+        <Column field="dateSchedule" title="Attendace Date" cell={dateFormat}  width="200px" />
         <Column
           field="isPresent"
           title="Present"
           cell={(e) => changeStatusOnClick(e, "isPresent")}
+          width="150px"
         />
         <Column
           field="isLate"
           title="Late"
           cell={(e) => changeStatusOnClick(e, "isLate")}
+          width="150px"
         />
         <Column
           field="isAbsent"
           title="Absent"
           cell={(e) => changeStatusOnClick(e, "isAbsent")}
+          width="150px"
         />
         <Column
           field="isExcused"
           title="Excused"
           cell={(e) => changeStatusOnClick(e, "isExcused")}
+          width="150px"
         />
         {/* <Column
                   sortable={false}

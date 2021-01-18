@@ -118,8 +118,8 @@ const ClassesAttendance = ({ course_id }) => {
     if (sessOpt.length) {
       let theSession = sessOpt[0];
       console.log("Selected Session", theSession);
-      let sDate = moment(theSession.startDate).format("YYYY/MM/DD h:mm a");
-      let eDate = moment(theSession.endDate).format("YYYY/MM/DD h:mm a");
+      let sDate = moment(theSession.startDate).format("YYYY-MM-DD h:mm a");
+      let eDate = moment(theSession.endDate).format("YYYY-MM-DD h:mm a");
       const sessionName = `${theSession.title} - (${sDate} - ${eDate})`;
 
       /* For Update: Temporariy code */
@@ -195,8 +195,8 @@ const ClassesAttendance = ({ course_id }) => {
   const sessionOptionList =
     sessionSelect.length &&
     sessionSelect.map((option, index) => {
-      const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
-      const eDate = moment(option.endDate).format("YYYY/MM/DD h:mm a");
+      const sDate = moment(option.startDate).format("YYYY-MM-DD h:mm a");
+      const eDate = moment(option.endDate).format("YYYY-MM-DD h:mm a");
       let sessionNames = `${option.title} - (${sDate} - ${eDate})`;
       let optValue = option.id;
       return (

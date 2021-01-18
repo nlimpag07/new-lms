@@ -60,7 +60,7 @@ const ClassesEnrollmentsList = ({
     const newEnrolleesData = enrollees_list.map((dataItem) => {
       let learnerInfo = dataItem.learner ? dataItem.learner[0] : null;
       let enrollmentDate = learnerInfo
-        ? moment(learnerInfo.createdAt).format("YYYY/MM/DD")
+        ? moment(learnerInfo.createdAt).format("YYYY-MM-DD")
         : "None";
       //console.log("dataItem", dataItem);
       let newEnrollee = {

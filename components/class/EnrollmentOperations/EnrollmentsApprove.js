@@ -115,10 +115,10 @@ const EnrollmentsApprove = ({
   if (courseSessions.length) {
     for (let i = 0; i < courseSessions.length; i++) {
       const sDate = moment(courseSessions[i].startDate).format(
-        "YYYY/MM/DD h:mm a"
+        "YYYY-MM-DD h:mm a"
       );
       const eDate = moment(courseSessions[i].endDate).format(
-        "YYYY/MM/DD h:mm a"
+        "YYYY-MM-DD h:mm a"
       );
       listSessions.push(
         <Option

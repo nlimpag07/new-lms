@@ -194,19 +194,7 @@ const Statuses = ({ data }) => {
     }
   }, [searchLoading]);
 
-  /* const sessionOptionList =
-    statusSelect.length &&
-    statusSelect.map((option, index) => {
-      const sDate = moment(option.startDate).format("YYYY/MM/DD h:mm a");
-      const eDate = moment(option.endDate).format("YYYY/MM/DD h:mm a");
-      let sessionNames = `${option.title} - (${sDate} - ${eDate})`;
-      let optValue = option.id;
-      return (
-        <Option key={index} label={sessionNames} value={optValue}>
-          {sessionNames}
-        </Option>
-      );
-    }); */
+  
     //console.log('statusesModal.dataProps',statusesModal.dataProps)
   return (
     //GridType(gridList)

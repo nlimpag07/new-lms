@@ -116,17 +116,17 @@ const EnrollmentsView = ({
   if (courseSessions.length) {
     for (let i = 0; i < courseSessions.length; i++) {
       const sDate = moment(courseSessions[i].startDate).format(
-        "YYYY/MM/DD h:mm a"
+        "DD-MMM-YYYY h:mm a"
       );
       const eDate = moment(courseSessions[i].endDate).format(
-        "YYYY/MM/DD h:mm a"
+        "DD-MMM-YYYY h:mm a"
       );
       listSessions.push(
         <Option
           key={i}
           value={courseSessions[i].id}
-          label={`${sDate} - ${eDate}`}
-        >{`${sDate} - ${eDate}`}</Option>
+          label={`(${sDate}) to (${eDate})`}
+        >{`(${sDate}) to (${eDate})`}</Option>
       );
     }
   }
