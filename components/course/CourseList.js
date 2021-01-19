@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
 import Loader from "../../components/theme-layout/loader/loader";
+import RadialUI from "../theme-layout/course-circular-ui/RadialUI";
 
 import axios from "axios";
 import Link from "next/link";
@@ -62,6 +63,24 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
+
+const menulists = [
+  {
+    title: "Add",
+    icon: "&#xf055;",
+    active: true,    
+    url: `/${linkUrl}/[course]/[...manage]`,
+    urlAs: `/${linkUrl}/course/add`,
+  },  
+  {
+    title: "Import",
+    icon: "&#xf1c3;",
+    url: `/${linkUrl}/dashboard`,
+    urlAs: `/${linkUrl}/course/add`,
+    callback: "Import",
+  },
+];
+
 const CourseList = (props) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -70,10 +89,20 @@ const CourseList = (props) => {
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
+  var [courseActionModal, setCourseActionModal] = useState({
+    StateModal: false,
+    modalTitle: "",
+  });
 
   useEffect(() => {    
     setLoading(false);
   }, []);
+  const showModal = (modaltitle) => {
+    setCourseActionModal({
+      StateModal: true,
+      modalTitle: modaltitle,
+    });
+  }
   return (
     <Row
       className="widget-container"
@@ -162,11 +191,17 @@ const CourseList = (props) => {
         </Row>
       </Col>
       <Modal
-        title="Publish Properties"
+        title={courseActionModal.modalTitle}
         centered
-        visible={modal2Visible}
-        onOk={() => setModal2Visible(false)}
-        onCancel={() => setModal2Visible(false)}
+        visible={courseActionModal.StateModal}
+        onOk={() => setCourseActionModal({
+          StateModal: false,
+          modalTitle: "",
+        })}
+        onCancel={() => setCourseActionModal({
+          StateModal: false,
+          modalTitle: "",
+        })}
         maskClosable={false}
         destroyOnClose={true}
         width={1000}
@@ -176,7 +211,13 @@ const CourseList = (props) => {
         <p>some contents...</p>
       </Modal>
 
-      <CourseCircularUi />
+      {/* <CourseCircularUi /> */}
+      <RadialUI
+          listMenu={menulists}
+          position="bottom-right"
+          iconColor="#8998BA"
+          toggleModal={showModal}
+        />
       <style jsx global>{`
         .ant-card-actions > li {
           padding: 0;

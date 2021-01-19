@@ -23,7 +23,7 @@ const menulists = [
     url: `/${linkUrl}/[course]/[...manage]`,
     urlAs: `/${linkUrl}/course/add`,
   },
-  {
+  /* {
     title: "Edit",
     icon: "&#xf044;",    
     url: `"/${linkUrl}/[course]/edit"`,
@@ -50,7 +50,7 @@ const menulists = [
     url: `/${linkUrl}/course`,
     urlAs: `/${linkUrl}/course/add`,
     callback: "Copy From",
-  },
+  }, */
   {
     title: "Import",
     icon: "&#xf1c3;",
@@ -58,13 +58,13 @@ const menulists = [
     urlAs: `/${linkUrl}/course/add`,
     callback: "Import",
   },
-  {
+  /* {
     title: "Export",
     icon: "&#xf019;",
     url: `/${linkUrl}/course`,
     urlAs: `/${linkUrl}/course/add`,
     callback: "Export",
-  },
+  }, */
 ];
 
 

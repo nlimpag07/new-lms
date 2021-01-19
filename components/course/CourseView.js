@@ -50,23 +50,14 @@ import CourseLearninOutcomesviewWidget from "./courseview-widgets/Course-Learnin
 import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenciesview-Widget";
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
+import CourseClone from "./courseview-widgets/Course-Clone-Widget";
 import CoursePublish from "./course-publish/CoursePublish";
 import Cookies from "js-cookie";
 
 const { Meta } = Card;
 /**TabPane declaration */
 const { TabPane } = Tabs;
-/*menulists used by radial menu */
-const menulists = [
-  {
-    title: "Save",
-    icon: "&#xf055;",
-    active: true,
-    url: "#",
-    urlAs: "#",
-    callback: "Save",
-  },
-];
+
 /**Panel used by collapsible accordion */
 const { Panel } = Collapse;
 
@@ -112,6 +103,61 @@ const CourseView = ({ course_id }) => {
   const [course_enrollments, setCourse_enrollments] = useState("");
   const [course_reviews, setCourse_reviews] = useState("");
   const [copySuccess, setCopySuccess] = useState("");
+  var [courseActionModal, setCourseActionModal] = useState({
+    StateModal: false,
+    modalOperation: "",
+  });
+  const showModal = (modalOperation) => {
+    setCourseActionModal({
+      StateModal: true,
+      modalOperation: modalOperation,
+    });
+  };
+
+  const hideModal = () => {
+    setCourseActionModal({
+      StateModal: false,
+      modalOperation: "",
+    });
+  };
+  /*menulists used by radial menu */
+  const menulists = [
+    {
+      title: "Edit",
+      icon: "&#xf044;",
+      url: `"/${linkUrl}/[course]/edit"`,
+      urlAs: `/${linkUrl}/course/edit/${course_id}`,
+    },
+    {
+      title: "Delete",
+      icon: "&#xf056;",
+      url: `/${linkUrl}/course`,
+      urlAs: `/${linkUrl}/course/add`,
+      callback: "delete",
+    },
+    {
+      title: "Print",
+      icon: "&#xf02f;",
+      url: `/${linkUrl}/dashboard`,
+      urlAs: `/${linkUrl}/course/add`,
+      callback: "print",
+    },
+    {
+      title: "Clone",
+      icon: "&#xf0c5;",
+      url: `/${linkUrl}/course`,
+      urlAs: `/${linkUrl}/course/add`,
+      callback: "clone",
+    },
+    {
+      title: "Export",
+      icon: "&#xf019;",
+      url: `/${linkUrl}/course`,
+      urlAs: `/${linkUrl}/course/add`,
+      callback: "export",
+    },
+  ];
+
   useEffect(() => {
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
@@ -196,7 +242,7 @@ const CourseView = ({ course_id }) => {
   } = courseDetails;
   featureImage = `${apidirectoryUrl}/Images/Course/thumbnail/${featureImage}`;
   featureVideo = `${apidirectoryUrl}/Video/Course/${featureVideo}`;
-  console.log("courseDetails", courseDetails);
+  //console.log("courseDetails", courseDetails);
   let lessons = course_outline ? course_outline.totalRecords : 0;
   const listData = [
     {
@@ -262,6 +308,7 @@ const CourseView = ({ course_id }) => {
     setCopySuccess("");
     //console.log("The text:", copyText);
   }
+
   return course.length ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <Row
@@ -430,10 +477,45 @@ const CourseView = ({ course_id }) => {
             />
           </div>
         </Modal>
-
+        {linkUrl !== "learner" && (
+          <Modal
+            title={`${courseActionModal.modalOperation.toUpperCase()}: ${title.toUpperCase()}`}
+            centered
+            visible={courseActionModal.StateModal}
+            onOk={() => hideModal(courseActionModal.modalOperation)}
+            onCancel={() => hideModal(courseActionModal.modalOperation)}
+            maskClosable={false}
+            destroyOnClose={true}
+            width="50%"
+            cancelButtonProps={{ style: { display: "none" } }}
+            okButtonProps={{ style: { display: "none" } }}
+            className="CVModalOperations"
+          >
+            {courseActionModal.modalOperation == "clone" ? (
+              <CourseClone operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} />
+            ) : courseActionModal.modalOperation == "add" ? (
+              "Hello Add"
+            ) : courseActionModal.modalOperation == "approve" ? (
+              "Hello Approve"
+            ) : courseActionModal.modalOperation == "delete" ? (
+              "HELLO Delete"
+            ) : (
+              "Default"
+            )}
+          </Modal>
+        )}
+        {linkUrl !== "learner" && (
+          <RadialUI
+            listMenu={menulists}
+            position="bottom-right"
+            iconColor="#8998BA"
+            toggleModal={showModal}
+          />
+        )}
         {/* <CourseCircularUi /> */}
       </Row>
       <style jsx global>{`
+        .CVModalOperations .ant-modal-footer{ border-top:none !important;}
         .Course-View .ImageWrapper img {
           width: 100%;
           height: 100%;
