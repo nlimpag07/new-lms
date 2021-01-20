@@ -51,6 +51,7 @@ import CourseCompetenciesviewWidget from "./courseview-widgets/Course-Competenci
 import CourseEnrollmentsviewWidget from "./courseview-widgets/Course-Enrollmentsview-Widget";
 import CourseReviewViewWidget from "./courseview-widgets/Course-Reviewview-Widget";
 import CourseClone from "./courseview-widgets/Course-Clone-Widget";
+import CourseDelete from "./courseview-widgets/Course-Delete-Widget";
 import CoursePublish from "./course-publish/CoursePublish";
 import Cookies from "js-cookie";
 
@@ -131,10 +132,11 @@ const CourseView = ({ course_id }) => {
     {
       title: "Delete",
       icon: "&#xf056;",
-      url: `/${linkUrl}/course`,
-      urlAs: `/${linkUrl}/course/add`,
+      url: `#`,
+      urlAs: `#`,
       callback: "delete",
     },
+    
     {
       title: "Print",
       icon: "&#xf02f;",
@@ -492,13 +494,14 @@ const CourseView = ({ course_id }) => {
             className="CVModalOperations"
           >
             {courseActionModal.modalOperation == "clone" ? (
-              <CourseClone operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} />
+              <CourseClone operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} setLoading={setLoading} />
             ) : courseActionModal.modalOperation == "add" ? (
               "Hello Add"
             ) : courseActionModal.modalOperation == "approve" ? (
               "Hello Approve"
             ) : courseActionModal.modalOperation == "delete" ? (
-              "HELLO Delete"
+              <CourseDelete operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} setLoading={setLoading} />
+
             ) : (
               "Default"
             )}

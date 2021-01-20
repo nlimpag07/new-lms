@@ -78,7 +78,8 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
   const onFinish = (values) => {
     setSpinning(true);
     setHasError("");
-    var data = {};
+    openMessage(`Error: Deleting Course is prohibited.`, false)
+  /*   var data = {};
     var errorList = [];
     console.log("Received values of form: ", values);
     let id = courseInfo && courseInfo.course_id ? courseInfo.course_id : null;
@@ -114,7 +115,7 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
         .then(() => {
           setLoading(true);
         });
-    }
+    } */
   };
   const openMessage = (msg, resp) => {
     const key = "updatable";
@@ -143,20 +144,13 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
         initialValues={{
           baseCourse: courseInfo.title,
         }}
-        className="cloneCourse"
+        className="deleteCourse"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 12 }}
       >
-        <Form.Item label="Course to Clone" name="baseCourse">
-          <Input placeholder="Input First Name" disabled />
-        </Form.Item>
-        <Form.Item
-          label="New Course Title"
-          name="courseTitle"
-          rules={[{ required: true, message: "Course Title is required" }]}
-        >
-          <Input placeholder="Input New Course Title" />
-        </Form.Item>
+        <Form.Item label="Course to Delete" name="baseCourse">
+          <Input placeholder="Course Name" disabled />
+        </Form.Item>        
 
         <Divider style={{ border: "none" }} />
         <Form.Item
@@ -183,10 +177,10 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
       </Form>
 
       <style jsx global>{`
-        .cloneCourse .ant-upload-select {
+        .deleteCourse .ant-upload-select {
           float: left;
         }
-        .cloneCourse .ant-upload-list-text {
+        .deleteCourse .ant-upload-list-text {
           float: left;
         }
         .spinHolder {
