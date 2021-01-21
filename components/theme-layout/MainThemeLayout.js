@@ -11,8 +11,17 @@ import {
   Carousel,
   Divider,
   Layout,
+  Row,
+  Col,
 } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  RightOutlined,
+  MenuOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/router";
 //importing menu
 //import MainMenu from "./main-menu/MainMenu";
@@ -68,7 +77,7 @@ export default function MainThemeLayout({ children }) {
     }
   } else if (router.route.startsWith("/instructor")) {
     NavigationMenu = <InstructorMenu />;
-    
+
     BreadCrumb = <BreadCrumbs pathname={router.route} />;
     if (router.route.startsWith("/instructor/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
@@ -81,37 +90,58 @@ export default function MainThemeLayout({ children }) {
     if (router.route.startsWith("/administrator/[course]/")) {
       NavigationMenu = <CourseManagementMenu />;
     }
-    //MainNav = <AdministratorNavbar />;   
+    //MainNav = <AdministratorNavbar />;
   } else {
-   
     NavigationMenu = <MainMenu />;
     //MainNav = <MainNavbar />;
   }
 
+  const [isMobile, setIsMobile] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [resProps, setResProps] = useState({
+    trigger: null,
+    collapsedWidth: 0,
+    collapsible: false,
+  });
 
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  const dynamicProps = (broken) => {
+    if (broken) {
+      setResProps({
+        trigger: null,
+        collapsedWidth: 0,
+      });
+      setIsMobile(true);
+    } else {
+      setResProps({ collapsible: true });
+      setIsMobile(false);
+    }
+  };
   return (
     <Loader loading={loading}>
       <Layout style={{ minHeight: "100vh" }}>
         <Sider
           theme="light"
-          collapsible
+          {...resProps}
           collapsed={collapsed}
           onCollapse={() => setCollapsed(!collapsed)}
-          /*trigger={null} 
-          onBreakpoint={broken => {
-        console.log(broken);
-      }}
-      onCollapse={(collapsed, type) => {
+          breakpoint="lg"
+          onBreakpoint={(broken) => {
+            dynamicProps(broken);
+            //console.log(broken);
+          }}
+          /* onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
       }} */
         >
-          <div className="logo">
-            <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
-          </div>
+          {!isMobile && (
+            <div className="logo">
+              <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
+            </div>
+          )}
           {NavigationMenu}
 
           <div className="sideBottom">
@@ -131,6 +161,33 @@ export default function MainThemeLayout({ children }) {
             className="site-layout-background header-nav"
             style={{ padding: 0 }}
           >
+            {isMobile && (
+              <Row
+                className="mobileHeaderHolder"
+                align="middle"
+                justify="space-between"
+              >
+                
+                <Col xs={14} sm={14} md={14}>
+                  <div className="logo">
+                    <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
+                  </div>
+                </Col>
+                <Col xs={6} sm={6} md={6} >
+                  {collapsed ? (
+                    <MenuOutlined
+                      className="trigger"
+                      onClick={() => setCollapsed(!collapsed)}
+                    />
+                  ) : (
+                    <MenuOutlined
+                      className="trigger"
+                      onClick={() => setCollapsed(!collapsed)}
+                    />
+                  )}
+                </Col>
+              </Row>
+            )}
             {MainNav}
           </Header>
           <Content /* style={{ margin: "0 16px" }} */>
@@ -158,9 +215,7 @@ export default function MainThemeLayout({ children }) {
           /* .ant-menu-inline-collapsed span {
             display: none;
           } */
-          .logo img {
-            width: 100%;
-          }
+          
         `}</style>
       </Layout>
     </Loader>

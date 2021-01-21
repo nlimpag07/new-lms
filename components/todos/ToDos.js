@@ -80,7 +80,7 @@ const ToDos = () => {
   }, []); */
   return (
     //GridType(gridList)
-    <Col className="gutter-row widget-holder-col" xs={24} sm={24} md={8} lg={8}>
+    <Col className="gutter-row widget-holder-col" xs={24} sm={24} md={24} lg={8}>
       <Row className="widget-header-row" justify="start">
         <Col xs={22}>
           <h3 className="widget-title">To Do's</h3>

@@ -82,14 +82,67 @@ const MainNavbar = ({ userRole }) => {
 
   return (
     <Layout>
-      <Row className="header-nav-top">
-        <Col className="nav-top-left" flex="1 1">
+      <Row className="header-nav-top" justify="space-between">
+        <Col xs={0} sm={0} md={0} lg={16} className="nav-top-left" /* flex="1 1" */>
           <span className="navLocationContainer">
             AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
           </span>
         </Col>
-        <Col className="nav-top-right" flex="0 1 25%">
-          <ul>
+        <Col
+          xs={24}
+          sm={24}
+          md={24}
+          lg={6}
+          className="nav-top-right" /* flex="0 1 25%" */
+        >
+          <Row justify="space-between">
+            <Col xs={{ span: 8 }}>
+              <Notifications />
+            </Col>
+            <Col xs={{ span: 8 }}>
+              {isAuthenticated ? (
+                <Dropdown overlay={profileMenu(userRole)} trigger={["click"]}>
+                  <a
+                    className="ant-dropdown-link"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <Avatar
+                      icon={
+                        <FontAwesomeIcon icon={["fas", "user"]} size="1x" />
+                      }
+                      style={{
+                        color: "#ebebeb",
+                        backgroundColor: "#707070",
+                      }}
+                    />
+                  </a>
+                </Dropdown>
+              ) : (
+                <Link href="/login" passHref>
+                  <a>
+                    <FontAwesomeIcon icon={["fas", "lock"]} size="lg" /> Login
+                  </a>
+                </Link>
+              )}
+            </Col>
+            <Col xs={{ span: 8 }}>
+              <Link href="/lang" passHref>
+                <a>
+                  <Avatar
+                    icon={
+                      <FontAwesomeIcon icon={["fas", "globe-asia"]} size="1x" />
+                    }
+                    style={{
+                      color: "#ebebeb",
+                      backgroundColor: "#707070",
+                    }}
+                  />
+                  {/* <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" />  En*/}
+                </a>
+              </Link>
+            </Col>
+          </Row>
+          {/* <ul>
             <li className="notif">
               <Notifications />
             </li>
@@ -110,7 +163,6 @@ const MainNavbar = ({ userRole }) => {
                           backgroundColor: "#707070",
                         }}
                       />
-                      {/* <FontAwesomeIcon icon={["far", "user"]} size="lg" /> */}
                     </a>
                   </Dropdown>
                 </li>
@@ -138,15 +190,15 @@ const MainNavbar = ({ userRole }) => {
                       backgroundColor: "#707070",
                     }}
                   />
-                  {/* <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" />  En*/}
+                  
                 </a>
               </Link>
             </li>
-          </ul>
+          </ul> */}
         </Col>
       </Row>
-      <Row className="header-nav-bot">
-        <Col className="nav-bot-left" flex="1 1 200px">
+      <Row className="header-nav-bot" justify="space-center">
+        <Col xs={24} sm={24} md={14} md={18} className="nav-bot-left" flex="1 1 200px">
           <Row style={{ height: "100%" }}>
             <div className="pageHeaderHolder">
               <div className="pageHeaderTitle">
@@ -156,7 +208,7 @@ const MainNavbar = ({ userRole }) => {
             </div>
           </Row>
         </Col>
-        <Col className="nav-bot-right" flex="0 1 25%">
+        <Col xs={0} sm={0} md={6} md={6} className="nav-bot-right" flex="0 1 25%">
           <Row className="right-shape">
             <div style={{ width: "100%" }}>
               GROUP{" "}
@@ -181,7 +233,6 @@ const MainNavbar = ({ userRole }) => {
           list-style: none;
           padding: 0;
           margin: 0;
-          text-align: right;
         }
         .ant-layout-header .header-nav-top {
           text-align: center;

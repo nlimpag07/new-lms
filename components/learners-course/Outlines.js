@@ -294,15 +294,7 @@ const Outlines = (props) => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        /* .widget-holder-col:nth-child(even) {
-          padding-right: 0px !important;
-          padding-left: 10px !important;
-        }
-
-        .widget-holder-col:nth-child(odd) {
-          padding-left: 0px !important;
-          padding-right: 10px !important;
-        } */
+        
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;

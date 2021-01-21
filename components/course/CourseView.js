@@ -316,7 +316,7 @@ const CourseView = ({ course_id }) => {
       <Row
         className="widget-container Course-View"
         gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ margin: "1rem 0px 4rem 0" }}
+        /* style={{ margin: "1rem 0px 4rem 0" }} */
       >
         <Col
           className="gutter-row widget-holder-col"
@@ -534,15 +534,7 @@ const CourseView = ({ course_id }) => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        .widget-holder-col:nth-child(even) {
-          padding-right: 0px !important;
-          padding-left: 10px !important;
-        }
-
-        .widget-holder-col:nth-child(odd) {
-          padding-left: 0px !important;
-          padding-right: 10px !important;
-        }
+        
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;

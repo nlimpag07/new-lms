@@ -100,7 +100,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
       className="gutter-row widget-holder-col"
       xs={24}
       sm={24}
-      md={16}
+      md={24}
       lg={16}
     >
       <Row className="widget-header-row" justify="start">
@@ -157,16 +157,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
         .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
-        }
-        .widget-holder-col:nth-child(even) {
-          padding-right: 0px !important;
-          padding-left: 10px !important;
-        }
-
-        .widget-holder-col:nth-child(odd) {
-          padding-left: 0px !important;
-          padding-right: 10px !important;
-        }
+        }        
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
@@ -252,7 +243,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
 
 const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   let gridClass = "";
-  let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 8 };
+  let gridProps = { xs: 24, sm: 24, md: 12, lg: 12, xl: 8 };
   if (gridType == "list") {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";

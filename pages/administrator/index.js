@@ -55,7 +55,7 @@ const AdminIndex = () => {
         <Row
           className="widget-container"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <AuthoredCourses />
           <ToDos />
@@ -63,14 +63,14 @@ const AdminIndex = () => {
         {/*2nd Level*/}
         <Row
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <Graph />
           <LeaderBoard />
         </Row>
         <Row
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <RecentActivities />
           <SocialMedia />

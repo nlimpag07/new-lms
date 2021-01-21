@@ -50,25 +50,25 @@ const StatusContent = ({ userType, sc }) => {
       return (
         //GridType(gridList)
         <Row gutter={[24, 16]} className="status-banner-container">
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col">
               <h1>{sc.ac}</h1>
               <span>Assigned Courses</span>
             </div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col">
               <h1>{sc.oc}</h1>
               <span>On Going</span>
             </div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col">
               <h1>{sc.cc}</h1>
               <span>Completed</span>
             </div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col current-rank">
               <h1>
                 <FontAwesomeIcon icon={["fas", "shield-alt"]} size="lg" />
@@ -109,16 +109,16 @@ const StatusContent = ({ userType, sc }) => {
       return (
         //GridType(gridList)
         <Row gutter={[24, 16]} className="status-banner-container">
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col"></div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col"></div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col"></div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={6}>
+          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
             <div className="status-col current-rank"></div>
           </Col>
           <style jsx global>{`

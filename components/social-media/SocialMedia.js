@@ -62,69 +62,64 @@ const SocialMedia = () => {
           </button>
         </Col>
       </Row>
-      <Row className="SocialMedia-Items" gutter={[16, 16]} style={{ padding: "10px 0" }} justify="center">
+      <Row
+        className="SocialMedia-Items"
+        gutter={[16, 16]}
+        style={{ padding: "10px 0" }}
+        justify="space-around"
+      >
         {GridType(curGridStyle)}
       </Row>
       <style jsx global>{`
         .SocialMedia-Items .ant-col {
-          text-align:center;
+          text-align: center;
         }
-        
       `}</style>
     </Col>
   );
 };
 
 const GridType = (gridType) => {
+  let avatarProps = {
+    size:50,
+    style:{
+      color: "#f56a00",
+      backgroundColor: "#fde3cf",
+    }
+  };
   switch (gridType) {
     default:
       return (
         <>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+          <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
               <Avatar
-              icon={<LinkedinFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+                icon={<LinkedinFilled />}
+                {...avatarProps}                
               />
             </motion.div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+          <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<TwitterCircleFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+              <Avatar
+                icon={<TwitterCircleFilled />}
+                {...avatarProps} 
               />
             </motion.div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+          <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<InstagramFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+              <Avatar
+                icon={<InstagramFilled />}
+                {...avatarProps} 
               />
             </motion.div>
           </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
+          <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<FacebookFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+              <Avatar
+                icon={<FacebookFilled />}
+                {...avatarProps} 
               />
             </motion.div>
           </Col>
@@ -133,51 +128,35 @@ const GridType = (gridType) => {
     case "list":
       return (
         <>
+          <Col xs={24} sm={24} md={4} lg={4}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Avatar
+                icon={<LinkedinFilled />}
+                {...avatarProps} 
+              />
+            </motion.div>
+          </Col>
+          <Col xs={24} sm={24} md={4} lg={4}>
+            <motion.div initial="hidden" animate="visible" variants={list}>
+              <Avatar
+                icon={<TwitterCircleFilled />}
+                {...avatarProps} 
+              />
+            </motion.div>
+          </Col>
           <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
               <Avatar
-              icon={<LinkedinFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+                icon={<InstagramFilled />}
+                {...avatarProps} 
               />
             </motion.div>
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<TwitterCircleFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
-              />
-            </motion.div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<InstagramFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
-              />
-            </motion.div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
-            <motion.div initial="hidden" animate="visible" variants={list}>
-            <Avatar
-              icon={<FacebookFilled />}
-              size={60}
-                style={{
-                  color: "#f56a00",
-                  backgroundColor: "#fde3cf",
-                }}
+              <Avatar
+                icon={<FacebookFilled />}
+                {...avatarProps} 
               />
             </motion.div>
           </Col>
