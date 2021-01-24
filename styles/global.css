@@ -10,6 +10,7 @@
     padding-right: 16px;
     padding-left: 16px;
   }
+  .viewStatusReq .ant-col{ text-align: left !important;}
 }
 /* sm */
 @media screen and (min-width: 576px) and (max-width: 767px) {
@@ -23,6 +24,7 @@
     padding-right: 16px;
     padding-left: 16px;
   }
+  .viewStatusReq .ant-col{ text-align: left !important;}
 }
 /* md */
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -59,11 +61,21 @@
 }
 /* xl */
 @media screen and (min-width: 1200px) and (max-width: 1599px) {
+  .main-content-holder {
+    padding-right: 16px;
+    padding-left: 0;
+  }
 }
 /* xxl */
 @media screen and (min-width: 1600px) {
+  .main-content-holder {
+    padding-right: 16px;
+    padding-left: 0;
+  }
 }
-
+.logo img {
+  width: 100%;
+}
 .mobileHeaderHolder {
   background-color: #ffffff;
 }

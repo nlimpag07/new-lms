@@ -95,11 +95,11 @@ const MainNavbar = ({ userRole }) => {
           lg={6}
           className="nav-top-right" /* flex="0 1 25%" */
         >
-          <Row justify="space-between">
-            <Col xs={{ span: 8 }}>
+          <Row justify="end">
+            <Col xs ={8} lg={6}>
               <Notifications />
             </Col>
-            <Col xs={{ span: 8 }}>
+            <Col xs ={8} lg={6}>
               {isAuthenticated ? (
                 <Dropdown overlay={profileMenu(userRole)} trigger={["click"]}>
                   <a
@@ -125,7 +125,7 @@ const MainNavbar = ({ userRole }) => {
                 </Link>
               )}
             </Col>
-            <Col xs={{ span: 8 }}>
+            <Col xs={8} lg={6}>
               <Link href="/lang" passHref>
                 <a>
                   <Avatar
@@ -199,7 +199,7 @@ const MainNavbar = ({ userRole }) => {
       </Row>
       <Row className="header-nav-bot" justify="space-center">
         <Col xs={24} sm={24} md={14} md={18} className="nav-bot-left" flex="1 1 200px">
-          <Row style={{ height: "100%" }}>
+          <Row justify="start" align="bottom" style={{ height: "100%" }}>
             <div className="pageHeaderHolder">
               <div className="pageHeaderTitle">
                 <span>{currentPage}</span>

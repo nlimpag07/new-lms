@@ -111,15 +111,15 @@ const CoursePublish = ({ isPublished, title, course_id }) => {
 
   return (
     //GridType(gridList)
-    <Col xs={24} sm={12} md={6}>
-      <Row justify="end" align="middle" className="viewStatusReq">
-        <Col xs={24} sm={4} md={12}>
+    <Col xs={24} sm={24} md={24} lg={8} xl={6}>
+      <Row justify="space-around" align="middle" className="viewStatusReq">
+        <Col xs={24} sm={8} md={8} lg={12}>
           Current Status: {isPublished == 1 ? "Published" : "Unpublished"}
         </Col>
-        <Col xs={24} sm={12} md={12}>
+        <Col xs={24} sm={6} md={4} lg={8}>
           {isPublished == 1 ? (
             <Button
-              type="primary"
+              
               shape="round"
               className="viewStatusReq-button"
               onClick={() => setPubModal2Visible(true)}

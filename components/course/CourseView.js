@@ -325,8 +325,8 @@ const CourseView = ({ course_id }) => {
           md={24}
           lg={24}
         >
-          <Row className="widget-header-row" justify="start" align="middle">
-            <Col xs={24} sm={12} md={18}>
+          <Row className="widget-header-row" align="middle">
+            <Col xs={24} sm={24} md={24} lg={16} xl={18}>
               <h1 className="widget-title">{title}</h1>
             </Col>
             {linkUrl != "learner" && (
@@ -343,9 +343,9 @@ const CourseView = ({ course_id }) => {
             style={{ padding: "10px 0" }}
           >
             {/* Left Side */}
-            <Col xs={24} sm={24} md={6}>
+            <Col xs={24} sm={24} md={12} lg={6}>
               <Row className="ImageWrapper">
-                <Col>
+                <Col xs={24}>
                   <img
                     alt={`${title} Featured Image`}
                     src={featureImage}
@@ -405,7 +405,7 @@ const CourseView = ({ course_id }) => {
               <Row className="Course-Tags">
                 <Col xs={24}>
                   <h3>DEMOS</h3>
-                  <Col xs={12} className="ImageWrapper demo-thumb">
+                  <Col xs={24} sm={12} className="ImageWrapper demo-thumb">
                     <img
                       alt={`${title} Featured Image`}
                       src={featureImage}
@@ -416,7 +416,7 @@ const CourseView = ({ course_id }) => {
               </Row>
             </Col>
             {/* Right Side */}
-            <Col xs={24} sm={24} md={18} className="Course-Tabs">
+            <Col xs={24} sm={24} md={12} lg={18} className="Course-Tabs">
               <Tabs defaultActiveKey="1">
                 <TabPane tab="OVERVIEW" key="1">
                   <CourseOverviewWidget course_details={courseDetails} />
@@ -685,11 +685,12 @@ const CourseView = ({ course_id }) => {
         }
         .viewStatusReq {
           color: #666666;
+          text-aling:right;
         }
-        .viewStatusReq-button {
+        /* .viewStatusReq-button {
           padding-right: 4rem !important;
           padding-left: 4rem !important;
-        }
+        } */
       `}</style>
     </motion.div>
   ) : (
