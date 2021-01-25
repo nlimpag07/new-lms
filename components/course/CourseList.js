@@ -25,6 +25,7 @@ import {
   Input,
   Tooltip,
   Empty,
+  Image,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -38,6 +39,8 @@ import {
 const { Meta } = Card;
 
 const { Search } = Input;
+const { Option } = Select;
+
 const list = {
   visible: {
     opacity: 1,
@@ -63,15 +66,14 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-
 const menulists = [
   {
     title: "Add",
     icon: "&#xf055;",
-    active: true,    
+    active: true,
     url: `/${linkUrl}/[course]/[...manage]`,
     urlAs: `/${linkUrl}/course/add`,
-  },  
+  },
   {
     title: "Import",
     icon: "&#xf1c3;",
@@ -84,9 +86,16 @@ const menulists = [
 const CourseList = (props) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  //console.log(router);
+  //console.log("Props", props);
   const { courseAllList, setCourseAllList } = useCourseList();
-  //console.log(courseAllList)
+  const [allCourses, setAllCourses] = useState([]);
+  const [uid, setUid] = useState(0);
+  const [selectSearch, setSelectSearch] = useState({
+    select: null,
+    search: null,
+  });
+
+  const [categories, setCategories] = useState("");
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   var [courseActionModal, setCourseActionModal] = useState({
@@ -94,15 +103,158 @@ const CourseList = (props) => {
     modalTitle: "",
   });
 
-  useEffect(() => {    
+  useEffect(() => {
+    let userData = JSON.parse(localStorage.getItem("userDetails"));
+    setUid(userData.id);
+    setAllCourses(courseAllList.result);
     setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Picklist/category",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data.result;
+          //console.log("Session Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            setCategories(theRes);
+          } else {
+            setCategories("");
+          }
+        }
+      } catch (error) {
+        console.log("Error Response", error);
+        let errContent;
+        error.response && error.response.data
+          ? (errContent = error.response.data.message)
+          : (errContent = `${error}, Please contact Technical Support`);
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: errContent,
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+    }
+    fetchData(config);
   }, []);
   const showModal = (modaltitle) => {
     setCourseActionModal({
       StateModal: true,
       modalTitle: modaltitle,
     });
+  };
+  //Processing Select dropdown Options
+  let categoriesOptions = [];
+  categoriesOptions.push({ name: "All Courses", id: "all" });
+  categoriesOptions.push({ name: "Authored Courses", id: "authored" });
+  let catOptions =
+    categories.length &&
+    categories.map((option, index) => {
+      categoriesOptions.push({ name: option.name, id: option.id });
+    });
+  categoriesOptions = categoriesOptions.map((opt, index) => {
+    return (
+      <Option key={index} label={opt.name} value={opt.id}>
+        {opt.name}
+      </Option>
+    );
+  });
+
+  //Catching the value of selected Option and change accordingly
+  function onChange(value) {
+    setSelectSearch({ select: value });
+    if (value == "all") {
+      //select all courses
+      let allCoursesList =
+        courseAllList && courseAllList.result ? courseAllList.result : [];
+      setAllCourses(allCoursesList);
+    } else if (value == "authored") {
+      //filter to authored courses
+      let isAuthored =
+        courseAllList &&
+        courseAllList.result.filter((course) => course.author.id === uid);
+      setAllCourses(isAuthored.length ? isAuthored : []);
+    } else {
+      //filter courses to selected category
+      let filteredList =
+        courseAllList &&
+        courseAllList.result.map((course, index) => {
+          let isInCategory =
+            course.courseCategory &&
+            course.courseCategory.filter(
+              (courseCat) => courseCat.categoryId === value
+            );
+          let result = null;
+          if (isInCategory.length) {
+            result = course;
+          }
+          return result;
+        });
+      let finalFiltered = filteredList.filter((course) => course !== null);
+      setAllCourses(finalFiltered.length ? finalFiltered : []);
+    }
   }
+  function searchCourse(value) {
+    //console.log(val);
+    const { select } = selectSearch;
+    setSelectSearch({select:select, search: value });
+    console.log(select);
+    if (select == "all" || !select) {
+      //select all courses
+      let allCoursesList =
+        courseAllList && courseAllList.result
+          ? courseAllList.result.filter((course) =>
+              course.title.toLowerCase().includes(value.toLowerCase())
+            )
+          : [];
+      setAllCourses(allCoursesList);
+    } else if (select == "authored") {
+      //filter to authored courses
+      let isAuthored =
+        courseAllList &&
+        courseAllList.result.filter(
+          (course) =>
+            course.author.id === uid &&
+            course.title.toLowerCase().includes(value.toLowerCase())
+        );
+      setAllCourses(isAuthored.length ? isAuthored : []);
+    } else {
+      //filter courses to selected category
+      let filteredList =
+        courseAllList &&
+        courseAllList.result.map((course, index) => {
+          let isInCategory =
+            course.courseCategory &&
+            course.courseCategory.filter(
+              (courseCat) => courseCat.categoryId === select &&
+              course.title.toLowerCase().includes(value.toLowerCase())
+            );
+          let result = null;
+          if (isInCategory.length) {
+            result = course;
+          }
+          return result;
+        });
+      let finalFiltered = filteredList.filter((course) => course !== null);
+      setAllCourses(finalFiltered.length ? finalFiltered : []);
+    }
+  }
+
   return (
     <Row
       className="widget-container"
@@ -117,13 +269,11 @@ const CourseList = (props) => {
         lg={24}
       >
         <Row className="widget-header-row" justify="start">
-          <Col xs={20}>
+          <Col xs={14} sm={18} md={18}>
             <h3 className="widget-title">Latest First</h3>
           </Col>
-          <Col xs={4} className="widget-switchgrid-holder">
-            <span>
-              {courseAllList ? courseAllList.totalRecords : 0} Results
-            </span>{" "}
+          <Col xs={10} sm={6} md={6} className="widget-switchgrid-holder">
+            <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
             <button
               className="switch-grid"
               key="Switch"
@@ -144,9 +294,10 @@ const CourseList = (props) => {
         <Row
           className="widget-search-row"
           justify="start"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
+          gutter={[16, 16]}
         >
-          <Col xs={8}>
+          <Col xs={24} sm={10} md={8}>
             <div className="choices-container category-holder">
               <Select
                 showSearch
@@ -162,16 +313,15 @@ const CourseList = (props) => {
                   0
                 }
               >
-                <Option value="Authored Courses">Authored Courses</Option>
-                <Option value="Categories">Categories</Option>
+                {categoriesOptions}
               </Select>
             </div>
           </Col>
-          <Col xs={16} className="widget-switchgrid-holder">
+          <Col xs={24} sm={14} md={16} className="widget-switchgrid-holder">
             <div className="choices-container searchbox-holder">
               <Search
                 placeholder="Search Course"
-                onSearch={(value) => console.log(value)}
+                onSearch={(value) => searchCourse(value)}
               />
             </div>
           </Col>
@@ -182,7 +332,7 @@ const CourseList = (props) => {
           style={{ padding: "10px 0" }}
         >
           {GridType(
-            courseAllList,
+            allCourses,
             curGridStyle,
             setModal2Visible,
             router,
@@ -194,14 +344,18 @@ const CourseList = (props) => {
         title={courseActionModal.modalTitle}
         centered
         visible={courseActionModal.StateModal}
-        onOk={() => setCourseActionModal({
-          StateModal: false,
-          modalTitle: "",
-        })}
-        onCancel={() => setCourseActionModal({
-          StateModal: false,
-          modalTitle: "",
-        })}
+        onOk={() =>
+          setCourseActionModal({
+            StateModal: false,
+            modalTitle: "",
+          })
+        }
+        onCancel={() =>
+          setCourseActionModal({
+            StateModal: false,
+            modalTitle: "",
+          })
+        }
         maskClosable={false}
         destroyOnClose={true}
         width={1000}
@@ -213,11 +367,11 @@ const CourseList = (props) => {
 
       {/* <CourseCircularUi /> */}
       <RadialUI
-          listMenu={menulists}
-          position="bottom-right"
-          iconColor="#8998BA"
-          toggleModal={showModal}
-        />
+        listMenu={menulists}
+        position="bottom-right"
+        iconColor="#8998BA"
+        toggleModal={showModal}
+      />
       <style jsx global>{`
         .ant-card-actions > li {
           padding: 0;
@@ -226,7 +380,7 @@ const CourseList = (props) => {
         .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
-        }        
+        }
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
@@ -371,43 +525,24 @@ const CourseList = (props) => {
           color: #e69138;
         }
       `}</style>
-    </Row> /*  : (
-    <Col>
-      <div style={{ textAlign: "center" }}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-      </div>
-    </Col>
-  ) */
-    /*: (
-    <Col>
-      <div style={{ textAlign: "center" }}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-      </div>
-    </Col>
-  ) */
-   /*: (
-    <Col>
-      <div style={{ textAlign: "center" }}>
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-      </div>
-    </Col>
-  ) */);
+    </Row>
+  );
 };
 
-const GridType = (courses, gridType, setModal2Visible, router,loading) => {
+const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   let gridClass = "";
   let gridProps = { xs: 24, sm: 12, md: 8, lg: 8, xl: 6 };
   if (gridType == "list") {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";
   }
-  courses = courses.result;
+  //courses = courses.result;
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
     return trimmedDesc + "...";
   };
-  console.log(courses)
+  //console.log(courses)
   return courses.length ? (
     <>
       {courses.map((course) => (
@@ -518,10 +653,6 @@ const GridType = (courses, gridType, setModal2Visible, router,loading) => {
   );
 };
 
-const { Option } = Select;
-function onChange(value) {
-  console.log(`selected ${value}`);
-}
 function onBlur() {
   console.log("blur");
 }

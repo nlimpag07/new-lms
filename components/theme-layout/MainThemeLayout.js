@@ -168,7 +168,7 @@ export default function MainThemeLayout({ children }) {
                 justify="space-between"
               >
                 
-                <Col xs={14} sm={14} md={14}>
+                <Col xs={10} sm={10} md={14}>
                   <div className="logo">
                     <img src="/images/fastrax-logo.png" alt="Fastrax Logo" />
                   </div>

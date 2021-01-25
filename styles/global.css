@@ -10,7 +10,9 @@
     padding-right: 16px;
     padding-left: 16px;
   }
-  .viewStatusReq .ant-col{ text-align: left !important;}
+  .viewStatusReq .ant-col {
+    text-align: left !important;
+  }
 }
 /* sm */
 @media screen and (min-width: 576px) and (max-width: 767px) {
@@ -24,7 +26,9 @@
     padding-right: 16px;
     padding-left: 16px;
   }
-  .viewStatusReq .ant-col{ text-align: left !important;}
+  .viewStatusReq .ant-col {
+    text-align: left !important;
+  }
 }
 /* md */
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -101,6 +105,7 @@
 } */
 .logo {
   display: block;
+  padding: 1.5rem;
 }
 .ant-layout {
   background-color: #ffffff;
@@ -364,7 +369,6 @@
   .ant-checkbox-checked::after {
   border-color: #000000;
 }
-
 
 .radial-ui.radial-open svg.radial-menu-svg {
   transform: scale(1);

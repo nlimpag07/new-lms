@@ -483,7 +483,7 @@ const CourseEdit = ({ course_id }) => {
           return newCats;
         }
       );
-      //console.log("SubmittedCats: ", processPickListCategory);
+      console.log("SubmittedCats: ", processPickListCategory);
       processPickListCategory.map((cat, index) => {
         data.append(`courseCategory[${index}][id]`, cat.id);
         data.append(`courseCategory[${index}][categoryId]`, cat.categoryId);
