@@ -33,7 +33,7 @@ import {
   CloudDownloadOutlined,
 } from "@ant-design/icons";
 const { Meta } = Card;
-
+const { Option } = Select;
 const { Search } = Input;
 const list = {
   visible: {
@@ -67,6 +67,12 @@ const ClassesCourseList = () => {
   const router = useRouter();
   const { courseAllList, setCourseAllList } = useCourseList();
   const [publishedCourses, setPublishedCourses] = useState("");
+  const [uid, setUid] = useState(0);
+  const [selectSearch, setSelectSearch] = useState({
+    select: null,
+    search: null,
+  });
+  const [categories, setCategories] = useState("");
 
   //console.log(courseAllList)
   const [curGridStyle, setCurGridStyle] = useState("grid");
@@ -74,6 +80,8 @@ const ClassesCourseList = () => {
 
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {
+    let userData = JSON.parse(localStorage.getItem("userDetails"));
+    setUid(userData.id);
     var data = JSON.stringify({});
     var config = {
       method: "get",
@@ -103,7 +111,160 @@ const ClassesCourseList = () => {
     }
     fetchData(config);
   }, []);
-  //console.log(courseAllList.length)
+
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Picklist/category",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data.result;
+          //console.log("Session Response", response.data);
+          // wait for response if the verification is true
+          if (theRes) {
+            setCategories(theRes);
+          } else {
+            setCategories("");
+          }
+        }
+      } catch (error) {
+        console.log("Error Response", error);
+        let errContent;
+        error.response && error.response.data
+          ? (errContent = error.response.data.message)
+          : (errContent = `${error}, Please contact Technical Support`);
+        Modal.error({
+          title: "Error: Unable to Retrieve data",
+          content: errContent,
+          centered: true,
+          width: 450,
+          onOk: () => {
+            //setdrawerVisible(false);
+            visible: false;
+          },
+        });
+      }
+    }
+    fetchData(config);
+  }, []);
+  //Processing Select dropdown Options
+  let categoriesOptions = [];
+  categoriesOptions.push({ name: "All Courses", id: "all" });
+  categoriesOptions.push({ name: "Authored Courses", id: "authored" });
+  let catOptions =
+    categories.length &&
+    categories.map((option, index) => {
+      categoriesOptions.push({ name: option.name, id: option.id });
+    });
+  categoriesOptions = categoriesOptions.map((opt, index) => {
+    return (
+      <Option key={index} label={opt.name} value={opt.id}>
+        {opt.name}
+      </Option>
+    );
+  });
+  //Catching the value of selected Option and change accordingly
+  function onChange(value) {
+    setSelectSearch({ select: value });
+    if (value == "all") {
+      //select all courses
+      let allCoursesList =
+        courseAllList && courseAllList.result
+          ? courseAllList.result.filter(
+              (getCourse) => getCourse.isPublished == 1
+            )
+          : [];
+          setPublishedCourses(allCoursesList);
+    } else if (value == "authored") {
+      //filter to authored courses
+      let isAuthored =
+        courseAllList &&
+        courseAllList.result.filter(
+          (course) => course.author.id === uid && course.isPublished == 1
+        );
+        setPublishedCourses(isAuthored.length ? isAuthored : []);
+    } else {
+      //filter courses to selected category
+      let filteredList =
+        courseAllList &&
+        courseAllList.result.map((course, index) => {
+          let isInCategory =
+            course.courseCategory &&
+            course.courseCategory.filter(
+              (courseCat) => courseCat.categoryId === value
+            );
+          let result = null;
+          if (isInCategory.length) {
+            result = course;
+          }
+          return result;
+        });
+      let finalFiltered = filteredList.filter(
+        (course) => course !== null && course.isPublished == 1
+      );
+      setPublishedCourses(finalFiltered.length ? finalFiltered : []);
+    }
+  }
+  function searchCourse(value) {
+    //console.log(val);
+    const { select } = selectSearch;
+    setSelectSearch({ select: select, search: value });
+    //console.log(select);
+    if (select == "all" || !select) {
+      //select all courses
+      let allCoursesList =
+        courseAllList && courseAllList.result
+          ? courseAllList.result.filter(
+              (course) =>
+                course.title.toLowerCase().includes(value.toLowerCase()) &&
+                course.isPublished == 1
+            )
+          : [];
+          setPublishedCourses(allCoursesList);
+    } else if (select == "authored") {
+      //filter to authored courses
+      let isAuthored =
+        courseAllList &&
+        courseAllList.result.filter(
+          (course) =>
+            course.author.id === uid &&
+            course.title.toLowerCase().includes(value.toLowerCase()) &&
+            course.isPublished == 1
+        );
+        setPublishedCourses(isAuthored.length ? isAuthored : []);
+    } else {
+      //filter courses to selected category
+      let filteredList =
+        courseAllList &&
+        courseAllList.result.map((course, index) => {
+          let isInCategory =
+            course.courseCategory &&
+            course.courseCategory.filter(
+              (courseCat) =>
+                courseCat.categoryId === select &&
+                course.title.toLowerCase().includes(value.toLowerCase()) &&
+                course.isPublished == 1
+            );
+          let result = null;
+          if (isInCategory.length) {
+            result = course;
+          }
+          return result;
+        });
+      let finalFiltered = filteredList.filter(
+        (course) => course !== null && course.isPublished == 1
+      );
+      setPublishedCourses(finalFiltered.length ? finalFiltered : []);
+    }
+  }
+
   return (
     //GridType(gridList)
     <Row
@@ -164,8 +325,7 @@ const ClassesCourseList = () => {
                   0
                 }
               >
-                <Option value="Authored Courses">Authored Courses</Option>
-                <Option value="Categories">Categories</Option>
+                {categoriesOptions}
               </Select>
             </div>
           </Col>
@@ -173,7 +333,7 @@ const ClassesCourseList = () => {
             <div className="choices-container searchbox-holder">
               <Search
                 placeholder="Search Course"
-                onSearch={(value) => console.log(value)}
+                onSearch={(value) => searchCourse(value)}
               />
             </div>
           </Col>
@@ -215,7 +375,7 @@ const ClassesCourseList = () => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        
+
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
@@ -374,7 +534,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
-    return trimmedDesc+'...';
+    return trimmedDesc + "...";
   };
   return courses ? (
     <>
@@ -493,10 +653,6 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   );
 };
 
-const { Option } = Select;
-function onChange(value) {
-  console.log(`selected ${value}`);
-}
 function onBlur() {
   console.log("blur");
 }

@@ -46,6 +46,8 @@ import Error from "next/error";
 import { useRouter } from "next/router";
 import cookie from "cookie";
 import { useCourseList } from "../../../providers/CourseProvider";
+import { CourseDetailsProvider } from "../../../providers/CourseDStatuses";
+
 
 
 import {
@@ -121,51 +123,33 @@ const CourseManagement = (props) => {
       return <Error statusCode={404} />;
     }
     thePage[0] == "view" &&
-      (theContent = <CourseView course_id={thePage[1]} />); // url /view/courseId - viewing the course General
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseView course_id={thePage[1]} /></CourseDetailsProvider>); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
-    thePage[0] == "edit" && (theContent = <CourseEdit course_id={thePage[1]} />); // url /edit/couseId - Editing Course General
+    thePage[0] == "edit" && (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseEdit course_id={thePage[1]} /></CourseDetailsProvider>); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
     /* thePage[0] == "view" ||  */thePage[0] == "edit"
   ) {
-    /* thePage[0] == "view" &&
-      thePage[2] == "course-outline" &&
-      (theContent = "HELLO View Course Outline"); // viewing the course
-    thePage[0] == "view" &&
-      thePage[2] == "learning-outcomes" &&
-      (theContent = "HELLO View Course learning-outcomes"); // viewing the course
-    thePage[0] == "view" &&
-      thePage[2] == "assessments" &&
-      (theContent = "HELLO View Course assessments"); // viewing the course
-    thePage[0] == "view" &&
-      thePage[2] == "instructors" &&
-      (theContent = "HELLO View Course instructors"); // viewing the course
-    thePage[0] == "view" &&
-      thePage[2] == "competencies" &&
-      (theContent = "HELLO View Course competencies"); // viewing the course
-    thePage[0] == "view" &&
-      thePage[2] == "evaluations" &&
-      (theContent = "HELLO View Course post-evaluation"); // viewing the course */
-
+    
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
-      (theContent = <CourseOutlines course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseOutlines course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "learning-outcomes" &&
-      (theContent = <CourseOutcomes course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseOutcomes course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "assessments" &&
-      (theContent = <CourseAssessments course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseAssessments course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "instructors" &&
-      (theContent = <CourseInstructors course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseInstructors course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "competencies" &&
-      (theContent = <CourseCompetencies course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseCompetencies course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "evaluations" &&
-      (theContent = <CoursePostEvaluations course_id={thePage[1]} />); // Editing the course
+      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CoursePostEvaluations course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
   } else {
     return <Error statusCode={404} />;
   }

@@ -94,7 +94,6 @@ const CourseList = (props) => {
     select: null,
     search: null,
   });
-
   const [categories, setCategories] = useState("");
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
