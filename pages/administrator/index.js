@@ -28,7 +28,6 @@ import SocialMedia from "../../components/social-media/SocialMedia";
 import cookie from "cookie";
 import { useCourseList } from "../../providers/CourseProvider";
 
-
 import {
   EditOutlined,
   EllipsisOutlined,
@@ -38,13 +37,13 @@ import {
 } from "@ant-design/icons";
 const { Meta } = Card;
 var apiBaseUrl = process.env.apiBaseUrl;
+
 const AdminIndex = () => {
   //console.log(useAuth());
   const [curGridStyle, setCurGridStyle] = useState("grid");
   const {courseAllList, setCourseAllList } = useCourseList();
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
  
-  //console.log(courseAllList);
   useEffect(() => {
   }, []);
 

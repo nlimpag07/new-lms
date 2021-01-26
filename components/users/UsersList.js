@@ -23,6 +23,7 @@ import { orderBy, filterBy } from "@progress/kendo-data-query";
 import UsersAdd from "./UsersAdd";
 import UsersEdit from "./UsersEdit";
 import Cookies from "js-cookie";
+import { useViewPort } from "../../providers/ViewPort";
 
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
@@ -65,12 +66,13 @@ const menulists = [
 ];
 
 const UsersList = ({ userlist }) => {
+  const { viewport } = useViewPort();
+  //console.log(viewport)
   //userlist = userlist.result;
   const [userslist, setUsersList] = useState(
     userlist && userlist.length ? userlist.result : null
   );
-  const [Data, setData] = useState({data: userslist,
-    filter: undefined});
+  const [Data, setData] = useState({ data: userslist, filter: undefined });
   const router = useRouter();
   //console.log(userlist);
 
@@ -114,7 +116,7 @@ const UsersList = ({ userlist }) => {
                   );
                 })
               : null;
-            setData({data:ddata});
+            setData({ data: ddata });
             setUsersList(ddata);
             setSpin(false);
           } else {
@@ -135,7 +137,7 @@ const UsersList = ({ userlist }) => {
                   );
                 })
               : null;
-            setData({data:ddata});
+            setData({ data: ddata });
             setUsersList(ddata);
             setSpin(false);
           }
@@ -173,7 +175,7 @@ const UsersList = ({ userlist }) => {
       }
       return item;
     });
-    setData({data:theData});
+    setData({ data: theData });
   };
   const rowClick = (event) => {
     let last = lastSelectedIndex;
@@ -194,7 +196,7 @@ const UsersList = ({ userlist }) => {
     for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
       theData[i].selected = select;
     }
-    setData({data:theData});
+    setData({ data: theData });
   };
 
   const headerSelectionChange = (event) => {
@@ -203,7 +205,7 @@ const UsersList = ({ userlist }) => {
       item.selected = checked;
       return item;
     });
-    setData({data:theData});
+    setData({ data: theData });
   };
 
   const showModal = (modalOperation, props) => {
@@ -236,10 +238,10 @@ const UsersList = ({ userlist }) => {
       );
     return <td>{userStatus}</td>;
   };
-  const filterChange = event => {
+  const filterChange = (event) => {
     setData({
       data: filterBy(userslist, event.filter),
-      filter: event.filter
+      filter: event.filter,
     });
   };
   return (
@@ -247,7 +249,7 @@ const UsersList = ({ userlist }) => {
     <Row
       className="widget-container"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      style={{ margin: "1rem 0" }}
+      /* style={{ margin: "1rem 0" }} */
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
         <Col
@@ -257,7 +259,9 @@ const UsersList = ({ userlist }) => {
           md={24}
           lg={24}
         >
-          <h1>Users List</h1>
+          <h1>
+            Users List
+          </h1>
           <Row className="Course-Enrollments">
             <Col xs={24}>
               {spin ? (
@@ -296,8 +300,8 @@ const UsersList = ({ userlist }) => {
                   pageable={true}
                   onPageChange={pageChange}
                   filterable={true}
-        filter={Data.filter}
-        onFilterChange={filterChange}
+                  filter={Data.filter}
+                  onFilterChange={filterChange}
                 >
                   <Column
                     field="selected"
@@ -309,10 +313,16 @@ const UsersList = ({ userlist }) => {
                     }
                     filterable={false}
                   />
-                  <Column field="empId" title="Emp ID" width="100px" filter={'numeric'} filterable={false} />
-                  <Column field="firstName" title="First Name" width="300px"  />
+                  <Column
+                    field="empId"
+                    title="Emp ID"
+                    width="100px"
+                    filter={"numeric"}
+                    filterable={false}
+                  />
+                  <Column field="firstName" title="First Name" width="300px" />
                   <Column field="lastName" title="Last Name" width="300px" />
-                  <Column field="userType" title="User Type"  />
+                  <Column field="userType" title="User Type" />
                   <Column field="email" title="Email" />
 
                   <Column

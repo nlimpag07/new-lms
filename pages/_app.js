@@ -16,12 +16,14 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "../styles/ams-icons/style.css";
 config.autoAddCss = false;
 library.add(fab, fas, far);
-
 function MyApp({ Component, pageProps, authenticated, usertype }) {
-  return (
-    <AuthProvider authenticated={authenticated} usertype={usertype}>
+   return (
+    <AuthProvider
+      authenticated={authenticated}
+      usertype={usertype}
+    >
       <CourseListProvider>
-      <Component {...pageProps} />
+        <Component {...pageProps} />
       </CourseListProvider>
     </AuthProvider>
   );
@@ -45,10 +47,8 @@ MyApp.getInitialProps = async (appContext) => {
   //console.log(appContext);
   // Call the page's `getInitialProps` and fill `appProps.pageProps`
   const appProps = await App.getInitialProps(appContext);
-  
+
   return { ...appProps, authenticated, usertype };
 };
 
 export default MyApp;
-
-

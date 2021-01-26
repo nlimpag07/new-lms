@@ -78,3 +78,4 @@ export function useUserDetails() {
   const context = useAuth();
   return context.isUsertype;
 }
+
