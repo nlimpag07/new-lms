@@ -211,7 +211,7 @@ const CourseList = (props) => {
   function searchCourse(value) {
     //console.log(val);
     const { select } = selectSearch;
-    setSelectSearch({select:select, search: value });
+    setSelectSearch({ select: select, search: value });
     console.log(select);
     if (select == "all" || !select) {
       //select all courses
@@ -240,8 +240,9 @@ const CourseList = (props) => {
           let isInCategory =
             course.courseCategory &&
             course.courseCategory.filter(
-              (courseCat) => courseCat.categoryId === select &&
-              course.title.toLowerCase().includes(value.toLowerCase())
+              (courseCat) =>
+                courseCat.categoryId === select &&
+                course.title.toLowerCase().includes(value.toLowerCase())
             );
           let result = null;
           if (isInCategory.length) {
@@ -271,7 +272,10 @@ const CourseList = (props) => {
           <Col xs={14} sm={18} md={18}>
             <h3 className="widget-title">Latest First</h3>
           </Col>
-          <Col xs={10} sm={6} md={6} className="widget-switchgrid-holder">
+          <Col xs={10} sm={6} md={6} lg={0} xl={0} xxl={0} className="widget-switchgrid-holder">
+            <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
+          </Col>
+          <Col xs={0} sm={0} md={0} lg={6} xl={6} xxl={6} className="widget-switchgrid-holder">
             <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
             <button
               className="switch-grid"

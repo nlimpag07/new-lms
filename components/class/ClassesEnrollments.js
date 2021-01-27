@@ -214,7 +214,7 @@ const ClassesEnrollments = ({ course_id }) => {
   return (
     <Row
       className="widget-container"
-      gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
       style={{ margin: "1rem 0" }}
     >
       <motion.div

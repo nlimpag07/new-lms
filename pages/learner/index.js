@@ -51,7 +51,7 @@ const LearnerIndex = (props) => {
         <Row
           className="widget-container"
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <RecentCourses courses={learner} />
           <ToDos />
@@ -59,14 +59,14 @@ const LearnerIndex = (props) => {
         {/*2nd Level*/}
         <Row
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <Graph />
           <LeaderBoard />
         </Row>
         <Row
           gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "1rem 0" }}
+          /* style={{ margin: "1rem 0" }} */
         >
           <RecentActivities />
           <SocialMedia />
