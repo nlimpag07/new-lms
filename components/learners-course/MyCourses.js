@@ -222,6 +222,7 @@ const MyCourses = ({ mycourses }) => {
   return (
     <Row
       className="widget-container"
+      
       /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
       style={{ margin: "1rem 0" }}
     >
@@ -498,10 +499,7 @@ const MyCourses = ({ mycourses }) => {
         .ant-card-actions > li > span:hover {
           color: #e69138;
         }
-        .ant-card-bordered {
-          border: 1px solid #f0f0f0;
-        }
-
+        
         .course-details,
         .selected-course-off {
           display: none;
@@ -516,15 +514,11 @@ const MyCourses = ({ mycourses }) => {
         .card-holder:hover {
           cursor: pointer;
         }
-        .card-holder:hover .ant-card-bordered {
-          border: 1px solid #f9c48e61;
-        }
+       
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
         }
-        .selected-c-body .ant-card-bordered {
-          border: 1px solid #ff9d3761;
-        }
+        
         /*.selected-c-body .ant-card-body::after {
           display: table;
           clear: both;
@@ -545,12 +539,12 @@ const MyCourses = ({ mycourses }) => {
     left: 30%;
           background-color: #666666;
         } */
-        .selected-c-body .ant-card-hoverable {
+        /* .selected-c-body .ant-card-hoverable {
           border-color: transparent;
           box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
             0 3px 6px 0 rgba(242, 163, 5, 0.3),
             0 5px 12px 4px rgba(242, 163, 5, 0.3);
-        }
+        } */
       `}</style>
     </Row>
   );

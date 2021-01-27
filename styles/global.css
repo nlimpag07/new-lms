@@ -552,3 +552,18 @@ a.ellipsis i {
   right: 0;
   border-radius: 5px 5px 0 0;
 }
+.ant-card-bordered {
+  border: none;
+  box-shadow: 0px 1px 3px #3333331c;
+} /*border: 1px solid #f0f0f0;*/
+.card-holder:hover .ant-card-bordered {
+  box-shadow: 0px 1px 3px #3333331c;
+}
+.selected-c-body .ant-card-bordered {
+  /* border: 1px solid #ff9d3761; */
+  box-shadow: 0px 2px 6px #ff9d3761;
+}
+.card-holder:focus,
+.card-holder:hover {
+  box-shadow: 0px 1px 3px #3333331c;
+}

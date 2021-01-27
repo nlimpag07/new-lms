@@ -447,10 +447,6 @@ const Outlines = (props) => {
         .ant-card-actions > li > span:hover {
           color: #e69138;
         }
-        .ant-card-bordered {
-          border: 1px solid #f0f0f0;
-        }
-
         .course-details,
         .selected-course-off {
           display: none;
@@ -464,15 +460,9 @@ const Outlines = (props) => {
         }
         .card-holder:hover {
           cursor: pointer;
-        }
-        .card-holder:hover .ant-card-bordered {
-          border: 1px solid #f9c48e61;
-        }
+        }        
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
-        }
-        .selected-c-body .ant-card-bordered {
-          border: 1px solid #ff9d3761;
         }
         /*.selected-c-body .ant-card-body::after {
           display: table;

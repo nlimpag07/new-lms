@@ -309,7 +309,7 @@ const LearnersCatalog = (props) => {
         </Row>
         <Row
           className="LearnersCourses-ListItems"
-          gutter={[16, 16]}
+          gutter={[24, 24]}
           style={{ padding: "10px 0" }}
         >
           {GridType(
@@ -517,10 +517,7 @@ const LearnersCatalog = (props) => {
         }
         .ant-card-actions > li > span:hover {
           color: #e69138;
-        }
-        .ant-card-bordered {
-          border: 1px solid #f0f0f0;
-        }
+        }        
 
         .course-details,
         .selected-course-off {
@@ -535,42 +532,10 @@ const LearnersCatalog = (props) => {
         }
         .card-holder:hover {
           cursor: pointer;
-        }
-        .card-holder:hover .ant-card-bordered {
-          border: 1px solid #f9c48e61;
-        }
+        }        
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
-        }
-        .selected-c-body .ant-card-bordered {
-          border: 1px solid #ff9d3761;
-        }
-        /*.selected-c-body .ant-card-body::after {
-          display: table;
-          clear: both;
-          content: "";
-          height: 2rem;
-          background-color: #e2e2e2;
-          z-index: 100;
-          position: absolute;
-          top: 100%;
-          width: 100%;
-          left: 0;
-          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-         .course-details-content {
-          width: 70vw;
-    position: absolute;
-    margin: 0 auto;
-    left: 30%;
-          background-color: #666666;
-        } */
-        .selected-c-body .ant-card-hoverable {
-          border-color: transparent;
-          box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
-            0 3px 6px 0 rgba(242, 163, 5, 0.3),
-            0 5px 12px 4px rgba(242, 163, 5, 0.3);
-        }
+        }      
       `}</style>
     </Row>
   );
