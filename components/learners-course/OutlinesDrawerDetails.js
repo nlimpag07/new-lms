@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
 import { useAuth } from "../../providers/Auth";
+import { useViewPort } from "../../providers/ViewPort";
 
 import axios from "axios";
 import Link from "next/link";
@@ -81,6 +82,7 @@ const OutlinesDrawerDetails = ({
   setStartOutline,
   startOutline,
 }) => {
+  const { viewport } = useViewPort();
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
@@ -506,22 +508,23 @@ const OutlinesDrawerDetails = ({
       //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
     }
   };
-
+  const drawerProps =
+  viewport && viewport == "mobile"
+    ? { height: `100%`, width: `100%`, placement: `right` }
+    : { height: `60%`, placement: `bottom` };
   return (
     <Drawer
-      //title={title} /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
-      height={`60vh`}
+    {...drawerProps}      
       onClose={() => setdrawerVisible(false)}
       visible={drawerVisible}
       bodyStyle={{ paddingBottom: 0 }}
-      placement={`bottom`}
       maskClosable={false}
       destroyOnClose={true}
       className="drawer-course-details"
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
         <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          gutter={[32, 32]}
           style={{ marginTop: "16px", marginBottom: "16px" }}
         >
           <Col xs={24} sm={24} md={6} offset={2}>
