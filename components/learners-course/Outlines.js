@@ -463,33 +463,13 @@ const Outlines = (props) => {
         }        
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
-        }
-        /*.selected-c-body .ant-card-body::after {
-          display: table;
-          clear: both;
-          content: "";
-          height: 2rem;
-          background-color: #e2e2e2;
-          z-index: 100;
-          position: absolute;
-          top: 100%;
-          width: 100%;
-          left: 0;
-          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-         .course-details-content {
-          width: 70vw;
-    position: absolute;
-    margin: 0 auto;
-    left: 30%;
-          background-color: #666666;
-        } */
-        .selected-c-body .ant-card-hoverable {
+        }        
+        /* .selected-c-body .ant-card-hoverable {
           border-color: transparent;
           box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
             0 3px 6px 0 rgba(242, 163, 5, 0.3),
             0 5px 12px 4px rgba(242, 163, 5, 0.3);
-        }
+        } */
         .learnerOutlines .ant-spin-spinning {
           position: fixed;
           display: block;

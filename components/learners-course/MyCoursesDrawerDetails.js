@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
 import { useAuth } from "../../providers/Auth";
+import { useViewPort } from "../../providers/ViewPort";
 
 import axios from "axios";
 import Link from "next/link";
@@ -69,13 +70,14 @@ const MyCoursesDrawerDetails = ({
   setdrawerVisible,
   drawerVisible,
 }) => {
+  const { viewport } = useViewPort();
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
   console.log("Course Details:", mycourseDetails);
 
-  let {isApproved, startDate, endDate } = mycourseDetails;
+  let { isApproved, startDate, endDate } = mycourseDetails;
   const learnerId = mycourseDetails.id;
   //Reassigning courseDetails
   var courseDetails = mycourseDetails.course;
@@ -95,7 +97,7 @@ const MyCoursesDrawerDetails = ({
     relatedCourse,
     learner,
   } = courseDetails;
-  console.log('Learner',learner);
+  console.log("Learner", learner);
   const listData = [
     {
       title: `${
@@ -152,8 +154,6 @@ const MyCoursesDrawerDetails = ({
         average: sumRating > 0 ? sumRating / totalLearners : 0,
         learnersCount: totalLearners > 0 ? totalLearners : 0,
       });
-
-      
     } else {
       setReviewDetails({
         average: 0,
@@ -164,7 +164,7 @@ const MyCoursesDrawerDetails = ({
 
     //Check if Learner Already in progress
     if (startDate) {
-      console.log(startDate)
+      console.log(startDate);
       setHasStarted(true);
     } else {
       setHasStarted(false);
@@ -175,7 +175,6 @@ const MyCoursesDrawerDetails = ({
   function onStartOrContinueCourse(e) {
     e.preventDefault();
 
-    
     //if approved and has not started
     if (isApproved == 1) {
       //Check if the Learner has not started this course
@@ -196,10 +195,10 @@ const MyCoursesDrawerDetails = ({
             const response = await axios(config);
             if (response) {
               //setOutcomeList(response.data.result);
-              let theRes = response.data.response
+              let theRes = response.data.response;
               //console.log("Response", response.data);
-              // wait for response if the verification is true              
-              if(theRes){
+              // wait for response if the verification is true
+              if (theRes) {
                 //true
                 setdrawerVisible(false);
                 //Redirect to Course Outline
@@ -207,11 +206,12 @@ const MyCoursesDrawerDetails = ({
                   `/${linkUrl}/my-courses/[courseId]/[outlines]`,
                   `/${linkUrl}/my-courses/${id}/learning-outlines`
                 );
-              }else{
+              } else {
                 //false
                 Modal.error({
                   title: "Error: Unable to Start Course",
-                  content: response.data.message + " Please contact Technical Support",
+                  content:
+                    response.data.message + " Please contact Technical Support",
                   centered: true,
                   width: 450,
                   onOk: () => {
@@ -240,8 +240,6 @@ const MyCoursesDrawerDetails = ({
           //setLoading(false);
         }
         fetchData(config);
-
-
       } else {
         //The learner already started this course, just
         //directly redirect to course outline
@@ -263,28 +261,30 @@ const MyCoursesDrawerDetails = ({
       });
     }
   }
-
+  const drawerProps =
+    viewport && viewport == "mobile"
+      ? { height: `100%`, width: `100%`, placement: `right` }
+      : { height: `60%`, placement: `bottom` };
   return (
     <Drawer
-      title={title} /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
-      height={`60vh`}
+      title="About the course" /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
+      {...drawerProps}
       onClose={() => setdrawerVisible(false)}
       visible={drawerVisible}
       bodyStyle={{ paddingBottom: 0 }}
-      placement={`bottom`}
       maskClosable={false}
       destroyOnClose={true}
       className="drawer-course-details"
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col xs={24} sm={24} md={18}>
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col xs={24} sm={12} md={12}>
-                <h1>About this course</h1>
+        <Row gutter={[32, 32]}>
+          <Col xs={24} sm={24} md={24} lg={17}>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <h1>{title}</h1>
               </Col>
-              <Col xs={24} sm={12} md={12}>
-                <div className="star-rating">
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Col className="star-rating">
                   <Rate
                     allowHalf
                     disabled
@@ -292,7 +292,49 @@ const MyCoursesDrawerDetails = ({
                   />{" "}
                   {reviewDetails.average} ({reviewDetails.learnersCount}{" "}
                   reviews)
-                </div>
+                </Col>
+              </Col>
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={0}
+                xl={0}
+                xxl={0}
+                className="drawerActionButtons"
+              >
+                {hasStarted ? (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={onStartOrContinueCourse}
+                  >
+                    Continue
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    danger
+                    onClick={onStartOrContinueCourse}
+                  >
+                    Start Course
+                  </Button>
+                )}
+                <Button
+                  shape="round"
+                  size="large"
+                  onClick={() =>
+                    router.push(
+                      `/${linkUrl}/course-catalogue/[...manage]`,
+                      `/${linkUrl}/course-catalogue/view/${id}`
+                    )
+                  }
+                >
+                  Course Details
+                </Button>
               </Col>
             </Row>
             <Row>
@@ -301,10 +343,7 @@ const MyCoursesDrawerDetails = ({
                   {/* <p>{`${
                     courseDetails != "" ? courseDetails.description : ""
                   }`}</p> */}
-                  <p>
-                    {decodeURI(description)}
-                    
-                  </p>
+                  <p>{decodeURI(description)}</p>
                 </div>
               </Col>
             </Row>
@@ -327,47 +366,45 @@ const MyCoursesDrawerDetails = ({
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={6}>
-            <div xs={24} className="drawerActionButtons">
-              {hasStarted ? (
+          <Col xs={24} sm={24} md={24} lg={7}>
+            <Row className="drawerActionButtons" gutter={[16, 16]}>
+              <Col xs={0} sm={0} md={0} lg={24} xl={12} xxl={12}>
+                {hasStarted ? (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={onStartOrContinueCourse}
+                  >
+                    Continue
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    danger
+                    onClick={onStartOrContinueCourse}
+                  >
+                    Start Course
+                  </Button>
+                )}
+              </Col>
+              <Col xs={0} sm={0} md={0} lg={24} xl={12} xxl={12}>
                 <Button
-                  type="primary"
                   shape="round"
-                  size="large"                  
-                  onClick={onStartOrContinueCourse}
-                  /* onClick={() =>
+                  size="large"
+                  onClick={() =>
                     router.push(
                       `/${linkUrl}/course-catalogue/[...manage]`,
                       `/${linkUrl}/course-catalogue/view/${id}`
                     )
-                  } */
+                  }
                 >
-                  Continue
+                  Course Details
                 </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="large"
-                  danger
-                  onClick={onStartOrContinueCourse}
-                >
-                  Start Course
-                </Button>
-              )}
-              <Button
-                shape="round"
-                size="large"
-                onClick={() =>
-                  router.push(
-                    `/${linkUrl}/course-catalogue/[...manage]`,
-                    `/${linkUrl}/course-catalogue/view/${id}`
-                  )
-                }
-              >
-                Course Details
-              </Button>
-            </div>
+              </Col>
+            </Row>
             <List
               itemLayout="horizontal"
               dataSource={listData}
@@ -409,17 +446,12 @@ const MyCoursesDrawerDetails = ({
         .drawer-course-details .ant-drawer-content .course-desc p {
           font-size: 16px;
         }
-        .star-rating {
-          font-size: 1.2rem;
-          text-align: right;
-        }
+        
         .star-rating .ant-rate {
           font-size: 1.5rem;
           margin-right: 1rem;
         }
-        .star-rating .ant-rate-star:not(:last-child) {
-          margin-right: 15px;
-        }
+        
         .drawer-course-details .ant-drawer-content .Course-Tags {
           margin-top: 2rem;
         }
@@ -430,13 +462,7 @@ const MyCoursesDrawerDetails = ({
           margin-right: 15px;
           background-color: #ffffff;
         }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons {
-          margin-bottom: 2rem;
-        }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons button {
-          margin-right: 1rem;
-          font-size: 1rem;
-        }
+        
       `}</style>
     </Drawer>
   );

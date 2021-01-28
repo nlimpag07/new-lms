@@ -13,7 +13,30 @@
   .viewStatusReq .ant-col {
     text-align: left !important;
   }
+  .drawer-course-details .ant-drawer-content h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0rem;
+  }
+  .drawer-course-details .ant-drawer-content h2 {
+    font-size: 1rem;
+  }
+  .star-rating {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin-bottom: 1rem;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+  .drawerActionButtons .ant-btn{width: 100%; margin-bottom: 1rem;}
 }
+
 /* sm */
 @media screen and (min-width: 576px) and (max-width: 767px) {
   .loginform-banner::after {
@@ -29,6 +52,23 @@
   .viewStatusReq .ant-col {
     text-align: left !important;
   }
+  .drawer-course-details .ant-drawer-content h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .star-rating {
+    font-size: 0.8rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin: 1rem 0 2rem 0;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
 }
 /* md */
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -41,6 +81,23 @@
   .main-content-holder {
     padding-right: 16px;
     padding-left: 16px;
+  }
+  .drawer-course-details .ant-drawer-content h1 {
+    font-size: 1.3rem;
+    margin-bottom: 0rem;
+  }
+  .star-rating {
+    font-size: 0.8rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin: 1rem 0 2rem 0;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
   }
 }
 /* lg */
@@ -62,6 +119,25 @@
     padding-right: 16px;
     padding-left: 0;
   }
+  .drawer-course-details .ant-drawer-content h1 {
+    margin-bottom: 0rem;
+  }
+  .star-rating {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin-bottom: 0rem;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+  .drawerActionButtons .ant-btn{width: 100%;}
+  .drawerActionButtons .ant-btn:not(:last-child){margin-bottom: 1rem;}
 }
 /* xl */
 @media screen and (min-width: 1200px) and (max-width: 1599px) {
@@ -69,6 +145,28 @@
     padding-right: 16px;
     padding-left: 0;
   }
+  .drawer-course-details .ant-drawer-body{
+    padding:2rem;
+  }
+  .drawer-course-details .ant-drawer-content h1 {
+    margin-bottom: 0rem;
+  }
+  .star-rating {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin-bottom: 1rem;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+  .drawerActionButtons .ant-btn{width: 100%;}
+
 }
 /* xxl */
 @media screen and (min-width: 1600px) {
@@ -76,6 +174,28 @@
     padding-right: 16px;
     padding-left: 0;
   }
+  .drawer-course-details .ant-drawer-body{
+    padding:2rem;
+  }
+  .drawer-course-details .ant-drawer-content h1 {
+    margin-bottom: 0rem;
+  }
+  .star-rating {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .star-rating .ant-rate-star:not(:last-child) {
+    margin-right: 7px;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons {
+    margin-bottom: 2rem;
+  }
+  .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+  .drawerActionButtons .ant-btn{width: 100%;}
+
 }
 .logo img {
   width: 100%;

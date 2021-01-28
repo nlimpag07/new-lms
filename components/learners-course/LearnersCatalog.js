@@ -553,7 +553,7 @@ const GridType = (
   //console.log(router);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
-  let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
+  let gridProps = { xs: 24, sm: 24, md: 12, lg: 8, xl: 6 };
   if (gridType == "list") {
     gridProps = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24 };
     gridClass = "grid-list";

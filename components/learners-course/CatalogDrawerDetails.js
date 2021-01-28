@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
 import { useAuth } from "../../providers/Auth";
+import { useViewPort } from "../../providers/ViewPort";
 
 import axios from "axios";
 import Link from "next/link";
@@ -70,6 +71,8 @@ const CatalogDrawerDetails = ({
   drawerVisible,
   setSpinner,
 }) => {
+  const { viewport } = useViewPort();
+
   const router = useRouter();
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
@@ -218,28 +221,32 @@ const CatalogDrawerDetails = ({
     }
     fetchData(config);
   }
-
+  const drawerProps =
+    viewport && viewport == "mobile"
+      ? { height: `100%`, width: `100%`, placement: `right` }
+      : { height: `60%`, placement: `bottom` };
   return (
     <Drawer
-      title={title} /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
-      height={`60vh`}
+      title="About the course" /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
+      {...drawerProps}
+      /* height={`100vh`} */
       onClose={() => setdrawerVisible(false)}
       visible={drawerVisible}
       bodyStyle={{ paddingBottom: 0 }}
-      placement={`bottom`}
-      maskClosable={false}
+      /*  placement={`bottom`} */
+      maskClosable={true}
       destroyOnClose={true}
       className="drawer-course-details"
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
-        <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col xs={24} sm={24} md={18}>
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col xs={24} sm={12} md={12}>
-                <h1>About this course</h1>
+        <Row gutter={[32, 32]}>
+          <Col xs={24} sm={24} md={24} lg={17}>
+            <Row>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <h1>{title}</h1>
               </Col>
-              <Col xs={24} sm={12} md={12}>
-                <div className="star-rating">
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Col className="star-rating">
                   <Rate
                     allowHalf
                     disabled
@@ -247,7 +254,54 @@ const CatalogDrawerDetails = ({
                   />{" "}
                   {reviewDetails.average} ({reviewDetails.learnersCount}{" "}
                   reviews)
-                </div>
+                </Col>
+              </Col>
+              <Col
+                xs={24}
+                sm={24}
+                md={24}
+                lg={0}
+                xl={0}
+                xxl={0}
+                className="drawerActionButtons"
+              >
+                {isEnrolled ? (
+                  <Button
+                    shape="round"
+                    size="large"
+                    danger
+                    //onClick={onEnrollToCourse}
+                    onClick={() =>
+                      router.push(
+                        `/${linkUrl}/course-catalogue/[...manage]`,
+                        `/${linkUrl}/course-catalogue/view/${id}`
+                      )
+                    }
+                  >
+                    ENROLLED
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={onEnrollToCourse}
+                  >
+                    ENROLL TO COURSE
+                  </Button>
+                )}
+                <Button
+                  shape="round"
+                  size="large"
+                  onClick={() =>
+                    router.push(
+                      `/${linkUrl}/course-catalogue/[...manage]`,
+                      `/${linkUrl}/course-catalogue/view/${id}`
+                    )
+                  }
+                >
+                  LEARN MORE
+                </Button>
               </Col>
             </Row>
             <Row>
@@ -256,25 +310,7 @@ const CatalogDrawerDetails = ({
                   {/* <p>{`${
                     courseDetails != "" ? courseDetails.description : ""
                   }`}</p> */}
-                  <p>
-                    {decodeURI(description)}
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum. Lorem ipsum dolor sit
-                    amet, consectetur adipisicing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad
-                    minim veniam, quis nostrud exercitation ullamco laboris nisi
-                    ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                    reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id
-                    est laborum.
-                  </p>
+                  <p>{decodeURI(description)}</p>
                 </div>
               </Col>
             </Row>
@@ -297,14 +333,39 @@ const CatalogDrawerDetails = ({
               </Col>
             </Row>
           </Col>
-          <Col xs={24} sm={24} md={6}>
-            <div xs={24} className="drawerActionButtons">
-              {isEnrolled ? (
+          <Col xs={24} sm={24} md={24} lg={7}>
+            <Row className="drawerActionButtons" gutter={[16, 16]}>
+              <Col xs={0} sm={0} md={0} lg={24} xl={12} xxl={12}>
+                {isEnrolled ? (
+                  <Button
+                    shape="round"
+                    size="large"
+                    danger
+                    //onClick={onEnrollToCourse}
+                    onClick={() =>
+                      router.push(
+                        `/${linkUrl}/course-catalogue/[...manage]`,
+                        `/${linkUrl}/course-catalogue/view/${id}`
+                      )
+                    }
+                  >
+                    ENROLLED
+                  </Button>
+                ) : (
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    onClick={onEnrollToCourse}
+                  >
+                    ENROLL TO COURSE
+                  </Button>
+                )}
+              </Col>
+              <Col xs={0} sm={0} md={0} lg={24} xl={12} xxl={12}>
                 <Button
                   shape="round"
                   size="large"
-                  danger
-                  //onClick={onEnrollToCourse}
                   onClick={() =>
                     router.push(
                       `/${linkUrl}/course-catalogue/[...manage]`,
@@ -312,31 +373,10 @@ const CatalogDrawerDetails = ({
                     )
                   }
                 >
-                  ENROLLED
+                  LEARN MORE
                 </Button>
-              ) : (
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="large"
-                  onClick={onEnrollToCourse}
-                >
-                  ENROLL TO COURSE
-                </Button>
-              )}
-              <Button
-                shape="round"
-                size="large"
-                onClick={() =>
-                  router.push(
-                    `/${linkUrl}/course-catalogue/[...manage]`,
-                    `/${linkUrl}/course-catalogue/view/${id}`
-                  )
-                }
-              >
-                LEARN MORE
-              </Button>
-            </div>
+              </Col>
+            </Row>
             <List
               itemLayout="horizontal"
               dataSource={listData}
@@ -378,17 +418,12 @@ const CatalogDrawerDetails = ({
         .drawer-course-details .ant-drawer-content .course-desc p {
           font-size: 16px;
         }
-        .star-rating {
-          font-size: 1.2rem;
-          text-align: right;
-        }
+
         .star-rating .ant-rate {
           font-size: 1.5rem;
           margin-right: 1rem;
         }
-        .star-rating .ant-rate-star:not(:last-child) {
-          margin-right: 15px;
-        }
+
         .drawer-course-details .ant-drawer-content .Course-Tags {
           margin-top: 2rem;
         }
@@ -398,13 +433,6 @@ const CatalogDrawerDetails = ({
           padding: 5px;
           margin-right: 15px;
           background-color: #ffffff;
-        }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons {
-          margin-bottom: 2rem;
-        }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons button {
-          margin-right: 1rem;
-          font-size: 1rem;
         }
       `}</style>
     </Drawer>
