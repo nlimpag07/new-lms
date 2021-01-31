@@ -619,7 +619,7 @@ const OutlinesDrawerDetails = ({
               activity_id
             )}&tincan=true`}
             width="100%"
-            height="850"
+            height="100%"
             type="text/html"
           >
             Alternative Content
