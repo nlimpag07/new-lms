@@ -3,7 +3,6 @@ import { AuthProvider } from "../providers/Auth";
 import { CourseListProvider } from "../providers/CourseProvider";
 
 import cookie from "cookie";
-import axios from "axios";
 import "antd/dist/antd.css";
 import "../styles/vars.css";
 import "../styles/global.css";

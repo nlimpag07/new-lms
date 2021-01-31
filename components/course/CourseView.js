@@ -470,7 +470,7 @@ const CourseView = ({ course_id }) => {
               url={featureVideo}
               controls={true}
               width="100%"
-              height="635px"
+              height="auto"
               config={{
                 youtube: {
                   playerVars: { showinfo: 0 },
@@ -665,9 +665,7 @@ const CourseView = ({ course_id }) => {
         .Course-Tabs .ant-tabs-ink-bar {
           background: #e69138;
         }
-        .Course-Tabs .ant-tabs-tab {
-          padding: 12px 5%;
-        }
+        
         .Course-Tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #e69138;
         }

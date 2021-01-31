@@ -34,7 +34,14 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
-  .drawerActionButtons .ant-btn{width: 100%; margin-bottom: 1rem;}
+  .drawerActionButtons .ant-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 10px;
+  }
+  .ant-modal-mask {background-color: #ffffff;}
 }
 
 /* sm */
@@ -69,6 +76,10 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 10px;
+  }
+  .ant-modal-mask {background-color: #ffffff;}
 }
 /* md */
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -99,6 +110,10 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 16px;
+  }
+  .ant-modal-mask {background-color: #ffffff;}
 }
 /* lg */
 @media screen and (min-width: 992px) and (max-width: 1199px) {
@@ -136,8 +151,15 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
-  .drawerActionButtons .ant-btn{width: 100%;}
-  .drawerActionButtons .ant-btn:not(:last-child){margin-bottom: 1rem;}
+  .drawerActionButtons .ant-btn {
+    width: 100%;
+  }
+  .drawerActionButtons .ant-btn:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 16px;
+  }
 }
 /* xl */
 @media screen and (min-width: 1200px) and (max-width: 1599px) {
@@ -145,8 +167,8 @@
     padding-right: 16px;
     padding-left: 0;
   }
-  .drawer-course-details .ant-drawer-body{
-    padding:2rem;
+  .drawer-course-details .ant-drawer-body {
+    padding: 2rem;
   }
   .drawer-course-details .ant-drawer-content h1 {
     margin-bottom: 0rem;
@@ -165,8 +187,16 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
-  .drawerActionButtons .ant-btn{width: 100%;}
-
+  .drawerActionButtons .ant-btn {
+    width: 100%;
+  }
+  .drawer-outline-details .drawerActionButtons .ant-btn {
+    margin-bottom: 1rem;
+  }
+  
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 20px;
+  }
 }
 /* xxl */
 @media screen and (min-width: 1600px) {
@@ -174,8 +204,8 @@
     padding-right: 16px;
     padding-left: 0;
   }
-  .drawer-course-details .ant-drawer-body{
-    padding:2rem;
+  .drawer-course-details .ant-drawer-body {
+    padding: 2rem;
   }
   .drawer-course-details .ant-drawer-content h1 {
     margin-bottom: 0rem;
@@ -194,8 +224,15 @@
     margin-right: 1rem;
     font-size: 1rem;
   }
-  .drawerActionButtons .ant-btn{width: 100%;}
-
+  .drawerActionButtons .ant-btn {
+    width: 100%;
+  }
+  .Course-Tabs .ant-tabs-tab {
+    padding: 12px 20px;
+  }
+  .drawer-outline-details .drawerActionButtons .ant-btn {
+    margin-bottom: 1rem;
+  }
 }
 .logo img {
   width: 100%;

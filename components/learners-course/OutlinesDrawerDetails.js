@@ -281,6 +281,7 @@ const OutlinesDrawerDetails = ({
             <Button type="dashed" shape="round" size="large">
               Completed
             </Button>
+
             <Button type="default" shape="round" size="large">
               Next
             </Button>
@@ -495,7 +496,7 @@ const OutlinesDrawerDetails = ({
     /* setArticulateModal2Visible(false);
     setdrawerVisible(false);
    */
-   //Detect if there is Assessment assigned to the Outline
+    //Detect if there is Assessment assigned to the Outline
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
@@ -509,43 +510,81 @@ const OutlinesDrawerDetails = ({
     }
   };
   const drawerProps =
-  viewport && viewport == "mobile"
-    ? { height: `100%`, width: `100%`, placement: `right` }
-    : { height: `60%`, placement: `bottom` };
+    viewport && viewport == "mobile"
+      ? { height: `100%`, width: `100%`, placement: `right` }
+      : { height: `60%`, placement: `bottom` };
   return (
     <Drawer
-    {...drawerProps}      
+      {...drawerProps}
       onClose={() => setdrawerVisible(false)}
       visible={drawerVisible}
       bodyStyle={{ paddingBottom: 0 }}
       maskClosable={false}
       destroyOnClose={true}
-      className="drawer-course-details"
+      className="drawer-outline-details"
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
         <Row
           gutter={[32, 32]}
           style={{ marginTop: "16px", marginBottom: "16px" }}
         >
-          <Col xs={24} sm={24} md={6} offset={2}>
+          <Col xs={24} sm={24} md={24} lg={17}>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 24 }}>
-              <Col xs={24} sm={12} md={24}>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 <h1>{title}</h1>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={8} xl={8}>
                 <img
                   alt="example"
                   src={`${apidirectoryUrl}/Images/courseOutline/thumbnail/${featureImage}`}
                   style={{ width: "100%" }}
                 />
               </Col>
+              <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+                <h2>In this lesson</h2>
+                <div className="course-desc">
+                  <p>{decodeURI(description)}</p>
+                </div>
+              </Col>
             </Row>
-            <Row>
-              <Col xs={24}></Col>
-            </Row>
-            <Row>
-              <Col xs={24} sm={12} md={12}>
+            {/* <Row>
+              <Col xs={24} sm={12} md={12} lg={4} xl={4}>
                 <h2 style={{ marginTop: "10px" }}>Resources</h2>
               </Col>
-              <Col xs={24} sm={12} md={12} style={{ textAlign: "end" }}>
+              <Col xs={24} sm={12} md={12} lg={4} xl={4} style={{ textAlign: "end" }}>
+                <Button
+                  size="middle"
+                  style={{ marginTop: "10px" }}
+                >
+                  Download All
+                </Button>
+              </Col>
+            </Row> 
+            <Row>
+              <Col xs={24}>{ResourcesList}</Col>
+            </Row>*/}
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={7}>
+            <Row
+              gutter={{ xs: 8, sm: 8, md: 8, lg: 32 }}
+            >
+              <Col
+                className="drawerActionButtons"
+                xs={24}
+                sm={12}
+                md={12}
+                lg={24}
+                xl={12}
+                xxl={12}
+              >
+                {DrawerButtons(outlineStatusId)}
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <h2 style={{ marginTop: "10px" }}>Resources</h2>
+              </Col>
+              <Col xs={12} style={{ textAlign: "end" }}>
                 <Button
                   size="middle"
                   /* onClick={onStartOrContinueLesson} */
@@ -554,26 +593,7 @@ const OutlinesDrawerDetails = ({
                   Download All
                 </Button>
               </Col>
-            </Row>
-            <Row>
               <Col xs={24}>{ResourcesList}</Col>
-            </Row>
-          </Col>
-          <Col xs={24} sm={24} md={14}>
-            <Row>
-              <Col xs={24} sm={24} md={24} style={{ textAlign: "end" }}>
-                <div xs={24} className="drawerActionButtons">
-                  {DrawerButtons(outlineStatusId)}
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col xs={24} sm={24} md={24}>
-                <h2>In this lesson</h2>
-                <div className="course-desc">
-                  <p>{decodeURI(description)}</p>
-                </div>
-              </Col>
             </Row>
           </Col>
         </Row>
@@ -629,23 +649,23 @@ const OutlinesDrawerDetails = ({
         />
       )} */}
       <style jsx global>{`
-        .drawer-course-details .ant-drawer-title {
+        .drawer-outline-details .ant-drawer-title {
           font-size: 1.2rem;
         }
-        .drawer-course-details .ant-drawer-content {
+        .drawer-outline-details .ant-drawer-content {
           background-color: #f9f9f9;
         }
-        .drawer-course-details .ant-drawer-content h1,
-        .drawer-course-details .ant-drawer-content h2 {
+        .drawer-outline-details .ant-drawer-content h1,
+        .drawer-outline-details .ant-drawer-content h2 {
           color: #e69138;
         }
-        .drawer-course-details .ant-drawer-content a.drawer-related-course {
+        .drawer-outline-details .ant-drawer-content a.drawer-related-course {
           margin-right: 1rem;
         }
-        .drawer-course-details .ant-drawer-content .course-desc {
+        .drawer-outline-details .ant-drawer-content .course-desc {
           min-height: 150px;
         }
-        .drawer-course-details .ant-drawer-content .course-desc p {
+        .drawer-outline-details .ant-drawer-content .course-desc p {
           font-size: 16px;
         }
         .star-rating {
@@ -659,20 +679,21 @@ const OutlinesDrawerDetails = ({
         .star-rating .ant-rate-star:not(:last-child) {
           margin-right: 15px;
         }
-        .drawer-course-details .ant-drawer-content .Course-Tags {
+        .drawer-outline-details .ant-drawer-content .Course-Tags {
           margin-top: 2rem;
         }
-        .drawer-course-details .ant-drawer-content .Course-Tags .tag-button {
+        .drawer-outline-details .ant-drawer-content .Course-Tags .tag-button {
           border-radius: 5px;
           border: 1px solid #333333;
           padding: 5px;
           margin-right: 15px;
           background-color: #ffffff;
         }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons {
-          margin-bottom: 1rem;
-        }
-        .drawer-course-details .ant-drawer-content .drawerActionButtons button {
+
+        .drawer-outline-details
+          .ant-drawer-content
+          .drawerActionButtons
+          button {
           margin-right: 1rem;
           font-size: 1rem;
         }
