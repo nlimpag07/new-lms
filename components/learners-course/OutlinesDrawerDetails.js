@@ -574,8 +574,8 @@ const OutlinesDrawerDetails = ({
                 sm={12}
                 md={12}
                 lg={24}
-                xl={12}
-                xxl={12}
+                xl={24}
+                xxl={24}
               >
                 {DrawerButtons(outlineStatusId)}
               </Col>

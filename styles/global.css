@@ -192,6 +192,7 @@
   }
   .drawer-outline-details .drawerActionButtons .ant-btn {
     margin-bottom: 1rem;
+    width: 45%;
   }
   
   .Course-Tabs .ant-tabs-tab {
@@ -232,6 +233,7 @@
   }
   .drawer-outline-details .drawerActionButtons .ant-btn {
     margin-bottom: 1rem;
+    width: 45%;
   }
 }
 .logo img {
