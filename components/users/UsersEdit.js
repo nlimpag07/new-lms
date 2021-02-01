@@ -110,19 +110,19 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
     data.id = id;
     !!values.firstName
       ? (data.firstName = values.firstName)
-      : errorList.push("Missing First Name");
+      : data.firstName = firstName;
     !!values.middleInitial
       ? (data.middleInitial = values.middleInitial)
-      : errorList.push("Missing Middle Initial");
+      : (data.middleInitial = middleInitial);
     !!values.lastName
       ? (data.lastName = values.lastName)
-      : errorList.push("Missing Last Name");
-    !!values.gender
+      : (data.lastName = lastName);
+    !values.gender
       ? (data.gender = values.gender)
-      : errorList.push("Missing Gender");
+      : (data.gender = gender);
     !!values.birthday
       ? (data.birthday = values.birthday.format("YYYY-MM-DD"))
-      : errorList.push("Missing Birthdate");
+      : (data.birthday = birthday.format("YYYY-MM-DD"));
 
     /* !!values.username
       ? (data.username = values.username)
@@ -132,11 +132,11 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
       : errorList.push("Missing Password"); */
     !!values.email
       ? (data.email = values.email)
-      : errorList.push("Missing Email Address");
+      : (data.email = email);
 
     !!values.positionId
       ? (data.positionId = values.positionId)
-      : errorList.push("Missing Position");
+      : (data.positionId = positionId);
     /* if (!!values.userRole) {
       switch (values.userRole) {
         case "1":
@@ -191,6 +191,8 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
         .then(() => {
           setSpin(true);
         });
+    }else{
+      console.log('errorList',errorList)
     }
   };
   const openMessage = (msg, resp) => {
