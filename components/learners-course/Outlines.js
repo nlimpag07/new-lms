@@ -138,7 +138,7 @@ const Outlines = (props) => {
     <Row
       className="widget-container learnerOutlines"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      style={{ margin: "1rem 0" }}
+      
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -507,6 +507,7 @@ const GridType = (
   const handleAnchorClick = (e, outline) => {
     e.preventDefault();
     //console.log(e.target.nextElementSibling);
+    //console.log('outline',outline);
 
     let notCard = document.querySelectorAll(".card-holder");
     let targetCard = "selected-c-body";

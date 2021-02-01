@@ -281,10 +281,6 @@ const OutlinesDrawerDetails = ({
             <Button type="dashed" shape="round" size="large">
               Completed
             </Button>
-
-            <Button type="default" shape="round" size="large">
-              Next
-            </Button>
           </>
         );
         break;
@@ -565,9 +561,7 @@ const OutlinesDrawerDetails = ({
             </Row>*/}
           </Col>
           <Col xs={24} sm={24} md={24} lg={7}>
-            <Row
-              gutter={{ xs: 8, sm: 8, md: 8, lg: 32 }}
-            >
+            <Row gutter={{ xs: 8, sm: 8, md: 8, lg: 32 }}>
               <Col
                 className="drawerActionButtons"
                 xs={24}
