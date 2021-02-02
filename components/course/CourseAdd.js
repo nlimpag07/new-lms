@@ -822,7 +822,7 @@ const CourseAdd = () => {
               }
               .course-management .ant-input-affix-wrapper {
                 border-radius: 0.5rem;
-                border: 1px solid #888787;
+                border: 1px solid #333333;
               }
 
               .course-management .cm-main-right .widget-header-row {

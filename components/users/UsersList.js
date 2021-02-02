@@ -387,9 +387,7 @@ const UsersList = ({ userlist }) => {
           font-size: 2rem;
           font-weight: 700;
         }
-        .UsersList .k-grid-header {
-          background-color: rgba(0, 0, 0, 0.05);
-        }
+        
         .UsersAddForm .ant-modal-body {
           padding: 3rem;
         }

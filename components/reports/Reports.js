@@ -162,12 +162,12 @@ const Reports = ({ userlist }) => {
           margin: 0;
           padding: 0;
         }
-        .reports
+        /* .reports
           .ant-collapse-icon-position-right
           > .ant-collapse-item
           > .ant-collapse-header {
           background-color: #eeeeee;
-        }
+        } */
         .reports .gutter-row .ant-col {
           display: flex;
           align-items: center;

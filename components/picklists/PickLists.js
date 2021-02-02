@@ -251,12 +251,7 @@ const PickLists = ({ userlist }) => {
           margin: 0;
           padding: 0;
         }
-        .pickLists
-          .ant-collapse-icon-position-right
-          > .ant-collapse-item
-          > .ant-collapse-header {
-          background-color: #eeeeee;
-        }
+        
         .pickLists .gutter-row .ant-col {
           display: flex;
           align-items: center;
