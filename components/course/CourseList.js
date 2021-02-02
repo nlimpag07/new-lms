@@ -272,10 +272,26 @@ const CourseList = (props) => {
           <Col xs={14} sm={18} md={18}>
             <h3 className="widget-title">Latest First</h3>
           </Col>
-          <Col xs={10} sm={6} md={6} lg={0} xl={0} xxl={0} className="widget-switchgrid-holder">
+          <Col
+            xs={10}
+            sm={6}
+            md={6}
+            lg={0}
+            xl={0}
+            xxl={0}
+            className="widget-switchgrid-holder"
+          >
             <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
           </Col>
-          <Col xs={0} sm={0} md={0} lg={6} xl={6} xxl={6} className="widget-switchgrid-holder">
+          <Col
+            xs={0}
+            sm={0}
+            md={0}
+            lg={6}
+            xl={6}
+            xxl={6}
+            className="widget-switchgrid-holder"
+          >
             <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
             <button
               className="switch-grid"
@@ -462,9 +478,9 @@ const CourseList = (props) => {
           padding-right: 0;
         }
         .widget-holder-col .widget-search-row .choices-container {
-          border-radius: 0.5rem;
+          /*border-radius: 0.5rem;
           border: 1px solid #888787;
-          /* padding: 0 10px; */
+          padding: 0 10px; */
         }
         .widget-holder-col .widget-search-row .category-holder {
           position: relative;
@@ -474,8 +490,9 @@ const CourseList = (props) => {
           .category-holder
           .ant-select-single:not(.ant-select-customize-input)
           .ant-select-selector {
-          background: none;
-          border: none;
+          /* background: none; */
+          border-radius: 0.5rem;
+          border: 1px solid #e69138;
         }
         .widget-holder-col .widget-search-row .category-holder .ant-select,
         .widget-holder-col
@@ -494,9 +511,13 @@ const CourseList = (props) => {
 
         .searchbox-holder .ant-input-affix-wrapper {
           background: none;
-          border: none;
+          border-radius: 0.5rem;
+          border: 1px solid #e69138;
           font-size: 1rem;
           color: #e69138;
+        }
+        .searchbox-holder .ant-input-search-icon::before {
+          border-left: 1px solid #e69138;
         }
         .searchbox-holder .ant-input,
         .searchbox-holder .ant-input-search-icon {

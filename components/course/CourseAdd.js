@@ -800,9 +800,9 @@ const CourseAdd = () => {
             />
             <style jsx global>{`
               .greyBackground {
-                background-color: #eeeeee;
+                /* background-color: #3D3D45; */
                 text-transform: uppercase;
-                font-weight: bold;
+                font-weight: 400;
               }
               .greyBackground p {
                 font-weight: normal;
