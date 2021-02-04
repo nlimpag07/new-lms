@@ -200,54 +200,56 @@ const Categories = ({ data }) => {
       <Row
         className="widget-container"
         gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ margin: "1rem 0" }}
+        style={{ margin: "0" }}
       >
-        <Col
-          className="gutter-row widget-holder-col Categories"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>Picklists: Departments</h1>
-          <Row className="widget-header-row" justify="start">
-            <Col xs={24} xs={24} sm={12} md={8} lg={8}>
-              <Search
-                placeholder="Search Department"
-                enterButton="Search"
-                size="large"
-                loading={searchLoading}
-                onSearch={onSearch}
-              />
-            </Col>
-          </Row>
-          <Row className="PicklistDepartments">
-            <Col xs={24}>
-              {spin ? (
-                <div className="spinHolder">
-                  <Spin
-                    size="small"
-                    tip="Retrieving data..."
-                    spinning={spin}
-                    delay={100}
-                  ></Spin>
-                </div>
-              ) : (
-                <Col xs={24}>
-                  <DepartmentsList
-                    departmentData={departmentData}
-                    page={page}
-                    setPage={setPage}
-                    setRunSpin={setRunSpin}
-                    spin={spin}
-                    showModal={showModal}
-                    hideModal={hideModal}
-                  />
-                </Col>
-              )}
-            </Col>
-          </Row>
-        </Col>
+        <div className="common-holder">
+          <Col
+            className="gutter-row widget-holder-col Categories"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>Picklists: Departments</h1>
+            <Row justify="start">
+              <Col xs={24} xs={24} sm={12} md={8} lg={8}>
+                <Search
+                  placeholder="Search Department"
+                  enterButton="Search"
+                  size="large"
+                  loading={searchLoading}
+                  onSearch={onSearch}
+                />
+              </Col>
+            </Row>
+            <Row className="PicklistDepartments">
+              <Col xs={24}>
+                {spin ? (
+                  <div className="spinHolder">
+                    <Spin
+                      size="small"
+                      tip="Retrieving data..."
+                      spinning={spin}
+                      delay={100}
+                    ></Spin>
+                  </div>
+                ) : (
+                  <Col xs={24}>
+                    <DepartmentsList
+                      departmentData={departmentData}
+                      page={page}
+                      setPage={setPage}
+                      setRunSpin={setRunSpin}
+                      spin={spin}
+                      showModal={showModal}
+                      hideModal={hideModal}
+                    />
+                  </Col>
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </div>
       </Row>
       <Modal
         title={`Departments - ${departmentsModal.modalOperation}`}
@@ -263,7 +265,11 @@ const Categories = ({ data }) => {
         className="PicklistdepartmentsModal"
       >
         {departmentsModal.modalOperation == "edit" ? (
-          <DepartmentsEdit dataProps={departmentsModal.dataProps} hideModal={hideModal} setRunSpin={setRunSpin} />
+          <DepartmentsEdit
+            dataProps={departmentsModal.dataProps}
+            hideModal={hideModal}
+            setRunSpin={setRunSpin}
+          />
         ) : departmentsModal.modalOperation == "add" ? (
           <DepartmentsAdd hideModal={hideModal} setRunSpin={setRunSpin} />
         ) : departmentsModal.modalOperation == "approve" ? (

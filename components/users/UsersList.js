@@ -252,97 +252,103 @@ const UsersList = ({ userlist }) => {
       /* style={{ margin: "1rem 0" }} */
     >
       <motion.div initial="hidden" animate="visible" variants={list}>
-        <Col
-          className="gutter-row widget-holder-col UsersList"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>Users List</h1>
-          <Row className="Course-Enrollments">
-            <Col xs={24}>
-              {spin ? (
-                <div className="spinHolder">
-                  <Spin
-                    size="small"
-                    tip="Retrieving data..."
-                    spinning={spin}
-                    delay={100}
-                  ></Spin>
-                </div>
-              ) : (
-                <Grid
-                  data={orderBy(
-                    Data.data.slice(
-                      pagination.skip,
-                      pagination.take + pagination.skip
-                    ),
-                    theSort.sort
-                  )}
-                  style={{ height: "550px" }}
-                  selectedField="selected"
-                  onSelectionChange={selectionChange}
-                  onHeaderSelectionChange={headerSelectionChange}
-                  onRowClick={rowClick}
-                  sortable
-                  sort={theSort.sort}
-                  onSortChange={(e) => {
-                    setTheSort({
-                      sort: e.sort,
-                    });
-                  }}
-                  skip={pagination.skip}
-                  take={pagination.take}
-                  total={Data.data.length}
-                  pageable={true}
-                  onPageChange={pageChange}
-                  filterable={true}
-                  filter={Data.filter}
-                  onFilterChange={filterChange}
-                >
-                  <Column
-                    field="selected"
-                    width="65px"
-                    headerSelectionValue={
-                      Data.data.findIndex(
-                        (dataItem) => dataItem.selected === false
-                      ) === -1
-                    }
-                    filterable={false}
-                  />
-                  <Column
-                    field="empId"
-                    title="Emp ID"
-                    width="100px"
-                    filter={"numeric"}
-                    filterable={false}
-                  />
-                  <Column field="firstName" title="First Name" width="300px" />
-                  <Column field="lastName" title="Last Name" width="300px" />
-                  <Column field="userType" title="User Type" />
-                  <Column field="email" title="Email" />
+        <div className="common-holder">
+          <Col
+            className="gutter-row widget-holder-col UsersList"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>Users List</h1>
+            <Row className="Course-Enrollments">
+              <Col xs={24}>
+                {spin ? (
+                  <div className="spinHolder">
+                    <Spin
+                      size="small"
+                      tip="Retrieving data..."
+                      spinning={spin}
+                      delay={100}
+                    ></Spin>
+                  </div>
+                ) : (
+                  <Grid
+                    data={orderBy(
+                      Data.data.slice(
+                        pagination.skip,
+                        pagination.take + pagination.skip
+                      ),
+                      theSort.sort
+                    )}
+                    style={{ height: "550px" }}
+                    selectedField="selected"
+                    onSelectionChange={selectionChange}
+                    onHeaderSelectionChange={headerSelectionChange}
+                    onRowClick={rowClick}
+                    sortable
+                    sort={theSort.sort}
+                    onSortChange={(e) => {
+                      setTheSort({
+                        sort: e.sort,
+                      });
+                    }}
+                    skip={pagination.skip}
+                    take={pagination.take}
+                    total={Data.data.length}
+                    pageable={true}
+                    onPageChange={pageChange}
+                    filterable={true}
+                    filter={Data.filter}
+                    onFilterChange={filterChange}
+                  >
+                    <Column
+                      field="selected"
+                      width="65px"
+                      headerSelectionValue={
+                        Data.data.findIndex(
+                          (dataItem) => dataItem.selected === false
+                        ) === -1
+                      }
+                      filterable={false}
+                    />
+                    <Column
+                      field="empId"
+                      title="Emp ID"
+                      width="100px"
+                      filter={"numeric"}
+                      filterable={false}
+                    />
+                    <Column
+                      field="firstName"
+                      title="First Name"
+                      width="300px"
+                    />
+                    <Column field="lastName" title="Last Name" width="300px" />
+                    <Column field="userType" title="User Type" />
+                    <Column field="email" title="Email" />
 
-                  <Column
-                    field="isActive"
-                    title="Active Status"
-                    cell={AciveStatusRender}
-                    filterable={false}
-                  />
-                  <Column
-                    sortable={false}
-                    cell={(item) =>
-                      ActionRender(item, showModal, hideModal, setSpin)
-                    }
-                    field=""
-                    title="Action"
-                    filterable={false}
-                  />
-                </Grid>
-              )}
-            </Col>
-          </Row>
-        </Col>
+                    <Column
+                      field="isActive"
+                      title="Active Status"
+                      cell={AciveStatusRender}
+                      filterable={false}
+                    />
+                    <Column
+                      sortable={false}
+                      cell={(item) =>
+                        ActionRender(item, showModal, hideModal, setSpin)
+                      }
+                      field=""
+                      title="Action"
+                      filterable={false}
+                    />
+                  </Grid>
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </div>
       </motion.div>
       <Modal
         title={`Users - ${userModal.modalOperation}`}

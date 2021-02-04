@@ -198,9 +198,9 @@ const Locations = ({ data }) => {
     <motion.div initial="hidden" animate="visible" variants={list}>
       <Row
         className="widget-container"
-        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        style={{ margin: "1rem 0" }}
-      >
+        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}    
+        style={{ margin: "0" }}    
+      ><div className="common-holder">
         <Col
           className="gutter-row widget-holder-col Locations"
           xs={24}
@@ -209,7 +209,7 @@ const Locations = ({ data }) => {
           lg={24}
         >
           <h1>Picklists: Locations</h1>
-          <Row className="widget-header-row" justify="start">
+          <Row justify="start">
             <Col xs={24} xs={24} sm={12} md={8} lg={8}>
               <Search
                 placeholder="Search Location"
@@ -247,6 +247,7 @@ const Locations = ({ data }) => {
             </Col>
           </Row>
         </Col>
+        </div>
       </Row>
       <Modal
         title={`Locations - ${locationsModal.modalOperation}`}
