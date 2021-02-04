@@ -34,33 +34,35 @@ const Graph = () => {
           <h3 className="widget-title">Graph</h3>
         </Col>
       </Row>
-      <Row gutter={[16, 16]} style={{ padding: "10px 0" }}>
-        <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-          <Chart>
-            <ChartTitle text="Student's Data" />
-            <ChartCategoryAxis>
-              <ChartCategoryAxisItem
-                title={{ text: "Months" }}
-                categories={categories}
-              />
-            </ChartCategoryAxis>
-            <ChartSeries>
-              <ChartSeriesItem
-                type="line"
-                data={[123, 276, 310, 212, 240, 156, 98]}
-              />
-              <ChartSeriesItem
-                type="line"
-                data={[165, 210, 287, 144, 190, 167, 212]}
-              />
-              <ChartSeriesItem
-                type="line"
-                data={[56, 140, 195, 46, 123, 78, 95]}
-              />
-            </ChartSeries>
-          </Chart>
-        </Col>
-      </Row>
+      <div className="common-holder">
+        <Row gutter={[16, 16]} style={{ padding: "10px 0" }}>
+          <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+            <Chart>
+              <ChartTitle text="Student's Data" />
+              <ChartCategoryAxis>
+                <ChartCategoryAxisItem
+                  title={{ text: "Months" }}
+                  categories={categories}
+                />
+              </ChartCategoryAxis>
+              <ChartSeries>
+                <ChartSeriesItem
+                  type="line"
+                  data={[123, 276, 310, 212, 240, 156, 98]}
+                />
+                <ChartSeriesItem
+                  type="line"
+                  data={[165, 210, 287, 144, 190, 167, 212]}
+                />
+                <ChartSeriesItem
+                  type="line"
+                  data={[56, 140, 195, 46, 123, 78, 95]}
+                />
+              </ChartSeries>
+            </Chart>
+          </Col>
+        </Row>
+      </div>
       <style jsx global>{`
         .example-wrapper {
           min-height: 280px;

@@ -97,12 +97,13 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
   }, []);
   return (
     <Col
-      className="gutter-row widget-holder-col"
+      className="widget-holder-col"
       xs={24}
       sm={24}
       md={24}
       lg={16}
     >
+      
       <Row className="widget-header-row" justify="start">
         <Col xs={23}>
           <h3 className="widget-title">Authored Courses</h3>
@@ -122,6 +123,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
           </button>
         </Col>
       </Row>
+      <div className="common-holder">
       <Row
         className="AuthoredCourses-ListItems"
         gutter={[16, 16]}
@@ -135,6 +137,7 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
           loading
         )}
       </Row>
+      </div>
       <Modal
         title="Publish Properties"
         centered
@@ -163,9 +166,8 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
           margin-bottom: 0;
           text-transform: uppercase;
         }
-        .widget-holder-col .widget-header-row {
-          background-color: #eeeeee;
-          padding: 5px 10px;
+        .widget-holder-col .widget-header-row {        
+          
           color: #e69138;
         }
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {

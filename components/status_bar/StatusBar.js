@@ -108,45 +108,55 @@ const StatusContent = ({ userType, sc }) => {
     default:
       return (
         //GridType(gridList)
-        <Row gutter={[24, 16]} className="status-banner-container">
-          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
-            <div className="status-col"></div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
-            <div className="status-col"></div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
-            <div className="status-col"></div>
-          </Col>
-          <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
-            <div className="status-col current-rank"></div>
-          </Col>
-          <style jsx global>{`
-            .status-banner-container .status-col h1 {
-              font-size: 5rem;
-              font-weight: 700;
-              margin: 0 auto;
-              padding: 0;
-              text-align: center;
-              line-height: 5rem;
-            }
-            .status-banner-container .current-rank h1 {
-              font-size: 3rem;
-            }
-            .status-banner-container .current-rank svg {
-              margin-right: 1rem;
-            }
-            .status-banner-container .status-col span {
-              padding-left: 15px;
-              font-weight: 700;
-            }
-            .status-col {
-              background: #eeeeee;
-              padding: 20px 15px 0 15px;
-              min-height: 150px;
-            }
-          `}</style>
-        </Row>
+        <Col
+      className="widget-holder-col"
+      xs={24}
+      sm={24}
+      md={24}
+      lg={24}
+    >
+        <div className="common-holder status-banner-holder">
+          <Row gutter={[16]} className="status-banner-container">
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
+              <div className="status-col"></div>
+            </Col>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
+              <div className="status-col"></div>
+            </Col>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
+              <div className="status-col"></div>
+            </Col>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={6}>
+              <div className="status-col current-rank"></div>
+            </Col>
+            <style jsx global>{`
+              .status-banner-container .status-col h1 {
+                font-size: 5rem;
+                font-weight: 700;
+                margin: 0 auto;
+                padding: 0;
+                text-align: center;
+                line-height: 5rem;
+              }
+              .status-banner-container .current-rank h1 {
+                font-size: 3rem;
+              }
+              .status-banner-container .current-rank svg {
+                margin-right: 1rem;
+              }
+              .status-banner-container .status-col span {
+                padding-left: 15px;
+                font-weight: 700;
+              }
+              .status-col {
+                background: #eeeeee;
+                padding: 20px 15px 0 15px;
+                min-height: 150px;
+              }
+            `}</style>
+          </Row>
+        </div>
+        </Col>
       );
       break;
   }

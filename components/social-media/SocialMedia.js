@@ -47,7 +47,7 @@ const SocialMedia = () => {
         <Col xs={22}>
           <h3 className="widget-title">Social Media</h3>
         </Col>
-        <Col xs={2} className="widget-switchgrid-holder">
+        <Col xs={0} className="widget-switchgrid-holder">
           <button
             className="switch-grid"
             key="Switch"
@@ -62,14 +62,16 @@ const SocialMedia = () => {
           </button>
         </Col>
       </Row>
-      <Row
-        className="SocialMedia-Items"
-        gutter={[16, 16]}
-        style={{ padding: "10px 0" }}
-        justify="space-around"
-      >
-        {GridType(curGridStyle)}
-      </Row>
+      <div className="common-holder">
+        <Row
+          className="SocialMedia-Items"
+          gutter={[16, 16]}
+          style={{ padding: "10px 0" }}
+          justify="space-around"
+        >
+          {GridType(curGridStyle)}
+        </Row>
+      </div>
       <style jsx global>{`
         .SocialMedia-Items .ant-col {
           text-align: center;
@@ -81,11 +83,11 @@ const SocialMedia = () => {
 
 const GridType = (gridType) => {
   let avatarProps = {
-    size:50,
-    style:{
+    size: 50,
+    style: {
       color: "#f56a00",
       backgroundColor: "#fde3cf",
-    }
+    },
   };
   switch (gridType) {
     default:
@@ -93,34 +95,22 @@ const GridType = (gridType) => {
         <>
           <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<LinkedinFilled />}
-                {...avatarProps}                
-              />
+              <Avatar icon={<LinkedinFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<TwitterCircleFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<TwitterCircleFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<InstagramFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<InstagramFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col xs={6} sm={6} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<FacebookFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<FacebookFilled />} {...avatarProps} />
             </motion.div>
           </Col>
         </>
@@ -130,34 +120,22 @@ const GridType = (gridType) => {
         <>
           <Col xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<LinkedinFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<LinkedinFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<TwitterCircleFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<TwitterCircleFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<InstagramFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<InstagramFilled />} {...avatarProps} />
             </motion.div>
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={4} lg={4}>
             <motion.div initial="hidden" animate="visible" variants={list}>
-              <Avatar
-                icon={<FacebookFilled />}
-                {...avatarProps} 
-              />
+              <Avatar icon={<FacebookFilled />} {...avatarProps} />
             </motion.div>
           </Col>
         </>

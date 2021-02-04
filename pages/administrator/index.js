@@ -1,11 +1,10 @@
 /** NLI
- * Use NextJs Conditional Importing 
+ * Use NextJs Conditional Importing
  * To Load Import Only the needed component
  **/
 /* Imported Courses Components **/
 //import AdminDashboard from "../../../components/course/CourseList";
 /**End Of Imported Courses Components **/
-
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -41,36 +40,28 @@ var apiBaseUrl = process.env.apiBaseUrl;
 const AdminIndex = () => {
   //console.log(useAuth());
   const [curGridStyle, setCurGridStyle] = useState("grid");
-  const {courseAllList, setCourseAllList } = useCourseList();
+  const { courseAllList, setCourseAllList } = useCourseList();
   const [myAuthoredCourses, setMyAuthoredCourses] = useState(courseAllList);
- 
-  useEffect(() => {
-  }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder">
-        <StatusBar />
-        <Row
-          className="widget-container"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+        <Row className="widget-container" gutter={[16, 32]}>
+          <StatusBar />
+        </Row>
+        <Row className="widget-container" gutter={[16, 32]}>
           <AuthoredCourses />
           <ToDos />
         </Row>
         {/*2nd Level*/}
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+
+        <Row gutter={[16, 32]}>
           <Graph />
           <LeaderBoard />
         </Row>
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+        <Row gutter={[16, 32]}>
           <RecentActivities />
           <SocialMedia />
         </Row>

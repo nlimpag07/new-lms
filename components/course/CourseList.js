@@ -258,8 +258,7 @@ const CourseList = (props) => {
   return (
     <Row
       className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
+      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */      
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -310,6 +309,7 @@ const CourseList = (props) => {
             </button>
           </Col>
         </Row>
+        <div className="common-holder">
         <Row
           className="widget-search-row"
           justify="start"
@@ -358,6 +358,7 @@ const CourseList = (props) => {
             loading
           )}
         </Row>
+        </div>
       </Col>
       <Modal
         title={courseActionModal.modalTitle}
@@ -405,8 +406,7 @@ const CourseList = (props) => {
           margin-bottom: 0;
           text-transform: uppercase;
         }
-        .widget-holder-col .widget-header-row {
-          padding: 5px 0;
+        .widget-holder-col .widget-header-row {         
           color: #e69138;
         }
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {

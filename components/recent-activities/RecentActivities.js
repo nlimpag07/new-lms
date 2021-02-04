@@ -64,13 +64,19 @@ const RecentActivities = () => {
           </button>
         </Col>
       </Row>
-      <Row gutter={[16, 16]} style={{ padding: "10px 0" }} className="recent-activities">
-        {GridType(curGridStyle)}
-      </Row>
+      <div className="common-holder">
+        <Row
+          gutter={[16, 16]}
+          style={{ padding: "10px 0" }}
+          className="recent-activities"
+        >
+          {GridType(curGridStyle)}
+        </Row>
+      </div>
       <style jsx global>{`
         .recent-activities .grid-list .ant-card-cover {
           width: auto;
-      }
+        }
       `}</style>
     </Col>
   );

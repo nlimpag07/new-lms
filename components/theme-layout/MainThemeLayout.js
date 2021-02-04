@@ -209,7 +209,7 @@ export default function MainThemeLayout({ children }) {
               {BreadCrumb}
               <div
                 className="site-layout-background"
-                style={{ minHeight: 360 }}
+                style={{ minHeight: 360, }}
               >
                 {children}
               </div>

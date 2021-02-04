@@ -259,9 +259,7 @@ const UsersList = ({ userlist }) => {
           md={24}
           lg={24}
         >
-          <h1>
-            Users List
-          </h1>
+          <h1>Users List</h1>
           <Row className="Course-Enrollments">
             <Col xs={24}>
               {spin ? (
@@ -387,9 +385,12 @@ const UsersList = ({ userlist }) => {
           font-size: 2rem;
           font-weight: 700;
         }
-        
+
         .UsersAddForm .ant-modal-body {
           padding: 3rem;
+        }
+        .UsersAddForm .ant-modal-footer {
+          display: none;
         }
         .spinHolder {
           text-align: center;

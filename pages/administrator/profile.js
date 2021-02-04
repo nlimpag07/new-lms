@@ -172,6 +172,7 @@ const Profile = ({ u, query }) => {
             <h2 className="widget-title">PROFILE</h2>
           </Col>
         </Row> */}
+        <div className="common-holder">
         <Row style={{ marginBottom: "1rem" }}>
           <Col xs={24} sm={24} md={24} lg={6}>
             <div className="userThumbnail">
@@ -224,7 +225,9 @@ const Profile = ({ u, query }) => {
             </div>
           </Col>
         </Row>
+        </div>
         {u.isLearner != 1 ? null : (
+          <div className="common-holder">
           <Row>
             <Tabs
               defaultActiveKey={theLabel}
@@ -268,6 +271,7 @@ const Profile = ({ u, query }) => {
               </TabPane>
             </Tabs>
           </Row>
+          </div>
         )}
       </Layout>
 
