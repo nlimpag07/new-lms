@@ -1047,6 +1047,7 @@ const CourseEdit = ({ course_id }) => {
   console.log("Widget Values ", defaultWidgetValues.courselevel); */
   console.log("course", course);
   return (
+    <div className="common-holder">
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       {course ? (
         <Form.Provider onFormFinish={onFormFinishProcess}>
@@ -1079,9 +1080,9 @@ const CourseEdit = ({ course_id }) => {
                   md={24}
                   lg={16}
                 >
-                  <Row className="widget-header-row" justify="start">
-                    <Col xs={24}>
-                      <h3 className="widget-title">Edit Course</h3>
+                  <Row justify="start">
+                  <Col className="h1-titles" xs={24}>
+                      <h1>Edit Course</h1>
                     </Col>
                   </Row>
                   <Row
@@ -1120,8 +1121,8 @@ const CourseEdit = ({ course_id }) => {
                   md={24}
                   lg={8}
                 >
-                  <Row className="widget-header-row" justify="start">
-                    <Col xs={24}>
+                  <Row justify="start">
+                    <Col xs={24} className="h3-titles text-right">
                       <CourseDateFormat course_id={course_id} />
                     </Col>
                   </Row>
@@ -1382,6 +1383,7 @@ const CourseEdit = ({ course_id }) => {
         />
       )}
     </motion.div>
+    </div>
   );
 };
 

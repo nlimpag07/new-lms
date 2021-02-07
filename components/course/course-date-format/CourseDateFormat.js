@@ -69,9 +69,7 @@ const CourseDateFormat = (props) => {
       )} */}
 
       <style jsx global>{`
-        .cStatusClass {
-          /* color: #333333 !important; */
-        }
+        
         .statusDisplayClass {
           font-weight: 500;
         }
