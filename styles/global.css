@@ -250,6 +250,17 @@ body {
     margin-bottom: 1rem;
     width: 45%;
   }
+  .h3-titles h3 {
+    font-size: 1rem;
+    margin-bottom: 0;
+    line-height: 3rem;
+  }
+}
+.orange {
+  color: orange;
+}
+.text-right {
+  text-align: right;
 }
 .logo img {
   width: 100%;
@@ -635,21 +646,7 @@ a.ellipsis i {
   display: block;
   text-align: center;
 }
-/* .errorpage {
-  z-index: 3;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.loadingSpinner{
-  position: fixed !important;
-    max-height: 100%  !important;
-    bottom: 0;
-    right: 0;
-    background-color: #ffffff  !important;
-} */
+
 .emptyData {
   margin: 24vh 0;
   text-align: center;
@@ -674,27 +671,7 @@ a.ellipsis i {
   padding: 2rem;
   background-color: #efefef91;
 }
-/* 
-.ClassesSessions .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner,
-.ClassesSessions .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
-  .ant-picker-cell-inner {
-  background-color: #00000045;
-}
-.ClassesSessions .ant-picker-cell:hover
-  .ant-picker-cell-inner::before,
-  .ClassesSessions .ant-picker-cell:hover
-  .ant-picker-cell-inner::before {
-  font-family: "ams-icons" !important;
-  content: "\e994";
-  position: absolute;
-  top: 40%;
-  left: 45%;
-  font-size: 2rem;
-}
-.ClassesSessions .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-value {
-  font-size: 1.7rem;
-}
- */
+
 .pageHeaderHolder {
   padding-top: 5px;
   position: relative;
@@ -800,4 +777,13 @@ a.ellipsis i {
 .widget-holder-col .widget-header-row .switch-grid {
   background-color: transparent;
 }
-.ant-menu-inline .ant-menu-item, .ant-menu-inline .ant-menu-submenu-title{width: calc(100%);}
+.ant-menu-inline .ant-menu-item,
+.ant-menu-inline .ant-menu-submenu-title {
+  width: calc(100%);
+}
+
+.h1-titles h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}

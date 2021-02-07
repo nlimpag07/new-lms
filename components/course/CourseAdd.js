@@ -543,6 +543,7 @@ const CourseAdd = () => {
   };
 
   return (
+    <div className="common-holder">
     <Form.Provider onFormFinish={onFormFinishProcess}>
       <motion.div initial="hidden" animate="visible" variants={framerEffect}>
         <Form
@@ -555,7 +556,8 @@ const CourseAdd = () => {
         >
           <Row
             className="widget-container course-management"
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
+            gutter={[16, 0]}
             style={{ margin: "0" }}
           >
             <Col
@@ -565,9 +567,9 @@ const CourseAdd = () => {
               md={24}
               lg={16}
             >
-              <Row className="widget-header-row" justify="start">
-                <Col xs={24}>
-                  <h3 className="widget-title">Add Course</h3>
+              <Row justify="start">
+                <Col className="h1-titles" xs={24}>
+                  <h1>Add Course</h1>
                 </Col>
               </Row>
               <Row
@@ -606,9 +608,9 @@ const CourseAdd = () => {
               md={24}
               lg={8}
             >
-              <Row className="widget-header-row" justify="start">
-                <Col xs={24}>
-                  <h3 className="widget-title">
+              <Row justify="start">
+                <Col xs={24} className="h3-titles text-right">
+                  <h3 className="orange">
                     <i>Course status reflects after submission</i>
                   </h3>
                 </Col>
@@ -816,8 +818,7 @@ const CourseAdd = () => {
               .cm-main-right .widget-title {
                 text-transform: initial;
               }
-              .widget-holder-col .widget-header-row {
-                padding: 5px 0;
+              .widget-holder-col .widget-header-row {               
                 color: #e69138;
               }
               .course-management .ant-input-affix-wrapper {
@@ -847,6 +848,7 @@ const CourseAdd = () => {
         </Form>
       </motion.div>
     </Form.Provider>
+    </div>
   );
 };
 
