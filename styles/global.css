@@ -13,6 +13,12 @@ body {
     padding-right: 16px;
     padding-left: 16px;
   }
+  .common-holder {
+    padding: 16px 16px 16px 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 4px 5px #ececec;
+    border-radius: 3px;
+  }
   .viewStatusReq .ant-col {
     text-align: left !important;
   }
@@ -61,6 +67,12 @@ body {
     padding-right: 16px;
     padding-left: 16px;
   }
+  .common-holder {
+    padding: 16px 16px 16px 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 4px 5px #ececec;
+    border-radius: 3px;
+  }
   .viewStatusReq .ant-col {
     text-align: left !important;
   }
@@ -99,6 +111,12 @@ body {
   .main-content-holder {
     padding-right: 16px;
     padding-left: 16px;
+  }
+  .common-holder {
+    padding: 16px 16px 16px 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 4px 5px #ececec;
+    border-radius: 3px;
   }
   .drawer-course-details .ant-drawer-content h1 {
     font-size: 1.3rem;
@@ -141,7 +159,13 @@ body {
   }
   .main-content-holder {
     padding-right: 16px;
-    padding-left: 0;
+    padding-left: 16px;
+  }
+  .common-holder {
+    padding: 16px 16px 16px 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 4px 5px #ececec;
+    border-radius: 3px;
   }
   .drawer-course-details .ant-drawer-content h1 {
     margin-bottom: 0rem;
@@ -174,7 +198,13 @@ body {
 @media screen and (min-width: 1200px) and (max-width: 1599px) {
   .main-content-holder {
     padding-right: 16px;
-    padding-left: 0;
+    padding-left: 16px;
+  }
+  .common-holder {
+    padding: 16px 16px 16px 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 4px 5px #ececec;
+    border-radius: 3px;
   }
   .drawer-course-details .ant-drawer-body {
     padding: 2rem;
@@ -255,7 +285,9 @@ body {
     margin-bottom: 0;
     line-height: 3rem;
   }
-  .cStatusClass{ line-height: 3.1rem;}
+  .cStatusClass {
+    line-height: 3.1rem;
+  }
 }
 .orange {
   color: orange;

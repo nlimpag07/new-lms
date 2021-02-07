@@ -35,7 +35,12 @@ const CourseOutlineDuration = (props) => {
     <>
       <Form.Item style={{ marginBottom: 0 }} className="course-duration-panel">
         <Form.Item name="outlineduration">
-          <Select placeholder={outlineduration?outlineduration:"Duration"} size="medium">
+        <InputNumber
+              min={1}
+              placeholder="Numbers Only"
+              style={{ width: "100%" }}
+            />
+         {/*  <Select placeholder={outlineduration?outlineduration:"Duration"} size="medium">
             <Option value="1">1</Option>
             <Option value="2">2</Option>
             <Option value="3">3</Option>
@@ -43,7 +48,7 @@ const CourseOutlineDuration = (props) => {
             <Option value="5">5</Option>
             <Option value="6">6</Option>
             <Option value="7">7</Option>
-          </Select>
+          </Select> */}
         </Form.Item>
         <Form.Item>
           <div className="s-description">Minutes</div>

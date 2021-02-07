@@ -136,7 +136,7 @@ const CourseView = ({ course_id }) => {
       urlAs: `#`,
       callback: "delete",
     },
-    
+
     {
       title: "Print",
       icon: "&#xf02f;",
@@ -313,212 +313,225 @@ const CourseView = ({ course_id }) => {
 
   return course.length ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
-      <Row
-        className="widget-container Course-View"
-        gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        /* style={{ margin: "1rem 0px 4rem 0" }} */
-      >
-        <Col
-          className="gutter-row widget-holder-col"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
+      <div className="common-holder">
+        <Row
+          className="widget-container Course-View"
+          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          /* style={{ margin: "1rem 0px 4rem 0" }} */
         >
-          <Row className="widget-header-row" align="middle">
-            <Col xs={24} sm={24} md={24} lg={16} xl={18}>
-              <h1 className="widget-title">{title}</h1>
-            </Col>
-            {linkUrl != "learner" && (
-              <CoursePublish
-                isPublished={isPublished}
-                title={title}
-                course_id={course_id}
-              />
-            )}
-          </Row>
-          <Row
-            className="Course-View-Details"
-            gutter={[16, 16]}
-            style={{ padding: "10px 0" }}
+          <Col
+            className="gutter-row widget-holder-col"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
           >
-            {/* Left Side */}
-            <Col xs={24} sm={24} md={12} lg={6}>
-              <Row className="ImageWrapper">
-                <Col xs={24}>
-                  <img
-                    alt={`${title} Featured Image`}
-                    src={featureImage}
-                    onClick={() => setModal2Visible(true)}
-                  />
-                </Col>
-              </Row>
-              <Row className="Icon-Listed-Data">
-                <Col xs={24}>
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={listData}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <List.Item.Meta
-                          avatar={item.avatar}
-                          title={item.title}
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Row className="Course-Tags">
-                <Col xs={24}>
-                  <h3>TAGS</h3>
-                  {courseTag &&
-                    courseTag.map((tags, index) => (
-                      <button key={index} className="tag-button">
-                        {tags.tag.name}
-                      </button>
-                    ))}
-                </Col>
-              </Row>
-              <Row className="Course-Tags">
-                <Col xs={24}>
-                  <h3>SHARE</h3>
-                  {
-                    <div>
-                      <Input
-                        id="shareCourse"
-                        value={`${homeUrl}/course/view/${id}`}
-                        readOnly
-                        style={{ maxWidth: "150px" }}
-                      />
-                      <Button
-                        onClick={onShareClick}
-                        onMouseOut={onShareMouseOut}
-                      >
-                        Copy
-                      </Button>{" "}
-                      {copySuccess}
-                    </div>
-                  }
-                </Col>
-              </Row>
-              <Row className="Course-Tags">
-                <Col xs={24}>
-                  <h3>DEMOS</h3>
-                  <Col xs={24} sm={12} className="ImageWrapper demo-thumb">
+            <Row align="middle">
+              <Col className="h1-titles" xs={24} sm={24} md={24} lg={16} xl={18}>
+                <h1>{title}</h1>
+              </Col>
+              {linkUrl != "learner" && (
+                <CoursePublish
+                  isPublished={isPublished}
+                  title={title}
+                  course_id={course_id}
+                />
+              )}
+            </Row>
+            <Row
+              className="Course-View-Details"
+              gutter={[16, 16]}
+              style={{ padding: "10px 0" }}
+            >
+              {/* Left Side */}
+              <Col xs={24} sm={24} md={12} lg={6}>
+                <Row className="ImageWrapper">
+                  <Col xs={24}>
                     <img
                       alt={`${title} Featured Image`}
                       src={featureImage}
                       onClick={() => setModal2Visible(true)}
                     />
                   </Col>
-                </Col>
-              </Row>
-            </Col>
-            {/* Right Side */}
-            <Col xs={24} sm={24} md={12} lg={18} className="Course-Tabs">
-              <Tabs defaultActiveKey="1">
-                <TabPane tab="OVERVIEW" key="1">
-                  <CourseOverviewWidget course_details={courseDetails} />
-                </TabPane>
-                <TabPane tab="COURSE OUTLINE" key="2">
-                  <CourseOutlineviewWidget course_outline={course_outline} />
-                </TabPane>
-                <TabPane tab="LEARNING OUTCOMES" key="3">
-                  <CourseLearninOutcomesviewWidget
-                    course_outcome={course_outcome}
-                  />
-                </TabPane>
-                <TabPane tab="COMPETENCIES" key="4">
-                  <CourseCompetenciesviewWidget
-                    course_competencies={course_competencies}
-                  />
-                </TabPane>
-                {linkUrl != "learner" && (
-                  <TabPane tab="ENROLLMENTS" key="5">
-                    <CourseEnrollmentsviewWidget
-                      course_id={course_id}
-                      course_enrollments={course_enrollments}
+                </Row>
+                <Row className="Icon-Listed-Data">
+                  <Col xs={24}>
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={listData}
+                      renderItem={(item) => (
+                        <List.Item>
+                          <List.Item.Meta
+                            avatar={item.avatar}
+                            title={item.title}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Col>
+                </Row>
+                <Row className="Course-Tags">
+                  <Col xs={24}>
+                    <h3>TAGS</h3>
+                    {courseTag &&
+                      courseTag.map((tags, index) => (
+                        <button key={index} className="tag-button">
+                          {tags.tag.name}
+                        </button>
+                      ))}
+                  </Col>
+                </Row>
+                <Row className="Course-Tags">
+                  <Col xs={24}>
+                    <h3>SHARE</h3>
+                    {
+                      <div>
+                        <Input
+                          id="shareCourse"
+                          value={`${homeUrl}/course/view/${id}`}
+                          readOnly
+                          style={{ maxWidth: "150px" }}
+                        />
+                        <Button
+                          onClick={onShareClick}
+                          onMouseOut={onShareMouseOut}
+                        >
+                          Copy
+                        </Button>{" "}
+                        {copySuccess}
+                      </div>
+                    }
+                  </Col>
+                </Row>
+                <Row className="Course-Tags">
+                  <Col xs={24}>
+                    <h3>DEMOS</h3>
+                    <Col xs={24} sm={12} className="ImageWrapper demo-thumb">
+                      <img
+                        alt={`${title} Featured Image`}
+                        src={featureImage}
+                        onClick={() => setModal2Visible(true)}
+                      />
+                    </Col>
+                  </Col>
+                </Row>
+              </Col>
+              {/* Right Side */}
+              <Col xs={24} sm={24} md={12} lg={18} className="Course-Tabs">
+                <Tabs defaultActiveKey="1">
+                  <TabPane tab="OVERVIEW" key="1">
+                    <CourseOverviewWidget course_details={courseDetails} />
+                  </TabPane>
+                  <TabPane tab="COURSE OUTLINE" key="2">
+                    <CourseOutlineviewWidget course_outline={course_outline} />
+                  </TabPane>
+                  <TabPane tab="LEARNING OUTCOMES" key="3">
+                    <CourseLearninOutcomesviewWidget
+                      course_outcome={course_outcome}
                     />
                   </TabPane>
-                )}
-                <TabPane tab="REVIEWS" key="6">
-                  <CourseReviewViewWidget
-                    course_id={course_id}
-                    course_reviews={course_reviews}
-                  />
-                </TabPane>
-              </Tabs>
-            </Col>
-            {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
-          </Row>
-        </Col>
-        <Modal
-          title={title}
-          centered
-          visible={modal2Visible}
-          onOk={() => setModal2Visible(false)}
-          onCancel={() => setModal2Visible(false)}
-          maskClosable={false}
-          destroyOnClose={true}
-          width="70%"
-          className="videoModal"
-        >
-          <div className="demoModalBody">
-            <ReactPlayer
-              playing={true}
-              url={featureVideo}
-              controls={true}
-              width="100%"
-              height="auto"
-              config={{
-                youtube: {
-                  playerVars: { showinfo: 0 },
-                },
-              }}
-            />
-          </div>
-        </Modal>
-        {linkUrl !== "learner" && (
+                  <TabPane tab="COMPETENCIES" key="4">
+                    <CourseCompetenciesviewWidget
+                      course_competencies={course_competencies}
+                    />
+                  </TabPane>
+                  {linkUrl != "learner" && (
+                    <TabPane tab="ENROLLMENTS" key="5">
+                      <CourseEnrollmentsviewWidget
+                        course_id={course_id}
+                        course_enrollments={course_enrollments}
+                      />
+                    </TabPane>
+                  )}
+                  <TabPane tab="REVIEWS" key="6">
+                    <CourseReviewViewWidget
+                      course_id={course_id}
+                      course_reviews={course_reviews}
+                    />
+                  </TabPane>
+                </Tabs>
+              </Col>
+              {/* {GridType(courseAllList, curGridStyle, setModal2Visible, router)} */}
+            </Row>
+          </Col>
           <Modal
-            title={`${courseActionModal.modalOperation.toUpperCase()}: ${title.toUpperCase()}`}
+            title={title}
             centered
-            visible={courseActionModal.StateModal}
-            onOk={() => hideModal(courseActionModal.modalOperation)}
-            onCancel={() => hideModal(courseActionModal.modalOperation)}
+            visible={modal2Visible}
+            onOk={() => setModal2Visible(false)}
+            onCancel={() => setModal2Visible(false)}
             maskClosable={false}
             destroyOnClose={true}
-            width="50%"
-            cancelButtonProps={{ style: { display: "none" } }}
-            okButtonProps={{ style: { display: "none" } }}
-            className="CVModalOperations"
+            width="70%"
+            className="videoModal"
           >
-            {courseActionModal.modalOperation == "clone" ? (
-              <CourseClone operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} setLoading={setLoading} />
-            ) : courseActionModal.modalOperation == "add" ? (
-              "Hello Add"
-            ) : courseActionModal.modalOperation == "approve" ? (
-              "Hello Approve"
-            ) : courseActionModal.modalOperation == "delete" ? (
-              <CourseDelete operation={courseActionModal.modalOperation} hideModal={hideModal} courseInfo = {{course_id:course_id,title:title}} setLoading={setLoading} />
-
-            ) : (
-              "Default"
-            )}
+            <div className="demoModalBody">
+              <ReactPlayer
+                playing={true}
+                url={featureVideo}
+                controls={true}
+                width="100%"
+                height="auto"
+                config={{
+                  youtube: {
+                    playerVars: { showinfo: 0 },
+                  },
+                }}
+              />
+            </div>
           </Modal>
-        )}
-        {linkUrl !== "learner" && (
-          <RadialUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-        )}
-        {/* <CourseCircularUi /> */}
-      </Row>
+          {linkUrl !== "learner" && (
+            <Modal
+              title={`${courseActionModal.modalOperation.toUpperCase()}: ${title.toUpperCase()}`}
+              centered
+              visible={courseActionModal.StateModal}
+              onOk={() => hideModal(courseActionModal.modalOperation)}
+              onCancel={() => hideModal(courseActionModal.modalOperation)}
+              maskClosable={false}
+              destroyOnClose={true}
+              width="50%"
+              cancelButtonProps={{ style: { display: "none" } }}
+              okButtonProps={{ style: { display: "none" } }}
+              className="CVModalOperations"
+            >
+              {courseActionModal.modalOperation == "clone" ? (
+                <CourseClone
+                  operation={courseActionModal.modalOperation}
+                  hideModal={hideModal}
+                  courseInfo={{ course_id: course_id, title: title }}
+                  setLoading={setLoading}
+                />
+              ) : courseActionModal.modalOperation == "add" ? (
+                "Hello Add"
+              ) : courseActionModal.modalOperation == "approve" ? (
+                "Hello Approve"
+              ) : courseActionModal.modalOperation == "delete" ? (
+                <CourseDelete
+                  operation={courseActionModal.modalOperation}
+                  hideModal={hideModal}
+                  courseInfo={{ course_id: course_id, title: title }}
+                  setLoading={setLoading}
+                />
+              ) : (
+                "Default"
+              )}
+            </Modal>
+          )}
+          {linkUrl !== "learner" && (
+            <RadialUI
+              listMenu={menulists}
+              position="bottom-right"
+              iconColor="#8998BA"
+              toggleModal={showModal}
+            />
+          )}
+          {/* <CourseCircularUi /> */}
+        </Row>
+      </div>
       <style jsx global>{`
-        .CVModalOperations .ant-modal-footer{ border-top:none !important;}
+        .CVModalOperations .ant-modal-footer {
+          border-top: none !important;
+        }
         .Course-View .ImageWrapper img {
           width: 100%;
           height: 100%;
@@ -534,7 +547,7 @@ const CourseView = ({ course_id }) => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        
+
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
@@ -665,7 +678,7 @@ const CourseView = ({ course_id }) => {
         .Course-Tabs .ant-tabs-ink-bar {
           background: #e69138;
         }
-        
+
         .Course-Tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #e69138;
         }
@@ -683,7 +696,7 @@ const CourseView = ({ course_id }) => {
         }
         .viewStatusReq {
           color: #666666;
-          text-aling:right;
+          text-aling: right;
         }
         /* .viewStatusReq-button {
           padding-right: 4rem !important;

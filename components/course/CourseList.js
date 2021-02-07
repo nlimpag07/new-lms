@@ -256,300 +256,304 @@ const CourseList = (props) => {
   }
 
   return (
-    <Row
-      className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */      
-    >
-      <Col
-        className="gutter-row widget-holder-col"
-        xs={24}
-        sm={24}
-        md={24}
-        lg={24}
+    <div className="common-holder">
+      <Row
+        className="widget-container"
+        /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
       >
-        <Row className="widget-header-row" justify="start">
-          <Col xs={14} sm={18} md={18}>
-            <h3 className="widget-title">Latest First</h3>
-          </Col>
-          <Col
-            xs={10}
-            sm={6}
-            md={6}
-            lg={0}
-            xl={0}
-            xxl={0}
-            className="widget-switchgrid-holder"
-          >
-            <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
-          </Col>
-          <Col
-            xs={0}
-            sm={0}
-            md={0}
-            lg={6}
-            xl={6}
-            xxl={6}
-            className="widget-switchgrid-holder"
-          >
-            <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
-            <button
-              className="switch-grid"
-              key="Switch"
-              onClick={() =>
-                setCurGridStyle(curGridStyle == "grid" ? "list" : "grid")
-              }
-            >
-              <FontAwesomeIcon
-                icon={[
-                  "fas",
-                  `th-${curGridStyle == "grid" ? "list" : "large"}`,
-                ]}
-                size="lg"
-              />
-            </button>
-          </Col>
-        </Row>
-        <div className="common-holder">
-        <Row
-          className="widget-search-row"
-          justify="start"
-          /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-          gutter={[16, 16]}
+        <Col
+          className="gutter-row widget-holder-col"
+          xs={24}
+          sm={24}
+          md={24}
+          lg={24}
         >
-          <Col xs={24} sm={10} md={8}>
-            <div className="choices-container category-holder">
-              <Select
-                showSearch
-                style={{ width: "100%" }}
-                placeholder="Select View"
-                optionFilterProp="children"
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
+          <Row className="widget-header-row" justify="start">
+            <Col xs={14} sm={18} md={18}>
+              <h3 className="widget-title">Latest First</h3>
+            </Col>
+            <Col
+              xs={10}
+              sm={6}
+              md={6}
+              lg={0}
+              xl={0}
+              xxl={0}
+              className="widget-switchgrid-holder"
+            >
+              <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
+            </Col>
+            <Col
+              xs={0}
+              sm={0}
+              md={0}
+              lg={6}
+              xl={6}
+              xxl={6}
+              className="widget-switchgrid-holder"
+            >
+              <span>{allCourses ? allCourses.length : 0} Results</span>{" "}
+              <button
+                className="switch-grid"
+                key="Switch"
+                onClick={() =>
+                  setCurGridStyle(curGridStyle == "grid" ? "list" : "grid")
                 }
               >
-                {categoriesOptions}
-              </Select>
-            </div>
-          </Col>
-          <Col xs={24} sm={14} md={16} className="widget-switchgrid-holder">
-            <div className="choices-container searchbox-holder">
-              <Search
-                placeholder="Search Course"
-                onSearch={(value) => searchCourse(value)}
-              />
-            </div>
-          </Col>
-        </Row>
-        <Row
-          className="AuthoredCourses-ListItems"
-          gutter={[16, 16]}
-          style={{ padding: "10px 0" }}
-        >
-          {GridType(
-            allCourses,
-            curGridStyle,
-            setModal2Visible,
-            router,
-            loading
-          )}
-        </Row>
-        </div>
-      </Col>
-      <Modal
-        title={courseActionModal.modalTitle}
-        centered
-        visible={courseActionModal.StateModal}
-        onOk={() =>
-          setCourseActionModal({
-            StateModal: false,
-            modalTitle: "",
-          })
-        }
-        onCancel={() =>
-          setCourseActionModal({
-            StateModal: false,
-            modalTitle: "",
-          })
-        }
-        maskClosable={false}
-        destroyOnClose={true}
-        width={1000}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>
+                <FontAwesomeIcon
+                  icon={[
+                    "fas",
+                    `th-${curGridStyle == "grid" ? "list" : "large"}`,
+                  ]}
+                  size="lg"
+                />
+              </button>
+            </Col>
+          </Row>
 
-      {/* <CourseCircularUi /> */}
-      <RadialUI
-        listMenu={menulists}
-        position="bottom-right"
-        iconColor="#8998BA"
-        toggleModal={showModal}
-      />
-      <style jsx global>{`
-        .ant-card-actions > li {
-          padding: 0;
-          margin: 0;
-        }
-        .ant-card-actions > li:hover {
-          background-color: #f0f0f0;
-          margin: 0;
-        }
-        .widget-holder-col .widget-title {
-          color: #e69138;
-          margin-bottom: 0;
-          text-transform: uppercase;
-        }
-        .widget-holder-col .widget-header-row {         
-          color: #e69138;
-        }
-        .widget-holder-col .widget-header-row .widget-switchgrid-holder {
-          text-align: right;
-        }
-        .widget-holder-col .widget-header-row .switch-grid {
-          vertical-align: middle;
-          font-weight: 900;
-          border: none;
-          outline: none;
-          background: none;
-        }
-        .widget-holder-col .widget-header-row .switch-grid:hover,
-        .widget-holder-col .widget-header-row .switch-grid:focus {
-          cursor: pointer;
-          outline: none;
-        }
-        .widget-holder-col .ant-card-hoverable {
-          cursor: default;
-        }
-        .widget-holder-col .ant-card-body {
-          padding: 10px;
-        }
-        .widget-holder-col .ant-card-head {
-          float: right;
-          position: absolute;
-          right: 5px;
-          top: 5px;
-          background-color: #62ab35bf;
-          border-radius: 15px;
-          padding: 0 10px;
-          font-size: 12px;
-          color: #ffffff;
-          padding: 7px 10px;
-          font-size: 12px;
-          min-height: 0;
-          border-bottom: none;
-        }
-        .widget-holder-col .ant-card-head .ant-card-extra {
-          color: #ffffff;
-          padding: 0 0;
-          font-size: 12px;
-        }
-        .grid-list .ant-card-cover {
-          width: 25%;
-        }
-        .grid-list .ant-card-cover,
-        .grid-list .ant-card-body {
-          float: left;
-          position: relative;
-        }
-        .grid-list .ant-card-actions {
-          float: none;
-          clear: both;
-          position: relative;
-        }
-        .widget-holder-col .published-course .ant-card-head {
-          background-color: #62ab35bf;
-        }
-        .widget-holder-col .unpublished-course .ant-card-head {
-          background-color: #ff572294;
-        }
-        .widget-holder-col .widget-search-row {
-          padding: 5px 10px;
-          color: #e69138;
-        }
-        .widget-holder-col .widget-search-row {
-          padding-left: 0;
-          padding-right: 0;
-        }
-        .widget-holder-col .widget-search-row .choices-container {
-          /*border-radius: 0.5rem;
+          <Row
+            className="widget-search-row"
+            justify="start"
+            /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
+            gutter={[16, 16]}
+          >
+            <Col xs={24} sm={10} md={8}>
+              <div className="choices-container category-holder">
+                <Select
+                  showSearch
+                  style={{ width: "100%" }}
+                  placeholder="Select View"
+                  optionFilterProp="children"
+                  onChange={onChange}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onSearch={onSearch}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {categoriesOptions}
+                </Select>
+              </div>
+            </Col>
+            <Col xs={24} sm={14} md={16} className="widget-switchgrid-holder">
+              <div className="choices-container searchbox-holder">
+                <Search
+                  placeholder="Search Course"
+                  onSearch={(value) => searchCourse(value)}
+                />
+              </div>
+            </Col>
+          </Row>
+          <Row
+            className="AuthoredCourses-ListItems"
+            gutter={[16, 16]}
+            style={{ padding: "10px 0" }}
+          >
+            {GridType(
+              allCourses,
+              curGridStyle,
+              setModal2Visible,
+              router,
+              loading
+            )}
+          </Row>
+        </Col>
+        <Modal
+          title={courseActionModal.modalTitle}
+          centered
+          visible={courseActionModal.StateModal}
+          onOk={() =>
+            setCourseActionModal({
+              StateModal: false,
+              modalTitle: "",
+            })
+          }
+          onCancel={() =>
+            setCourseActionModal({
+              StateModal: false,
+              modalTitle: "",
+            })
+          }
+          maskClosable={false}
+          destroyOnClose={true}
+          width={1000}
+        >
+          <p>some contents...</p>
+          <p>some contents...</p>
+          <p>some contents...</p>
+        </Modal>
+
+        {/* <CourseCircularUi /> */}
+        <RadialUI
+          listMenu={menulists}
+          position="bottom-right"
+          iconColor="#8998BA"
+          toggleModal={showModal}
+        />
+        <style jsx global>{`
+          .ant-card-actions > li {
+            padding: 0;
+            margin: 0;
+          }
+          .ant-card-actions > li:hover {
+            background-color: #f0f0f0;
+            margin: 0;
+          }
+          .widget-holder-col .widget-title {
+            color: #e69138;
+            margin-bottom: 0;
+            text-transform: uppercase;
+          }
+          .widget-holder-col .widget-header-row {
+            color: #e69138;
+            background-color: #ffffff;
+            padding: 0;
+          }
+          .widget-holder-col .widget-header-row .widget-switchgrid-holder {
+            text-align: right;
+          }
+          .widget-holder-col .widget-header-row .switch-grid {
+            vertical-align: middle;
+            font-weight: 900;
+            border: none;
+            outline: none;
+            background: none;
+          }
+          .widget-holder-col .widget-header-row .switch-grid:hover,
+          .widget-holder-col .widget-header-row .switch-grid:focus {
+            cursor: pointer;
+            outline: none;
+          }
+          .widget-holder-col .ant-card-hoverable {
+            cursor: default;
+          }
+          .widget-holder-col .ant-card-body {
+            padding: 10px;
+          }
+          .widget-holder-col .ant-card-head {
+            float: right;
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: #62ab35bf;
+            border-radius: 15px;
+            padding: 0 10px;
+            font-size: 12px;
+            color: #ffffff;
+            padding: 7px 10px;
+            font-size: 12px;
+            min-height: 0;
+            border-bottom: none;
+          }
+          .widget-holder-col .ant-card-head .ant-card-extra {
+            color: #ffffff;
+            padding: 0 0;
+            font-size: 12px;
+          }
+          .grid-list .ant-card-cover {
+            width: 25%;
+          }
+          .grid-list .ant-card-cover,
+          .grid-list .ant-card-body {
+            float: left;
+            position: relative;
+          }
+          .grid-list .ant-card-actions {
+            float: none;
+            clear: both;
+            position: relative;
+          }
+          .widget-holder-col .published-course .ant-card-head {
+            background-color: #62ab35bf;
+          }
+          .widget-holder-col .unpublished-course .ant-card-head {
+            background-color: #ff572294;
+          }
+          .widget-holder-col .widget-search-row {
+            padding: 5px 10px;
+            color: #e69138;
+          }
+          .widget-holder-col .widget-search-row {
+            padding-left: 0;
+            padding-right: 0;
+          }
+          .widget-holder-col .widget-search-row .choices-container {
+            /*border-radius: 0.5rem;
           border: 1px solid #888787;
           padding: 0 10px; */
-        }
-        .widget-holder-col .widget-search-row .category-holder {
-          position: relative;
-        }
-        .widget-holder-col
-          .widget-search-row
-          .category-holder
-          .ant-select-single:not(.ant-select-customize-input)
-          .ant-select-selector {
-          /* background: none; */
-          border-radius: 0.5rem;
-          border: 1px solid #e69138;
-        }
-        .widget-holder-col .widget-search-row .category-holder .ant-select,
-        .widget-holder-col
-          .widget-search-row
-          .category-holder
-          .ant-select-arrow {
-          color: #e69138;
-          font-size: 1rem;
-        }
-        .widget-holder-col
-          .widget-search-row
-          .category-holder
-          .ant-select-arrow {
-          top: 50%;
-        }
+          }
+          .widget-holder-col .widget-search-row .category-holder {
+            position: relative;
+          }
+          .widget-holder-col
+            .widget-search-row
+            .category-holder
+            .ant-select-single:not(.ant-select-customize-input)
+            .ant-select-selector {
+            /* background: none; */
+            border-radius: 0.5rem;
+            border: 1px solid #e69138;
+          }
+          .widget-holder-col .widget-search-row .category-holder .ant-select,
+          .widget-holder-col
+            .widget-search-row
+            .category-holder
+            .ant-select-arrow {
+            color: #e69138;
+            font-size: 1rem;
+          }
+          .widget-holder-col
+            .widget-search-row
+            .category-holder
+            .ant-select-arrow {
+            top: 50%;
+          }
 
-        .searchbox-holder .ant-input-affix-wrapper {
-          background: none;
-          border-radius: 0.5rem;
-          border: 1px solid #e69138;
-          font-size: 1rem;
-          color: #e69138;
-        }
-        .searchbox-holder .ant-input-search-icon::before {
-          border-left: 1px solid #e69138;
-        }
-        .searchbox-holder .ant-input,
-        .searchbox-holder .ant-input-search-icon {
-          font-size: 1rem;
-          color: #e69138;
-        }
-        .searchbox-holder .ant-input-affix-wrapper .ant-input-prefix,
-        .searchbox-holder .ant-input-affix-wrapper .ant-input-suffix {
-          color: #e69138;
-        }
-        .category-holder .ant-select-selection-placeholder,
-        .searchbox-holder .ant-input::placeholder {
-          color: #e69138;
-          opacity: 0.5;
-        }
-        .widget-holder-col .ant-card-meta-title a {
-          color: #000000;
-        }
-        .widget-holder-col .ant-card-meta-title a:hover {
-          color: #e69138;
-        }
-        .widget-holder-col .ant-card-cover a img {
-          width: 100%;
-        }
-        .class-icon-holder {
-          padding: 12px 0;
-        }
-        .ant-card-actions > li > span:hover {
-          color: #e69138;
-        }
-      `}</style>
-    </Row>
+          .searchbox-holder .ant-input-affix-wrapper {
+            background: none;
+            border-radius: 0.5rem;
+            border: 1px solid #e69138;
+            font-size: 1rem;
+            color: #e69138;
+          }
+          .searchbox-holder .ant-input-search-icon::before {
+            border-left: 1px solid #e69138;
+          }
+          .searchbox-holder .ant-input,
+          .searchbox-holder .ant-input-search-icon {
+            font-size: 1rem;
+            color: #e69138;
+          }
+          .searchbox-holder .ant-input-affix-wrapper .ant-input-prefix,
+          .searchbox-holder .ant-input-affix-wrapper .ant-input-suffix {
+            color: #e69138;
+          }
+          .category-holder .ant-select-selection-placeholder,
+          .searchbox-holder .ant-input::placeholder {
+            color: #e69138;
+            opacity: 0.5;
+          }
+          .widget-holder-col .ant-card-meta-title a {
+            color: #000000;
+          }
+          .widget-holder-col .ant-card-meta-title a:hover {
+            color: #e69138;
+          }
+          .widget-holder-col .ant-card-cover a img {
+            width: 100%;
+          }
+          .class-icon-holder {
+            padding: 12px 0;
+          }
+          .ant-card-actions > li > span:hover {
+            color: #e69138;
+          }
+        `}</style>
+      </Row>
+    </div>
   );
 };
 
