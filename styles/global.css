@@ -255,7 +255,7 @@ body {
     margin-bottom: 0;
     line-height: 3rem;
   }
-  .cStatusClass{ line-height: 3rem;}
+  .cStatusClass{ line-height: 3.1rem;}
 }
 .orange {
   color: orange;

@@ -62,7 +62,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -722,246 +722,246 @@ const CoursePostEvaluations = ({ course_id }) => {
 
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
-      <Form.Provider onFormFinish={onFormFinishProcess}>
-      {courseDetails.isPublished === 1 ? (
-          <CourseProhibit
-            title="Editing Published Course Is Prohibited"
-            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
-            url={`/${linkUrl}/[course]/[...manage]`}
-            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
-          />
-        ) : (
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Post Evaluations</h3>
-              </Col>
-            </Row>
+      <div className="common-holder">
+        <Form.Provider onFormFinish={onFormFinishProcess}>
+          {courseDetails.isPublished === 1 ? (
+            <CourseProhibit
+              title="Editing Published Course Is Prohibited"
+              subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+              url={`/${linkUrl}/[course]/[...manage]`}
+              asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+            />
+          ) : (
             <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              /* style={{ padding: "10px 0" }} */
+              className="widget-container course-management"
+              gutter={[16, 0]}
+              style={{ margin: "0" }}
             >
-              {" "}
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CoursePostEvaluationsList
-                  evaluationList={evaluationList}
-                  setEvaluationList={setEvaluationList}
-                  curEvaluationId={curEvaluationId}
-                  setcurEvaluationId={setcurEvaluationId}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-              <CourseDateFormat course_id={course_id} />
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "0" }}
-            >
-              <Col xs={24}>
-                <Form
-                  style={{ width: "100%" }}
-                  name="basicForm"
-                  hideRequiredMark={true}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  {...formInitialValues}
+              <Col
+                className="gutter-row widget-holder-col cm-main-left"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={16}
+              >
+                <Row justify="start">
+                  <Col xs={24} className="h1-titles">
+                    <h1>Post Evaluations</h1>
+                  </Col>
+                </Row>
+                <Row
+                  className="cm-main-content"
+                  gutter={[16, 16]}
+                  /* style={{ padding: "10px 0" }} */
                 >
-                  <Collapse
-                    defaultActiveKey={["1"]}
-                    expandIconPosition={"right"}
-                  >
-                    <Panel header="Details" key="1" className="greyBackground">
-                      <div className="evaluationWidgetHolder">
-                        <CoursePostEvaluationsDetails
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.evaluationdetails !==
-                            curValues.evaluationdetails
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                          course_id={course_id}
-                          allOutlines={allOutlines}
-                          userGroupList={userGroupList}
-                          setEvaluationType={setEvaluationType}
-                        />
-                      </div>
-                    </Panel>
-                    <Panel header="Values" key="3" className="greyBackground">
-                      <div className="evaluationWidgetHolder">
-                        <div>
-                          {{
-                            1: (
-                              <>
-                                <CoursePostEvaluationsStarProcess
-                                  evaluationType={evaluationType}
-                                  defaultWidgetValues={defaultWidgetValues}
-                                />
-                              </>
-                            ),
-                            2: (
-                              <>
-                                <CoursePostEvaluationsValues
-                                  shouldUpdate={(prevValues, curValues) =>
-                                    prevValues.evaluationvalues !==
-                                    curValues.evaluationvalues
-                                  }
-                                  showModal={showModal}
-                                  defaultWidgetValues={defaultWidgetValues}
-                                  setdefaultWidgetValues={
-                                    setdefaultWidgetValues
-                                  }
-                                  evaluationList={evaluationList}
-                                  evaluationType={evaluationType}
-                                />
-                              </>
-                            ),
-                            3: (
-                              <>
-                                <div>Comment Component here</div>
-                              </>
-                            ),
-                          }[evaluationType] || (
-                            <div>Please select an evaluation type first</div>
-                          )}
-                        </div>
-
-                        {/*  <CoursePostEvaluationsValues
-                            shouldUpdate={(prevValues, curValues) =>
-                              prevValues.evaluationvalues !==
-                              curValues.evaluationvalues
-                            }
-                            showModal={showModal}
-                            defaultWidgetValues={defaultWidgetValues}
-                            setdefaultWidgetValues={setdefaultWidgetValues}
-                            evaluationList={evaluationList}
-                            evaluationType={evaluationType}
-                          /> */}
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Form>
+                  {" "}
+                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                    <CoursePostEvaluationsList
+                      evaluationList={evaluationList}
+                      setEvaluationList={setEvaluationList}
+                      curEvaluationId={curEvaluationId}
+                      setcurEvaluationId={setcurEvaluationId}
+                      loading={loading}
+                      setLoading={setLoading}
+                    />
+                  </Col>
+                </Row>
               </Col>
+              <Col
+                className="gutter-row widget-holder-col cm-main-right"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={8}
+              >
+                <Row justify="start">
+                  <Col xs={24} className="h3-titles text-right">
+                    <CourseDateFormat course_id={course_id} />
+                  </Col>
+                </Row>
+                <Row
+                  className="cm-main-right-content"
+                  gutter={[16, 16]}
+                  style={{ padding: "0" }}
+                >
+                  <Col xs={24}>
+                    <Form
+                      style={{ width: "100%" }}
+                      name="basicForm"
+                      hideRequiredMark={true}
+                      onFinish={onFinish}
+                      validateMessages={validateMessages}
+                      {...formInitialValues}
+                    >
+                      <Collapse
+                        defaultActiveKey={["1"]}
+                        expandIconPosition={"right"}
+                      >
+                        <Panel
+                          header="Details"
+                          key="1"
+                          className="greyBackground"
+                        >
+                          <div className="evaluationWidgetHolder">
+                            <CoursePostEvaluationsDetails
+                              shouldUpdate={(prevValues, curValues) =>
+                                prevValues.evaluationdetails !==
+                                curValues.evaluationdetails
+                              }
+                              showModal={showModal}
+                              defaultWidgetValues={defaultWidgetValues}
+                              setdefaultWidgetValues={setdefaultWidgetValues}
+                              course_id={course_id}
+                              allOutlines={allOutlines}
+                              userGroupList={userGroupList}
+                              setEvaluationType={setEvaluationType}
+                            />
+                          </div>
+                        </Panel>
+                        <Panel
+                          header="Values"
+                          key="3"
+                          className="greyBackground"
+                        >
+                          <div className="evaluationWidgetHolder">
+                            <div>
+                              {{
+                                1: (
+                                  <>
+                                    <CoursePostEvaluationsStarProcess
+                                      evaluationType={evaluationType}
+                                      defaultWidgetValues={defaultWidgetValues}
+                                    />
+                                  </>
+                                ),
+                                2: (
+                                  <>
+                                    <CoursePostEvaluationsValues
+                                      shouldUpdate={(prevValues, curValues) =>
+                                        prevValues.evaluationvalues !==
+                                        curValues.evaluationvalues
+                                      }
+                                      showModal={showModal}
+                                      defaultWidgetValues={defaultWidgetValues}
+                                      setdefaultWidgetValues={
+                                        setdefaultWidgetValues
+                                      }
+                                      evaluationList={evaluationList}
+                                      evaluationType={evaluationType}
+                                    />
+                                  </>
+                                ),
+                                3: (
+                                  <>
+                                    <div>Comment Component here</div>
+                                  </>
+                                ),
+                              }[evaluationType] || (
+                                <div>
+                                  Please select an evaluation type first
+                                </div>
+                              )}
+                            </div>                            
+                          </div>
+                        </Panel>
+                      </Collapse>
+                    </Form>
+                  </Col>
+                </Row>
+              </Col>
+
+              <ModalForm
+                title={evaluationActionModal.modalTitle}
+                modalFormName={evaluationActionModal.modalFormName}
+                modalBodyContent={evaluationActionModal.modalBodyContent}
+                visible={evaluationActionModal.StateModal}
+                onCancel={hideModal}
+                okText={`${
+                  evaluationActionModal.modalTitle != "Save" ? "Add" : "Ok"
+                }`}
+                onFinish={{
+                  form: "basicForm",
+                  key: "submit",
+                  htmlType: "submit",
+                }}
+              />
+              <Spin
+                size="large"
+                tip="Processing..."
+                spinning={spinner}
+                delay={100}
+              ></Spin>
+
+              <SaveUI
+                listMenu={menulists}
+                position="bottom-right"
+                iconColor="#8998BA"
+                toggleModal={showModal}
+              />
+              <style jsx global>{`
+                .greyBackground .ant-collapse-header {
+                  background-color: #eeeeee;
+                  text-transform: uppercase;
+                  font-weight: bold;
+                }
+                .greyBackground p {
+                  font-weight: normal;
+                  text-transform: initial;
+                }
+                .widget-holder-col .widget-title {
+                  color: #e69138;
+                  margin-bottom: 0;
+                  text-transform: uppercase;
+                }
+                .widget-holder-col .widget-header-row {
+                  padding: 1rem 0;
+                  color: #e69138;
+                }
+                .course-management .ant-input-affix-wrapper {
+                  border-radius: 0.5rem;
+                  border: 1px solid #888787;
+                }
+
+                .course-management .cm-main-right .widget-header-row {
+                  text-align: end;
+                }
+                .course-management .ant-form-item-label {
+                  display: none;
+                }
+                .courses-class .ant-spin-spinning {
+                  position: fixed;
+                  display: block;
+                  top: 0;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  background-color: #ffffff9e;
+                  z-index: 3;
+                  padding: 23% 0;
+                }
+                .evaluationWidgetHolder {
+                  padding: 10px 0;
+                }
+                .evaluationWidgetHolder
+                  .evaluationWithValue
+                  .ant-select-selection-placeholder {
+                  opacity: 1 !important;
+                  color: #000000 !important;
+                }
+                .evaluationWithValue .ant-input::placeholder {
+                  opacity: 1 !important;
+                  color: #000000 !important;
+                }
+                .evaluationWithValue .ant-picker-input input::placeholder,
+                .evaluationWithValue .ant-input-number input::placeholder {
+                  opacity: 1 !important;
+                  color: #000000 !important;
+                }
+              `}</style>
             </Row>
-          </Col>
-
-          <ModalForm
-            title={evaluationActionModal.modalTitle}
-            modalFormName={evaluationActionModal.modalFormName}
-            modalBodyContent={evaluationActionModal.modalBodyContent}
-            visible={evaluationActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${
-              evaluationActionModal.modalTitle != "Save" ? "Add" : "Ok"
-            }`}
-            onFinish={{
-              form: "basicForm",
-              key: "submit",
-              htmlType: "submit",
-            }}
-          />
-          <Spin
-            size="large"
-            tip="Processing..."
-            spinning={spinner}
-            delay={100}
-          ></Spin>
-
-          <SaveUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-          <style jsx global>{`
-            .greyBackground .ant-collapse-header {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 1rem 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label {
-              display: none;
-            }
-            .courses-class .ant-spin-spinning {
-              position: fixed;
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              background-color: #ffffff9e;
-              z-index: 3;
-              padding: 23% 0;
-            }
-            .evaluationWidgetHolder {
-              padding: 10px 0;
-            }
-            .evaluationWidgetHolder
-              .evaluationWithValue
-              .ant-select-selection-placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .evaluationWithValue .ant-input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .evaluationWithValue .ant-picker-input input::placeholder,
-            .evaluationWithValue .ant-input-number input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-          `}</style>
-        </Row>
-        )}
-      </Form.Provider>
+          )}
+        </Form.Provider>
+      </div>
     </motion.div>
   ) : (
     <Loader loading={loading}>

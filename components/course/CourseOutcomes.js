@@ -68,7 +68,7 @@ const menulists = [
     url: "/instructor/[course]/edit",
     urlAs: "/instructor/course/edit",
     callback: "Save",
-    iconClass:"ams-floppy-disk",
+    iconClass: "ams-floppy-disk",
   },
 ];
 /**Panel used by collapsible accordion */
@@ -519,183 +519,191 @@ const CourseOutcomes = ({ course_id }) => {
   };
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
-      <Form.Provider onFormFinish={onFormFinishProcess}>
-      {courseDetails.isPublished === 1 ? (
-          <CourseProhibit
-            title="Editing Published Course Is Prohibited"
-            subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
-            url={`/${linkUrl}/[course]/[...manage]`}
-            asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
-          />
-        ) : (
-        <Row
-          className="widget-container course-management"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          style={{ margin: "0" }}
-        >
-          <Col
-            className="gutter-row widget-holder-col cm-main-left"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={16}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <h3 className="widget-title">Add/Edit Course outcome</h3>
-              </Col>
-            </Row>
+      <div className="common-holder">
+        <Form.Provider onFormFinish={onFormFinishProcess}>
+          {courseDetails.isPublished === 1 ? (
+            <CourseProhibit
+              title="Editing Published Course Is Prohibited"
+              subTitle="Sorry, editing published course is prohibited. Please use the Course Clone function instead."
+              url={`/${linkUrl}/[course]/[...manage]`}
+              asUrl={`/${linkUrl}/course/view/${courseDetails.id}`}
+            />
+          ) : (
             <Row
-              className="cm-main-content"
-              gutter={[16, 16]}
-              /* style={{ padding: "10px 0" }} */
+              className="widget-container course-management"
+              gutter={[16, 0]}
+              style={{ margin: "0" }}
             >
-              {" "}
-              <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                <CourseOutcomeList
-                  outcomeList={outcomeList}
-                  setOutcomeList={setOutcomeList}
-                  curOutcomeId={curOutcomeId}
-                  setcurOutcomeId={setcurOutcomeId}
-                  loading={loading}
-                  setLoading={setLoading}
-                />
-              </Col>
-            </Row>
-          </Col>
-          <Col
-            className="gutter-row widget-holder-col cm-main-right"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={8}
-          >
-            <Row className="widget-header-row" justify="start">
-              <Col xs={24}>
-                <CourseDateFormat course_id={course_id} />
-              </Col>
-            </Row>
-            <Row
-              className="cm-main-right-content"
-              gutter={[16, 16]}
-              style={{ padding: "0" }}
-            >
-              <Col xs={24}>
-                <Form
-                  style={{ width: "100%" }}
-                  name="basicForm"
-                  hideRequiredMark={true}
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                  {...formInitialValues}
+              <Col
+                className="gutter-row widget-holder-col cm-main-left"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={16}
+              >
+                <Row justify="start">
+                  <Col className="h1-titles" xs={24}>
+                    <h1>Add/Edit Course outcome</h1>
+                  </Col>
+                </Row>
+                <Row
+                  className="cm-main-content"
+                  gutter={[16, 16]}
+                  /* style={{ padding: "10px 0" }} */
                 >
-                  <Collapse
-                    defaultActiveKey={["1"]}
-                    expandIconPosition={"right"}
-                  >
-                    <Panel header="Details" key="1" className="greyBackground">
-                      <div className="outcomeWidgetHolder">
-                        <CourseOutcomeDetails
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.outcomedetails !==
-                            curValues.outcomedetails
-                          }
-                          showModal={showModal}
-                          outcome={outcome}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Form>
+                  {" "}
+                  <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
+                    <CourseOutcomeList
+                      outcomeList={outcomeList}
+                      setOutcomeList={setOutcomeList}
+                      curOutcomeId={curOutcomeId}
+                      setcurOutcomeId={setcurOutcomeId}
+                      loading={loading}
+                      setLoading={setLoading}
+                    />
+                  </Col>
+                </Row>
               </Col>
-            </Row>
-          </Col>
+              <Col
+                className="gutter-row widget-holder-col cm-main-right"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={8}
+              >
+                <Row justify="start">
+                  <Col xs={24} className="h3-titles text-right">
+                    <CourseDateFormat course_id={course_id} />
+                  </Col>
+                </Row>
+                <Row
+                  className="cm-main-right-content"
+                  gutter={[16, 16]}
+                  style={{ padding: "0" }}
+                >
+                  <Col xs={24}>
+                    <Form
+                      style={{ width: "100%" }}
+                      name="basicForm"
+                      hideRequiredMark={true}
+                      onFinish={onFinish}
+                      validateMessages={validateMessages}
+                      {...formInitialValues}
+                    >
+                      <Collapse
+                        defaultActiveKey={["1"]}
+                        expandIconPosition={"right"}
+                      >
+                        <Panel
+                          header="Details"
+                          key="1"
+                          className="greyBackground"
+                        >
+                          <div className="outcomeWidgetHolder">
+                            <CourseOutcomeDetails
+                              shouldUpdate={(prevValues, curValues) =>
+                                prevValues.outcomedetails !==
+                                curValues.outcomedetails
+                              }
+                              showModal={showModal}
+                              outcome={outcome}
+                              defaultWidgetValues={defaultWidgetValues}
+                              setdefaultWidgetValues={setdefaultWidgetValues}
+                            />
+                          </div>
+                        </Panel>
+                      </Collapse>
+                    </Form>
+                  </Col>
+                </Row>
+              </Col>
 
-          <ModalForm
-            title={outcomeActionModal.modalTitle}
-            modalFormName={outcomeActionModal.modalFormName}
-            modalBodyContent={outcomeActionModal.modalBodyContent}
-            visible={outcomeActionModal.StateModal}
-            onCancel={hideModal}
-            okText={`${outcomeActionModal.modalTitle != "Save" ? "Add" : "Ok"}`}
-            onFinish={{
-              form: "basicForm",
-              key: "submit",
-              htmlType: "submit",
-            }}
-          />
-          <Spin
-            size="large"
-            tip="Processing..."
-            spinning={spinner}
-            delay={100}
-          ></Spin>
-          <SaveUI
-            listMenu={menulists}
-            position="bottom-right"
-            iconColor="#8998BA"
-            toggleModal={showModal}
-          />
-          <style jsx global>{`
-            .greyBackground .ant-collapse-header {
-              background-color: #eeeeee;
-              text-transform: uppercase;
-              font-weight: bold;
-            }
-            .greyBackground p {
-              font-weight: normal;
-              text-transform: initial;
-            }
-            .widget-holder-col .widget-title {
-              color: #e69138;
-              margin-bottom: 0;
-              text-transform: uppercase;
-            }
-            .widget-holder-col .widget-header-row {
-              padding: 1rem 0;
-              color: #e69138;
-            }
-            .course-management .ant-input-affix-wrapper {
-              border-radius: 0.5rem;
-              border: 1px solid #888787;
-            }
-            
-            .course-management .cm-main-right .widget-header-row {
-              text-align: end;
-            }
-            .course-management .ant-form-item-label {
-              display: none;
-            }
-            .courses-class .ant-spin-spinning {
-              position: fixed;
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              background-color: #ffffff9e;
-              z-index: 3;
-              padding: 23% 0;
-            }
-            .outcomeWidgetHolder {
-              padding: 10px 0;
-            }
-            .outcomeWidgetHolder
-              .outComeWithValue
-              .ant-select-selection-placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-            .outComeWithValue .ant-input::placeholder {
-              opacity: 1 !important;
-              color: #000000 !important;
-            }
-          `}</style>
-        </Row>
-        )}
-      </Form.Provider>
+              <ModalForm
+                title={outcomeActionModal.modalTitle}
+                modalFormName={outcomeActionModal.modalFormName}
+                modalBodyContent={outcomeActionModal.modalBodyContent}
+                visible={outcomeActionModal.StateModal}
+                onCancel={hideModal}
+                okText={`${
+                  outcomeActionModal.modalTitle != "Save" ? "Add" : "Ok"
+                }`}
+                onFinish={{
+                  form: "basicForm",
+                  key: "submit",
+                  htmlType: "submit",
+                }}
+              />
+              <Spin
+                size="large"
+                tip="Processing..."
+                spinning={spinner}
+                delay={100}
+              ></Spin>
+              <SaveUI
+                listMenu={menulists}
+                position="bottom-right"
+                iconColor="#8998BA"
+                toggleModal={showModal}
+              />
+              <style jsx global>{`
+                .greyBackground .ant-collapse-header {
+                  background-color: #eeeeee;
+                  text-transform: uppercase;
+                  font-weight: bold;
+                }
+                .greyBackground p {
+                  font-weight: normal;
+                  text-transform: initial;
+                }
+                .widget-holder-col .widget-title {
+                  color: #e69138;
+                  margin-bottom: 0;
+                  text-transform: uppercase;
+                }
+                .widget-holder-col .widget-header-row {
+                  padding: 1rem 0;
+                  color: #e69138;
+                }
+                .course-management .ant-input-affix-wrapper {
+                  border-radius: 0.5rem;
+                  border: 1px solid #888787;
+                }
+
+                .course-management .cm-main-right .widget-header-row {
+                  text-align: end;
+                }
+                .course-management .ant-form-item-label {
+                  display: none;
+                }
+                .courses-class .ant-spin-spinning {
+                  position: fixed;
+                  display: block;
+                  top: 0;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  background-color: #ffffff9e;
+                  z-index: 3;
+                  padding: 23% 0;
+                }
+                .outcomeWidgetHolder {
+                  padding: 10px 0;
+                }
+                .outcomeWidgetHolder
+                  .outComeWithValue
+                  .ant-select-selection-placeholder {
+                  opacity: 1 !important;
+                  color: #000000 !important;
+                }
+                .outComeWithValue .ant-input::placeholder {
+                  opacity: 1 !important;
+                  color: #000000 !important;
+                }
+              `}</style>
+            </Row>
+          )}
+        </Form.Provider>
+      </div>
     </motion.div>
   ) : (
     <Loader loading={loading}>

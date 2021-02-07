@@ -599,6 +599,7 @@ const CourseCompetencies = ({ course_id }) => {
   };
   return loading == false ? (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
+      <div className="common-holder">
       <Form.Provider onFormFinish={onFormFinishProcess}>
         {courseDetails.isPublished === 1 ? (
           <CourseProhibit
@@ -610,7 +611,7 @@ const CourseCompetencies = ({ course_id }) => {
         ) : (
           <Row
             className="widget-container course-management"
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+            gutter={[16,0]}
             style={{ margin: "0" }}
           >
             <Col
@@ -620,9 +621,9 @@ const CourseCompetencies = ({ course_id }) => {
               md={24}
               lg={16}
             >
-              <Row className="widget-header-row" justify="start">
-                <Col xs={24}>
-                  <h3 className="widget-title">Add/Edit Course Competencies</h3>
+              <Row justify="start">
+                <Col xs={24} className="h1-titles">
+                  <h1>Add/Edit Course Competencies</h1>
                 </Col>
               </Row>
               <Row
@@ -650,8 +651,8 @@ const CourseCompetencies = ({ course_id }) => {
               md={24}
               lg={8}
             >
-              <Row className="widget-header-row" justify="start">
-                <Col xs={24}>
+              <Row justify="start">
+                <Col xs={24} className="h3-titles text-right">
                   <CourseDateFormat course_id={course_id} />
                 </Col>
               </Row>
@@ -821,6 +822,7 @@ const CourseCompetencies = ({ course_id }) => {
           </Row>
         )}
       </Form.Provider>
+      </div>
     </motion.div>
   ) : (
     <Loader loading={loading}>

@@ -38,6 +38,8 @@ const CourseOutlineFeaturedVideo = (props) => {
     showModal,
     defaultWidgetValues,
     setdefaultWidgetValues,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   var featured_video = defaultWidgetValues.outlinefeaturedvideo
     ? defaultWidgetValues.outlinefeaturedvideo
@@ -100,7 +102,11 @@ const CourseOutlineFeaturedVideo = (props) => {
                             showModal(
                               widgetFieldLabels.catname,
                               widgetFieldLabels.catFormName,
-                              modalFormBody
+                              () =>
+                                modalFormBody(
+                                  isOkButtonDisabled,
+                                  setIsOkButtonDisabled
+                                )
                             )
                           }
                         >
@@ -147,7 +153,11 @@ const CourseOutlineFeaturedVideo = (props) => {
                             showModal(
                               widgetFieldLabels.catname,
                               widgetFieldLabels.catFormName,
-                              modalFormBody
+                              () =>
+                                modalFormBody(
+                                  isOkButtonDisabled,
+                                  setIsOkButtonDisabled
+                                )
                             )
                           }
                         >
@@ -166,7 +176,7 @@ const CourseOutlineFeaturedVideo = (props) => {
     </>
   );
 };
-const modalFormBody = () => {
+const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
   const [fileList, setFileList] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);

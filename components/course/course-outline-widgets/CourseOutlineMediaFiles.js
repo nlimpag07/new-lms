@@ -316,10 +316,11 @@ const modalFormBody = (
 
   const beforeUpload = (file) => {
     setLoading(true);
+    console.log(file.type)
     if (
-      file.type !== "application/pdf" ||
-      file.type !== "application/msword" ||
-      file.type !==
+      file.type != "application/pdf" ||
+      file.type != "application/msword" ||
+      file.type !=
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       setalertMessage(
@@ -362,6 +363,7 @@ const modalFormBody = (
           multiple={true}
           beforeUpload={beforeUpload}
           fileList={fileList.fileList}
+          accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           onClick={() => setalertMessage("")}
           /* onRemove={onRemove} */
         >
