@@ -286,12 +286,14 @@ const modalFormBody = (
     setFileList("");
     setImageUrl("");
     setLoading(false);
+    setIsOkButtonDisabled(true);
   };
   /* const beforeUpload = () => {
     return setLoading(true);
     //return false;
   }; */
   const handleChange = (info) => {
+    console.log(info);
     setLoading(true);
     setFileList(info.fileList.filter((file) => !!file.status));
     //setFileList(info);
@@ -306,27 +308,42 @@ const modalFormBody = (
       });
       setLoading(false);
       setFileList(info);
-      //setalertMessage("");
+      setIsOkButtonDisabled(false);
     } else {
       setFileList("");
       setImageUrl("");
       setLoading(false);
+      setIsOkButtonDisabled(true);
     }
   };
 
   const beforeUpload = (file) => {
     setLoading(true);
-    console.log(file.type)
-    if (
-      file.type != "application/pdf" ||
-      file.type != "application/msword" ||
-      file.type !=
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    const isTypeIncluded = allowedTypes.includes(file.type);
+    console.log("File", file);
+    if (isTypeIncluded) {
+      setalertMessage("");
+    } else {
       setalertMessage(
         `Unsupported file detected. Files not supported are not added to the list.`
       );
     }
+    /* if (
+      file.type !== "application/pdf" ||
+      file.type !== "application/msword" ||
+      file.type !==
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      console.log(file.type);
+      setalertMessage(
+        `Unsupported file detected. Files not supported are not added to the list.`
+      );
+    } */
     return (
       file.type === "application/pdf" ||
       file.type === "application/msword" ||
@@ -353,8 +370,7 @@ const modalFormBody = (
       )}
     </div>
   );
-  console.log(alertMessage) */;
-  return (
+  console.log(alertMessage) */ return (
     <>
       {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
       <Form.Item name="outlinemedia">
@@ -363,9 +379,7 @@ const modalFormBody = (
           multiple={true}
           beforeUpload={beforeUpload}
           fileList={fileList.fileList}
-          accept="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          onClick={() => setalertMessage("")}
-          /* onRemove={onRemove} */
+          onRemove={onRemove}
         >
           <div>
             {loading ? (

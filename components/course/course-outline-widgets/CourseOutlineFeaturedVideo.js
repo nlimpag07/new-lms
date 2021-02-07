@@ -200,17 +200,20 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
         setImageUrl(imageUrl);
         setalertMessage("");
         setLoading(false);
+        setIsOkButtonDisabled(false);
       });
     } else {
       setFileList("");
       setImageUrl("");
       setLoading(false);
+      setIsOkButtonDisabled(true);
     }
   };
   const onRemove = (info) => {
     setFileList("");
     setImageUrl("");
     setLoading(false);
+    setIsOkButtonDisabled(true);
   };
   const beforeUpload = (file) => {
     setLoading(true);
