@@ -105,10 +105,10 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
     >
       
       <Row className="widget-header-row" justify="start">
-        <Col xs={23}>
+        <Col xs={22} sm={23}>
           <h3 className="widget-title">Authored Courses</h3>
         </Col>
-        <Col xs={1} className="widget-switchgrid-holder">
+        <Col xs={2} sm={1} className="widget-switchgrid-holder">
           <button
             className="switch-grid"
             key="Switch"

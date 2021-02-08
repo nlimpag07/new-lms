@@ -53,6 +53,9 @@ body {
   .ant-modal-mask {
     background-color: #ffffff;
   }
+  .status-banner-container .ant-col:not(:last-child) {
+    margin-bottom: 16px;
+  }
 }
 
 /* sm */
@@ -99,6 +102,12 @@ body {
   .ant-modal-mask {
     background-color: #ffffff;
   }
+  .status-banner-container .ant-col:not(:last-child) {
+    margin-bottom: 16px;
+  }
+  .status-banner-container .ant-col:nth-last-child(2) {
+    margin-bottom: 0px;
+  }
 }
 /* md */
 @media screen and (min-width: 768px) and (max-width: 991px) {
@@ -140,6 +149,12 @@ body {
   }
   .ant-modal-mask {
     background-color: #ffffff;
+  }
+  .status-banner-container .ant-col:not(:last-child) {
+    margin-bottom: 16px;
+  }
+  .status-banner-container .ant-col:nth-last-child(2) {
+    margin-bottom: 0px;
   }
 }
 /* lg */
@@ -842,7 +857,9 @@ a.ellipsis i {
 .login {
   background-color: #ffffff;
 }
-.login .ant-input-affix-wrapper{border: 1px solid #333333 !important;}
+.login .ant-input-affix-wrapper {
+  border: 1px solid #333333 !important;
+}
 .searchbox-holder .ant-input-search-icon::before {
   border-left: 1px solid #e69138;
 }

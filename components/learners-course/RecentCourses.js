@@ -71,14 +71,14 @@ const RecentCourses = ({ courses }) => {
       className="gutter-row widget-holder-col"
       xs={24}
       sm={24}
-      md={16}
+      md={24}
       lg={16}
     >
       <Row className="widget-header-row" justify="start">
-        <Col xs={23}>
+        <Col xs={22} sm={23}>
           <h3 className="widget-title">Recent Courses</h3>
         </Col>
-        <Col xs={1} className="widget-switchgrid-holder">
+        <Col xs={22} sm={1} className="widget-switchgrid-holder">
           <button
             className="switch-grid"
             key="Switch"
@@ -93,6 +93,7 @@ const RecentCourses = ({ courses }) => {
           </button>
         </Col>
       </Row>
+      <div className="common-holder">
       <Row
         className="RecentCourses-ListItems"
         gutter={[16, 16]}
@@ -100,6 +101,7 @@ const RecentCourses = ({ courses }) => {
       >
         {GridType(courses, curGridStyle, setModal2Visible, router, loading)}
       </Row>
+      </div>
       <Modal
         title="Publish Properties"
         centered
@@ -128,8 +130,7 @@ const RecentCourses = ({ courses }) => {
           margin-bottom: 0;
           text-transform: uppercase;
         }
-        .widget-holder-col .widget-header-row {
-          background-color: #eeeeee;
+        .widget-holder-col .widget-header-row {         
           padding: 5px 10px;
           color: #e69138;
         }

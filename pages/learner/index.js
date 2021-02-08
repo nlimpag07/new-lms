@@ -39,35 +39,26 @@ var apiBaseUrl = process.env.apiBaseUrl;
 const LearnerIndex = (props) => {
   console.log("props From DashBoard GetInitialProps", props);
   const { courses, learner, user } = props;
-  
-  useEffect(() => {
-  }, []);
+
   useEffect(() => {}, []);
- 
+  useEffect(() => {}, []);
+
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder">
-        <StatusBar learner={learner} />
-        <Row
-          className="widget-container"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+        <Row className="widget-container" gutter={[16, 32]}>
+          <StatusBar learner={learner} />
+        </Row>
+        <Row className="widget-container" gutter={[16, 32]}>
           <RecentCourses courses={learner} />
           <ToDos />
         </Row>
         {/*2nd Level*/}
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+        <Row gutter={[16, 32]}>
           <Graph />
           <LeaderBoard />
         </Row>
-        <Row
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-          /* style={{ margin: "1rem 0" }} */
-        >
+        <Row gutter={[16, 32]}>
           <RecentActivities />
           <SocialMedia />
         </Row>
