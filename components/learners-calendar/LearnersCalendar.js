@@ -382,11 +382,7 @@ const LearnersCalendar = ({ course_id }) => {
   }
   return (
     //GridType(gridList)
-    <Row
-      className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
-    >
+    <Row className="widget-container">
       {spin ? (
         <div className="spinHolder">
           <Spin
@@ -498,9 +494,12 @@ const LearnersCalendar = ({ course_id }) => {
           font-size: 2rem;
           margin: 0.5rem 0;
         }
-        .LearnersCalendar .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date{
+        .LearnersCalendar
+          .ant-picker-calendar-full
+          .ant-picker-panel
+          .ant-picker-calendar-date {
           border: 1px solid #f0f0f0;
-          margin:0 !important;
+          margin: 0 !important;
         }
       `}</style>
     </Row>

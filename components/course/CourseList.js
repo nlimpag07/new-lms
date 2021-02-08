@@ -257,10 +257,7 @@ const CourseList = (props) => {
 
   return (
     <div className="common-holder">
-      <Row
-        className="widget-container"
-        /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      >
+      <Row className="widget-container">
         <Col
           className="gutter-row widget-holder-col"
           xs={24}
@@ -488,7 +485,7 @@ const CourseList = (props) => {
           .widget-holder-col .widget-search-row .category-holder {
             position: relative;
           }
-          
+
           .widget-holder-col .widget-search-row .category-holder .ant-select,
           .widget-holder-col
             .widget-search-row
@@ -505,9 +502,6 @@ const CourseList = (props) => {
           }
 
           
-          .searchbox-holder .ant-input-search-icon::before {
-            border-left: 1px solid #e69138;
-          }
           .searchbox-holder .ant-input,
           .searchbox-holder .ant-input-search-icon {
             font-size: 1rem;

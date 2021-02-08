@@ -235,10 +235,10 @@ const LearnersCatalog = (props) => {
     }
   }
   return (
+    <div className="common-holder">
     <Row
       className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
+      
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -381,8 +381,9 @@ const LearnersCatalog = (props) => {
           text-transform: uppercase;
         }
         .widget-holder-col .widget-header-row {
-          padding: 5px 0;
+          padding:0;
           color: #e69138;
+          background-color: #ffffff;
         }
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {
           text-align: right;
@@ -452,22 +453,11 @@ const LearnersCatalog = (props) => {
           padding-left: 0;
           padding-right: 0;
         }
-        .widget-holder-col .widget-search-row .choices-container {
-          border-radius: 0.5rem;
-          border: 1px solid #888787;
-          /* padding: 0 10px; */
-        }
+        
         .widget-holder-col .widget-search-row .category-holder {
           position: relative;
         }
-        .widget-holder-col
-          .widget-search-row
-          .category-holder
-          .ant-select-single:not(.ant-select-customize-input)
-          .ant-select-selector {
-          background: none;
-          border: none;
-        }
+        
         .widget-holder-col .widget-search-row .category-holder .ant-select,
         .widget-holder-col
           .widget-search-row
@@ -483,12 +473,12 @@ const LearnersCatalog = (props) => {
           top: 50%;
         }
 
-        .searchbox-holder .ant-input-affix-wrapper {
+        /* .searchbox-holder .ant-input-affix-wrapper {
           background: none;
           border: none;
           font-size: 1rem;
           color: #e69138;
-        }
+        } */
         .searchbox-holder .ant-input,
         .searchbox-holder .ant-input-search-icon {
           font-size: 1rem;
@@ -538,6 +528,7 @@ const LearnersCatalog = (props) => {
         }      
       `}</style>
     </Row>
+    </div>
   );
 };
 

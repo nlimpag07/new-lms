@@ -133,39 +133,35 @@ const TranscriptList = ({ listOfTranscripts }) => {
   }, []);
 
   return Data.length ? (
-    //GridType(gridList)
-    <Row
-      className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
-    >
-      <motion.div initial="hidden" animate="visible" variants={list}>
-        <Col
-          className="gutter-row widget-holder-col TranscriptList"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>My Transcripts</h1>
-          <Row className="Course-Enrollments">
-            <Col xs={24}>
-              <Grid
-                data={orderBy(Data, theSort.sort)}
-                style={{ height: "550px" }}
-                selectedField="selected"
-                onSelectionChange={selectionChange}
-                onHeaderSelectionChange={headerSelectionChange}
-                onRowClick={rowClick}
-                sortable
-                sort={theSort.sort}
-                onSortChange={(e) => {
-                  setTheSort({
-                    sort: e.sort,
-                  });
-                }}
-              >
-                {/* <Column
+    <div className="common-holder">
+      <Row className="widget-container">
+        <motion.div initial="hidden" animate="visible" variants={list}>
+          <Col
+            className="gutter-row widget-holder-col TranscriptList"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>My Transcripts</h1>
+            <Row className="Course-Enrollments">
+              <Col xs={24}>
+                <Grid
+                  data={orderBy(Data, theSort.sort)}
+                  style={{ height: "550px" }}
+                  selectedField="selected"
+                  onSelectionChange={selectionChange}
+                  onHeaderSelectionChange={headerSelectionChange}
+                  onRowClick={rowClick}
+                  sortable
+                  sort={theSort.sort}
+                  onSortChange={(e) => {
+                    setTheSort({
+                      sort: e.sort,
+                    });
+                  }}
+                >
+                  {/* <Column
                   field="selected"
                   width="65px"
                   headerSelectionValue={
@@ -174,43 +170,48 @@ const TranscriptList = ({ listOfTranscripts }) => {
                     ) === -1
                   }
                 /> */}
-                <Column field="num" width="65px" title="#" />
-                <Column field="courseTitle" title="Course" width="300px" />
-                <Column field="result" title="Result" />
-                <Column field="steps" title="Steps" />
-                <Column field="avg" title="Avg. Score" />
-                <Column field="finalScoreLabel" title="Final Score" />
-                <Column field="totalHoursTakenLabel" title="Hours Taken" />
-                <Column
-                  sortable={false}
-                  cell={(props) =>
-                    ActionRender(props, setModal2Visible, setTranscriptDetails)
-                  }
-                  field=""
-                  title="Action"
-                />
-              </Grid>
-            </Col>
-          </Row>
-        </Col>
-      </motion.div>
-      <TranscriptDetails
-        modal2Visible={modal2Visible}
-        setModal2Visible={setModal2Visible}
-        transcriptDetails={transcriptDetails}
-      />
+                  <Column field="num" width="65px" title="#" />
+                  <Column field="courseTitle" title="Course" width="300px" />
+                  <Column field="result" title="Result" />
+                  <Column field="steps" title="Steps" />
+                  <Column field="avg" title="Avg. Score" />
+                  <Column field="finalScoreLabel" title="Final Score" />
+                  <Column field="totalHoursTakenLabel" title="Hours Taken" />
+                  <Column
+                    sortable={false}
+                    cell={(props) =>
+                      ActionRender(
+                        props,
+                        setModal2Visible,
+                        setTranscriptDetails
+                      )
+                    }
+                    field=""
+                    title="Action"
+                  />
+                </Grid>
+              </Col>
+            </Row>
+          </Col>
+        </motion.div>
+        <TranscriptDetails
+          modal2Visible={modal2Visible}
+          setModal2Visible={setModal2Visible}
+          transcriptDetails={transcriptDetails}
+        />
 
-      {/* <CourseCircularUi /> */}
-      <style jsx global>{`
-        .TranscriptList h1 {
-          font-size: 2rem;
-          font-weight: 700;
-        }
-        .TranscriptList .k-grid-header {
-          background-color: rgba(0, 0, 0, 0.05);
-        }
-      `}</style>
-    </Row>
+        {/* <CourseCircularUi /> */}
+        <style jsx global>{`
+          .TranscriptList h1 {
+            font-size: 2rem;
+            font-weight: 700;
+          }
+          .TranscriptList .k-grid-header {
+            background-color: rgba(0, 0, 0, 0.05);
+          }
+        `}</style>
+      </Row>
+    </div>
   ) : (
     <Empty></Empty>
   );
