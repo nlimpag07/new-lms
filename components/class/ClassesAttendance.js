@@ -135,8 +135,7 @@ const ClassesAttendance = ({ course_id }) => {
         ? (learnerList = theSession.learnerSession)
         : (learnerList = []);
 
-
-        /* var config = {
+      /* var config = {
           method: "get",
           url: apiBaseUrl + "/Attendance/" + theSession.id,
           headers: {
@@ -166,7 +165,6 @@ const ClassesAttendance = ({ course_id }) => {
         }
         fetchData(config); */
 
-      
       setSessionData({
         trigger: theSession.id,
         sessionTitle: sessionName,
@@ -210,69 +208,68 @@ const ClassesAttendance = ({ course_id }) => {
     //GridType(gridList)
 
     <motion.div initial="hidden" animate="visible" variants={list}>
-      <Row
-        className="widget-container"
-        /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-        style={{ margin: "1rem 0" }}
-      >
-        <Col
-          className="gutter-row widget-holder-col ClassesAttendance"
-          xs={24}
-          sm={24}
-          md={24}
-          lg={24}
-        >
-          <h1>{courseDetails.title}: Attendance</h1>
-          <Row className="widget-header-row" justify="start">
-            <Col xs={24} xs={24} sm={12} md={8} lg={8}>
-              <h3 className="widget-title">
-                Select A Session to view Attendance:
-              </h3>
-              <Select
-                showSearch
-                style={{ width: "100%" }}
-                placeholder="Select Session"
-                optionFilterProp="children"
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                {sessionOptionList}
-              </Select>
-            </Col>
-          </Row>
-          <Divider className="searchResultSeparator">
-            Search Result Below
-          </Divider>
-          <Row className="Course-Enrollments">
-            <Col xs={24}>
-              {spin ? (
-                <div className="spinHolder">
-                  <Spin
-                    size="small"
-                    tip="Retrieving data..."
-                    spinning={spin}
-                    delay={100}
-                  ></Spin>
-                </div>
-              ) : (
-                <Col xs={24}>
-                  <ClassessAttendanceList
-                    sessionData={sessionData}
-                    setSpin={setSpin}
-                    spin={spin}
-                  />
-                </Col>
-              )}
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+      <div className="common-holder">
+        <Row className="widget-container" xs={24} sm={24} md={24} lg={24}>
+          <Col
+            className="gutter-row widget-holder-col ClassesAttendance"
+            xs={24}
+            sm={24}
+            md={24}
+            lg={24}
+          >
+            <h1>{courseDetails.title}: Attendance</h1>
+            <Row justify="start">
+              <Col xs={24} xs={24} sm={12} md={8} lg={8}>
+                <h3 className="widget-title">
+                  Select A Session to view Attendance:
+                </h3>
+                <Select
+                  showSearch
+                  style={{ width: "100%" }}
+                  placeholder="Select Session"
+                  optionFilterProp="children"
+                  onChange={onChange}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onSearch={onSearch}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {sessionOptionList}
+                </Select>
+              </Col>
+            </Row>
+            <Divider className="searchResultSeparator">
+              Search Result Below
+            </Divider>
+            <Row className="Course-Enrollments">
+              <Col xs={24}>
+                {spin ? (
+                  <div className="spinHolder">
+                    <Spin
+                      size="small"
+                      tip="Retrieving data..."
+                      spinning={spin}
+                      delay={100}
+                    ></Spin>
+                  </div>
+                ) : (
+                  <Col xs={24}>
+                    <ClassessAttendanceList
+                      sessionData={sessionData}
+                      setSpin={setSpin}
+                      spin={spin}
+                    />
+                  </Col>
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
       <Modal
         title="Publish Properties"
         centered

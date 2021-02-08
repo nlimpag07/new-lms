@@ -266,11 +266,10 @@ const ClassesCourseList = () => {
   }
 
   return (
-    //GridType(gridList)
+    <div className="common-holder">
     <Row
       className="widget-container"
-      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
+      /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */      
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -307,9 +306,9 @@ const ClassesCourseList = () => {
         <Row
           className="widget-search-row"
           justify="start"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
+          gutter={[16, 16]}
         >
-          <Col xs={8}>
+          <Col xs={24} sm={10} md={8}>
             <div className="choices-container category-holder">
               <Select
                 showSearch
@@ -329,7 +328,7 @@ const ClassesCourseList = () => {
               </Select>
             </div>
           </Col>
-          <Col xs={16} className="widget-switchgrid-holder">
+          <Col xs={24} sm={14} md={16} className="widget-switchgrid-holder">
             <div className="choices-container searchbox-holder">
               <Search
                 placeholder="Search Course"
@@ -382,9 +381,14 @@ const ClassesCourseList = () => {
           text-transform: uppercase;
         }
         .widget-holder-col .widget-header-row {
+          color: #e69138;
+          background-color: #ffffff;
+          padding: 0;
+      }
+        /* .widget-holder-col .widget-header-row {
           padding: 5px 0;
           color: #e69138;
-        }
+        } */
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {
           text-align: right;
         }
@@ -453,22 +457,11 @@ const ClassesCourseList = () => {
           padding-left: 0;
           padding-right: 0;
         }
-        .widget-holder-col .widget-search-row .choices-container {
-          border-radius: 0.5rem;
-          border: 1px solid #888787;
-          /* padding: 0 10px; */
-        }
+        
         .widget-holder-col .widget-search-row .category-holder {
           position: relative;
         }
-        .widget-holder-col
-          .widget-search-row
-          .category-holder
-          .ant-select-single:not(.ant-select-customize-input)
-          .ant-select-selector {
-          background: none;
-          border: none;
-        }
+        
         .widget-holder-col .widget-search-row .category-holder .ant-select,
         .widget-holder-col
           .widget-search-row
@@ -484,12 +477,12 @@ const ClassesCourseList = () => {
           top: 50%;
         }
 
-        .searchbox-holder .ant-input-affix-wrapper {
+        /* .searchbox-holder .ant-input-affix-wrapper {
           background: none;
           border: none;
           font-size: 1rem;
           color: #e69138;
-        }
+        } */
         .searchbox-holder .ant-input,
         .searchbox-holder .ant-input-search-icon {
           font-size: 1rem;
@@ -521,6 +514,7 @@ const ClassesCourseList = () => {
         }
       `}</style>
     </Row>
+    </div>
   );
 };
 

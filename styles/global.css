@@ -756,7 +756,7 @@ a.ellipsis i {
   border: 1px solid #333333;
 }
 .ant-table-thead > tr > th {
-  background-color: #333333;
+  background-color: #333333 !important;
   color: #ffffff;
 }
 .ant-collapse > .ant-collapse-item > .ant-collapse-header {
@@ -819,4 +819,20 @@ a.ellipsis i {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0;
+}
+
+.widget-holder-col
+  .widget-search-row
+  .category-holder
+  .ant-select-single:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border-radius: 0.5rem;
+  border: 1px solid #e69138;
+}
+.searchbox-holder .ant-input-affix-wrapper {
+  background: none;
+  border-radius: 0.5rem;
+  border: 1px solid #e69138;
+  font-size: 1rem;
+  color: #e69138;
 }

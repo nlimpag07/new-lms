@@ -398,6 +398,7 @@ const ClassesSessions = ({ course_id }) => {
         </div>
       ) : (
         <motion.div initial="hidden" animate="visible" variants={list}>
+          <div className="common-holder">
           <Col
             className="gutter-row widget-holder-col ClassesSessions"
             xs={24}
@@ -418,6 +419,7 @@ const ClassesSessions = ({ course_id }) => {
               <div>You cannot set Sessions on Self-Paced type courses.</div>
             )}
           </Col>
+          </div>
         </motion.div>
       )}
       <Modal

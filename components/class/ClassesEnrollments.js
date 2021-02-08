@@ -28,8 +28,6 @@ import EnrollmentsApprove from "./EnrollmentOperations/EnrollmentsApprove";
 import EnrollmentsAdd from "./EnrollmentOperations/EnrollmentsAdd";
 import EnrollmentsView from "./EnrollmentOperations/EnrollmentsView";
 
-
-
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
@@ -189,20 +187,17 @@ const ClassesEnrollments = ({ course_id }) => {
   }, [spin]);
 
   const showModal = (modalOperation, props) => {
-    
     setEnrollmentsModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
-    
   };
   const hideModal = (modalOperation) => {
     setEnrollmentsModal({
       visible: false,
       modalOperation: modalOperation,
     });
-    
   };
   //console.log("Spin", spin);
 
@@ -224,26 +219,28 @@ const ClassesEnrollments = ({ course_id }) => {
         style={{ width: "100%" }}
       >
         {!spin ? (
-          <Col
-            className="gutter-row widget-holder-col ClassesEnrollments"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-          >
-            <h1>{courseDetails.title}: Enrollments</h1>
-            <Row className="Course-Enrollments">
-              <Col xs={24}>
-                <ClassesEnrollmentsList
-                  enrollees_list={enrollees}
-                  showModal={showModal}
-                  hideModal={hideModal}
-                  setSpin={setSpin}
-                  courseType={courseType}
-                />
-              </Col>
-            </Row>
-          </Col>
+          <div className="common-holder">
+            <Col
+              className="gutter-row widget-holder-col ClassesEnrollments"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={24}
+            >
+              <h1>{courseDetails.title}: Enrollments</h1>
+              <Row className="Course-Enrollments">
+                <Col xs={24}>
+                  <ClassesEnrollmentsList
+                    enrollees_list={enrollees}
+                    showModal={showModal}
+                    hideModal={hideModal}
+                    setSpin={setSpin}
+                    courseType={courseType}
+                  />
+                </Col>
+              </Row>
+            </Col>
+          </div>
         ) : (
           <Col xs={24} style={{ textAlign: "center" }}>
             <Spin
@@ -275,7 +272,7 @@ const ClassesEnrollments = ({ course_id }) => {
               hideModal={hideModal}
               setSpin={setSpin}
               courseType={courseType}
-              dataProps = {enrollmentsModal.dataProps}
+              dataProps={enrollmentsModal.dataProps}
             />
           ) : enrollmentsModal.modalOperation == "add" ? (
             <EnrollmentsAdd
@@ -292,7 +289,7 @@ const ClassesEnrollments = ({ course_id }) => {
               hideModal={hideModal}
               setSpin={setSpin}
               courseType={courseType}
-              dataProps = {enrollmentsModal.dataProps}
+              dataProps={enrollmentsModal.dataProps}
             />
           ) : enrollmentsModal.modalOperation == "delete" ? (
             "HELLO Delete"

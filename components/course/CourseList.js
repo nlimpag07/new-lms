@@ -488,15 +488,7 @@ const CourseList = (props) => {
           .widget-holder-col .widget-search-row .category-holder {
             position: relative;
           }
-          .widget-holder-col
-            .widget-search-row
-            .category-holder
-            .ant-select-single:not(.ant-select-customize-input)
-            .ant-select-selector {
-            /* background: none; */
-            border-radius: 0.5rem;
-            border: 1px solid #e69138;
-          }
+          
           .widget-holder-col .widget-search-row .category-holder .ant-select,
           .widget-holder-col
             .widget-search-row
@@ -512,13 +504,7 @@ const CourseList = (props) => {
             top: 50%;
           }
 
-          .searchbox-holder .ant-input-affix-wrapper {
-            background: none;
-            border-radius: 0.5rem;
-            border: 1px solid #e69138;
-            font-size: 1rem;
-            color: #e69138;
-          }
+          
           .searchbox-holder .ant-input-search-icon::before {
             border-left: 1px solid #e69138;
           }

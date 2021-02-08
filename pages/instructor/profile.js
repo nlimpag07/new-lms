@@ -116,54 +116,56 @@ const Profile = ({ u, query }) => {
             <h2 className="widget-title">PROFILE</h2>
           </Col>
         </Row> */}
-        <Row style={{ marginBottom: "1rem" }}>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <div className="userThumbnail">
-              <img
-                alt="img"
-                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={18} className="userDetails">
-            <div className="userDetails-Holder">
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Name:</span> {`${u.firstName} ${u.lastName}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Registration Date:</span>{" "}
-                  {`${u.firstName} ${u.lastName}`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Email:</span> {`${u.email}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Birth Date (mm-dd-yyyy):</span>{" "}
-                  {`${moment(u.birthday).format("MM-DD-YYYY")}`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Department:</span> {`${u.department}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Position:</span> {`${u.position}`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>User Group:</span> {`${u.userGroup}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Last Access:</span> {`${u.lastAccess}`}
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
+        <div className="common-holder">
+          <Row style={{ marginBottom: "1rem" }}>
+            <Col xs={24} sm={24} md={24} lg={6}>
+              <div className="userThumbnail">
+                <img
+                  alt="img"
+                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                />
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={18} className="userDetails">
+              <div className="userDetails-Holder">
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Name:</span> {`${u.firstName} ${u.lastName}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Registration Date:</span>{" "}
+                    {`${u.firstName} ${u.lastName}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Email:</span> {`${u.email}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Birth Date (mm-dd-yyyy):</span>{" "}
+                    {`${moment(u.birthday).format("MM-DD-YYYY")}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Department:</span> {`${u.department}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Position:</span> {`${u.position}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>User Group:</span> {`${u.userGroup}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Last Access:</span> {`${u.lastAccess}`}
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+        </div>
         {u.isLearner != 1 ? null : (
           <Row>
             <Tabs
