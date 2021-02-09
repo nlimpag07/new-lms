@@ -708,11 +708,7 @@ const CourseAssessments = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-assessment`
-          ); */
+          visible: false;          
           setdefaultWidgetValues({
             assessmentdetails: [],
             assessmentitems: [],
@@ -736,20 +732,7 @@ const CourseAssessments = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // console.log(curAssessmentId)
-  /*console.log(assessmentList)  */
-  /* let {
-    id,
-    courseAssessmentsMedia,
-    courseAssessmentsMilestone,
-    courseAssessmentsItems,
-    description,
-    duration,
-    featureImage,
-    interactiveVideo,
-    title,
-    userGroup,
-  } = ""; */
+ 
   useEffect(() => {
     let {
       id,

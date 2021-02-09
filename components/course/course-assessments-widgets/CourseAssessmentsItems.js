@@ -427,7 +427,7 @@ const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
                           rules={[
                             {
                               required: field.name === 0 ? true : false,
-                              message: "Missing Choice Name",
+                              message: "select the checkbox",
                             },
                           ]}
                         >
