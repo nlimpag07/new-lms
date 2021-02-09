@@ -14,7 +14,7 @@ import {
   Select,
   Checkbox,
   Button,
-  Space
+  Space,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -373,56 +373,83 @@ const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
       {questionType === 2 && (
         <Form.Item label="Choices:">
           <Form.List name={["assessmentitems", "courseAssessmentItemChoices"]}>
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map((field) => (
-                  <Form.Item key={field.key}>
-                  <Space key={field.key} align="baseline" direction="horizontal">
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    <Form.Item
-                      noStyle
-                      shouldUpdate={(prevValues, curValues) =>
-                        prevValues.area !== curValues.area ||
-                        prevValues.sights !== curValues.sights
-                      }
-                    >
-                      {() => (
+            {(fields, { add, remove }) => {
+              let dChoices = [{ title: "", isCorrect: true }];
+              return (
+                <>
+                  {fields.map((field) => (
+                    <Form.Item key={field.key}>
+                      <Space
+                        key={field.key}
+                        align="baseline"
+                        direction="horizontal"
+                      >
+                        {dChoices.length > 1 ? (
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        ) : null}
+                        <Form.Item
+                          noStyle
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.area !== curValues.area ||
+                            prevValues.sights !== curValues.sights
+                          }
+                        >
+                          {() => {
+                            console.log("fields", fields);
+                            return (
+                              <Form.Item
+                                {...field}
+                                noStyle
+                                name={[field.name, "name"]}
+                                fieldKey={[field.fieldKey, "name"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Missing Choice Name",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={`Choice ${field.name + 1}`}
+                                />
+                              </Form.Item>
+                            );
+                          }}
+                        </Form.Item>
                         <Form.Item
                           {...field}
-                          noStyle                          
-                          name={[field.name, "name"]}
-                          fieldKey={[field.fieldKey, "name"]}
-                          rules={[{ required: true, message: "Missing Choice Name" }]}
+                          noStyle
+                          name={[field.name, "isCorrect"]}
+                          fieldKey={[field.fieldKey, "isCorrect"]}
+                          valuePropName="checked"
+                          rules={[
+                            {
+                              required: field.name === 0 ? true : false,
+                              message: "Missing Choice Name",
+                            },
+                          ]}
                         >
-                          <Input placeholder={`Choice ${field.name + 1}`} />
+                          <Checkbox>is Correct?</Checkbox>
                         </Form.Item>
-                      )}
+                      </Space>
                     </Form.Item>
-                    <Form.Item
-                      {...field}
-                      noStyle
-                      name={[field.name, "isCorrect"]}
-                      fieldKey={[field.fieldKey, "isCorrect"]}  
-                      valuePropName="checked"                   
-                    >
-                      <Checkbox>is Correct?</Checkbox>
-                    </Form.Item>                    
-                  </Space>
-                  </Form.Item>
-                ))}
+                  ))}
 
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    Add sights
-                  </Button>
-                </Form.Item>
-              </>
-            )}
+                  <Form.Item noStyle>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add Choice
+                    </Button>
+                  </Form.Item>
+                </>
+              );
+            }}
           </Form.List>
           {/* <Form.Item
             name={["assessmentitems", "courseAssessmentItemChoices", "choice1"]}

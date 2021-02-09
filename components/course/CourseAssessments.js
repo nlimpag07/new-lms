@@ -617,7 +617,20 @@ const CourseAssessments = ({ course_id }) => {
               items.isTrue = newTrue;
               items.isFalse = newTrue ? 0 : 1;
             }
-
+            
+            if (items.courseAssessmentItemChoices) {
+              let itemChoices = items.courseAssessmentItemChoices.map(
+                (choice, cIndex) => {
+                  choice.id = 0;
+                  choice.courseAssessmentItemId = items.id;
+                  choice.isCorrect = choice.isCorrect ? 1 : 0;
+                  return choice;
+                }
+              );
+              console.log("itemChoices",itemChoices)
+              items.courseAssessmentItemChoices = itemChoices;
+              items.isShuffle =items.isShuffle?1:0;
+            }
             //console.log("For Submission assessmentitems: ",items)
             return items;
           }
