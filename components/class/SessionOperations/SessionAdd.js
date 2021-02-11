@@ -50,12 +50,13 @@ const SessionAdd = ({
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
 
-  console.log('instructorsList',instructorsList);
+  //console.log('instructorsList',instructorsList);
   const selectInstructorOptions =
     instructorsList.length &&
     instructorsList.map((option, index) => {
       let insFullName = `${option.user.firstName} ${option.user.lastName}`;
       let insValue = option.userId;
+      console.log("value", insValue)
       return (
         <Option key={index} value={insValue}>
           {insFullName}

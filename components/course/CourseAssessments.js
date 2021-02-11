@@ -617,7 +617,20 @@ const CourseAssessments = ({ course_id }) => {
               items.isTrue = newTrue;
               items.isFalse = newTrue ? 0 : 1;
             }
-
+            
+            if (items.courseAssessmentItemChoices) {
+              let itemChoices = items.courseAssessmentItemChoices.map(
+                (choice, cIndex) => {
+                  choice.id = 0;
+                  choice.courseAssessmentItemId = items.id;
+                  choice.isCorrect = choice.isCorrect ? 1 : 0;
+                  return choice;
+                }
+              );
+              console.log("itemChoices",itemChoices)
+              items.courseAssessmentItemChoices = itemChoices;
+              items.isShuffle =items.isShuffle?1:0;
+            }
             //console.log("For Submission assessmentitems: ",items)
             return items;
           }
@@ -695,11 +708,7 @@ const CourseAssessments = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-assessment`
-          ); */
+          visible: false;          
           setdefaultWidgetValues({
             assessmentdetails: [],
             assessmentitems: [],
@@ -723,20 +732,7 @@ const CourseAssessments = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // console.log(curAssessmentId)
-  /*console.log(assessmentList)  */
-  /* let {
-    id,
-    courseAssessmentsMedia,
-    courseAssessmentsMilestone,
-    courseAssessmentsItems,
-    description,
-    duration,
-    featureImage,
-    interactiveVideo,
-    title,
-    userGroup,
-  } = ""; */
+ 
   useEffect(() => {
     let {
       id,

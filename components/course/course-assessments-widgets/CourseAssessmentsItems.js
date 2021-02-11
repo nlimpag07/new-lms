@@ -13,6 +13,8 @@ import {
   Radio,
   Select,
   Checkbox,
+  Button,
+  Space,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -50,7 +52,6 @@ const CourseAssessmentsItems = (props) => {
   //console.log("Base Type: ", assessBaseType);
   var assItemList = defaultWidgetValues.assessmentConstItems;
   var chosenRows = defaultWidgetValues.assessmentitems;
-  
 
   const onRemove = (name) => {
     let newValues = chosenRows.filter((value) => value.name !== name);
@@ -204,24 +205,24 @@ const CourseAssessmentsItems = (props) => {
                           console.log("ChosenRows Individual Fields:", field);
                           return (
                             <Row className="" gutter={[0, 0]} key={field.key}>
-                            <Col span={2}>
-                              {chosenRows.length >= 1 ? (
-                                <MinusCircleOutlined
-                                  className="dynamic-delete-button"
-                                  style={{ margin: "0 8px" }}
-                                  key={`del-${field.key}`}
-                                  onClick={() => {
-                                    remove(field.key);
-                                    onRemove(field.value);
-                                  }}
-                                />
-                              ) : null}
-                            </Col>
-                            <Col span={11}>{field.value}</Col>
-                            <Col span={5}>{field.assessmentItemTypeName}</Col>
-                            <Col span={3}>
-                              {field.duration ? field.duration : "--"}
-                            </Col>
+                              <Col span={2}>
+                                {chosenRows.length >= 1 ? (
+                                  <MinusCircleOutlined
+                                    className="dynamic-delete-button"
+                                    style={{ margin: "0 8px" }}
+                                    key={`del-${field.key}`}
+                                    onClick={() => {
+                                      remove(field.key);
+                                      onRemove(field.value);
+                                    }}
+                                  />
+                                ) : null}
+                              </Col>
+                              <Col span={11}>{field.value}</Col>
+                              <Col span={5}>{field.assessmentItemTypeName}</Col>
+                              <Col span={3}>
+                                {field.duration ? field.duration : "--"}
+                              </Col>
                               {/* <Form.Item
                                 required={false}
                                 key={field.key}
@@ -371,7 +372,86 @@ const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
       {/* //If Multiple Choice -Shuffle choices option */}
       {questionType === 2 && (
         <Form.Item label="Choices:">
-          <Form.Item
+          <Form.List name={["assessmentitems", "courseAssessmentItemChoices"]}>
+            {(fields, { add, remove }) => {
+              let dChoices = [{ title: "", isCorrect: true }];
+              return (
+                <>
+                  {fields.map((field) => (
+                    <Form.Item key={field.key}>
+                      <Space
+                        key={field.key}
+                        align="baseline"
+                        direction="horizontal"
+                      >
+                        {dChoices.length > 1 ? (
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        ) : null}
+                        <Form.Item
+                          noStyle
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.area !== curValues.area ||
+                            prevValues.sights !== curValues.sights
+                          }
+                        >
+                          {() => {
+                            console.log("fields", fields);
+                            return (
+                              <Form.Item
+                                {...field}
+                                noStyle
+                                name={[field.name, "name"]}
+                                fieldKey={[field.fieldKey, "name"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Missing Choice Name",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={`Choice ${field.name + 1}`}
+                                />
+                              </Form.Item>
+                            );
+                          }}
+                        </Form.Item>
+                        <Form.Item
+                          {...field}
+                          noStyle
+                          name={[field.name, "isCorrect"]}
+                          fieldKey={[field.fieldKey, "isCorrect"]}
+                          valuePropName="checked"
+                          rules={[
+                            {
+                              required: field.name === 0 ? true : false,
+                              message: "select the checkbox",
+                            },
+                          ]}
+                        >
+                          <Checkbox>is Correct?</Checkbox>
+                        </Form.Item>
+                      </Space>
+                    </Form.Item>
+                  ))}
+
+                  <Form.Item noStyle>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add Choice
+                    </Button>
+                  </Form.Item>
+                </>
+              );
+            }}
+          </Form.List>
+          {/* <Form.Item
             name={["assessmentitems", "courseAssessmentItemChoices", "choice1"]}
             noStyle
             key={1}
@@ -391,7 +471,7 @@ const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
             key={3}
           >
             <Input placeholder="choice 3" />
-          </Form.Item>
+          </Form.Item> */}
         </Form.Item>
       )}
       {questionType === 2 && (
