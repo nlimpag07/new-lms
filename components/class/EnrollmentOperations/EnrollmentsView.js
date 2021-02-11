@@ -38,7 +38,7 @@ const EnrollmentsView = ({
   courseType,
   dataProps,
 }) => {
-  console.log('dataProps',dataProps)
+  console.log("dataProps", dataProps);
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseSessions, setCourseSessions] = useState([]);
@@ -114,6 +114,23 @@ const EnrollmentsView = ({
   //processing all the sessions of the course
   const listSessions = [];
   if (courseSessions.length) {
+    console.log('courseSessions',courseSessions)
+    /* courseSessions.map((session, index) => {
+      const sDate = moment(session[i].startDate).format(
+        "DD-MMM-YYYY h:mm a"
+      );
+      const eDate = moment(session[i].endDate).format(
+        "DD-MMM-YYYY h:mm a"
+      );
+      listSessions.push(
+        <Option
+          key={index}
+          value={session.id}
+          label={`(${sDate}) to (${eDate})`}
+        >{`(${sDate}) to (${eDate})`}</Option>
+      );
+    }); */
+
     for (let i = 0; i < courseSessions.length; i++) {
       const sDate = moment(courseSessions[i].startDate).format(
         "DD-MMM-YYYY h:mm a"
@@ -130,6 +147,7 @@ const EnrollmentsView = ({
       );
     }
   }
+  console.log(listSessions)
   //processing the assigned session(s) for the specific learner and set it to initial values via defaultLearnerSessions
   var defaultLearnerSessions;
   if (dataProps) {
@@ -139,7 +157,7 @@ const EnrollmentsView = ({
   }
   const onCancel = (form) => {
     form.resetFields();
-    setCourseSessions("")
+    setCourseSessions("");
     hideModal("view");
   };
   const onFinish = (values) => {
