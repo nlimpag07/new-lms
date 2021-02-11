@@ -117,7 +117,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
     !!values.lastName
       ? (data.lastName = values.lastName)
       : (data.lastName = lastName);
-    !values.gender
+    !!values.gender
       ? (data.gender = values.gender)
       : (data.gender = gender);
     !!values.birthday
@@ -387,7 +387,7 @@ const UsersEdit = ({ dataProps, hideModal, setSpin }) => {
             style={{ display: "inline-block", width: "calc(30%)" }}
           >
             <Select placeholder="Gender" optionLabelProp="label">
-              <Option value={0} label="Female">
+              <Option value={2} label="Female">
                 Female
               </Option>
               <Option value={1} label="Male">

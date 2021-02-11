@@ -193,7 +193,6 @@ const SessionOperationOptions = ({
     <Row
       className="widget-container"
       /* gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }} */
-      style={{ margin: "1rem 0" }}
     >
       {spin ? (
         <div className="spinHolder">

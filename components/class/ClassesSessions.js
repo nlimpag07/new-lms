@@ -73,7 +73,7 @@ const ClassesSessions = ({ course_id }) => {
         const response = await axios(conf);
         if (response) {
           let theRes = response.data;
-          //console.log("Course", response.data);
+          console.log("Course", response.data);
           // wait for response if the verification is true
           if (theRes) {
             theRes.courseInstructor && theRes.courseInstructor.length

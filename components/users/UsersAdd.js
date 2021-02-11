@@ -358,7 +358,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             style={{ display: "inline-block", width: "calc(30%)" }}
           >
             <Select placeholder="Gender">
-              <Option value="0">Female</Option>
+              <Option value="2">Female</Option>
               <Option value="1">Male</Option>
             </Select>
           </Form.Item>

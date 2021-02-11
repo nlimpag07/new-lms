@@ -55,8 +55,8 @@ const SessionAdd = ({
     instructorsList.length &&
     instructorsList.map((option, index) => {
       let insFullName = `${option.user.firstName} ${option.user.lastName}`;
-      let insValue = option.userId;
-      console.log("value", insValue)
+      let insValue = option.id;
+      //console.log("value", insValue)
       return (
         <Option key={index} value={insValue}>
           {insFullName}
@@ -130,7 +130,7 @@ const SessionAdd = ({
     if (!!values.sessionInstructorId) {
       data.courseInstructorId = values.sessionInstructorId;
     } else {
-      setHasError("* ERROR: On Duration, Please review the field.");
+      setHasError("* ERROR: On Instructor, Please review the field.");
       checker.push("Error");
     }
     if (!!values.sessionTitle) {
