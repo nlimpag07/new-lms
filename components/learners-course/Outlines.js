@@ -32,6 +32,7 @@ import {
   Progress,
   Empty,
   Spin,
+  message,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CourseCircularUi from "../theme-layout/course-circular-ui/course-circular-ui";
@@ -91,7 +92,7 @@ const Outlines = (props) => {
 
   var myOutlineCount = 0;
   if (outlineList) myOutlineCount = outlineList.length;
-  
+
   useEffect(() => {
     //setOutlineList(listOfOutlines);
     //console.log("run SetLoading",loading)
@@ -128,7 +129,7 @@ const Outlines = (props) => {
         }
       }
       fetchData(config);
-      setSpinner(false);     
+      setSpinner(false);
     }
   }, [startOutline]);
 
@@ -138,7 +139,6 @@ const Outlines = (props) => {
     <Row
       className="widget-container learnerOutlines"
       gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-      
     >
       <Col
         className="gutter-row widget-holder-col"
@@ -294,7 +294,7 @@ const Outlines = (props) => {
           background-color: #f0f0f0;
           margin: 0;
         }
-        
+
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
@@ -460,10 +460,10 @@ const Outlines = (props) => {
         }
         .card-holder:hover {
           cursor: pointer;
-        }        
+        }
         .LearnersCourses-ListItems .ant-card {
           pointer-events: none;
-        }        
+        }
         /* .selected-c-body .ant-card-hoverable {
           border-color: transparent;
           box-shadow: 0 1px 2px -2px rgba(242, 163, 5, 0.3),
@@ -507,15 +507,40 @@ const GridType = (
   const handleAnchorClick = (e, outline) => {
     e.preventDefault();
     //console.log(e.target.nextElementSibling);
-    //console.log('outline',outline);
 
     let notCard = document.querySelectorAll(".card-holder");
     let targetCard = "selected-c-body";
     notCard.forEach((c) =>
       c.classList[e.target == c ? "toggle" : "remove"](targetCard)
     );
-    setDrawer2Visible(true);
-    setCourseDrawerDetails(outline);
+
+    var config = {
+      method: "get",
+      url: apiBaseUrl + `/CourseAssessment/${outline.courseId}`,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(config)
+      .then((res) => {
+        console.log("res: ", res.data);
+        if (res.data.result) {
+          let theNewoutline = outline;
+          outline = { ...theNewoutline, courseAssessment: res.data.result };
+        }
+      })
+      .catch((err) => {
+        console.log("err: ", err.response.data);
+        message.error(
+          "Network Error on pulling data, Contact Technical Support"
+        );
+      })
+      .then(() => {
+        setDrawer2Visible(true);
+        setCourseDrawerDetails(outline);        
+      });
+
     /* let notTarget = document.querySelectorAll(".course-details");
     let targetdiv = "selected-course-open";
     notTarget.forEach((c) =>
@@ -571,8 +596,6 @@ const GridType = (
         }
         //Insert outlineStatusId to outline for Drawer Usage
         outline["outlineStatusId"] = outlineStatusId;
-
-        //console.log(currentPercent);
         return (
           <Col
             key={outline.id}

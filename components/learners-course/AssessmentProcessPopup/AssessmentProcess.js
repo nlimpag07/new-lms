@@ -94,12 +94,13 @@ const AssessmentProcess = ({
   const outlineId = outlineDetails ? outlineDetails.id : null;
   const outlineTitle = outlineDetails ? outlineDetails.title : null;
   //console.log("Assessment Details:", courseAssessment);
-  const assessmentDetails = courseAssessment.length
-    ? courseAssessment[0]
-    : null;
+  const [assessmentDetails, setAssessmentDetails] = useState(
+    courseAssessment.length ? courseAssessment[0] : null
+  );
 
   let {
     id,
+    courseId,
     title,
     assessmentTypeId,
     attempts,
@@ -145,7 +146,6 @@ const AssessmentProcess = ({
       return questionData;
     }
   );
-  //console.log("stepQuestions", stepQuestions);
 
   const [currentStep, setCurrentStep] = useState(0);
   const next = (ans) => {
@@ -165,7 +165,7 @@ const AssessmentProcess = ({
     //e.preventDefault();
     setSubmitAnswerSpin(true);
 
-     var config = {
+    var config = {
       method: "post",
       url: apiBaseUrl + "/Learner/courseassessment",
       headers: {
@@ -243,8 +243,6 @@ const AssessmentProcess = ({
     setSubmitIsActive(false);
     /*setSubmitAnswerSpin(false); */
   }
-
-  
 
   const onChangeToF = (e, q_info) => {
     //console.log("Selected Question", q_info);
@@ -384,8 +382,11 @@ const AssessmentProcess = ({
               </Col>
               <Divider orientation="left" plain></Divider>
               {assessResult ? (
-                <Col xs={32} sm={24} md={24}>                                  
-                    <AssessmentResult onClickReload={onClickReload} resultInfo={assessResult?assessResult:"error"}/>
+                <Col xs={32} sm={24} md={24}>
+                  <AssessmentResult
+                    onClickReload={onClickReload}
+                    resultInfo={assessResult ? assessResult : "error"}
+                  />
                 </Col>
               ) : (
                 <Col xs={32} sm={24} md={24}>
