@@ -339,7 +339,7 @@ const ClassesSessions = ({ course_id }) => {
       title: "Sessions List",
       date: moment(date).format("YYYY-MM-DD HH:mm"),
       visible: true,
-      width: "70%",
+      width: "90%",
     });
     let theList = getListData(date);
     setDateSessionList(theList);

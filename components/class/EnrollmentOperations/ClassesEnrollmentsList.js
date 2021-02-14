@@ -160,7 +160,7 @@ const ClassesEnrollmentsList = ({
           Data.findIndex((dataItem) => dataItem.selected === false) === -1
         }
       />
-      <Column field="studentFullName" title="Name" width="300px" />
+      <Column field="studentFullName" title="Name" />
       <Column field="enrollmentType" title="Enrollment Type" />
       <Column field="enrollmentDate" title="Enrollment Date" />
       <Column field="status" title="Status" cell={StatusRender} />

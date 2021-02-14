@@ -111,7 +111,7 @@ const SessionOperationOptions = ({
       title: "Running Date",
       dataIndex: "startDate",
       key: "startDate",
-      width:"25%",
+      /* width:"25%", */
       render: (date, record) => {
         //console.log("record", record);
         return (
@@ -139,7 +139,7 @@ const SessionOperationOptions = ({
       title: "Session Title",
       dataIndex: "title",
       key: "title",
-      width:"50%",
+      
       render: (text) => <a>{text}</a>,
     },
 
@@ -147,7 +147,7 @@ const SessionOperationOptions = ({
       title: "Status",
       dataIndex: "isActivetype",
       key: "isActivetype",
-      width:"100px",
+      
       render: (text, record) => {
         return text == "success" ? (
           <>
