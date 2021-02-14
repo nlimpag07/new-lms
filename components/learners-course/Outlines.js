@@ -147,7 +147,7 @@ const Outlines = (props) => {
         md={24}
         lg={24}
       >
-        <Row className="widget-header-row" justify="start">
+        {/* <Row className="widget-header-row" justify="start">
           <Col xs={20}>
             <h3 className="widget-title">Latest First</h3>
           </Col>
@@ -169,7 +169,7 @@ const Outlines = (props) => {
               />
             </button>
           </Col>
-        </Row>
+        </Row> */}
         {/* <Row
           className="widget-search-row"
           justify="start"
@@ -303,6 +303,7 @@ const Outlines = (props) => {
         .widget-holder-col .widget-header-row {
           padding: 5px 0;
           color: #e69138;
+          background: none !important;
         }
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {
           text-align: right;
@@ -538,7 +539,7 @@ const GridType = (
       })
       .then(() => {
         setDrawer2Visible(true);
-        setCourseDrawerDetails(outline);        
+        setCourseDrawerDetails(outline);
       });
 
     /* let notTarget = document.querySelectorAll(".course-details");

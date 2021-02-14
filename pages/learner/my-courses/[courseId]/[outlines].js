@@ -204,35 +204,37 @@ const CourseOutlines = ({ courseDetails }) => {
         className="main-content-holder outlinesDetailsTabber"
         id="courses-class"
       >
-        <Row>
-          <Col>
-            <h2 className="widget-title">{cDetails.title}</h2>
-          </Col>
-        </Row>
-        <Tabs defaultActiveKey={theLabel} onChange={onChangeTab}>
-          {/* <TabPane tab="Overview" key="learning-overview">
+        <div className="common-holder">
+          <Row>
+            <Col>
+              <h2 className="widget-title">{cDetails.title}</h2>
+            </Col>
+          </Row>
+          <Tabs defaultActiveKey={theLabel} onChange={onChangeTab}>
+            {/* <TabPane tab="Overview" key="learning-overview">
             Content of Tab Pane 1
           </TabPane> */}
-          <TabPane tab="Outlines" key="learning-outlines">
-            <LearnersMyCourseOutlines
-              cDetails={cDetails}
-              course_id={courseId}
-              learnerId={learnerId}
-              listOfOutlines={outlines}
-            />
-          </TabPane>
-          <TabPane tab="Assessments" key="learning-assessments">
-            <CourseAssessmentsList
-              cDetails={cDetails}
-              course_id={courseId}
-              learnerId={learnerId}
-              listOfOutlines={outlines}
-            />
-          </TabPane>
-          <TabPane tab="Certificates" key="learning-certificates">
-            Needs to be addressed
-          </TabPane>
-        </Tabs>
+            <TabPane tab="Outlines" key="learning-outlines">
+              <LearnersMyCourseOutlines
+                cDetails={cDetails}
+                course_id={courseId}
+                learnerId={learnerId}
+                listOfOutlines={outlines}
+              />
+            </TabPane>
+            <TabPane tab="Assessments" key="learning-assessments">
+              <CourseAssessmentsList
+                cDetails={cDetails}
+                course_id={courseId}
+                learnerId={learnerId}
+                listOfOutlines={outlines}
+              />
+            </TabPane>
+            <TabPane tab="Certificates" key="learning-certificates">
+              Needs to be addressed
+            </TabPane>
+          </Tabs>
+        </div>
       </Layout>
 
       <style jsx global>{`
