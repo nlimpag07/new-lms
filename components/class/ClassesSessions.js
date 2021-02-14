@@ -496,10 +496,7 @@ const ClassesSessions = ({ course_id }) => {
           list-style: none;
           padding: 0;
         }
-        .ClassesSessions .ant-picker-calendar-date-value h2 {
-          font-size: 2rem;
-          margin: 0.5rem 0;
-        }
+        
         .ClassesSessions .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date{
           border: 1px solid #f0f0f0;
           margin:0 !important;
