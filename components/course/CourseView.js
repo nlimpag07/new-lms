@@ -327,7 +327,14 @@ const CourseView = ({ course_id }) => {
             lg={24}
           >
             <Row align="middle">
-              <Col className="h1-titles" xs={24} sm={24} md={24} lg={16} xl={18}>
+              <Col
+                className="h1-titles"
+                xs={24}
+                sm={24}
+                md={24}
+                lg={16}
+                xl={18}
+              >
                 <h1>{title}</h1>
               </Col>
               {linkUrl != "learner" && (
@@ -462,7 +469,7 @@ const CourseView = ({ course_id }) => {
             onCancel={() => setModal2Visible(false)}
             maskClosable={false}
             destroyOnClose={true}
-            width="70%"
+            width="50%"
             className="videoModal"
           >
             <div className="demoModalBody">
@@ -663,8 +670,10 @@ const CourseView = ({ course_id }) => {
           padding: 0;
         }
         .videoModal .ant-modal-close {
-          top: -3.5rem;
-          right: -3.5rem;
+          top: -1.5rem;
+          right: -1.5rem;
+          background-color: #ffffff;
+          border-radius: 50%;
         }
         .Course-View img:hover {
           cursor: pointer;
