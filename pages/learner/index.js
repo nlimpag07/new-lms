@@ -15,6 +15,7 @@ import MainThemeLayout from "../../components/theme-layout/MainThemeLayout";
 import withAuth from "../../hocs/withAuth";
 
 import StatusBar from "../../components/status_bar/StatusBar";
+import PreAssessment from "../../components/learners-preassessment/PreAssessment";
 
 import RecentCourses from "../../components/learners-course/RecentCourses";
 import ToDos from "../../components/todos/ToDos";
@@ -48,7 +49,10 @@ const LearnerIndex = (props) => {
       <Layout className="main-content-holder">
         <Row className="widget-container" gutter={[16, 32]}>
           <StatusBar learner={learner} />
-        </Row>        
+        </Row> 
+        <Row className="widget-container" gutter={[16, 32]}>
+          <PreAssessment learner={learner} />
+        </Row>       
         <Row className="widget-container" gutter={[16, 32]}>
           <RecentCourses courses={learner} />
           <ToDos />
