@@ -208,19 +208,7 @@ const CourseView = ({ course_id }) => {
       .catch((errors) => {
         // react on errors.
         console.error(errors);
-      });
-    /* async function fetchData(config) {      
-      const response = await axios(config);
-      if (response) {
-        //localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        //setCourseAllList(response.data);
-        console.log(response.data);
-      } else {
-        //const userData = JSON.parse(localStorage.getItem("courseAllList"));
-        //setCourseAllList(userData);
-      }
-    }
-    fetchData(config); */
+      });   
 
     setLoading(false);
   }, [course_id]);

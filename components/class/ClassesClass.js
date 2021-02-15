@@ -379,10 +379,7 @@ const ActionRender = () => {
   return (
     <td>
       <button
-        className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+        className="k-primary k-button k-grid-edit-command"        
       >
         <FontAwesomeIcon icon={["fas", `eye`]} size="lg" />
       </button>

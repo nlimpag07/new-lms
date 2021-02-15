@@ -297,13 +297,6 @@ const ClassesEnrollments = ({ course_id }) => {
             "Default"
           )}
         </Modal>
-
-        {/* <RadialUI
-          listMenu={menulists}
-          position="bottom-right"
-          iconColor="#8998BA"
-          toggleModal={() => showModal("add")}
-        /> */}
         <SaveUI
           listMenu={menulists}
           position="bottom-right"

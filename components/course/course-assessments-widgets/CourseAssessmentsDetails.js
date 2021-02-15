@@ -52,35 +52,7 @@ const CourseAssessmentsDetails = (props) => {
     chosenRows && chosenRows.length ? chosenRows[0].isImmediate : false;
   const [isImmediateChecked, setisImmediateChecked] = useState(theImmediate);
 
-  /* useEffect(() => {
-    var config = {
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      await axios
-        .all([axios.get(apiBaseUrl + "/Settings/usergroup", config)])
-        .then(
-          axios.spread((usergroup) => {
-            !usergroup.data.response
-              ? setUserGroupList(usergroup.data.result)
-              : setUserGroupList([]);
-          })
-        )
-        .catch((errors) => {
-          // react on errors.
-          console.error(errors);
-        });
-      
-    }
-
-    fetchData(config);
-  }, []); */
-
-  useEffect(() => {
-    //chosenRows.length && console.log("isImmediate",chosenRows[0].isImmediate)
+  useEffect(() => {   
     chosenRows.length
       ? setisImmediateChecked(chosenRows[0].isImmediate)
       : setisImmediateChecked(false);
@@ -102,18 +74,12 @@ const CourseAssessmentsDetails = (props) => {
     );
   });
   function immediateOnChange(e) {
-    //setisImmediateChecked(!e.target.checked);
     setisImmediateChecked(e.target.checked);
-    //console.log(`checked = ${e.target.checked}`);
   }
   const onDateChange = (date, dateString) => {
-    /*  console.log(date, dateString);
-    console.log("startDate", dateString[0]);
-    console.log("===================");
-    console.log("endDate", dateString[1]); */
+
   };
-  //console.log("Chosen Rows", chosenRows);
-  //console.log(isImmediateChecked)
+
   const dateFormat = "YYYY-MM-DD";
   return !chosenRows.length ? (
     <>

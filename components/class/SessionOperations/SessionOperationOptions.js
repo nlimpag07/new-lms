@@ -92,14 +92,7 @@ const SessionOperationOptions = ({
         const { response } = error;
         //const { request, ...errorObject } = response; // take everything but 'request'
         console.log(response.data.message);
-        message.error(response.data.message);
-
-        /* Modal.error({
-          title: "Unable to Delete",
-          content: response.data.message,
-          centered: true,
-          width: 450,
-        }); */
+        message.error(response.data.message);       
       }
       //setLoading(false);
     }
@@ -122,14 +115,7 @@ const SessionOperationOptions = ({
             {" => "}
             <Tag color={`volcano`} key={`nth${record.id}`}>
               {moment(record.endDate).format("YYYY-MM-DD HH:mm")}
-            </Tag>
-            {/* <Tag color={`geekblue`} key={record.index}>
-              {date.format("YYYY-MM-DD HH:mm")}
-            </Tag>
-            {" => "}
-            <Tag color={`volcano`} key={record.index + 1}>
-              {date.format("YYYY-MM-DD HH:mm")}
-            </Tag> */}
+            </Tag>            
           </>
         );
       },

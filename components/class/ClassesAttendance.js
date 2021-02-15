@@ -133,37 +133,7 @@ const ClassesAttendance = ({ course_id }) => {
 
       theSession.learnerSession && theSession.learnerSession.length
         ? (learnerList = theSession.learnerSession)
-        : (learnerList = []);
-
-      /* var config = {
-          method: "get",
-          url: apiBaseUrl + "/Attendance/" + theSession.id,
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-          //data: { courseId: course_id },
-        };
-        async function fetchData(config) {
-          try {
-            const response = await axios(config);
-            if (response) {
-              let theRes = response.data;
-               console.log("Session Response", response.data);               
-              if (theRes) {
-                
-              } else {
-                
-              }
-            }
-          } catch (error) {
-            const { response } = error;
-            console.log("Error Response", response);   
-            
-          }
-          //setLoading(false);
-        }
-        fetchData(config); */
+        : (learnerList = []);     
 
       setSessionData({
         trigger: theSession.id,

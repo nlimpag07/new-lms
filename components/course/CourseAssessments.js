@@ -139,18 +139,14 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        //modalFormName === "assessmentduration" && form.resetFields();
-        //modalFormName === "assessmentitems" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
         modalFormName === "picklisttags" && form.resetFields();
-        //modalFormName === "picklistlevel" || modalFormName === "picklistcategory"
       },
     };
     width = 750;
   }
-  //console.log(adProps);
   /*End of submit filtration */
 
   return (
@@ -177,8 +173,6 @@ const CourseAssessments = ({ course_id }) => {
   const { courseDetails, setCourseDetails } = useCourseDetails();
 
   const router = useRouter();
-  //const courseId = router.query.manage[1];
-  //console.log(course_id);
   const [loading, setLoading] = useState(true);
   const [allOutlines, setAllOutlines] = useState("");
   const [userGroupList, setUserGroupList] = useState([]);
@@ -214,12 +208,6 @@ const CourseAssessments = ({ course_id }) => {
     };
 
     async function fetchData(config) {
-      /* const response = await axios(config);
-      if (response) {
-        
-        setAssessmentList(response.data.result);
-        //console.log(response.data.result);
-      } */
       await axios
         .all([
           axios.get(apiBaseUrl + "/CourseOutline/" + course_id, config),
@@ -237,7 +225,6 @@ const CourseAssessments = ({ course_id }) => {
               setAllOutlines("");
             }
             //initOutline is true, check if there's assessments
-            //console.log("initOutline", initOutline);
             if (initOutline) {
               allAssessment.data.result
                 ? setAssessmentList(allAssessment.data.result)
@@ -294,14 +281,7 @@ const CourseAssessments = ({ course_id }) => {
         ...defaultWidgetValues,
         assessmentduration: [...value],
       });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
     }
-    /* if (name === "picklistduration") {
-      basicForm.setFieldsValue({
-        picklistduration: [...picklistFields, values],
-      });
-    } */
 
     if (name === "assessmentitems") {
       console.log("Items: ", values);
@@ -380,13 +360,11 @@ const CourseAssessments = ({ course_id }) => {
     var errorList = [];
     if (curAssessmentIdExist) {
       //Edit Course assessment
-      //console.log("HELLLOOOOO assessment ID", curAssessmentIdExist);
       //NLI: Extended Form Values Processing & Filtration
       var isNotAllEmpty = [];
       data.courseId = course_id;
       data.id = curAssessmentIdExist;
       if (!!values.assessmentdetails) {
-        //console.log("assessment Details Present")
         if (!!values.assessmentdetails.assessmenttitle) {
           data.title = values.assessmentdetails.assessmenttitle;
           isNotAllEmpty.push("Not Empty");
@@ -418,11 +396,9 @@ const CourseAssessments = ({ course_id }) => {
 
         //isImmediate
         if (values.assessmentdetails.isImmediate) {
-          //console.log("is Immediate", 1);
           data.isImmediate = 1;
           isNotAllEmpty.push("Not Empty");
         } else {
-          //console.log("is Immediate", 0);
           data.isImmediate = 0;
 
           if (
@@ -454,15 +430,7 @@ const CourseAssessments = ({ course_id }) => {
             data.attempts = 0;
           }
           isNotAllEmpty.push("Not Empty");
-          /* data.isAttempts = 1;
-          data.attempts = values.assessmentdetails.attempts;
-          isNotAllEmpty.push("Not Empty"); */
-          //console.log("attempts", values.assessmentdetails.attempts);
         }
-        /*  else {
-          data.isAttempts = 0;
-          data.attempts = 0;
-        } */
       }
 
       if (!!values.assessmentduration) {
@@ -489,8 +457,6 @@ const CourseAssessments = ({ course_id }) => {
               items.isTrue = newTrue;
               items.isFalse = newTrue ? 0 : 1;
             }
-
-            //console.log("For Submission assessmentitems: ",items)
             return items;
           }
         );
@@ -533,7 +499,6 @@ const CourseAssessments = ({ course_id }) => {
       }
     } else {
       //Add Course assessment
-      //console.log("Empty Baby", course_id);
       //NLI: Extended Form Values Processing & Filtration
       data.courseId = course_id;
       if (!!values.assessmentdetails) {
@@ -617,7 +582,7 @@ const CourseAssessments = ({ course_id }) => {
               items.isTrue = newTrue;
               items.isFalse = newTrue ? 0 : 1;
             }
-            
+
             if (items.courseAssessmentItemChoices) {
               let itemChoices = items.courseAssessmentItemChoices.map(
                 (choice, cIndex) => {
@@ -627,9 +592,9 @@ const CourseAssessments = ({ course_id }) => {
                   return choice;
                 }
               );
-              console.log("itemChoices",itemChoices)
+              console.log("itemChoices", itemChoices);
               items.courseAssessmentItemChoices = itemChoices;
-              items.isShuffle =items.isShuffle?1:0;
+              items.isShuffle = items.isShuffle ? 1 : 0;
             }
             //console.log("For Submission assessmentitems: ",items)
             return items;
@@ -708,7 +673,7 @@ const CourseAssessments = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;          
+          visible: false;
           setdefaultWidgetValues({
             assessmentdetails: [],
             assessmentitems: [],
@@ -732,73 +697,13 @@ const CourseAssessments = ({ course_id }) => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
- 
+
   useEffect(() => {
-    let {
-      id,
-      courseAssessmentsMedia,
-      courseAssessmentsMilestone,
-      courseAssessmentsItems,
-      description,
-      duration,
-      featureImage,
-      interactiveVideo,
-      title,
-      userGroupId,
-      visibility,
-    } = "";
     if (curAssessmentId.length) {
       let isSelected = assessmentList.filter(
         (selectedassessment) => selectedassessment.id === curAssessmentId[0].id
       );
-      console.log("Selected Assessment", isSelected[0]);
-      let prerequisite = [];
-      /* let currentAssessmentItem = isSelected[0].courseAssessmentsItem;
-      if (currentAssessmentItem.length) {        
-        prerequisite = currentAssessmentItem.map((c_assessmentItem, index) => {
-          let getassessment = assessmentList.filter(
-            (assessment) => c_assessmentItem.preRequisiteId == assessment.id
-          );
-          let list = {
-            id: c_assessmentItem.id,
-            title: getassessment[0].title,
-            courseAssessmentsId: c_assessmentItem.courseAssessmentsId,
-            preRequisiteId: c_assessmentItem.preRequisiteId,
-            isticked: true,
-          };
-          return list;
-        });
-      } */
-      let mediaFiles = [];
-      /* let currentMediaFiles = isSelected[0].courseAssessmentsMedia;
-      if (currentMediaFiles.length) {
-        mediaFiles = currentMediaFiles.map((c_assessmentmediafiles, index) => {
-          let list = {
-            id: c_assessmentmediafiles.id,
-            name: c_assessmentmediafiles.fileName,
-            courseAssessmentsId: c_assessmentmediafiles.courseAssessmentsId,
-            resourceFile: c_assessmentmediafiles.resourceFile,
-            isticked: true,
-          };
-          return list;
-        });
-      } */
-      let mileStones = [];
-      /* let currentMileStones = isSelected[0].courseAssessmentsMilestone;
-      if (currentMileStones.length) {
-        mileStones = currentMileStones.map((c_assessmentmilestones, index) => {
-          let list = {
-            id: c_assessmentmilestones.id,
-            name: c_assessmentmilestones.name,
-            courseAssessmentsId: c_assessmentmilestones.courseAssessmentsId,
-            lessonCompleted: c_assessmentmilestones.lessonCompleted,
-            resourceFile: c_assessmentmilestones.resourceFile,
-            isticked: true,
-          };
-          return list;
-        });
-      } */
-
+      //console.log("Selected Assessment", isSelected[0]);
       var theOutlineName = "";
       let currentOutlineId = isSelected[0].courseOutlineId;
       if (currentOutlineId) {
@@ -859,60 +764,9 @@ const CourseAssessments = ({ course_id }) => {
         assessmentduration: [],
         assessmentitems: [],
         assessmentConstItems: [],
-
-        /* featuredvideo: video,
-        relatedcourses: relateds,
-        duration: [durationtime], */
       });
     }
-    //console.log(title)
-    //setdefaultWidgetValues(defaultWidgetValues);
-    /* let {
-      relateds,
-      categories,
-      levels,
-      types,
-      languages,
-      tags,
-      image,
-      video,
-      durationtime,
-      durationtype,
-    } = "";
-
-    if (relatedCourse) {
-      relateds = relatedCourse.map((c_related, index) => {
-        let list = {
-          id: c_related.courseRelated.course.id,
-          title: c_related.courseRelated.course.title,
-          isreq: c_related.isPrerequisite,
-        };
-        return list;
-      });
-    }
-    
-    if (featureImage) {
-      image = featureImage;
-    }
-    if (featureVideo) {
-      video = featureVideo;
-    }
-    if (durationTime && durationType) {
-      video = featureVideo;
-    }
-    if (durationTime && durationType) {
-      durationtime = { durationTime: durationTime, durationType: durationType };
-    }
-    setdefaultWidgetValues({
-      ...defaultWidgetValues,
-      featuredimage: image,
-      featuredvideo: video,
-      relatedcourses: relateds,
-      duration: [durationtime],
-    }); */
   }, [curAssessmentId]);
-  /* console.log(defaultWidgetValues)
-  console.log(assessment) */
 
   const formInitialValues = {
     /* initialValues: {

@@ -178,15 +178,7 @@ const ClassesSessions = ({ course_id }) => {
         //ed - endDate from api
         let sd = moment(session.startDate).format("YYYY-MM-DD");
         let ed = moment(session.endDate).format("YYYY-MM-DD");
-        /* if (cellDate == sd) {
-          let isActivetype;
-          moment(ed).isBefore(nowDate)
-            ? (isActivetype = "error")
-            : (isActivetype = "success");
-          session["isActivetype"] = isActivetype;
-
-          return session;
-        } */
+       
         if (
           moment(cellDate).isSameOrAfter(sd) &&
           moment(cellDate).isSameOrBefore(ed)
@@ -202,102 +194,7 @@ const ClassesSessions = ({ course_id }) => {
         //console.log(sd);
       });
     }
-    return datalist || [];
-    /* let listData;
-    switch (value.date()) {
-      case 8:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event.",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is usual event.",
-          },
-        ];
-        break;
-      case 10:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event.",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is usual event.",
-          },
-          {
-            id: 3,
-            dateTime: value,
-            title: "This is a title3",
-            type: "error",
-            content: "This is error event.",
-          },
-        ];
-        break;
-      case 15:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is very long usual event。。....",
-          },
-          {
-            id: 3,
-            dateTime: value,
-            title: "This is a title3",
-            type: "error",
-            content: "This is error event 1.",
-          },
-          {
-            id: 4,
-            dateTime: value,
-            title: "This is a title4",
-            type: "error",
-            content: "This is error event 2.",
-          },
-          {
-            id: 5,
-            dateTime: value,
-            title: "This is a title5",
-            type: "error",
-            content: "This is error event 3.",
-          },
-          {
-            id: 6,
-            dateTime: value,
-            title: "This is a title6",
-            type: "error",
-            content: "This is error event 4.",
-          },
-        ];
-        break;
-      default:
-    }
-    console.log('listData',listData)
-    return listData || []; */
+    return datalist || [];    
   }
 
   function dateCellRender(value) {

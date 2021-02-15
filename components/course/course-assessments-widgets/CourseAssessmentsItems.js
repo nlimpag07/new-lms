@@ -49,13 +49,11 @@ const CourseAssessmentsItems = (props) => {
     setdefaultWidgetValues,
     assessBaseType,
   } = props;
-  //console.log("Base Type: ", assessBaseType);
   var assItemList = defaultWidgetValues.assessmentConstItems;
   var chosenRows = defaultWidgetValues.assessmentitems;
 
   const onRemove = (name) => {
     let newValues = chosenRows.filter((value) => value.name !== name);
-    //console.log("NewValues:", newValues);
     setdefaultWidgetValues({
       ...defaultWidgetValues,
       assessmentitems: newValues,
@@ -130,32 +128,6 @@ const CourseAssessmentsItems = (props) => {
                             <Col span={3}>
                               {field.duration ? field.duration : "--"}
                             </Col>
-
-                            {/* <Form.Item
-                              required={false}
-                              key={field.key}
-                              gutter={[16, 16]}
-                            >
-                              <Form.Item
-                                noStyle
-                                key={field.key}
-                                rules={[
-                                  {
-                                    required: true,
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder={widgetFieldLabels.catname}
-                                  style={{ width: "85%" }}
-                                  key={field.key}
-                                  value={field.value}
-                                  readOnly
-                                />
-                                
-                              </Form.Item>
-                              
-                            </Form.Item> */}
                           </Row>
                         );
                       })}
@@ -223,40 +195,6 @@ const CourseAssessmentsItems = (props) => {
                               <Col span={3}>
                                 {field.duration ? field.duration : "--"}
                               </Col>
-                              {/* <Form.Item
-                                required={false}
-                                key={field.key}
-                                gutter={[16, 16]}
-                              >
-                                <Form.Item
-                                  noStyle
-                                  key={field.key}
-                                  rules={[
-                                    {
-                                      required: true,
-                                    },
-                                  ]}
-                                >
-                                  <Input
-                                    placeholder={widgetFieldLabels.catname}
-                                    style={{ width: "85%" }}
-                                    key={field.key}
-                                    value={field.value}
-                                    readOnly
-                                  />
-                                </Form.Item>
-                                {chosenRows.length >= 1 ? (
-                                  <CloseOutlined
-                                    className="dynamic-delete-button"
-                                    style={{ margin: "0 8px" }}
-                                    key={`del-${field.key}`}
-                                    onClick={() => {
-                                      remove(field.key);
-                                      onRemove(field.value);
-                                    }}
-                                  />
-                                ) : null}
-                              </Form.Item> */}
                             </Row>
                           );
                         })}
@@ -451,27 +389,6 @@ const modalFormBody = (assItemList, chosenRows, assessBaseType) => {
               );
             }}
           </Form.List>
-          {/* <Form.Item
-            name={["assessmentitems", "courseAssessmentItemChoices", "choice1"]}
-            noStyle
-            key={1}
-          >
-            <Input placeholder="choice 1" />
-          </Form.Item>
-          <Form.Item
-            name={["assessmentitems", "courseAssessmentItemChoices", "choice2"]}
-            noStyle
-            key={2}
-          >
-            <Input placeholder="choice 2" />
-          </Form.Item>
-          <Form.Item
-            name={["assessmentitems", "courseAssessmentItemChoices", "choice3"]}
-            noStyle
-            key={3}
-          >
-            <Input placeholder="choice 3" />
-          </Form.Item> */}
         </Form.Item>
       )}
       {questionType === 2 && (

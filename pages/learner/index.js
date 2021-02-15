@@ -48,7 +48,7 @@ const LearnerIndex = (props) => {
       <Layout className="main-content-holder">
         <Row className="widget-container" gutter={[16, 32]}>
           <StatusBar learner={learner} />
-        </Row>
+        </Row>        
         <Row className="widget-container" gutter={[16, 32]}>
           <RecentCourses courses={learner} />
           <ToDos />
@@ -95,7 +95,6 @@ LearnerIndex.getInitialProps = async (ctx) => {
   const result = await axios(config);
   res = result.data;
   const data = res;
-  //console.log('Dashboard Data:',data);
   return { ...data };
 };
 export default withAuth(LearnerIndex);

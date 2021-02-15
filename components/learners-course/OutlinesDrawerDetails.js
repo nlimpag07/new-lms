@@ -89,11 +89,7 @@ const OutlinesDrawerDetails = ({
   const [outlineStatus, setOutlineStatus] = useState(0);
   const [articulateModal2Visible, setArticulateModal2Visible] = useState(false);
 
-  //console.log("User Details:", userDetails);
-  //console.log("startOutline:", startOutline);
-
   let { isApproved, startDate, endDate } = outlineDetails;
-  //const outlineId = outlineDetails.id;
   let {
     id,
     description,
@@ -112,11 +108,7 @@ const OutlinesDrawerDetails = ({
   } = outlineDetails;
 
   useEffect(() => {}, [drawerVisible]);
-  /* useEffect(() => {
-    if (startOutline) {
-      setArticulateModal2Visible(true);
-    }
-  }, [startOutline]); */
+  
 
   function onStartOrContinueLesson(e) {
     e.preventDefault();
@@ -145,20 +137,12 @@ const OutlinesDrawerDetails = ({
           const response = await axios(config);
           if (response) {
             let theRes = response.data.response;
-            //console.log("Response", response.data);
             // wait for response if the verification is true
             if (theRes) {
               //true
               setSpinner(false);
               setArticulateModal2Visible(true);
-              setdrawerVisible(true);
-              /* setStartOutline(true); */
-              //console.log()
-              //Redirect to Course Outline
-              /* router.push(
-                `/${linkUrl}/my-courses/[courseId]/[outlines]`,
-                `/${linkUrl}/my-courses/${id}/learning-outlines`
-              ); */
+              setdrawerVisible(true);              
             } else {
               //false
               setSpinner(false);
@@ -169,7 +153,6 @@ const OutlinesDrawerDetails = ({
                 centered: true,
                 width: 450,
                 onOk: () => {
-                  //setdrawerVisible(false);
                   visible: false;
                 },
               });
@@ -178,8 +161,6 @@ const OutlinesDrawerDetails = ({
         } catch (error) {
           const { response } = error;
           const { request, data } = response; // take everything but 'request'
-
-          //console.log('Error Response',data.message);
           setSpinner(false);
           Modal.error({
             title: "Error: Unable to Start Lesson",
@@ -187,25 +168,19 @@ const OutlinesDrawerDetails = ({
             centered: true,
             width: 450,
             onOk: () => {
-              //setdrawerVisible(false);
               visible: false;
             },
           });
         }
-        //setLoading(false);
       }
       fetchData(config);
     } else {
       //The learner already started this lesson, just
-      //show the lesson
-      //setdrawerVisible(false);
+      //show the lesson      
       setStartOutline(false);
       setArticulateModal2Visible(true);
       setSpinner(false);
-      /* router.push(
-        `/${linkUrl}/my-courses/[courseId]/[outlines]`,
-        `/${linkUrl}/my-courses/${id}/learning-outlines`
-      ); */
+      
     }
   }
 
@@ -301,8 +276,7 @@ const OutlinesDrawerDetails = ({
       var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
       eventer(messageEvent, function (e) {
-        if (e.data == "1" /* && e.origin == "http://localhost:5001" */) {
-          /* console.log("RUN API FETCH", e.origin); */
+        if (e.data == "1") {          
           OnArticulateModalClose();
         } else {
           console.log("No value from articulate detected. Exiting...");
@@ -382,8 +356,6 @@ const OutlinesDrawerDetails = ({
   //Process the Data On Clicking Exit Course
   const OnArticulateModalClose = () => {
     setSpinner(true);
-    //console.log("Articulate Modal Status: Closed");
-    //console.log("Run assessments:", courseAssessment);
 
     var lrsConfig = {
       headers: {
@@ -488,21 +460,14 @@ const OutlinesDrawerDetails = ({
         });
       }
     }
-
-    /* setArticulateModal2Visible(false);
-    setdrawerVisible(false);
-   */
+   
     //Detect if there is Assessment assigned to the Outline
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
     } else {
       setSpinner(false);
-      //Don't run assessment, refresh the outlineList instead
-      //setOutlineAssessmentModal(false);
-      setOutlineFinishModal(true);
-      //window.location.reload();
-      //router.push(`/learner/my-courses/${courseId}/learning-outlines`);
+      setOutlineFinishModal(true);      
     }
   };
   const drawerProps =
@@ -632,16 +597,7 @@ const OutlinesDrawerDetails = ({
           ></iframe> */}
         </div>
       </Modal>
-      {/*  {outlineAssessmentModal && (
-        <AssessmentProcess
-          assessment={courseAssessment}
-          outlineAssessmentModal={outlineAssessmentModal}
-          setOutlineAssessmentModal={setOutlineAssessmentModal}
-          learnerId={learnerId}
-          spinner={spinner}
-          setSpinner={setSpinner}
-        />
-      )} */}
+      
       <style jsx global>{`
         .drawer-outline-details .ant-drawer-title {
           font-size: 1.2rem;

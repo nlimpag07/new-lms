@@ -18,9 +18,6 @@ const CourseAssessmentDetails = ({
   console.log("assessmentDetails", assessmentDetails);
 
   useEffect(() => {
-    /* let userData = JSON.parse(localStorage.getItem("userDetails"));
-    const { firstName, lastName } = userData;
-    let theFullName = `${firstName}, ${lastName}`; */
     setAssessmentTitle(assessmentDetails ? assessmentDetails.title : "");
   }, [modal2Visible]);
 
@@ -30,45 +27,10 @@ const CourseAssessmentDetails = ({
   var rating;
   var courseOutlines;
   if (assessmentDetails) {
-    //assessmentTitle = assessmentDetails.title;
-    /* courseInstructorsList = assessmentDetails.course.courseInstructor && assessmentDetails.course.courseInstructor.length
-      ? assessmentDetails.course.courseInstructor.map((instructor, index) => {
-          let instructorFullName =
-            instructor.user.firstName + ", " + instructor.user.lastName;
-
-          return <Tag key={index}>{instructorFullName}</Tag>;
-        })
-      : null; */
     courseCode = assessmentDetails.course
       ? assessmentDetails.course.code
       : null;
     rating = assessmentDetails.result ? assessmentDetails.result : null;
-    /* courseOutlines = assessmentDetails.course.courseOutline.length
-      ? assessmentDetails.course.courseOutline.map((outline, index) => {
-          let outlineNewDetails = {
-            number: index + 1,
-            outlineId: outline.id,
-            title: outline.title,
-          };
-          if (outline.learnerCourseOutline.length) {
-            outlineNewDetails = {
-              ...outlineNewDetails,
-              status: outline.learnerCourseOutline[0].status.name,
-              score: outline.learnerCourseOutline[0].score,
-              hoursTaken: outline.learnerCourseOutline[0].hoursTaken,
-            };
-          } else {
-            outlineNewDetails = {
-              ...outlineNewDetails,
-              status: "-",
-              score: "-",
-              hoursTaken: "-",
-            };
-          }
-
-          return outlineNewDetails;
-        })
-      : []; */
   }
   //console.log(courseOutlines);
 

@@ -37,30 +37,6 @@ const list = {
   },
 };
 
-const userlist = [
-  /* {
-    empId: 1,
-    firstName: "Noel",
-    lastName: "Limpag",
-    email: "nlimpag@ams.global",
-    isActive: 1,
-  },
-  {
-    empId: 2,
-    firstName: "Noel2",
-    lastName: "Limpag2",
-    email: "nlimpag2@ams.global",
-    isActive: 1,
-  },
-  {
-    empId: 3,
-    firstName: 'Noel3',
-    lastName:'Limpag3',
-    email: 'nlimpag@ams.global',
-    isActive: 0,
-    }, */
-];
-
 const CourseAssessmentsList = (props) => {
   /* userlist = userlist.result; */
   const router = useRouter();
@@ -77,25 +53,6 @@ const CourseAssessmentsList = (props) => {
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
 
-  /*  const showModal = (modaltitle, modalbodycontent) => {
-    setassessmentActionModal({
-      visible: true,
-      modalTitle: modaltitle,
-      modalBodyContent: modalbodycontent,
-    });
-  }; */
-
-  /*  useEffect(() => {
-    let theList = assessmentList;
-    setAssessmentList(theList);
-    //console.log("The assessment List",assessmentList)
-  }, []); */
-  /* useEffect(() => {
-    let theList = assessmentList;
-    setAssessmentList(theList);
-    console.log("The assessment List",assessmentList)
-  }, [loading]); */
-  //console.log("The assessment List",assessmentList)
   if (assessmentList) {
     assessmentList.map((dataItem) => {
       //dataItem.
@@ -172,26 +129,7 @@ const CourseAssessmentsList = (props) => {
     //console.log("The RowClick: ", theData);
   };
 
-  /* const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  }; */
-
   const removeSelected = (item) => {
-    //console.log(item.id);
-    //setModal2Visible(true)
-    /* let newDataList = assessmentList;   
-    let index = newDataList.findIndex(
-      (p) => p === item || (item.id && p.id === item.id)
-    );
-    if (index >= 0) {
-      newDataList.splice(index, 1);
-    }    
-    setAssessmentList(newDataList); */
     var config = {
       method: "delete",
       url: apiBaseUrl + "/CourseAssessment/" + item.id,
@@ -211,12 +149,6 @@ const CourseAssessmentsList = (props) => {
         }
       } catch (error) {
         const { response } = error;
-        //const { request, ...errorObject } = response; // take everything but 'request'
-        /* setassessmentActionModal({
-          visible: false,
-          modalTitle: "",
-          modalBodyContent: "",
-        }); */
         console.log(response.data.message);
         Modal.error({
           title: "Unable to Delete",
@@ -229,10 +161,8 @@ const CourseAssessmentsList = (props) => {
     }
     fetchData(config);
   };
-  /*  useEffect(() => {
-  }, []); */
+
   const ActionRender = (list) => {
-    //console.log(list.dataItem)
     return (
       <td>
         <Popconfirm
@@ -241,15 +171,7 @@ const CourseAssessmentsList = (props) => {
           cancelText="No"
           onConfirm={() => removeSelected(list.dataItem)}
         >
-          <button
-            className="k-button k-grid-remove-command"
-            //onClick={() => removeSelected(list.dataItem)}
-            /* onClick={() => {
-            removeSelected(list.dataItem);
-             confirm("Confirm deleting: " + list.dataItem.title) &&
-              remove(list.dataItem);
-          }} */
-          >
+          <button className="k-button k-grid-remove-command">
             <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
           </button>
         </Popconfirm>
@@ -268,7 +190,6 @@ const CourseAssessmentsList = (props) => {
                 style={{ height: "auto" }}
                 selectedField="selected"
                 onSelectionChange={selectionChange}
-                /* onHeaderSelectionChange={headerSelectionChange} */
                 onRowClick={selectionChange}
                 sortable
                 sort={theSort.sort}
@@ -305,7 +226,6 @@ const CourseAssessmentsList = (props) => {
           </Row>
         </div>
       </motion.div>
-      {/* <CourseCircularUi /> */}
       <style jsx global>{`
         .CourseAssessmentsList h1 {
           font-size: 2rem;

@@ -239,23 +239,7 @@ const SessionView = ({
             ? selectedRecord.courseInstructorId
             : "",
           sessionTitle: selectedRecord ? selectedRecord.title : "",
-          description: selectedRecord ? selectedRecord.description : "",
-          /* sessionType: selectedRecord ? selectedRecord.sessionTypeId : "",
-          startDate: selectedRecord
-            ? moment(selectedRecord.startDate, "YYYY-MM-DD HH:mm")
-            : moment().format("YYYY-MM-DD HH:mm"),
-          sessionLocation: selectedRecord ? selectedRecord.sessionLocation : "",
-          userGroup: selectedRecord ? selectedRecord.userGroupId : "",
-          capacity: selectedRecord ? selectedRecord.capacity : "",
-          endDate: selectedRecord
-            ? moment(selectedRecord.endDate, "YYYY-MM-DD HH:mm")
-            : moment().format("YYYY-MM-DD HH:mm"),
-          duration: selectedRecord ? selectedRecord.duration : "",
-          sessionInstructorId: selectedRecord
-            ? selectedRecord.courseInstructorId
-            : "",
-          sessionTitle: selectedRecord ? selectedRecord.title : "",
-          description: selectedRecord ? selectedRecord.description : "", */
+          description: selectedRecord ? selectedRecord.description : "",         
         }}
       >
         <Form.Item
