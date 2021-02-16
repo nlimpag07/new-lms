@@ -174,18 +174,18 @@ const PickLists = ({ userlist }) => {
                   </Link>
                 </Col>
                 <Col xs={24} sm={12} md={6} lg={6}>
-                  {/* <Link
-                    href="/administrator/picklists"
-                    as={`/administrator/picklists`}
+                  <Link
+                    href="/administrator/picklists/preassessments"
+                    as={`/administrator/picklists/preassessments`}
                   >
                     <a>
                       <FontAwesomeIcon
-                        icon={["fas", "hourglass-start"]}
+                        icon={["fas", "poll"]}
                         size="3x"
                       />{" "}
-                      Status
+                      Preassessment Survey
                     </a>
-                  </Link> */}
+                  </Link>
                 </Col>
               </Row>
             </Panel>
