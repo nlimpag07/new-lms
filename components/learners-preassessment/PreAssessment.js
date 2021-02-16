@@ -1,14 +1,19 @@
 import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { Row, Col, Card, Modal, Button, Space } from "antd";
+import { Row, Col, Card, Modal, Button, Space, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 const linkUrl = Cookies.get("usertype");
-
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
 const PreAssessment = ({ learner }) => {
   const [assessmentModal, setAssessmentModal] = useState(false);
-  const [assessmentData, setAssessmentData] = useState("");
+  const [assessmentData, setAssessmentData] = useState({
+    started: 0,
+    data: null,
+  });
   //console.log("Learner", learner);
   const [uType, setUtype] = useState("");
   const [sc, setSc] = useState({
@@ -18,12 +23,53 @@ const PreAssessment = ({ learner }) => {
   });
 
   useEffect(() => {}, []);
-  const assModalOperation = (v, data) => {
-    setAssessmentData(data);
+  //Display the modal and the initial contents
+  //optional: if v is true then data should be displayed,otherwise set setAssessmentData should be resetted
+  const assModalOperation = (e, v, data) => {
+    e.preventDefault();
+    setAssessmentData({ ...assessmentData, data: data });
     setAssessmentModal(v);
   };
+  //pull assessments data from api
+  const GetAssessments = (v) => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + `/learner/preassessment`,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    axios(config)
+      .then((res) => {
+        console.log("res: ", res.data);
+        if (res.data.result) {
+          setAssessmentData({ started: v, data: res.data.result });
+        } else {
+          setAssessmentData({ started: v, data: "No Data Retrieved" });
+        }
+      })
+      .catch((err) => {
+        console.log("err: ", err.response.data);
+        message.error(
+          "Network Error on pulling data, Contact Technical Support"
+        );
+      })
+      .then(() => {
+        //do nothing
+      });
+  };
+
+  //Begin the preassessment
+  //condition: if istrue is 1, run GetAssessments otherwise means already started and should be NEXT.
+  const beginPreassessment = (e, istrue) => {
+    e.preventDefault();
+    GetAssessments(istrue);
+  };
+  console.log(assessmentData);
   return (
     <StatusContent
+      beginPreassessment={beginPreassessment}
       assModalOperation={assModalOperation}
       assessmentModal={assessmentModal}
       setAssessmentModal={setAssessmentModal}
@@ -34,6 +80,7 @@ const PreAssessment = ({ learner }) => {
 };
 
 const StatusContent = ({
+  beginPreassessment,
   assModalOperation,
   assessmentModal,
   setAssessmentModal,
@@ -54,7 +101,7 @@ const StatusContent = ({
         <Row
           gutter={[16]}
           className="preassessment-container"
-          onClick={() => assModalOperation(true, preText)}
+          onClick={(e) => assModalOperation(e, true, preText)}
         >
           <Col xs={24} sm={24} md={24} lg={24} className="pre-holder">
             <h2>Take this free pre-assessment exam</h2>
@@ -68,25 +115,36 @@ const StatusContent = ({
         visible={assessmentModal}
         maskClosable={false}
         destroyOnClose={true}
-        onOk={() => setAssessmentModal(false)}
-        onCancel={() => setAssessmentModal(false)}
+        onOk={(e) => assModalOperation(e, false, "")}
+        onCancel={(e) => assModalOperation(e, false, "")}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
         className="preassessmentModal"
       >
         <Space direction="vertical">
           <div className="description">
-            <p>{assessmentData}</p>
+            <p>{assessmentData.data}</p>
           </div>
           <div className="buttonHolder">
-            <Button
-              type="primary"
-              shape="round"
-              size="medium"
-              onClick={() => assModalOperation(false, "")}
-            >
-              Begin
-            </Button>
+            {assessmentData.started === 1 ? (
+              <Button
+                type="primary"
+                shape="round"
+                size="medium"
+                onClick={(e) => beginPreassessment(e, 0)}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                shape="round"
+                size="medium"
+                onClick={(e) => beginPreassessment(e, 1)}
+              >
+                Begin
+              </Button>
+            )}
           </div>
         </Space>
       </Modal>
@@ -102,6 +160,9 @@ const StatusContent = ({
         }
         .learner-pre .preassessment-holder {
           background-color: #0078d4;
+        }
+        .preassessment-holder .preassessment-container:hover {
+          cursor: pointer;
         }
         .preassessment-container .pre-holder {
           text-align: center;
