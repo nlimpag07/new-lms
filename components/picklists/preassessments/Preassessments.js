@@ -89,7 +89,7 @@ const Preassessments = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/learner/preassessment",
+        url: apiBaseUrl + "/picklist/preassessment",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",

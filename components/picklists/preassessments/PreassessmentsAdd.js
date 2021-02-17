@@ -131,98 +131,72 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
         >
           <Input placeholder="Preassessment Name" />
         </Form.Item>
-        <Form.Item
-          label="Question Type"
-          name="PQuestionType"
-          style={{
-            marginBottom: "1rem",
-          }}
-          rules={[
-            {
-              required: true,
-              message: "Please Select Question Type!",
-            },
-          ]}
-        >
-          <Select
-            placeholder="Select a Question Type"
-            size="medium"
-            style={{ marginBottom: "0px" }}
-            value={questionType}
-            onChange={questionTypeOnChange}
-          >
-            <Option value={1}>Input</Option>
-            <Option value={2}>Multiple Choice</Option>
-          </Select>
-        </Form.Item>
-        {questionType === 2 && (
-          <Form.Item label="Choices:">
-            <Form.List name={["assessmentitems", "PQuestionChoices"]}>
-              {(fields, { add, remove }) => {
-                let dChoices = [{ title: "", isCorrect: true }];
-                return (
-                  <>
-                    {fields.map((field) => (
-                      <Form.Item key={field.key}>
-                        <Space
-                          key={field.key}
-                          align="baseline"
-                          direction="horizontal"
-                        >
-                          {fields.length > 1 ? (
-                            <MinusCircleOutlined
-                              onClick={() => remove(field.name)}
-                            />
-                          ) : null}
-                          <Form.Item
-                            noStyle
-                            shouldUpdate={(prevValues, curValues) =>
-                              prevValues.area !== curValues.area ||
-                              prevValues.sights !== curValues.sights
-                            }
-                          >
-                            {() => {
-                              console.log("fields", fields);
-                              return (
-                                <Form.Item
-                                  {...field}
-                                  noStyle
-                                  name={[field.name, "name"]}
-                                  fieldKey={[field.fieldKey, "name"]}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: "Missing Choice Name",
-                                    },
-                                  ]}
-                                >
-                                  <Input
-                                    placeholder={`Choice ${field.name + 1}`}
-                                  />
-                                </Form.Item>
-                              );
-                            }}
-                          </Form.Item>
-                        </Space>
-                      </Form.Item>
-                    ))}
-
-                    <Form.Item noStyle>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        block
-                        icon={<PlusOutlined />}
+        <Form.Item label="Choices:">
+          <Form.List name={["assessmentitems", "PQuestionChoices"]}>
+            {(fields, { add, remove }) => {
+              let dChoices = [{ title: "", isCorrect: true }];
+              return (
+                <>
+                  {fields.map((field) => (
+                    <Form.Item key={field.key}>
+                      <Space
+                        key={field.key}
+                        align="baseline"
+                        direction="horizontal"
                       >
-                        Add Choice
-                      </Button>
+                        {fields.length > 1 ? (
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        ) : null}
+                        <Form.Item
+                          noStyle
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.area !== curValues.area ||
+                            prevValues.sights !== curValues.sights
+                          }
+                        >
+                          {() => {
+                            console.log("fields", fields);
+                            return (
+                              <Form.Item
+                                {...field}
+                                noStyle
+                                name={[field.name, "name"]}
+                                fieldKey={[field.fieldKey, "name"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Missing Choice Name",
+                                  },
+                                ]}
+                              >
+                                <Input
+                                  placeholder={`Choice ${field.name + 1}`}
+                                />
+                              </Form.Item>
+                            );
+                          }}
+                        </Form.Item>
+                      </Space>
                     </Form.Item>
-                  </>
-                );
-              }}
-            </Form.List>
-          </Form.Item>
-        )}
+                  ))}
+
+                  <Form.Item noStyle>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                    >
+                      Add Choice
+                    </Button>
+                  </Form.Item>
+                </>
+              );
+            }}
+          </Form.List>
+        </Form.Item>
         {hasError ? (
           <p
             style={{
