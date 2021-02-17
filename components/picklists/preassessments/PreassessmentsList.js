@@ -157,7 +157,7 @@ const PreassessmentList = ({
         pageable={true}
         onPageChange={pageChange}
       >
-        <Column field="name" title="Name" />
+        <Column field="title" title="Name" />
         {/* <Column field="category" title="Category" /> */}
         <Column
           sortable={false}

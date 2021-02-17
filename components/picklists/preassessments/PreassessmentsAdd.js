@@ -46,8 +46,36 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [questionType, setquestionType] = useState(0);
-
-  useEffect(() => {}, []);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Picklist/category",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+      //data: { courseId: course_id },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data;
+          console.log("Session Response", response.data);
+          if (theRes) {
+            setCategories(theRes.result);
+          } else {
+            setCategories([]);
+          }
+        }
+      } catch (error) {
+        const { response } = error;
+        console.log("Error Response", error);
+      }
+    }
+    fetchData(config);
+  }, []);
 
   const onCancel = (form) => {
     form.resetFields();
@@ -55,15 +83,26 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
     hideModal("add");
   };
   const onFinish = (values) => {
+    console.log("Values", values);
     setSpinning(true);
     setHasError("");
     var data = {};
     var checker = [];
 
-    if (!!values.PreassessmentQuestion) {
-      data.name = values.PreassessmentQuestion;
+    if (!!values.title) {
+      data.title = values.title;
     } else {
-      setHasError("* Please Input Course Type Name");
+      setHasError("* Please Input Question Name");
+      checker.push("Error");
+    }
+    if (!!values.categoryId) {
+      data.preassessmentCategory = [
+        {
+          categoryId: values.categoryId,
+        },
+      ];
+    } else {
+      setHasError("* Please Select Category");
       checker.push("Error");
     }
 
@@ -98,10 +137,17 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
     }
   };
 
-  const questionTypeOnChange = (value) => {
-    console.log("Selected Value: ", value);
-    setquestionType(value);
-  };
+  const catOptionList =
+    categories.length &&
+    categories.map((option, index) => {
+      let catNames = `${option.name}`;
+      let optValue = option.id;
+      return (
+        <Option key={index} label={catNames} value={optValue}>
+          {catNames}
+        </Option>
+      );
+    });
   return (
     <Row gutter={[0, 0]}>
       <Form
@@ -118,7 +164,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
       >
         <Form.Item
           label="Preassessment Question"
-          name="PQuestion"
+          name="title"
           style={{
             marginBottom: "1rem",
           }}
@@ -131,71 +177,23 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
         >
           <Input placeholder="Preassessment Name" />
         </Form.Item>
-        <Form.Item label="Choices:">
-          <Form.List name={["assessmentitems", "PQuestionChoices"]}>
-            {(fields, { add, remove }) => {
-              let dChoices = [{ title: "", isCorrect: true }];
-              return (
-                <>
-                  {fields.map((field) => (
-                    <Form.Item key={field.key}>
-                      <Space
-                        key={field.key}
-                        align="baseline"
-                        direction="horizontal"
-                      >
-                        {fields.length > 1 ? (
-                          <MinusCircleOutlined
-                            onClick={() => remove(field.name)}
-                          />
-                        ) : null}
-                        <Form.Item
-                          noStyle
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.area !== curValues.area ||
-                            prevValues.sights !== curValues.sights
-                          }
-                        >
-                          {() => {
-                            console.log("fields", fields);
-                            return (
-                              <Form.Item
-                                {...field}
-                                noStyle
-                                name={[field.name, "name"]}
-                                fieldKey={[field.fieldKey, "name"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Missing Choice Name",
-                                  },
-                                ]}
-                              >
-                                <Input
-                                  placeholder={`Choice ${field.name + 1}`}
-                                />
-                              </Form.Item>
-                            );
-                          }}
-                        </Form.Item>
-                      </Space>
-                    </Form.Item>
-                  ))}
-
-                  <Form.Item noStyle>
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                    >
-                      Add Choice
-                    </Button>
-                  </Form.Item>
-                </>
-              );
-            }}
-          </Form.List>
+        <Form.Item
+          name="categoryId"
+          label="Category"
+          rules={[
+            {
+              required: true,
+              message: "Please Select Category!",
+            },
+          ]}
+        >
+          <Select
+            placeholder="Select a Category"
+            size="medium"
+            style={{ marginBottom: "0px" }}
+          >
+            {catOptionList}
+          </Select>
         </Form.Item>
         {hasError ? (
           <p

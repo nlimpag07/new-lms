@@ -34,6 +34,7 @@ const PicklistPreassessmentsIndex = ({ data, token, apiBaseUrl }) => {
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
+ 
 
   useEffect(() => {
     //setLoading(false);
