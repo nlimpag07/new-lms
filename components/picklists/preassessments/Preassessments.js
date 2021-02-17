@@ -89,7 +89,7 @@ const Preassessments = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/picklist/coursetype",
+        url: apiBaseUrl + "/learner/preassessment",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -253,7 +253,7 @@ const Preassessments = ({ data }) => {
         </div>
       </Row>
       <Modal
-        title={`Course Types - ${PreassessmentsModal.modalOperation}`}
+        title={`Preassessments - ${PreassessmentsModal.modalOperation}`}
         centered
         visible={PreassessmentsModal.visible}
         onOk={() => hideModal(PreassessmentsModal.modalOperation)}

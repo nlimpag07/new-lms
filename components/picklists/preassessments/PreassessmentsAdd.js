@@ -20,8 +20,14 @@ import {
   message,
   Popover,
   Avatar,
+  Space,
+  Checkbox,
 } from "antd";
-import { CaretDownOutlined } from "@ant-design/icons";
+import {
+  CaretDownOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import Cookies from "js-cookie";
 import moment from "moment";
 import { CompactPicker, AlphaPicker, CirclePicker } from "react-color";
@@ -39,6 +45,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
+  const [questionType, setquestionType] = useState(0);
 
   useEffect(() => {}, []);
 
@@ -53,8 +60,8 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.PreassessmentName) {
-      data.name = values.PreassessmentName;
+    if (!!values.PreassessmentQuestion) {
+      data.name = values.PreassessmentQuestion;
     } else {
       setHasError("* Please Input Course Type Name");
       checker.push("Error");
@@ -91,12 +98,16 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
     }
   };
 
+  const questionTypeOnChange = (value) => {
+    console.log("Selected Value: ", value);
+    setquestionType(value);
+  };
   return (
-    <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
+    <Row gutter={[0, 0]}>
       <Form
         form={form}
         onFinish={onFinish}
-        layout="horizontal"
+        layout="vertical"
         name="AddPicklistPreassessment"
         initialValues={
           {
@@ -106,19 +117,112 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
         }
       >
         <Form.Item
-          name="PreassessmentName"
+          label="Preassessment Question"
+          name="PQuestion"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Preassessment Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Preassessment Name" />
         </Form.Item>
+        <Form.Item
+          label="Question Type"
+          name="PQuestionType"
+          style={{
+            marginBottom: "1rem",
+          }}
+          rules={[
+            {
+              required: true,
+              message: "Please Select Question Type!",
+            },
+          ]}
+        >
+          <Select
+            placeholder="Select a Question Type"
+            size="medium"
+            style={{ marginBottom: "0px" }}
+            value={questionType}
+            onChange={questionTypeOnChange}
+          >
+            <Option value={1}>Input</Option>
+            <Option value={2}>Multiple Choice</Option>
+          </Select>
+        </Form.Item>
+        {questionType === 2 && (
+          <Form.Item label="Choices:">
+            <Form.List name={["assessmentitems", "PQuestionChoices"]}>
+              {(fields, { add, remove }) => {
+                let dChoices = [{ title: "", isCorrect: true }];
+                return (
+                  <>
+                    {fields.map((field) => (
+                      <Form.Item key={field.key}>
+                        <Space
+                          key={field.key}
+                          align="baseline"
+                          direction="horizontal"
+                        >
+                          {fields.length > 1 ? (
+                            <MinusCircleOutlined
+                              onClick={() => remove(field.name)}
+                            />
+                          ) : null}
+                          <Form.Item
+                            noStyle
+                            shouldUpdate={(prevValues, curValues) =>
+                              prevValues.area !== curValues.area ||
+                              prevValues.sights !== curValues.sights
+                            }
+                          >
+                            {() => {
+                              console.log("fields", fields);
+                              return (
+                                <Form.Item
+                                  {...field}
+                                  noStyle
+                                  name={[field.name, "name"]}
+                                  fieldKey={[field.fieldKey, "name"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Missing Choice Name",
+                                    },
+                                  ]}
+                                >
+                                  <Input
+                                    placeholder={`Choice ${field.name + 1}`}
+                                  />
+                                </Form.Item>
+                              );
+                            }}
+                          </Form.Item>
+                        </Space>
+                      </Form.Item>
+                    ))}
+
+                    <Form.Item noStyle>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        block
+                        icon={<PlusOutlined />}
+                      >
+                        Add Choice
+                      </Button>
+                    </Form.Item>
+                  </>
+                );
+              }}
+            </Form.List>
+          </Form.Item>
+        )}
         {hasError ? (
           <p
             style={{

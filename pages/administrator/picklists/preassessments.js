@@ -71,7 +71,7 @@ PicklistPreassessmentsIndex.getInitialProps = async (ctx) => {
 
   var config = {
     method: "get",
-    url: apiBaseUrl + "/Picklist/coursetype?orderByDesc=true",
+    url: apiBaseUrl + "/learner/preassessment?orderByDesc=true",
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
