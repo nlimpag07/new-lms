@@ -2,6 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { Row, Col, Card, Modal, Button, Space, message } from "antd";
+import PreAssessmentQuestions from "./PreAssessmentQuestions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 const linkUrl = Cookies.get("usertype");
@@ -12,8 +13,11 @@ const PreAssessment = ({ learner }) => {
   const [assessmentModal, setAssessmentModal] = useState(false);
   const [assessmentData, setAssessmentData] = useState({
     started: 0,
+    qNum: 0,
     data: null,
   });
+  const [allQuestions, setAllquestions] = useState([]);
+  const [allAnswers, setAllanswers] = useState([]);
   //console.log("Learner", learner);
   const [uType, setUtype] = useState("");
   const [sc, setSc] = useState({
@@ -33,30 +37,47 @@ const PreAssessment = ({ learner }) => {
   //pull assessments data from api
   const GetAssessments = (v) => {
     var config = {
-      method: "get",
-      url: apiBaseUrl + `/learner/preassessment`,
+      /*  method: "get",
+      url: apiBaseUrl + `/picklist/preassessment`, */
       headers: {
         Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
+        "Content-Type": "text/plain",
       },
     };
-    axios(config)
-      .then((res) => {
-        console.log("res: ", res.data);
-        if (res.data.result) {
-          setAssessmentData({ started: v, data: res.data.result });
-        } else {
-          setAssessmentData({ started: v, data: "No Data Retrieved" });
-        }
-      })
+    axios
+      .all([
+        axios.get(apiBaseUrl + "/picklist/preassessment", config),
+        axios.get(apiBaseUrl + "/Picklist/preassessmentAnswers/", config),
+      ])
+      .then(
+        axios.spread((preQList, preAList) => {
+          if (preQList.data.result) {
+            setAllquestions(preQList.data.result);
+            setAssessmentData({
+              started: v,
+              qNum: 0,
+              data: preQList.data.result[0],
+            });
+          } else {
+            setAllquestions([]);
+            setAssessmentData({
+              started: 0,
+              qnum: 0,
+              data: "No Data Retrieved",
+            });
+          }
+          if (preAList.data.result) {
+            setAllanswers(preAList.data.result);
+          } else {
+            setAllanswers([]);
+          }
+        })
+      )
       .catch((err) => {
         console.log("err: ", err.response.data);
         message.error(
           "Network Error on pulling data, Contact Technical Support"
         );
-      })
-      .then(() => {
-        //do nothing
       });
   };
 
@@ -66,7 +87,6 @@ const PreAssessment = ({ learner }) => {
     e.preventDefault();
     GetAssessments(istrue);
   };
-  console.log(assessmentData);
   return (
     <StatusContent
       beginPreassessment={beginPreassessment}
@@ -75,6 +95,8 @@ const PreAssessment = ({ learner }) => {
       setAssessmentModal={setAssessmentModal}
       assessmentData={assessmentData}
       setAssessmentData={setAssessmentData}
+      allQuestions={allQuestions}
+      allAnswers={allAnswers}
     />
   );
 };
@@ -86,7 +108,12 @@ const StatusContent = ({
   setAssessmentModal,
   assessmentData,
   setAssessmentData,
+  allQuestions,
+  allAnswers,
 }) => {
+  console.log("All Questions", allQuestions);
+  
+
   let preText =
     "This assessment will help you choose from the different learning programs that we offer. We are here to help you choose from the wide variety of courses that could help you in your career.";
   return (
@@ -123,7 +150,14 @@ const StatusContent = ({
       >
         <Space direction="vertical">
           <div className="description">
-            <p>{assessmentData.data}</p>
+            {assessmentData.started === 1 ? (
+              <PreAssessmentQuestions
+                assessmentData={assessmentData}
+                allAnswers={allAnswers}
+              />
+            ) : (
+              <p>{assessmentData.data}</p>
+            )}
           </div>
           <div className="buttonHolder">
             {assessmentData.started === 1 ? (
