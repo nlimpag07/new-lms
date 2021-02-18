@@ -46,34 +46,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [questionType, setquestionType] = useState(0);
-  useEffect(() => {
-    /* var config = {
-      method: "get",
-      url: apiBaseUrl + "/Picklist/category",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      //data: { courseId: course_id },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          let theRes = response.data;
-          console.log("Session Response", response.data);
-          if (theRes) {
-            setCategories(theRes.result);
-          } else {
-            setCategories([]);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        console.log("Error Response", error);
-      }
-    }
-    fetchData(config); */
+  useEffect(() => {    
   }, []);
 
   const onCancel = (form) => {

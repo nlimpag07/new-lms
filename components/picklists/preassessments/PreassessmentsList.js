@@ -220,9 +220,6 @@ const categoryRender = (props) => {
 };
 //Deleting Status
 function deleteConfirm(e, data, setRunSpin) {
-  //console.log(e);
-  //console.log("PopConfirm", data);
-  //setSpin(true);
   var config = {
     method: "delete",
     url: apiBaseUrl + "/picklist/Preassessment/" + data.id,
@@ -248,11 +245,7 @@ function deleteConfirm(e, data, setRunSpin) {
             onOk: () => {
               visible: false;
               setRunSpin(true);
-              /* router.push(
-                "/administrator/picklists/status",
-                `/administrator/picklists/status`
-              ); */
-              //console.log("Should hide modal")
+              
             },
           });
         } else {

@@ -131,8 +131,7 @@ const Preassessments = ({ data }) => {
         }
       }
       fetchData(config);
-      setRunSpin(false);
-      console.log("hello");
+      setRunSpin(false);      
     }
   }, [runSpin]);
 
@@ -199,22 +198,15 @@ const Preassessments = ({ data }) => {
     });
   };
 
-  function onBlur() {
-    //console.log("blur");
-  }
-  function onFocus() {
-    //console.log("focus");
-  }
+  
   function onSearch(val) {
     console.log("search:", val);
     setSpin(true);
     setSearchLoading(true);
     let searchedData = allPreassessmentData.filter((d) =>
-      d.name.toLowerCase().includes(val.toLowerCase())
+      d.title.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setPreassessmentData(searchedData)
-      : setPreassessmentData(allPreassessmentData); */
+   
     setPreassessmentData(searchedData);
   }
   useEffect(() => {
