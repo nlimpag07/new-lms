@@ -17,6 +17,7 @@ import {
   Button,
   Popconfirm,
   message,
+  Tag,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -78,9 +79,19 @@ const PreassessmentList = ({
   var lastSelectedIndex = 0;
   const the_data =
     PreassessmentData && PreassessmentData.length ? PreassessmentData : [];
-  const ddata = the_data.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  );
+  const ddata = the_data.map((dataItem) => {
+    let catData =
+      dataItem.preassessmentCategory.length &&
+      dataItem.preassessmentCategory.map((pcat) => {
+        return {
+          categoryId: pcat.categoryId,
+          categoryName: pcat.category.name,
+        };
+      });
+    //console.log("catData", catData);
+    return Object.assign({ selected: false, category: catData }, dataItem);
+  });
+  console.log("ddata", ddata);
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "desc" }],
@@ -158,7 +169,7 @@ const PreassessmentList = ({
         onPageChange={pageChange}
       >
         <Column field="title" title="Name" />
-        {/* <Column field="category" title="Category" /> */}
+        <Column field="category" title="Category" cell={categoryRender} />
         <Column
           sortable={false}
           cell={(props) =>
@@ -195,6 +206,17 @@ const PreassessmentList = ({
       `}</style>
     </>
   );
+};
+const categoryRender = (props) => {
+  console.log("props", props.dataItem);
+  let theCat =
+    props.dataItem && props.dataItem.category ? props.dataItem.category : [];
+  let catListRender = theCat.length
+    ? theCat.map((cat, index) => {
+        return <Tag key={index}>{cat.categoryName}</Tag>;
+      })
+    : [];
+  return <td>{catListRender}</td>;
 };
 //Deleting Status
 function deleteConfirm(e, data, setRunSpin) {

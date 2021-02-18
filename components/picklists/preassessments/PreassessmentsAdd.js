@@ -40,15 +40,14 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
+const PreassessmentsAdd = ({ hideModal, setRunSpin,categories }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [questionType, setquestionType] = useState(0);
-  const [categories, setCategories] = useState([]);
   useEffect(() => {
-    var config = {
+    /* var config = {
       method: "get",
       url: apiBaseUrl + "/Picklist/category",
       headers: {
@@ -74,7 +73,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin }) => {
         console.log("Error Response", error);
       }
     }
-    fetchData(config);
+    fetchData(config); */
   }, []);
 
   const onCancel = (form) => {
