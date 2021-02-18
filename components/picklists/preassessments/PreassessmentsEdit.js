@@ -34,16 +34,20 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsEdit = ({ dataProps, hideModal, setRunSpin }) => {
+const PreassessmentsEdit = ({
+  dataProps,
+  hideModal,
+  setRunSpin,
+  categories,
+}) => {
   console.log("dataProps", dataProps);
-  const { name, id } = dataProps;
+  const { title, id } = dataProps;
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
 
-  useEffect(() => {
-  }, []); 
+  useEffect(() => {}, []);
 
   const onCancel = (form) => {
     form.resetFields();
@@ -56,13 +60,21 @@ const PreassessmentsEdit = ({ dataProps, hideModal, setRunSpin }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.PreassessmentName) {
-      data.name = values.PreassessmentName;
+    if (!!values.title) {
+      data.title = values.title;
     } else {
-      data.name = name;
+      data.title = title;
     }
-    
-
+    if (!!values.categoryId) {
+      data.preassessmentCategory = [
+        {
+          categoryId: values.categoryId,
+        },
+      ];
+    } else {
+      setHasError("* Please Select Category");
+      checker.push("Error");
+    }
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
@@ -91,7 +103,22 @@ const PreassessmentsEdit = ({ dataProps, hideModal, setRunSpin }) => {
         });
     }
   };
-
+  var defaultCatOptionsId;
+  if (dataProps) {
+    let precat = dataProps.category;
+    defaultCatOptionsId = precat.map((cat) => cat.categoryId);
+  }
+  const catOptionList =
+    categories.length &&
+    categories.map((option, index) => {
+      let catNames = `${option.name}`;
+      let optValue = option.id;
+      return (
+        <Option key={index} label={catNames} value={optValue}>
+          {catNames}
+        </Option>
+      );
+    });
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
       <Form
@@ -100,25 +127,44 @@ const PreassessmentsEdit = ({ dataProps, hideModal, setRunSpin }) => {
         layout="horizontal"
         name="EditPicklistPreassessments"
         initialValues={{
-          PreassessmentName: name,
+          title: title,
+          categoryId: defaultCatOptionsId,
         }}
       >
         <Form.Item
-          name="PreassessmentName"
+          label="Preassessment Question"
+          name="title"
           style={{
             marginBottom: "1rem",
           }}
           rules={[
             {
               required: true,
-              message: "Please input Course Type Name!",
+              message: "Please input Preassessment Name!",
             },
           ]}
         >
-          <Input placeholder="Course Type Name" />
+          <Input placeholder="Preassessment Name" />
         </Form.Item>
-        
-        
+        <Form.Item
+          name="categoryId"
+          label="Category"
+          rules={[
+            {
+              required: true,
+              message: "Please Select Category!",
+            },
+          ]}
+        >
+          <Select
+                mode="multiple"
+                placeholder="Please select Session"
+                optionLabelProp="label"
+              >
+                {catOptionList}
+              </Select>
+         
+        </Form.Item>
         {hasError ? (
           <p
             style={{

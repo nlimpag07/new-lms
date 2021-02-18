@@ -284,10 +284,10 @@ function deleteConfirm(e, data, setRunSpin) {
 const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   return (
     <td>
-      <Button
+      {/* <Button
         icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
         onClick={() => showModal("edit", props.dataItem)}
-      />{" "}
+      />{" "} */}
       <Popconfirm
         title="Delete this Status?"
         onConfirm={(e) => deleteConfirm(e, props.dataItem, setRunSpin)}

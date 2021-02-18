@@ -40,7 +40,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsAdd = ({ hideModal, setRunSpin,categories }) => {
+const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -100,9 +100,6 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin,categories }) => {
           categoryId: values.categoryId,
         },
       ];
-    } else {
-      setHasError("* Please Select Category");
-      checker.push("Error");
     }
 
     data = JSON.stringify(data);
