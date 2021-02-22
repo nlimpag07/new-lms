@@ -12,6 +12,7 @@ import {
   Form,
   Radio,
   Input,
+  Spin,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
@@ -19,7 +20,13 @@ const linkUrl = Cookies.get("usertype");
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
-const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
+const PreAssessmentQuestions = ({
+  assModalOperation,
+  setAssessmentData,
+  assessmentData,
+  allQuestions,
+  allAnswers,
+}) => {
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
@@ -29,7 +36,6 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
   const onCancel = (form) => {
     form.resetFields();
     setSpinning(true);
-    hideModal("add");
   };
   const onFinish = (values) => {
     console.log("Values", values);
@@ -38,25 +44,25 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
     var data = {};
     var checker = [];
 
-    if (!!values.title) {
-      data.title = values.title;
+    if (!!values.preassessmentId) {
+      data.preassessmentId = values.preassessmentId;
     } else {
-      setHasError("* Please Input Question Name");
+      setHasError("* No Question Data Generated, Please Contact Support");
       checker.push("Error");
     }
-    if (!!values.categoryId) {
-      data.preassessmentCategory = [
-        {
-          categoryId: values.categoryId,
-        },
-      ];
+    if (!!values.answer) {
+      data.answerId = values.answer.answerId;
+      data.score = values.answer.answerScore;
+    } else {
+      setHasError("* Please select an answer from the options given.");
+      checker.push("Error");
     }
 
     data = JSON.stringify(data);
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/picklist/Preassessment",
+        url: apiBaseUrl + "/learner/Preassessment",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -67,9 +73,18 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
       axios(config)
         .then((res) => {
           message.success(res.data.message);
-          setSpinning(false);
-          setRunSpin(true);
-          hideModal("add");
+          let newQNum = assessmentData.qNum + 1;
+          let nextQData = allQuestions[newQNum];
+          if (newQNum <= allQuestions.length) {
+            setAssessmentData({
+              ...assessmentData,
+              qNum: newQNum,
+              data: nextQData,
+            });
+            setSpinning(false);
+          } else {
+            
+          }
         })
         .catch((err) => {
           console.log("err: ", err);
@@ -77,67 +92,65 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
             "Network Error on Submission, Contact Technical Support"
           );
           setSpinning(false);
-          setRunSpin(true);
-          hideModal("add");
         });
     }
   };
   console.log("All Answers", allAnswers);
   console.log("Current Question Data", assessmentData);
-  /* const ansOptionList =
+  const onChangeOptionList = (e) => {
+    console.log("checked", e.target.value);
+  };
+  const ansOptionList =
     allAnswers.length &&
     allAnswers.map((option, index) => {
-      let catNames = `${option.title}`;
-      let optValue = option.id;
+      let catNames = `${option.name}`;
+      let optValue = { answerId: option.id, answerScore: option.score };
       return (
-        <Radio.Button key={index} label={catNames} value={optValue}>
+        <Radio.Button
+          className="radioVertical"
+          key={index}
+          label={catNames}
+          value={optValue}
+          onChange={onChangeOptionList}
+        >
           {catNames}
         </Radio.Button>
       );
-    }); */
+    });
   return (
     <Form
       form={form}
       onFinish={onFinish}
-      layout="vertical"
-      name="AddPicklistPreassessment"
-      initialValues={
-        {
-          /*
-    colorPicker:"#ffffff",*/
-        }
-      }
+      name="learnerSubmitPreassessment"
+      initialValues={{
+        preassessmentId: assessmentData.data.id,
+      }}
     >
+      <p style={{ color: "#cccbcb" }}>{`Survey ${assessmentData.qNum + 1} of ${
+        assessmentData.qTotal
+      }`}</p>
+      <h2 style={{ marginBottom: "1.5rem" }}>{assessmentData.data.title}</h2>
       <Form.Item
-        label="Preassessment Question"
-        name="title"
+        label="Survey Question"
+        name="preassessmentId"
         style={{
           marginBottom: "1rem",
         }}
-        rules={[
-          {
-            required: true,
-            message: "Please input Preassessment Name!",
-          },
-        ]}
+        hidden
       >
-        <Input placeholder="Preassessment Name" />
+        <Input />
       </Form.Item>
       <Form.Item
-        name="categoryId"
-        label="Category"
+        name="answer"
         rules={[
           {
             required: true,
-            message: "Please Select Category!",
+            message: "Please Select from the options to proceed!",
           },
         ]}
       >
-        <Radio.Group defaultValue="a" buttonStyle="solid">
-          <Radio.Button value="a">Hangzhou</Radio.Button>
-          <Radio.Button value="b">Shanghai</Radio.Button>
-          <Radio.Button value="c">Beijing</Radio.Button>
-          <Radio.Button value="d">Chengdu</Radio.Button>
+        <Radio.Group buttonStyle="solid">
+          <Space>{ansOptionList}</Space>
         </Radio.Group>
       </Form.Item>
       {hasError ? (
@@ -169,10 +182,9 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
         }}
         style={{ textAlign: "center", marginBottom: 0 }}
       >
-        <Button type="primary" htmlType="submit">
-          Submit
+        <Button type="primary" shape="round" size="medium" htmlType="submit">
+          Next
         </Button>{" "}
-        <Button onClick={() => onCancel(form)}>Cancel</Button>
       </Form.Item>
       {spinning && (
         <div className="spinHolder">
@@ -184,6 +196,27 @@ const PreAssessmentQuestions = ({ assessmentData, allAnswers }) => {
           ></Spin>
         </div>
       )}
+      <style jsx global>{`
+        #learnerSubmitPreassessment .radioVertical {
+          display: block;
+          height: 30px;
+          line-height: 30px;
+        }
+        #learnerSubmitPreassessment .spinHolder {
+          text-align: center;
+          z-index: 100;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          background-color: #ffffff;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      `}</style>
     </Form>
   );
 };

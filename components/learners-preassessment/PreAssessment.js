@@ -14,6 +14,7 @@ const PreAssessment = ({ learner }) => {
   const [assessmentData, setAssessmentData] = useState({
     started: 0,
     qNum: 0,
+    qTotal: 0,
     data: null,
   });
   const [allQuestions, setAllquestions] = useState([]);
@@ -29,9 +30,19 @@ const PreAssessment = ({ learner }) => {
   useEffect(() => {}, []);
   //Display the modal and the initial contents
   //optional: if v is true then data should be displayed,otherwise set setAssessmentData should be resetted
-  const assModalOperation = (e, v, data) => {
+  const showModal = (e, v, data) => {
     e.preventDefault();
     setAssessmentData({ ...assessmentData, data: data });
+    setAssessmentModal(v);
+  };
+  const hideModal = (e, v) => {
+    e.preventDefault();
+    setAssessmentData({
+      started: 0,
+      qnum: 0,
+      qTotal: 0,
+      data: "No Data Retrieved",
+    });
     setAssessmentModal(v);
   };
   //pull assessments data from api
@@ -56,6 +67,7 @@ const PreAssessment = ({ learner }) => {
             setAssessmentData({
               started: v,
               qNum: 0,
+              qTotal: preQList.data.result.length,
               data: preQList.data.result[0],
             });
           } else {
@@ -63,6 +75,7 @@ const PreAssessment = ({ learner }) => {
             setAssessmentData({
               started: 0,
               qnum: 0,
+              qTotal: 0,
               data: "No Data Retrieved",
             });
           }
@@ -90,7 +103,8 @@ const PreAssessment = ({ learner }) => {
   return (
     <StatusContent
       beginPreassessment={beginPreassessment}
-      assModalOperation={assModalOperation}
+      hideModal={hideModal}
+      showModal={showModal}
       assessmentModal={assessmentModal}
       setAssessmentModal={setAssessmentModal}
       assessmentData={assessmentData}
@@ -103,7 +117,8 @@ const PreAssessment = ({ learner }) => {
 
 const StatusContent = ({
   beginPreassessment,
-  assModalOperation,
+  hideModal,
+  showModal,
   assessmentModal,
   setAssessmentModal,
   assessmentData,
@@ -112,7 +127,6 @@ const StatusContent = ({
   allAnswers,
 }) => {
   console.log("All Questions", allQuestions);
-  
 
   let preText =
     "This assessment will help you choose from the different learning programs that we offer. We are here to help you choose from the wide variety of courses that could help you in your career.";
@@ -128,7 +142,7 @@ const StatusContent = ({
         <Row
           gutter={[16]}
           className="preassessment-container"
-          onClick={(e) => assModalOperation(e, true, preText)}
+          onClick={(e) => showModal(e, true, preText)}
         >
           <Col xs={24} sm={24} md={24} lg={24} className="pre-holder">
             <h2>Take this free pre-assessment exam</h2>
@@ -142,32 +156,39 @@ const StatusContent = ({
         visible={assessmentModal}
         maskClosable={false}
         destroyOnClose={true}
-        onOk={(e) => assModalOperation(e, false, "")}
-        onCancel={(e) => assModalOperation(e, false, "")}
+        onOk={(e) => hideModal(e, false)}
+        onCancel={(e) => hideModal(e, false)}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
         className="preassessmentModal"
+        width="600px"
       >
         <Space direction="vertical">
           <div className="description">
             {assessmentData.started === 1 ? (
               <PreAssessmentQuestions
+                showModal={showModal}
+                setAssessmentData={setAssessmentData}
                 assessmentData={assessmentData}
+                allQuestions={allQuestions}
                 allAnswers={allAnswers}
               />
+            ) : assessmentData.started === 2 ? (
+              <p>Thank you for taking the survey</p>
             ) : (
               <p>{assessmentData.data}</p>
             )}
           </div>
           <div className="buttonHolder">
-            {assessmentData.started === 1 ? (
+            {assessmentData.started === 1 ? null : assessmentData.started ===
+              2 ? (
               <Button
                 type="primary"
                 shape="round"
                 size="medium"
-                onClick={(e) => beginPreassessment(e, 0)}
+                onClick={(e) => hideModal(e, false)}
               >
-                Next
+                Begin
               </Button>
             ) : (
               <Button
