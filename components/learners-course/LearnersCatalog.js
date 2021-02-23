@@ -103,6 +103,7 @@ const LearnersCatalog = (props) => {
         if (response) {
           localStorage.setItem("courseAllList", JSON.stringify(response.data));
           setCourseAllList(response.data);
+          setAllCourses(response.data.result);
           //console.log(response.data);
         } else {
           //do nothing

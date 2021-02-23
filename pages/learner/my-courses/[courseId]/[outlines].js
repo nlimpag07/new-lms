@@ -36,12 +36,19 @@ import {
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const CourseOutlines = ({ courseDetails }) => {
+  console.log("courseDetails", courseDetails);
   const router = useRouter();
   const [theLabel, setTheLabel] = useState("");
   //check if Err response
   var isError = courseDetails.err ? true : false;
   //console.log(isError);
+  //check if approved
+  var hasPermission =
+    courseDetails && courseDetails.isApprove == 1 ? true : false;
 
+  if (isError || !hasPermission) {
+    return <Error statusCode={404} />;
+  }
   var urlPath = router.asPath;
   var theContent; //content assignment variable
   let getlength = Object.keys(router.query).length;
@@ -63,7 +70,7 @@ const CourseOutlines = ({ courseDetails }) => {
   const courseId = router.query.courseId;
   const theOutline = router.query.outlines;
   let manageQueryLength = router.query ? Object.keys(router.query).length : 0;
-  var isApproved = courseDetails.course ? 1 : 0;
+  //var isApproved = courseDetails.course ? 1 : 0;
   /* var isApproved =
     courseDetails.course & (courseDetails.course.isApproved == 1) ? 1 : 0; */
 
@@ -207,7 +214,9 @@ const CourseOutlines = ({ courseDetails }) => {
         <div className="common-holder">
           <Row>
             <Col>
-              <h2 className="widget-title">{cDetails.title}</h2>
+              <h2 className="widget-title">
+                {cDetails ? cDetails.title : null}
+              </h2>
             </Col>
           </Row>
           <Tabs defaultActiveKey={theLabel} onChange={onChangeTab}>

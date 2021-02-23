@@ -34,7 +34,7 @@ const LearnerMenu = () => {
   if (aspath.endsWith("/reports")) {
     selectedKey = "reports";
   }
-  console.log(aspath);
+  //console.log(aspath);
   //const [defaultKey,setDefaultKey] = useState(`'${selectedKey}'`);
   /* useEffect(() => {
     setDefaultKey(`'${selectedKey}'`);

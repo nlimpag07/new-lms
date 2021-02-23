@@ -20,7 +20,7 @@ const linkUrl = Cookies.get("usertype");
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
-const PreAssessmentQuestions = ({
+const LearnersCourseEvaluationQuestions = ({
   assModalOperation,
   setAssessmentData,
   assessmentData,
@@ -227,4 +227,4 @@ const PreAssessmentQuestions = ({
   );
 };
 
-export default PreAssessmentQuestions;
+export default LearnersCourseEvaluationQuestions;

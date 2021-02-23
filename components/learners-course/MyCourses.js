@@ -532,7 +532,7 @@ const GridType = (
   loading
 ) => {
   //courses = courses ? courses.result : null;
-  console.log("Courses:", courses);
+  //console.log("Courses:", courses);
   const [selectedCourse, setSelectedCourse] = useState("off");
   let gridClass = "";
   let gridProps = { xs: 24, sm: 24, md: 8, lg: 8, xl: 6 };
@@ -576,7 +576,7 @@ const GridType = (
   return courses && courses.length ? (
     <>
       {courses.map((mycourse) => {
-        console.log("My Course", mycourse);
+        //console.log("My Course", mycourse);
         var baseNumber =
           mycourse.course.courseOutline && mycourse.course.courseOutline.length
             ? mycourse.course.courseOutline.length
@@ -586,7 +586,7 @@ const GridType = (
             ? mycourse.learnerCourseOutline.length
             : 0;
         var currentPercent = Math.round((newNumber * 100) / baseNumber);
-        console.log(currentPercent);
+        //console.log(currentPercent);
         return (
           <Col
             key={mycourse.course.id}

@@ -75,7 +75,8 @@ const MyCoursesDrawerDetails = ({
   const { userDetails } = useAuth();
   const [reviewDetails, setReviewDetails] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
-  console.log("Course Details:", mycourseDetails);
+  const [hasFinished, setHasFinished] = useState(false);
+  //console.log("Course Details:", mycourseDetails);
 
   let { isApproved, startDate, endDate } = mycourseDetails;
   const learnerId = mycourseDetails.id;
@@ -97,7 +98,7 @@ const MyCoursesDrawerDetails = ({
     relatedCourse,
     learner,
   } = courseDetails;
-  console.log("Learner", learner);
+  //console.log("Learner", learner);
   const listData = [
     {
       title: `${
@@ -166,6 +167,7 @@ const MyCoursesDrawerDetails = ({
     if (startDate) {
       console.log(startDate);
       setHasStarted(true);
+      endDate ? setHasFinished(true) : setHasFinished(false);
     } else {
       setHasStarted(false);
     }
@@ -369,7 +371,16 @@ const MyCoursesDrawerDetails = ({
           <Col xs={24} sm={24} md={24} lg={7}>
             <Row className="drawerActionButtons" gutter={[16, 16]}>
               <Col xs={0} sm={0} md={0} lg={24} xl={12} xxl={12}>
-                {hasStarted ? (
+                {hasStarted && hasFinished ? (
+                  <Button
+                    type="info"
+                    shape="round"
+                    size="large"
+                    onClick={onStartOrContinueCourse}
+                  >
+                    Review
+                  </Button>
+                ) : hasStarted ? (
                   <Button
                     type="primary"
                     shape="round"
@@ -405,6 +416,15 @@ const MyCoursesDrawerDetails = ({
                 </Button>
               </Col>
             </Row>
+            {hasStarted && hasFinished && (
+              <Row className="drawerActionButtons" gutter={[16, 16]}>
+                <Col xs={0} sm={0} md={0} lg={24} xl={24} xxl={24}>
+                  <Button type="link" onClick={onStartOrContinueCourse} block>
+                    Submit a Post Evaluation
+                  </Button>
+                </Col>
+              </Row>
+            )}
             <List
               itemLayout="horizontal"
               dataSource={listData}
@@ -446,12 +466,12 @@ const MyCoursesDrawerDetails = ({
         .drawer-course-details .ant-drawer-content .course-desc p {
           font-size: 16px;
         }
-        
+
         .star-rating .ant-rate {
           font-size: 1.5rem;
           margin-right: 1rem;
         }
-        
+
         .drawer-course-details .ant-drawer-content .Course-Tags {
           margin-top: 2rem;
         }
@@ -462,7 +482,6 @@ const MyCoursesDrawerDetails = ({
           margin-right: 15px;
           background-color: #ffffff;
         }
-        
       `}</style>
     </Drawer>
   );
