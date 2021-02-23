@@ -72,10 +72,10 @@ const PreAssessmentQuestions = ({
 
       axios(config)
         .then((res) => {
-          message.success(res.data.message);
+          //message.success(res.data.message);
           let newQNum = assessmentData.qNum + 1;
           let nextQData = allQuestions[newQNum];
-          if (newQNum <= allQuestions.length) {
+          if (newQNum < allQuestions.length) {
             setAssessmentData({
               ...assessmentData,
               qNum: newQNum,
@@ -83,7 +83,11 @@ const PreAssessmentQuestions = ({
             });
             setSpinning(false);
           } else {
-            
+            setAssessmentData({
+              started: 2,
+              qNum: 0,
+              data: "",
+            });
           }
         })
         .catch((err) => {
@@ -123,13 +127,15 @@ const PreAssessmentQuestions = ({
       onFinish={onFinish}
       name="learnerSubmitPreassessment"
       initialValues={{
-        preassessmentId: assessmentData.data.id,
+        preassessmentId: assessmentData.data ? assessmentData.data.id : 0,
       }}
     >
       <p style={{ color: "#cccbcb" }}>{`Survey ${assessmentData.qNum + 1} of ${
         assessmentData.qTotal
       }`}</p>
-      <h2 style={{ marginBottom: "1.5rem" }}>{assessmentData.data.title}</h2>
+      <h2 style={{ marginBottom: "1.5rem" }}>
+        {assessmentData.data ? assessmentData.data.title : null}
+      </h2>
       <Form.Item
         label="Survey Question"
         name="preassessmentId"

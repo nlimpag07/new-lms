@@ -1,7 +1,8 @@
 import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { Row, Col, Card, Modal, Button, Space, message } from "antd";
+import { Row, Col, Card, Modal, Button, Space, message, Result } from "antd";
+import { SmileOutlined } from "@ant-design/icons";
 import PreAssessmentQuestions from "./PreAssessmentQuestions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
@@ -163,7 +164,7 @@ const StatusContent = ({
         className="preassessmentModal"
         width="600px"
       >
-        <Space direction="vertical">
+        
           <div className="description">
             {assessmentData.started === 1 ? (
               <PreAssessmentQuestions
@@ -174,23 +175,26 @@ const StatusContent = ({
                 allAnswers={allAnswers}
               />
             ) : assessmentData.started === 2 ? (
-              <p>Thank you for taking the survey</p>
+              <Result
+                icon={<SmileOutlined />}
+                title="All done, thank you for participating!"
+                extra={
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="medium"
+                    onClick={(e) => hideModal(e, false)}
+                  >
+                    Close
+                  </Button>
+                }
+              />
             ) : (
               <p>{assessmentData.data}</p>
             )}
           </div>
           <div className="buttonHolder">
-            {assessmentData.started === 1 ? null : assessmentData.started ===
-              2 ? (
-              <Button
-                type="primary"
-                shape="round"
-                size="medium"
-                onClick={(e) => hideModal(e, false)}
-              >
-                Begin
-              </Button>
-            ) : (
+            {assessmentData.started === 1 || assessmentData.started === 2 ? null : (
               <Button
                 type="primary"
                 shape="round"
@@ -201,9 +205,11 @@ const StatusContent = ({
               </Button>
             )}
           </div>
-        </Space>
       </Modal>
       <style jsx global>{`
+        .ant-modal-close {
+          display: none;
+        }
         .preassessmentModal .buttonHolder {
           text-align: center;
         }
