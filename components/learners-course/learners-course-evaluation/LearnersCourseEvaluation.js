@@ -10,8 +10,12 @@ const linkUrl = Cookies.get("usertype");
 const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
-const LearnersCourseEvaluation = ({ learner }) => {
-  const [assessmentModal, setAssessmentModal] = useState(false);
+const LearnersCourseEvaluation = ({
+  courseId,
+  modalStatus,
+  setIsEvaluationActive,
+}) => {
+  const [assessmentModal, setAssessmentModal] = useState(modalStatus);
   const [assessmentData, setAssessmentData] = useState({
     started: 0,
     qNum: 0,
@@ -27,8 +31,41 @@ const LearnersCourseEvaluation = ({ learner }) => {
     oc: 0,
     cc: 0,
   });
-
+  //console.log("CourseId from MyCoursesDrawerDetails",courseId)
   useEffect(() => {}, []);
+  useEffect(() => {
+    
+      var config = {
+        method: "get",
+        url: apiBaseUrl + `/CourseEvaluation/${courseId}`,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+      async function fetchData(config) {
+        const response = await axios(config);
+        if (response) {
+          //setOutcomeList(response.data.result);
+          let theRes = response.data;
+          console.log("Response", response.data);
+          // wait for response if the verification is true
+          /* if (theRes.length) {
+            let outlines = theRes[0].course
+              ? theRes[0].course.courseOutline
+              : null;
+            setOutlineList(outlines);
+            let cDetails = theRes[0].course ? theRes[0].course : null;
+            setCourse(cDetails);
+          } else {
+            //false
+          } */
+        }
+      }
+      fetchData(config);
+      //setSpinner(false);
+    
+  }, []);
   //Display the modal and the initial contents
   //optional: if v is true then data should be displayed,otherwise set setAssessmentData should be resetted
   const showModal = (e, v, data) => {
@@ -37,6 +74,7 @@ const LearnersCourseEvaluation = ({ learner }) => {
     setAssessmentModal(v);
   };
   const hideModal = (e, v) => {
+    setIsEvaluationActive(false);
     e.preventDefault();
     setAssessmentData({
       started: 0,
@@ -129,83 +167,74 @@ const StatusContent = ({
 }) => {
   console.log("All Questions", allQuestions);
 
-  let preText =
-    "This assessment will help you choose from the different learning programs that we offer. We are here to help you choose from the wide variety of courses that could help you in your career.";
   return (
-    <Col
-      className="widget-holder-col learner-pre"
-      xs={24}
-      sm={24}
-      md={24}
-      lg={24}
+    <Modal
+      title="Course Post Evaluation"
+      centered
+      visible={assessmentModal}
+      maskClosable={false}
+      destroyOnClose={true}
+      onOk={(e) => hideModal(e, false)}
+      onCancel={(e) => hideModal(e, false)}
+      cancelButtonProps={{ style: { display: "none" } }}
+      okButtonProps={{ style: { display: "none" } }}
+      className="preassessmentModal"
+      width="600px"
     >
-      <div className="common-holder preassessment-holder">
-        <Row
-          gutter={[16]}
-          className="preassessment-container"
-          onClick={(e) => showModal(e, true, preText)}
-        >
-          <Col xs={24} sm={24} md={24} lg={24} className="pre-holder">
-            <h2>Take this free pre-assessment exam</h2>
-            <span>and learn more about our training programs</span>
-          </Col>
-        </Row>
+      <div className="description">
+        {assessmentData.started === 1 ? (
+          <LearnersCourseEvaluationQuestions
+            showModal={showModal}
+            setAssessmentData={setAssessmentData}
+            assessmentData={assessmentData}
+            allQuestions={allQuestions}
+            allAnswers={allAnswers}
+          />
+        ) : assessmentData.started === 2 ? (
+          <Result
+            icon={<SmileOutlined />}
+            title="All done, thank you for participating!"
+            extra={
+              <Button
+                type="primary"
+                shape="round"
+                size="medium"
+                onClick={(e) => hideModal(e, false)}
+              >
+                Close
+              </Button>
+            }
+          />
+        ) : (
+          <p>
+            In order for us to improve our service, your feedback is of the
+            utmost importance. We'd like to know what you think about the
+            course.
+          </p>
+        )}
       </div>
-      <Modal
-        title="Learner's Pre-Assessment"
-        centered
-        visible={assessmentModal}
-        maskClosable={false}
-        destroyOnClose={true}
-        onOk={(e) => hideModal(e, false)}
-        onCancel={(e) => hideModal(e, false)}
-        cancelButtonProps={{ style: { display: "none" } }}
-        okButtonProps={{ style: { display: "none" } }}
-        className="preassessmentModal"
-        width="600px"
-      >
-        <div className="description">
-          {assessmentData.started === 1 ? (
-            <LearnersCourseEvaluationQuestions
-              showModal={showModal}
-              setAssessmentData={setAssessmentData}
-              assessmentData={assessmentData}
-              allQuestions={allQuestions}
-              allAnswers={allAnswers}
-            />
-          ) : assessmentData.started === 2 ? (
-            <Result
-              icon={<SmileOutlined />}
-              title="All done, thank you for participating!"
-              extra={
-                <Button
-                  type="primary"
-                  shape="round"
-                  size="medium"
-                  onClick={(e) => hideModal(e, false)}
-                >
-                  Close
-                </Button>
-              }
-            />
-          ) : (
-            <p>{assessmentData.data}</p>
-          )}
-        </div>
-        <div className="buttonHolder">
-          {assessmentData.started === 1 ||
-          assessmentData.started === 2 ? null : (
+      <div className="buttonHolder">
+        {assessmentData.started === 1 || assessmentData.started === 2 ? null : (
+          <>
+            <Button
+              type="danger"
+              shape="round"
+              size="medium"
+              onClick={(e) => hideModal(e, false)}
+            >
+              No Thanks
+            </Button>{" "}
             <Button
               type="primary"
               shape="round"
               size="medium"
               onClick={(e) => beginPreassessment(e, 1)}
             >
-              Begin
+              Begin Evaluation
             </Button>
-          )}
-        </div>
-      </Modal>
+          </>
+        )}
+      </div>
       <style jsx global>{`
         .ant-modal-close {
           display: none;
@@ -299,7 +328,7 @@ const StatusContent = ({
           height: 5px;
         }
       `}</style>
-    </Col>
+    </Modal>
   );
 };
 

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { useCourseList } from "../../providers/CourseProvider";
 import { useAuth } from "../../providers/Auth";
 import { useViewPort } from "../../providers/ViewPort";
+import LearnersCourseEvaluation from "./learners-course-evaluation/LearnersCourseEvaluation";
 
 import axios from "axios";
 import Link from "next/link";
@@ -76,7 +77,9 @@ const MyCoursesDrawerDetails = ({
   const [reviewDetails, setReviewDetails] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
-  //console.log("Course Details:", mycourseDetails);
+  const [isEvaluationActive, setIsEvaluationActive] = useState(false);
+
+  console.log("Course Details:", mycourseDetails);
 
   let { isApproved, startDate, endDate } = mycourseDetails;
   const learnerId = mycourseDetails.id;
@@ -167,7 +170,7 @@ const MyCoursesDrawerDetails = ({
     if (startDate) {
       console.log(startDate);
       setHasStarted(true);
-      endDate ? setHasFinished(true) : setHasFinished(false);
+      endDate ? setHasFinished(true) : setHasFinished(true);
     } else {
       setHasStarted(false);
     }
@@ -267,6 +270,11 @@ const MyCoursesDrawerDetails = ({
     viewport && viewport == "mobile"
       ? { height: `100%`, width: `100%`, placement: `right` }
       : { height: `60%`, placement: `bottom` };
+
+  /* const onClickCourseEvaluation = (e) => {
+    e.preventDefault();
+    setIsEvaluationActive(true);    
+  }; */
   return (
     <Drawer
       title="About the course" /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
@@ -419,7 +427,11 @@ const MyCoursesDrawerDetails = ({
             {hasStarted && hasFinished && (
               <Row className="drawerActionButtons" gutter={[16, 16]}>
                 <Col xs={0} sm={0} md={0} lg={24} xl={24} xxl={24}>
-                  <Button type="link" onClick={onStartOrContinueCourse} block>
+                  <Button
+                    type="link"
+                    onClick={() => setIsEvaluationActive(true)}
+                    block
+                  >
                     Submit a Post Evaluation
                   </Button>
                 </Col>
@@ -446,6 +458,24 @@ const MyCoursesDrawerDetails = ({
           </Col>
         </Row>
       </motion.div>
+      {isEvaluationActive && (
+        <LearnersCourseEvaluation courseId={id} modalStatus="true" setIsEvaluationActive={setIsEvaluationActive} />
+      )}
+      {/* <Modal
+        title="Course Evaluation"
+        centered
+        visible={isEvaluationActive}
+        onOk={() => setIsEvaluationActive(false)}
+        onCancel={() => setIsEvaluationActive(false)}
+        maskClosable={false}
+        destroyOnClose={true}
+        width="95%"
+        className="courseEvaluationModal"
+      >
+        <div className="demoModalBody">
+          <h3>Course Evaluations</h3>
+        </div>
+      </Modal> */}
       <style jsx global>{`
         .drawer-course-details .ant-drawer-title {
           font-size: 1.2rem;

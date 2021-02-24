@@ -44,8 +44,8 @@ const CourseOutlines = ({ courseDetails }) => {
   //console.log(isError);
   //check if approved
   var hasPermission =
-    courseDetails && courseDetails.isApprove == 1 ? true : false;
-
+    courseDetails && courseDetails.isApproved === 1 ? true : false;
+  console.log("hasPermission", hasPermission);
   if (isError || !hasPermission) {
     return <Error statusCode={404} />;
   }
