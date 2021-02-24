@@ -13,6 +13,7 @@ import {
   Radio,
   Input,
   Spin,
+  Rate,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
@@ -22,11 +23,22 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const LearnersCourseEvaluationQuestions = ({
   assModalOperation,
-  setAssessmentData,
-  assessmentData,
+  setEvaluationData,
+  evaluationData,
   allQuestions,
   allAnswers,
 }) => {
+  console.log("evaluationData", evaluationData);
+  const {
+    courseId,
+    courseEvaluationValues,
+    evaluationActionId,
+    evaluationTypeId,
+    isRequired,
+    userGroupId,
+    maxValue,
+    minValue,
+  } = evaluationData.data;
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
@@ -44,23 +56,36 @@ const LearnersCourseEvaluationQuestions = ({
     var data = {};
     var checker = [];
 
-    if (!!values.preassessmentId) {
-      data.preassessmentId = values.preassessmentId;
+    if (!!values.evaluationId) {
+      data.evaluationId = values.evaluationId;
     } else {
       setHasError("* No Question Data Generated, Please Contact Support");
       checker.push("Error");
     }
-    if (!!values.answer) {
-      data.answerId = values.answer.answerId;
-      data.score = values.answer.answerScore;
-    } else {
-      setHasError("* Please select an answer from the options given.");
-      checker.push("Error");
+    if (!!values.courseEvaluationValues) {
+      data.answerId = values.courseEvaluationValues.answerId;
+      data.score = values.courseEvaluationValues.answerScore;
     }
 
     data = JSON.stringify(data);
     if (!checker.length) {
-      var config = {
+      let newQNum = evaluationData.qNum + 1;
+      let nextQData = allQuestions[newQNum];
+      if (newQNum < allQuestions.length) {
+        setEvaluationData({
+          ...evaluationData,
+          qNum: newQNum,
+          data: nextQData,
+        });
+        setSpinning(false);
+      } else {
+        setEvaluationData({
+          started: 2,
+          qNum: 0,
+          data: "",
+        });
+      }
+      /* var config = {
         method: "post",
         url: apiBaseUrl + "/learner/Preassessment",
         headers: {
@@ -73,17 +98,17 @@ const LearnersCourseEvaluationQuestions = ({
       axios(config)
         .then((res) => {
           //message.success(res.data.message);
-          let newQNum = assessmentData.qNum + 1;
+          let newQNum = evaluationData.qNum + 1;
           let nextQData = allQuestions[newQNum];
           if (newQNum < allQuestions.length) {
-            setAssessmentData({
-              ...assessmentData,
+            setEvaluationData({
+              ...evaluationData,
               qNum: newQNum,
               data: nextQData,
             });
             setSpinning(false);
           } else {
-            setAssessmentData({
+            setEvaluationData({
               started: 2,
               qNum: 0,
               data: "",
@@ -96,19 +121,22 @@ const LearnersCourseEvaluationQuestions = ({
             "Network Error on Submission, Contact Technical Support"
           );
           setSpinning(false);
-        });
+        }); */
     }
   };
   /* console.log("All Answers", allAnswers);
-  console.log("Current Question Data", assessmentData); */
+  console.log("Current Question Data", evaluationData); */
   const onChangeOptionList = (e) => {
     /* console.log("checked", e.target.value); */
   };
   const ansOptionList =
-    allAnswers.length &&
-    allAnswers.map((option, index) => {
+    courseEvaluationValues.length &&
+    courseEvaluationValues.map((option, index) => {
       let catNames = `${option.name}`;
-      let optValue = { answerId: option.id, answerScore: option.score };
+      let optValue = {
+        answerId: option.id,
+        courseEvaluationId: option.courseEvaluationId,
+      };
       return (
         <Radio.Button
           className="radioVertical"
@@ -125,20 +153,26 @@ const LearnersCourseEvaluationQuestions = ({
     <Form
       form={form}
       onFinish={onFinish}
-      name="learnerSubmitPreassessment"
+      name="learnerSubmitEvaluation"
       initialValues={{
-        preassessmentId: assessmentData.data ? assessmentData.data.id : 0,
+        evaluationId: evaluationData.data ? evaluationData.data.id : 0,
+        evaluationActionId: evaluationData.data
+          ? evaluationData.data.evaluationActionId
+          : 0,
+          courseEvaluationRate: evaluationData.data
+          ? evaluationData.data.minValue
+          : 0,
       }}
     >
-      <p style={{ color: "#cccbcb" }}>{`Survey ${assessmentData.qNum + 1} of ${
-        assessmentData.qTotal
+      <p style={{ color: "#cccbcb" }}>{`Survey ${evaluationData.qNum + 1} of ${
+        evaluationData.qTotal
       }`}</p>
       <h2 style={{ marginBottom: "1.5rem" }}>
-        {assessmentData.data ? assessmentData.data.title : null}
+        {evaluationData.data ? evaluationData.data.title : null}
       </h2>
       <Form.Item
-        label="Survey Question"
-        name="preassessmentId"
+        label="Evaluation"
+        name="evaluationId"
         style={{
           marginBottom: "1rem",
         }}
@@ -147,18 +181,43 @@ const LearnersCourseEvaluationQuestions = ({
         <Input />
       </Form.Item>
       <Form.Item
-        name="answer"
-        rules={[
-          {
-            required: true,
-            message: "Please Select from the options to proceed!",
-          },
-        ]}
+        label="Evaluation Action"
+        name="evaluationActionId"
+        style={{
+          marginBottom: "1rem",
+        }}
+        hidden
       >
-        <Radio.Group buttonStyle="solid">
-          <Space>{ansOptionList}</Space>
-        </Radio.Group>
+        <Input />
       </Form.Item>
+      {evaluationTypeId === 1 ? (
+        <Form.Item
+          name="courseEvaluationRate"
+          rules={[
+            {
+              required: true,
+              message: "Please Select from the options to proceed!",
+            },
+          ]}
+        >
+          <Rate allowHalf count={maxValue} />
+        </Form.Item>
+      ) : evaluationTypeId === 2 ? (
+        <Form.Item
+          name="courseEvaluationValues"
+          rules={[
+            {
+              required: true,
+              message: "Please Select from the options to proceed!",
+            },
+          ]}
+        >
+          <Radio.Group buttonStyle="solid">
+            <Space>{ansOptionList}</Space>
+          </Radio.Group>
+        </Form.Item>
+      ) : null}
+
       {hasError ? (
         <p
           style={{
@@ -203,12 +262,12 @@ const LearnersCourseEvaluationQuestions = ({
         </div>
       )}
       <style jsx global>{`
-        #learnerSubmitPreassessment .radioVertical {
+        #learnerSubmitEvaluation .radioVertical {
           display: block;
           height: 30px;
           line-height: 30px;
         }
-        #learnerSubmitPreassessment .spinHolder {
+        #learnerSubmitEvaluation .spinHolder {
           text-align: center;
           z-index: 100;
           position: absolute;

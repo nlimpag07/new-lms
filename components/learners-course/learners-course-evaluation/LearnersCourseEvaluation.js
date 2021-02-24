@@ -15,8 +15,8 @@ const LearnersCourseEvaluation = ({
   modalStatus,
   setIsEvaluationActive,
 }) => {
-  const [assessmentModal, setAssessmentModal] = useState(modalStatus);
-  const [assessmentData, setAssessmentData] = useState({
+  const [evaluationModal, setEvaluationModal] = useState(modalStatus);
+  const [evaluationData, setEvaluationData] = useState({
     started: 0,
     qNum: 0,
     qTotal: 0,
@@ -32,63 +32,55 @@ const LearnersCourseEvaluation = ({
     cc: 0,
   });
   //console.log("CourseId from MyCoursesDrawerDetails",courseId)
-  useEffect(() => {}, []);
   useEffect(() => {
-    
-      var config = {
-        method: "get",
-        url: apiBaseUrl + `/CourseEvaluation/${courseId}`,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      };
-      async function fetchData(config) {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data;
-          console.log("Response", response.data);
-          // wait for response if the verification is true
-          /* if (theRes.length) {
-            let outlines = theRes[0].course
-              ? theRes[0].course.courseOutline
-              : null;
-            setOutlineList(outlines);
-            let cDetails = theRes[0].course ? theRes[0].course : null;
-            setCourse(cDetails);
-          } else {
-            //false
-          } */
+    var config = {
+      method: "get",
+      url: apiBaseUrl + `/CourseEvaluation/${courseId}`,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      const response = await axios(config);
+      if (response) {
+        //setOutcomeList(response.data.result);
+        let theRes = response.data;
+        console.log("Response", response.data);
+        // wait for response if the verification is true
+        if (theRes) {
+          setAllquestions(theRes.result);
+        } else {
+          setAllquestions([]);
         }
       }
-      fetchData(config);
-      //setSpinner(false);
-    
+    }
+    fetchData(config);
+    //setSpinner(false);
   }, []);
   //Display the modal and the initial contents
-  //optional: if v is true then data should be displayed,otherwise set setAssessmentData should be resetted
+  //optional: if v is true then data should be displayed,otherwise set setEvaluationData should be resetted
   const showModal = (e, v, data) => {
     e.preventDefault();
-    setAssessmentData({ ...assessmentData, data: data });
-    setAssessmentModal(v);
+    setEvaluationData({ ...evaluationData, data: data });
+    setEvaluationModal(v);
   };
   const hideModal = (e, v) => {
     setIsEvaluationActive(false);
     e.preventDefault();
-    setAssessmentData({
+    setEvaluationData({
       started: 0,
       qnum: 0,
       qTotal: 0,
       data: "No Data Retrieved",
     });
-    setAssessmentModal(v);
+    setEvaluationModal(v);
   };
-  //pull assessments data from api
+  //pull evaluations data from api
   const GetAssessments = (v) => {
     var config = {
       /*  method: "get",
-      url: apiBaseUrl + `/picklist/preassessment`, */
+      url: apiBaseUrl + `/picklist/preevaluation`, */
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "text/plain",
@@ -96,14 +88,14 @@ const LearnersCourseEvaluation = ({
     };
     axios
       .all([
-        axios.get(apiBaseUrl + "/picklist/preassessment", config),
-        axios.get(apiBaseUrl + "/Picklist/preassessmentAnswers/", config),
+        axios.get(apiBaseUrl + "/picklist/preevaluation", config),
+        axios.get(apiBaseUrl + "/Picklist/preevaluationAnswers/", config),
       ])
       .then(
         axios.spread((preQList, preAList) => {
           if (preQList.data.result) {
             setAllquestions(preQList.data.result);
-            setAssessmentData({
+            setEvaluationData({
               started: v,
               qNum: 0,
               qTotal: preQList.data.result.length,
@@ -111,7 +103,7 @@ const LearnersCourseEvaluation = ({
             });
           } else {
             setAllquestions([]);
-            setAssessmentData({
+            setEvaluationData({
               started: 0,
               qnum: 0,
               qTotal: 0,
@@ -133,21 +125,26 @@ const LearnersCourseEvaluation = ({
       });
   };
 
-  //Begin the preassessment
+  //Begin the preevaluation
   //condition: if istrue is 1, run GetAssessments otherwise means already started and should be NEXT.
-  const beginPreassessment = (e, istrue) => {
+  const beginEvaluation = (e, istrue) => {
     e.preventDefault();
-    GetAssessments(istrue);
+    setEvaluationData({
+      started: istrue,
+      qNum: 0,
+      qTotal: allQuestions.length,
+      data: allQuestions[0],
+    });
   };
   return (
     <StatusContent
-      beginPreassessment={beginPreassessment}
+      beginEvaluation={beginEvaluation}
       hideModal={hideModal}
       showModal={showModal}
-      assessmentModal={assessmentModal}
-      setAssessmentModal={setAssessmentModal}
-      assessmentData={assessmentData}
-      setAssessmentData={setAssessmentData}
+      evaluationModal={evaluationModal}
+      setEvaluationModal={setEvaluationModal}
+      evaluationData={evaluationData}
+      setEvaluationData={setEvaluationData}
       allQuestions={allQuestions}
       allAnswers={allAnswers}
     />
@@ -155,13 +152,13 @@ const LearnersCourseEvaluation = ({
 };
 
 const StatusContent = ({
-  beginPreassessment,
+  beginEvaluation,
   hideModal,
   showModal,
-  assessmentModal,
-  setAssessmentModal,
-  assessmentData,
-  setAssessmentData,
+  evaluationModal,
+  setEvaluationModal,
+  evaluationData,
+  setEvaluationData,
   allQuestions,
   allAnswers,
 }) => {
@@ -171,26 +168,26 @@ const StatusContent = ({
     <Modal
       title="Course Post Evaluation"
       centered
-      visible={assessmentModal}
+      visible={evaluationModal}
       maskClosable={false}
       destroyOnClose={true}
       onOk={(e) => hideModal(e, false)}
       onCancel={(e) => hideModal(e, false)}
       cancelButtonProps={{ style: { display: "none" } }}
       okButtonProps={{ style: { display: "none" } }}
-      className="preassessmentModal"
+      className="preevaluationModal"
       width="600px"
     >
       <div className="description">
-        {assessmentData.started === 1 ? (
+        {evaluationData.started === 1 ? (
           <LearnersCourseEvaluationQuestions
             showModal={showModal}
-            setAssessmentData={setAssessmentData}
-            assessmentData={assessmentData}
+            setEvaluationData={setEvaluationData}
+            evaluationData={evaluationData}
             allQuestions={allQuestions}
             allAnswers={allAnswers}
           />
-        ) : assessmentData.started === 2 ? (
+        ) : evaluationData.started === 2 ? (
           <Result
             icon={<SmileOutlined />}
             title="All done, thank you for participating!"
@@ -214,7 +211,7 @@ const StatusContent = ({
         )}
       </div>
       <div className="buttonHolder">
-        {assessmentData.started === 1 || assessmentData.started === 2 ? null : (
+        {evaluationData.started === 1 || evaluationData.started === 2 ? null : (
           <>
             <Button
               type="danger"
@@ -228,7 +225,7 @@ const StatusContent = ({
               type="primary"
               shape="round"
               size="medium"
-              onClick={(e) => beginPreassessment(e, 1)}
+              onClick={(e) => beginEvaluation(e, 1)}
             >
               Begin Evaluation
             </Button>
@@ -239,32 +236,32 @@ const StatusContent = ({
         .ant-modal-close {
           display: none;
         }
-        .preassessmentModal .buttonHolder {
+        .preevaluationModal .buttonHolder {
           text-align: center;
         }
-        .preassessmentModal .ant-modal-footer {
+        .preevaluationModal .ant-modal-footer {
           display: none;
         }
         .learner-pre .common-holder {
           background-color: none;
         }
-        .learner-pre .preassessment-holder {
+        .learner-pre .preevaluation-holder {
           background-color: #0078d4;
         }
-        .preassessment-holder .preassessment-container:hover {
+        .preevaluation-holder .preevaluation-container:hover {
           cursor: pointer;
         }
-        .preassessment-container .pre-holder {
+        .preevaluation-container .pre-holder {
           text-align: center;
           padding: 1rem;
           color: #ffffff;
         }
-        .preassessment-container .pre-holder h2 {
+        .preevaluation-container .pre-holder h2 {
           margin-bottom: 0px;
           font-size: 1.7rem;
           color: #ffffff;
         }
-        .preassessment-container .status-col h1 {
+        .preevaluation-container .status-col h1 {
           font-size: 5rem;
           font-weight: 700;
           margin: 0 auto;
@@ -272,13 +269,13 @@ const StatusContent = ({
           text-align: right;
           line-height: 5rem;
         }
-        .preassessment-container .current-rank h1 {
+        .preevaluation-container .current-rank h1 {
           font-size: 3rem;
         }
-        .preassessment-container .current-rank svg {
+        .preevaluation-container .current-rank svg {
           margin-right: 1rem;
         }
-        .preassessment-container .status-col span {
+        .preevaluation-container .status-col span {
           /* padding-left: 15px; */
           font-weight: 700;
           text-transform: uppercase;
