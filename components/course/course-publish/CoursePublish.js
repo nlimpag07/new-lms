@@ -26,7 +26,7 @@ const token = Cookies.get("token");
 const { TextArea } = Input;
 const { Option } = Select;
 
-const CoursePublish = ({ isPublished, title, course_id }) => {
+const CoursePublish = ({ isPublished, title, course_id, setLoading }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [courseDetails, setCourseDetails] = useState("");
@@ -40,6 +40,7 @@ const CoursePublish = ({ isPublished, title, course_id }) => {
     form.resetFields();
     setPubModal2Visible(false);
     setSpinning(false);
+    setLoading(true);
   };
   const onFinish = (values) => {
     setSpinning(true);
@@ -94,13 +95,15 @@ const CoursePublish = ({ isPublished, title, course_id }) => {
           //console.log("res: ", res.data);
           message.success(res.data.message);
           //setPubModal2Visible(false);
-          onCloseModal()
-          //setSpin(true);
+          onCloseModal();
+          //router.reload();
         })
         .catch((err) => {
           //console.log("err: ", err.response.data);
-          message.error(`${err.response.data.statusCode} - ${err.response.data.message}`);
-          onCloseModal()
+          message.error(
+            `${err.response.data.statusCode} - ${err.response.data.message}`
+          );
+          onCloseModal();
           //setPubModal2Visible(false);
         });
       setSpinning(false);
@@ -119,7 +122,6 @@ const CoursePublish = ({ isPublished, title, course_id }) => {
         <Col xs={24} sm={6} md={4} lg={8}>
           {isPublished == 1 ? (
             <Button
-              
               shape="round"
               className="viewStatusReq-button"
               onClick={() => setPubModal2Visible(true)}

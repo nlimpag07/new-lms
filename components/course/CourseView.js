@@ -54,6 +54,7 @@ import CourseClone from "./courseview-widgets/Course-Clone-Widget";
 import CourseDelete from "./courseview-widgets/Course-Delete-Widget";
 import CoursePublish from "./course-publish/CoursePublish";
 import Cookies from "js-cookie";
+import { resolveHref } from "next/dist/next-server/lib/router/router";
 
 const { Meta } = Card;
 /**TabPane declaration */
@@ -208,10 +209,34 @@ const CourseView = ({ course_id }) => {
       .catch((errors) => {
         // react on errors.
         console.error(errors);
-      });   
+      });
 
     setLoading(false);
   }, [course_id]);
+
+  useEffect(() => {
+    if (loading) {
+      var config = {
+        method: "get",
+        url: apiBaseUrl + "/Courses/" + course_id,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log("courseRes", res.data);
+          setCourse([res.data]);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log("err: ", err);
+          setLoading(false);
+        });
+    }
+  }, [loading]);
 
   let courseDetails = course[0] || [];
   let {
@@ -330,6 +355,7 @@ const CourseView = ({ course_id }) => {
                   isPublished={isPublished}
                   title={title}
                   course_id={course_id}
+                  setLoading={setLoading}
                 />
               )}
             </Row>
@@ -431,7 +457,7 @@ const CourseView = ({ course_id }) => {
                     />
                   </TabPane>
                   {linkUrl != "learner" && (
-                    <TabPane tab="ENROLLMENTS" key="5">
+                    <TabPane tab="STUDENTS" key="5">
                       <CourseEnrollmentsviewWidget
                         course_id={course_id}
                         course_enrollments={course_enrollments}
