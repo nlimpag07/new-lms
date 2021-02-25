@@ -188,7 +188,7 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
     reader.readAsDataURL(img);
   }
   const handleChange = (info) => {
-    setLoading(true);
+    //setLoading(true);
     //console.log("set Loading to True");
     setFileList(info.fileList.filter((file) => !!file.status));
     //setFileList(info);
@@ -216,13 +216,13 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
     setIsOkButtonDisabled(true);
   };
   const beforeUpload = (file) => {
-    setLoading(true);
+    //setLoading(true);
     if (file.type !== "application/x-zip-compressed") {
       setalertMessage(`${file.name} is not a ZIP file`);
     }
     return file.type === "application/x-zip-compressed";
   };
-  const uploadButton = (
+  /* const uploadButton = (
     <div>
       {loading ? (
         <LoadingOutlined />
@@ -240,7 +240,7 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
         </div>
       )}
     </div>
-  );
+  ); */
   return (
     <>
       {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
@@ -249,19 +249,26 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
           onChange={handleChange}
           multiple={false}
           beforeUpload={beforeUpload}
-          fileList={fileList.fileList}
+          fileList={fileList}
           onRemove={onRemove}
         >
-          {imageUrl ? (
-            <video
-              controls
-              src={imageUrl}
-              alt="avatar"
-              style={{ width: "100%" }}
-            />
-          ) : (
-            uploadButton
-          )}
+          <div>
+            {loading ? (
+              <LoadingOutlined />
+            ) : (
+              <div className="ant-upload-text">
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <p className="ant-upload-text">
+                  Click or drag an .ZIP file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Please upload an .ZIP file or leave it blank.
+                </p>
+              </div>
+            )}
+          </div>
         </Dragger>
         {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
         <Button>
