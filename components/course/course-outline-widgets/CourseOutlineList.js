@@ -76,14 +76,13 @@ const CourseOutlineList = (props) => {
   const [courseDetails, setCourseDetails] = useState("");
   var dataList = [];
 
- /*  const showModal = (modaltitle, modalbodycontent) => {
+  /*  const showModal = (modaltitle, modalbodycontent) => {
     setOutlineActionModal({
       visible: true,
       modalTitle: modaltitle,
       modalBodyContent: modalbodycontent,
     });
   }; */
-
 
   /*  useEffect(() => {
     let theList = outlineList;
@@ -105,7 +104,7 @@ const CourseOutlineList = (props) => {
         userGroup: dataItem.userGroup.name,
         userGroupId: dataItem.userGroupId,
         visibility: dataItem.visibility === 1 ? "Private" : "Public",
-        description:dataItem.description,
+        description: dataItem.description,
       };
       dataList.push(theoutline);
     });
@@ -212,7 +211,7 @@ const CourseOutlineList = (props) => {
           content: response.data.message,
           centered: true,
           width: 450,
-        })
+        });
       }
       //setLoading(false);
     }
@@ -275,6 +274,7 @@ const CourseOutlineList = (props) => {
                       (dataItem) => dataItem.selected === false
                     ) === -1
                   }
+                  headerCell={hiddenCell}
                 />
                 <Column field="title" title="Title" width="300px" />
                 <Column field="userGroup" title="User Group" />
@@ -304,5 +304,7 @@ const CourseOutlineList = (props) => {
     </Row>
   );
 };
-
+const hiddenCell = (props) => {
+  return null;
+};
 export default CourseOutlineList;
