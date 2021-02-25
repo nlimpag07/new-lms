@@ -460,7 +460,11 @@ const MyCoursesDrawerDetails = ({
         </Row>
       </motion.div>
       {isEvaluationActive && (
-        <LearnersCourseEvaluation courseId={id} modalStatus="true" setIsEvaluationActive={setIsEvaluationActive} />
+        <LearnersCourseEvaluation
+          courseId={id}
+          modalStatus="true"
+          setIsEvaluationActive={setIsEvaluationActive}
+        />
       )}
       {/* <Modal
         title="Course Evaluation"

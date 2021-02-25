@@ -108,7 +108,6 @@ const OutlinesDrawerDetails = ({
   } = outlineDetails;
 
   useEffect(() => {}, [drawerVisible]);
-  
 
   function onStartOrContinueLesson(e) {
     e.preventDefault();
@@ -142,7 +141,7 @@ const OutlinesDrawerDetails = ({
               //true
               setSpinner(false);
               setArticulateModal2Visible(true);
-              setdrawerVisible(true);              
+              setdrawerVisible(true);
             } else {
               //false
               setSpinner(false);
@@ -176,11 +175,10 @@ const OutlinesDrawerDetails = ({
       fetchData(config);
     } else {
       //The learner already started this lesson, just
-      //show the lesson      
+      //show the lesson
       setStartOutline(false);
       setArticulateModal2Visible(true);
       setSpinner(false);
-      
     }
   }
 
@@ -276,7 +274,7 @@ const OutlinesDrawerDetails = ({
       var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
       eventer(messageEvent, function (e) {
-        if (e.data == "1") {          
+        if (e.data == "1") {
           OnArticulateModalClose();
         } else {
           console.log("No value from articulate detected. Exiting...");
@@ -460,14 +458,14 @@ const OutlinesDrawerDetails = ({
         });
       }
     }
-   
+
     //Detect if there is Assessment assigned to the Outline
     if (courseAssessment.length) {
       //Run the Assessment
       setOutlineAssessmentModal(true);
     } else {
       setSpinner(false);
-      setOutlineFinishModal(true);      
+      setOutlineFinishModal(true);
     }
   };
   const drawerProps =
@@ -597,8 +595,11 @@ const OutlinesDrawerDetails = ({
           ></iframe> */}
         </div>
       </Modal>
-      
+
       <style jsx global>{`
+        .articulateVideoModal .demoModalBody {
+          height: 95vh;
+        }
         .drawer-outline-details .ant-drawer-title {
           font-size: 1.2rem;
         }
