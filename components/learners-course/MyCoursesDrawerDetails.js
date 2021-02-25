@@ -170,7 +170,7 @@ const MyCoursesDrawerDetails = ({
     if (startDate) {
       console.log(startDate);
       setHasStarted(true);
-      endDate ? setHasFinished(true) : setHasFinished(true);
+      endDate ? setHasFinished(true) : setHasFinished(false);
     } else {
       setHasStarted(false);
     }
@@ -428,8 +428,9 @@ const MyCoursesDrawerDetails = ({
               <Row className="drawerActionButtons" gutter={[16, 16]}>
                 <Col xs={0} sm={0} md={0} lg={24} xl={24} xxl={24}>
                   <Button
-                    type="link"
+                    type="primary"
                     onClick={() => setIsEvaluationActive(true)}
+                    ghost
                     block
                   >
                     Submit a Post Evaluation
