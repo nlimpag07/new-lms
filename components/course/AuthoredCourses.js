@@ -365,9 +365,11 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
       ))}
     </>
   ) : (
+    <div style={{margin:"0 auto"}}>
     <Loader loading={loading}>
       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     </Loader>
+    </div>
   );
 };
 

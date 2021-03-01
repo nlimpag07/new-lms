@@ -178,7 +178,7 @@ const ClassesSessions = ({ course_id }) => {
         //ed - endDate from api
         let sd = moment(session.startDate).format("YYYY-MM-DD");
         let ed = moment(session.endDate).format("YYYY-MM-DD");
-       
+
         if (
           moment(cellDate).isSameOrAfter(sd) &&
           moment(cellDate).isSameOrBefore(ed)
@@ -194,7 +194,7 @@ const ClassesSessions = ({ course_id }) => {
         //console.log(sd);
       });
     }
-    return datalist || [];    
+    return datalist || [];
   }
 
   function dateCellRender(value) {
@@ -294,30 +294,30 @@ const ClassesSessions = ({ course_id }) => {
           ></Spin>
         </div>
       ) : (
-        <motion.div initial="hidden" animate="visible" variants={list}>
-          <div className="common-holder">
-          <Col
-            className="gutter-row widget-holder-col ClassesSessions"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-          >
-            <h1>Sessions</h1>
-            {courseType != 2 ? (
-              <Calendar
-                /*dateCellRender={dateCellRender}*/
-                dateFullCellRender={dateFullCellRender}
-                monthCellRender={monthCellRender}
-                /* onSelect={(date) => onOpenModal(date, calSessionModal)} */
-                mode="month"
-              />
-            ) : (
-              <div>You cannot set Sessions on Self-Paced type courses.</div>
-            )}
-          </Col>
-          </div>
-        </motion.div>
+        <Col
+          className="gutter-row widget-holder-col ClassesSessions"
+          xs={24}
+          sm={24}
+          md={24}
+          lg={24}
+        >
+          <motion.div initial="hidden" animate="visible" variants={list}>
+            <div className="common-holder">
+              <h1>Sessions</h1>
+              {courseType != 2 ? (
+                <Calendar
+                  /*dateCellRender={dateCellRender}*/
+                  dateFullCellRender={dateFullCellRender}
+                  monthCellRender={monthCellRender}
+                  /* onSelect={(date) => onOpenModal(date, calSessionModal)} */
+                  mode="month"
+                />
+              ) : (
+                <div>You cannot set Sessions on Self-Paced type courses.</div>
+              )}
+            </div>
+          </motion.div>
+        </Col>
       )}
       <Modal
         title={`${calSessionModal.title}`}
@@ -393,10 +393,13 @@ const ClassesSessions = ({ course_id }) => {
           list-style: none;
           padding: 0;
         }
-        
-        .ClassesSessions .ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date{
+
+        .ClassesSessions
+          .ant-picker-calendar-full
+          .ant-picker-panel
+          .ant-picker-calendar-date {
           border: 1px solid #f0f0f0;
-          margin:0 !important;
+          margin: 0 !important;
         }
       `}</style>
     </Row>
