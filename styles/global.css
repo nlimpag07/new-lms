@@ -914,3 +914,13 @@ a.ellipsis i {
   background-position-x: center;
   background-blend-mode: color-burn;
 }
+
+.Course-OutlineView .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  color: #333333;
+  background-color: transparent;
+  border-bottom: none;
+}
+.Course-OutlineView .ant-collapse-content > .ant-collapse-content-box {
+  border: none;
+  padding: 0;
+}

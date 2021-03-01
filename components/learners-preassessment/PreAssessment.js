@@ -162,7 +162,7 @@ const StatusContent = ({
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
         className="preassessmentModal"
-        width="600px"
+        width="60%"
       >
         
           <div className="description">
@@ -182,7 +182,7 @@ const StatusContent = ({
                   <Button
                     type="primary"
                     shape="round"
-                    size="medium"
+                    size="large"
                     onClick={(e) => hideModal(e, false)}
                   >
                     Close
@@ -198,10 +198,10 @@ const StatusContent = ({
               <Button
                 type="primary"
                 shape="round"
-                size="medium"
+                size="large"
                 onClick={(e) => beginPreassessment(e, 1)}
               >
-                Begin
+                Start Assessment
               </Button>
             )}
           </div>
@@ -209,6 +209,10 @@ const StatusContent = ({
       <style jsx global>{`
         .ant-modal-close {
           display: none;
+        }
+        .preassessmentModal .description{
+          padding:1rem;
+          text-align:center;
         }
         .preassessmentModal .buttonHolder {
           text-align: center;

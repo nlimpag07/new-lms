@@ -188,7 +188,7 @@ const PreAssessmentQuestions = ({
         }}
         style={{ textAlign: "center", marginBottom: 0 }}
       >
-        <Button type="primary" shape="round" size="medium" htmlType="submit">
+        <Button type="primary" shape="round" size="large" htmlType="submit">
           Next
         </Button>{" "}
       </Form.Item>
