@@ -282,8 +282,7 @@ const CourseAdd = () => {
         ...defaultWidgetValues,
         relatedcourses: [...value],
       });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
+      
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -323,7 +322,6 @@ const CourseAdd = () => {
         featuredimage: values.name,
       });
       //setFeatureMedia({ image: values.name });
-      //console.log("AddCourse fileList ",values.name.fileList);
     }
     if (name === "picklistfeaturedvideo") {
       basicForm.setFieldsValue({
@@ -438,11 +436,7 @@ const CourseAdd = () => {
         //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       });
-    /* !!values.picklistfeaturedvideo
-      ? values.picklistfeaturedvideo.map((video, index) => {
-          data.append(`featureVideo`, video.fileList[0].originFileObj);
-        })
-      : errorList.push("Missing Course Video"); */
+    
 
     //data = JSON.stringify(data);
     if (errorList.length) {

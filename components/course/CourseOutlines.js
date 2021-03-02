@@ -778,20 +778,7 @@ const CourseOutlines = ({ course_id }) => {
     },
   };
 
-  useEffect(() => {
-    let {
-      id,
-      courseOutlineMedia,
-      courseOutlineMilestone,
-      courseOutlinePrerequisite,
-      description,
-      duration,
-      featureImage,
-      interactiveVideo,
-      title,
-      userGroupId,
-      visibility,
-    } = "";
+  useEffect(() => {    
     if (curOutlineId.length) {
       let isSelected = outlineList.filter(
         (selectedOutline) => selectedOutline.id === curOutlineId[0].id

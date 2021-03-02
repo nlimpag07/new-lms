@@ -138,8 +138,6 @@ const ModalForm = ({
     adProps = {
       onOk: () => {
         form.submit();
-        //modalFormName === "evaluationduration" && form.resetFields();
-        //modalFormName === "evaluationitems" && form.resetFields();
         modalFormName === "picklistcategory" && form.resetFields();
         modalFormName === "picklisttype" && form.resetFields();
         modalFormName === "picklistlanguage" && form.resetFields();
@@ -212,13 +210,7 @@ const CoursePostEvaluations = ({ course_id }) => {
       },
     };
 
-    async function fetchData(config) {
-      /* const response = await axios(config);
-      if (response) {
-        
-        setAssessmentList(response.data.result);
-        //console.log(response.data.result);
-      } */
+    async function fetchData(config) {      
       await axios
         .all([
           axios.get(apiBaseUrl + "/CourseEvaluation/" + course_id, config),
@@ -446,9 +438,7 @@ const CoursePostEvaluations = ({ course_id }) => {
         } else {
           errorList.push("Missing Evaluation Type");
         }
-        /* !!values.evaluationdetails.assessmentTypeId
-          ? (data.evaluationTypeId = values.evaluationdetails.evaluationTypeId)
-          : errorList.push("Missing Evaluation Type"); */
+        
         //isImmediate
         if (values.evaluationdetails.isRequired) {
           //console.log("is Immediate", 1);
@@ -555,11 +545,7 @@ const CoursePostEvaluations = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-assessment`
-          ); */
+          visible: false;          
           setdefaultWidgetValues({
             evaluationdetails: [],
             evaluationitems: [],
@@ -590,39 +576,8 @@ const CoursePostEvaluations = ({ course_id }) => {
         (selectedassessment) => selectedassessment.id === curEvaluationId[0].id
       );
       console.log("Selected Assessment", isSelected[0]);
-      let prerequisite = [];
-      /* let currentAssessmentItem = isSelected[0].courseAssessmentsItem;
-      if (currentAssessmentItem.length) {        
-        prerequisite = currentAssessmentItem.map((c_assessmentItem, index) => {
-          let getassessment = evaluationList.filter(
-            (assessment) => c_assessmentItem.preRequisiteId == assessment.id
-          );
-          let list = {
-            id: c_assessmentItem.id,
-            title: getassessment[0].title,
-            courseAssessmentsId: c_assessmentItem.courseAssessmentsId,
-            preRequisiteId: c_assessmentItem.preRequisiteId,
-            isticked: true,
-          };
-          return list;
-        });
-      } */
-
-      let mileStones = [];
-      /* let currentMileStones = isSelected[0].courseAssessmentsMilestone;
-      if (currentMileStones.length) {
-        mileStones = currentMileStones.map((c_assessmentmilestones, index) => {
-          let list = {
-            id: c_assessmentmilestones.id,
-            name: c_assessmentmilestones.name,
-            courseAssessmentsId: c_assessmentmilestones.courseAssessmentsId,
-            lessonCompleted: c_assessmentmilestones.lessonCompleted,
-            resourceFile: c_assessmentmilestones.resourceFile,
-            isticked: true,
-          };
-          return list;
-        });
-      } */
+      let prerequisite = [];     
+      let mileStones = [];      
 
       var theOutlineName = "";
       let currentOutlineId = isSelected[0].courseOutlineId;
@@ -633,18 +588,7 @@ const CoursePostEvaluations = ({ course_id }) => {
         if (getOutline.length)
           theOutlineName = getOutline[0].title ? getOutline[0].title : null;
       }
-      /* var theGroupName = "";
-      let currentGroupId = isSelected[0].userGroupId;
-      if (currentGroupId) {
-        let getGroup = userGroupList.filter(
-          (usergroup) => usergroup.id == currentGroupId
-        );
-        if (getGroup.length)
-          theGroupName = getGroup[0].name ? getGroup[0].name : null;
-      } */
-      //console.log("Group Name:", theGroupName);
-
-      //checking evaluationTypeId and assign evaluationData
+            
       let currentEvaluationValue = "";
       //console.log("Selected TypeID", isSelected[0].evaluationTypeId);
       if (isSelected[0].evaluationTypeId === 1) {
@@ -704,19 +648,14 @@ const CoursePostEvaluations = ({ course_id }) => {
       });
     }
   }, [curEvaluationId]);
-  /* console.log(defaultWidgetValues)
-  console.log(assessment) */
+
 
   const formInitialValues = {
     /* initialValues: {
-      evaluationdetails: {
-        //assessmenttitle: "HEY NOEL", 
-        //userGroup: 1,
+      evaluationdetails: {       
         isImmediate: true,
         attempts: 0,
       },
-      //assessmentdescription: decodeURI(description),
-      //evaluationduration: duration,
     }, */
   };
 

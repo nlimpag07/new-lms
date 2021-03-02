@@ -302,8 +302,7 @@ const CourseEdit = ({ course_id }) => {
         ...defaultWidgetValues,
         relatedcourses: [...value],
       });
-      /* console.log('combined value', [...picklistFields, ...value]);
-      console.log('======================='); */
+      
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -345,8 +344,7 @@ const CourseEdit = ({ course_id }) => {
           featuredimage: values.name,
         });
       }
-      //setFeatureMedia({ image: values.name });
-      //console.log("Edit Course fileList ",value);
+      
     }
     if (name === "picklistfeaturedvideo") {
       var value = values.name ? values : "";
@@ -451,8 +449,7 @@ const CourseEdit = ({ course_id }) => {
           tobedeleted.push(delLevel);
         }
       });
-      //console.log("======================");
-      //console.log("tobedeletedLevels: ", tobedeleted);
+      
       tobedeleted.map((level, index) => {
         data.append(`deleteCourseLevel[${index}][id]`, level.id);
         data.append(`deleteCourseLevel[${index}][levelId]`, level.levelId);
@@ -1044,8 +1041,8 @@ const CourseEdit = ({ course_id }) => {
 
   /* console.log("Const Default Values ", constDefaultValues.courselevel);
   console.log("=========================================");
-  console.log("Widget Values ", defaultWidgetValues.courselevel); */
-  console.log("course", course);
+  console.log("Widget Values ", defaultWidgetValues.courselevel); 
+  console.log("course", course);*/
   return (
     <motion.div initial="hidden" animate="visible" variants={framerEffect}>
       <div className="common-holder">

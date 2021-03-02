@@ -293,9 +293,6 @@ const CourseAssessments = ({ course_id }) => {
       console.log("================");
       console.log("CUrrent picklistFields:", ...picklistFields);
 
-      /* var value = values.assessment_items
-        ? values.assessment_items.map((item, index) => item)
-        : ""; */
       basicForm.setFieldsValue({
         assessmentitems: [
           ...defaultWidgetValues.assessmentitems,
@@ -769,13 +766,7 @@ const CourseAssessments = ({ course_id }) => {
   }, [curAssessmentId]);
 
   const formInitialValues = {
-    /* initialValues: {
-      assessmentdetails: {
-        //assessmenttitle: "HEY NOEL", 
-        //userGroup: 1,
-        isImmediate: true,
-        attempts: 0,
-      },
+    /* initialValues: {     
       //assessmentdescription: decodeURI(description),
       //assessmentduration: duration,
     }, */

@@ -45,12 +45,6 @@ import CourseOutcomeDetails from "./course-outcome-widgets/CourseOutcomeDetails"
 import CourseDateFormat from "./course-date-format/CourseDateFormat";
 import { useCourseDetails } from "../../providers/CourseDStatuses";
 import CourseProhibit from "../course/course-prohibit/CourseProhibit";
-/* import CourseOutcomeFeaturedImage from "./course-outcome-widgets/CourseOutcomeFeaturedImage";
-import CourseOutcomeFeaturedVideo from "./course-outcome-widgets/CourseOutcomeFeaturedVideo";
-import CourseOutcomePrerequisite from "./course-outcome-widgets/CourseOutcomePrerequisite";
-import CourseOutcomeMediaFiles from "./course-outcome-widgets/CourseOutcomeMediaFiles";
-import CourseOutcomeMilestones from "./course-outcome-widgets/CourseOutcomeMilestones";
-import CourseOutcomeDuration from "./course-outcome-widgets/CourseOutcomeDuration"; */
 
 import Error from "next/error";
 
@@ -206,9 +200,7 @@ const CourseOutcomes = ({ course_id }) => {
     };
     async function fetchData(config) {
       const response = await axios(config);
-      if (response) {
-        /* localStorage.setItem("courseAllList", JSON.stringify(response.data));
-        setoutcomeAllList(response.data); */
+      if (response) {        
         setOutcomeList(response.data.result);
         //console.log(response.data.result);
       } else {
@@ -437,11 +429,7 @@ const CourseOutcomes = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-outcome`
-          ); */
+          visible: false;          
           setdefaultWidgetValues({
             outcomedetails: [],
           });
@@ -510,11 +498,7 @@ const CourseOutcomes = ({ course_id }) => {
 
   const formInitialValues = {
     /* initialValues: {
-      outcometitle: title,
-      description: decodeURI(description),
-      usergroup: usergroup,
-      usergroupid: usergroupid,
-      visibility: visibility,
+      outcometitle: title,      
     }, */
   };
   return loading == false ? (

@@ -251,7 +251,6 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     gridClass = "grid-list";
   }
 
-  /* let courses = courseList.result.filter(course => course.authorId==userId)*/
   //console.log(courses)
 
   const descTrimmerDecoder = (desc) => {

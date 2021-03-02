@@ -505,11 +505,7 @@ const CourseCompetencies = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-outline`
-          ); */
+          visible: false;         
           setdefaultWidgetValues({
             competencydetails: [],
             competencycertificates: [],
@@ -540,21 +536,7 @@ const CourseCompetencies = ({ course_id }) => {
       );
       console.log("Current Selected", isSelected[0]);
 
-      let mediaFiles = [];
-      /*let currentMediaFiles = isSelected[0].courseOutlineMedia;
-      if (currentMediaFiles.length) {
-        mediaFiles = currentMediaFiles.map((c_competencycertificates, index) => {
-          let list = {
-            id: c_competencycertificates.id,
-            name: c_competencycertificates.fileName,
-            courseOutlineId: c_competencycertificates.courseOutlineId,
-            resourceFile: c_competencycertificates.resourceFile,
-            isticked: true,
-          };
-          return list;
-        });
-      }   */
-
+      let mediaFiles = [];     
       //console.log(outlineItem)
       setdefaultWidgetValues({
         ...defaultWidgetValues,

@@ -436,11 +436,7 @@ const CourseInstructors = ({ course_id }) => {
         width: modalWidth,
         onOk: () => {
           console.log("response before redirection:", response);
-          visible: false;
-          /* router.push(
-            `/${linkUrl}/[course]/[...manage]`,
-            `/${linkUrl}/course/edit/${course_id}/course-instructor`
-          ); */
+          visible: false;          
           setdefaultWidgetValues({
             instructordetails: [],
           });
@@ -475,8 +471,7 @@ const CourseInstructors = ({ course_id }) => {
       //console.log(instructor);
       let isSelected = instructorList.filter(
         (selectedinstructor) => selectedinstructor.id === curInstructorId[0].id
-      );
-      //console.log('Select Instructor',isSelected[0]);
+      );      
 
       title = isSelected[0].title;
       usergroup = isSelected[0].usergroup.name;
@@ -503,11 +498,7 @@ const CourseInstructors = ({ course_id }) => {
 
   const formInitialValues = {
     /* initialValues: {
-      instructortitle: title,
-      description: decodeURI(description),
-      usergroup: usergroup,
-      usergroupid: usergroupid,
-      visibility: visibility,
+      instructortitle: title,      
     }, */
   };
   return loading == false ? (
@@ -602,25 +593,7 @@ const CourseInstructors = ({ course_id }) => {
                               instructor={instructor}
                               defaultWidgetValues={defaultWidgetValues}
                               setdefaultWidgetValues={setdefaultWidgetValues}
-                            />
-                            {/* <CourseinstructorFeaturedImage
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.instructorfeaturedimage !==
-                            curValues.instructorfeaturedimage
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        />
-                        <CourseinstructorFeaturedVideo
-                          shouldUpdate={(prevValues, curValues) =>
-                            prevValues.instructorfeaturedvideo !==
-                            curValues.instructorfeaturedvideo
-                          }
-                          showModal={showModal}
-                          defaultWidgetValues={defaultWidgetValues}
-                          setdefaultWidgetValues={setdefaultWidgetValues}
-                        /> */}
+                            />                            
                           </div>
                         </Panel>
                       </Collapse>
