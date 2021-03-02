@@ -32,12 +32,7 @@ const CourseOutlineDetails = (props) => {
   } = props;
   const [isLoading, setIsLoading] = useState(false);
   const chosenRows = defaultWidgetValues.outlinedetails;
-  /* useEffect(() => {
-    console.log(chosenRows);
-  }, [outline]); */
-  //console.log(chosenRows);
-  //return outline?(title):("Nothing");
-  //console.log('Outline',outline);
+  
   return !chosenRows.length ? (
     <>
       <Form.Item

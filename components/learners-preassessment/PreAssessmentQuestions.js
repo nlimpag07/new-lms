@@ -99,8 +99,7 @@ const PreAssessmentQuestions = ({
         });
     }
   };
-  /* console.log("All Answers", allAnswers);
-  console.log("Current Question Data", assessmentData); */
+  
   const onChangeOptionList = (e) => {
     /* console.log("checked", e.target.value); */
   };

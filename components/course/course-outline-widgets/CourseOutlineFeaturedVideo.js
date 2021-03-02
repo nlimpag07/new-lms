@@ -221,26 +221,7 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
       setalertMessage(`${file.name} is not a ZIP file`);
     }
     return file.type === "application/x-zip-compressed";
-  };
-  /* const uploadButton = (
-    <div>
-      {loading ? (
-        <LoadingOutlined />
-      ) : (
-        <div className="ant-upload-text">
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag an .ZIP file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Please upload an .ZIP file or leave it blank.
-          </p>
-        </div>
-      )}
-    </div>
-  ); */
+  };  
   return (
     <>
       {alertMessage ? <Alert message={alertMessage} type="error" /> : null}
@@ -269,13 +250,7 @@ const modalFormBody = (isOkButtonDisabled, setIsOkButtonDisabled) => {
               </div>
             )}
           </div>
-        </Dragger>
-        {/* <Upload onChange={handleChange} multiple={false} beforeUpload={() => false} fileList={fileList.fileList}>
-        <Button>
-          <UploadOutlined /> Upload
-        </Button>
-      </Upload> */}
-        {/* <Input type="file" onChange={handleChange} /> */}
+        </Dragger>        
       </Form.Item>
     </>
   );

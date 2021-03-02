@@ -73,15 +73,6 @@ const CourseEnrollmentsviewWidget = ({ course_id, course_enrollments }) => {
     setData(theData);
   };
 
-  /*  const {
-    relatedCourse,
-    courseCompetencies,
-    courseInstructor,
-  } = course_details;
-  console.log(course_details);
-
-  useEffect(() => {}, []); */
-
   return (
     <div className="tab-content">
       <Row className="Course-Enrollments">

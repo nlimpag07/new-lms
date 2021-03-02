@@ -158,28 +158,9 @@ const CourseOutlineList = (props) => {
     }
     setData(theData);
     //console.log("The RowClick: ", theData);
-  };
+  };  
 
-  /* const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  }; */
-
-  const removeSelected = (item) => {
-    //console.log(item.id);
-    //setModal2Visible(true)
-    /* let newDataList = outlineList;   
-    let index = newDataList.findIndex(
-      (p) => p === item || (item.id && p.id === item.id)
-    );
-    if (index >= 0) {
-      newDataList.splice(index, 1);
-    }    
-    setOutlineList(newDataList); */
+  const removeSelected = (item) => {    
     var config = {
       method: "delete",
       url: apiBaseUrl + "/CourseOutline/" + item.id,
@@ -198,13 +179,7 @@ const CourseOutlineList = (props) => {
           setLoading(true);
         }
       } catch (error) {
-        const { response } = error;
-        //const { request, ...errorObject } = response; // take everything but 'request'
-        /* setOutlineActionModal({
-          visible: false,
-          modalTitle: "",
-          modalBodyContent: "",
-        }); */
+        const { response } = error;        
         console.log(response.data.message);
         Modal.error({
           title: "Unable to Delete",
@@ -230,13 +205,7 @@ const CourseOutlineList = (props) => {
           onConfirm={() => removeSelected(list.dataItem)}
         >
           <button
-            className="k-button k-grid-remove-command"
-            //onClick={() => removeSelected(list.dataItem)}
-            /* onClick={() => {
-            removeSelected(list.dataItem);
-             confirm("Confirm deleting: " + list.dataItem.title) &&
-              remove(list.dataItem);
-          }} */
+            className="k-button k-grid-remove-command"            
           >
             <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
           </button>
