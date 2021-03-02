@@ -31,10 +31,6 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
     ) : null;
 
   useEffect(() => {
-    /* console.log(theslice);
-    setInitLoading(false);
-    setData(theslice);
-    setList(theslice); */
     GetData((res) => {
       let getThree = res.slice(0, count);
       console.log(res);
@@ -46,18 +42,6 @@ const CourseReviewViewWidget = ({ course_id, course_reviews }) => {
 
   //https://codesandbox.io/s/3z8tf?file=/index.js
   const GetData = (callback) => {
-    /* axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((result) => {
-        var res = result.data;
-        callback(res);
-        //console.log(res);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error.response.data);
-      }); */
-
     var enrollees = [];
     if (course_reviews) {
       const tdata = course_reviews.result.map((dataItem) => {

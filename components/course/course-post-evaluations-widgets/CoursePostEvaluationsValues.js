@@ -49,17 +49,6 @@ const CoursePostEvaluationsValues = (props) => {
   //console.log("Evaluation Type: ", evaluationType);
   var assItemList = defaultWidgetValues.evaluationvalues;
   var chosenRows = defaultWidgetValues.evaluationvalues;
-  /* if(chosenRows.length){
-    let choosed = chosenRows.map((chosen,index)=>{
-      let newOutline = assItemList.filter((outline)=>chosen.preRequisiteId == outline.id)
-      chosen['title']= newOutline[0].title;
-      return chosen;
-    })
-    chosenRows = choosed;
-  } */
-  //console.log("Chosen Rows", chosenRows);
-  /* useEffect(() => {    
-  }, []); */
 
   const onRemove = (name) => {
     let newValues = chosenRows.filter((value) => value.optionname !== name);
@@ -90,7 +79,7 @@ const CoursePostEvaluationsValues = (props) => {
                       {thisPicklist.map((field, index) => {
                         field = {
                           ...field,
-                          name:index,
+                          name: index,
                           key: index,
                           value: field.optionname,
                           id: index,
@@ -151,7 +140,7 @@ const CoursePostEvaluationsValues = (props) => {
                         {chosenRows.map((field, index) => {
                           field = {
                             ...field,
-                            name:index,
+                            name: index,
                             key: index,
                             value: field.optionname,
                           };
@@ -223,13 +212,17 @@ const modalFormBody = (assItemList, chosenRows, evaluationType) => {
   useEffect(() => {}, []);
 
   return (
-    <Form.Item name="optionname" label="Option Name" rules={[
-      {
-        required: true,
-        message: "Please input Option Name!",
-      },
-    ]}>
-        <Input placeholder="Option Name" />
+    <Form.Item
+      name="optionname"
+      label="Option Name"
+      rules={[
+        {
+          required: true,
+          message: "Please input Option Name!",
+        },
+      ]}
+    >
+      <Input placeholder="Option Name" />
     </Form.Item>
   );
 };

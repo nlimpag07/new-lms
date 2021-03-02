@@ -129,19 +129,14 @@ const ActionRender = () => {
     <td>
       <button
         className="k-primary k-button k-grid-edit-command"
-        /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+        
       >
         ✔
       </button>
       &nbsp;
       <button
         className="k-button k-grid-remove-command"
-        /* onClick={() => {
-          confirm("Confirm deleting: " + this.props.dataItem.ProductName) &&
-            remove(this.props.dataItem);
-        }} */
+        
       >
         ✖
       </button>

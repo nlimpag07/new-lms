@@ -19,62 +19,12 @@ const CourseOutlineviewWidget = ({ course_outline }) => {
     //console.log("onChange:", current);
     setCurrent(current);
   };
- 
+
   return (
     <div className="tab-content">
       <Row className="Course-OutlineView">
         <Col xs={24}>
-          <Timeline>
-            {OutlinePanels(course_outline,loading)}
-            {/* <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel header="Lesson 1. Lorem ipsum dolor sit amet" key="1">
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item>
-            <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel
-                  header="Lesson 2. Duis aute irure dolor in reprehenderit in voluptate "
-                  key="1"
-                >
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item>
-            <Timeline.Item color="orange">
-              <Collapse
-                accordion
-                expandIconPosition="right"
-                ghost
-                expandIcon={({ isActive }) => (
-                  <CaretDownOutlined rotate={isActive ? 180 : 0} />
-                )}
-              >
-                <Panel
-                  header="Lesson 3. Excepteur sint occaecat cupidatat non proident"
-                  key="1"
-                >
-                  {Description()}
-                </Panel>
-              </Collapse>
-            </Timeline.Item> */}
-          </Timeline>
+          <Timeline>{OutlinePanels(course_outline, loading)}</Timeline>
         </Col>
       </Row>
 

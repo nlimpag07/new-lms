@@ -12,13 +12,6 @@ const CourseOverviewWidget = ({ course_details }) => {
   aspath = `${aspath[2]}/${aspath[3]}`;
   const route = router.route;
 
-  //var pathname = router.asPath.split("/");
-  /* var [courseId, setCourseId] = useState(course_id);
-  const homeUrl = process.env.homeUrl;
-  const { courseAllList } = useCourseList();
-  const [course, setCourse] = useState("");
-  const [modal2Visible, setModal2Visible] = useState("");
-  var courseData = ""; */
   const { relatedCourse, description, courseInstructor } = course_details;
   //console.log(course_details);
   useEffect(() => {}, []);
@@ -28,35 +21,6 @@ const CourseOverviewWidget = ({ course_details }) => {
       <Row className="Course-Tags">
         <Col xs={24}>
           <p>{decodeURI(description)}</p>
-          {/* <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </p>
-          <p>
-            Ett dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum. Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua.
-          </p>
-          <p>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </p> */}
         </Col>
       </Row>
       <Row className="Course-Tags related-courses">
@@ -84,13 +48,6 @@ const CourseOverviewWidget = ({ course_details }) => {
                   {instructor.user.firstName} {instructor.user.lastName}
                   {", "}
                 </span>
-                /* <Link
-                  key={index}
-                  href={`${route}`}
-                  as={`/${linkUrl}/${aspath}/${instructor.courseRelated.course.id}`}
-                >
-                  <a>{instructor.user.firstName}{" "}{instructor.user.lastName}{", "}</a>
-                </Link> */
               ))
             : "None"}
         </Col>
