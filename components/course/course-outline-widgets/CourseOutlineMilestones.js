@@ -171,18 +171,7 @@ const CourseOutlineMilestones = (props) => {
                                     title={field.value}
                                     readOnly
                                   />
-                                </Form.Item>
-                                {/* {chosenRows.length >= 1 ? (
-                                  <MinusCircleOutlined
-                                    className="dynamic-delete-button"
-                                    style={{ margin: "0 8px" }}
-                                    key={`del-${field.key}`}
-                                    onClick={() => {
-                                      remove(field.name);
-                                      onRemove(field.id);
-                                    }}
-                                  />
-                                ) : null} */}
+                                </Form.Item>                                
                               </Form.Item>
                             </div>
                           );

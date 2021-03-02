@@ -213,9 +213,6 @@ const StatusRender = (props) => {
 
 //Deleting for Courses enrollees
 function deleteConfirm(e, data, setSpin) {
-  //console.log(e);
-  //console.log("PopConfirm", data);
-  //setSpin(true);
   var config = {
     method: "delete",
     url: apiBaseUrl + "/enrollment/" + data.learnerId,

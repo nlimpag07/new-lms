@@ -114,22 +114,7 @@ const EnrollmentsView = ({
   //processing all the sessions of the course
   const listSessions = [];
   if (courseSessions.length) {
-    console.log('courseSessions',courseSessions)
-    /* courseSessions.map((session, index) => {
-      const sDate = moment(session[i].startDate).format(
-        "DD-MMM-YYYY h:mm a"
-      );
-      const eDate = moment(session[i].endDate).format(
-        "DD-MMM-YYYY h:mm a"
-      );
-      listSessions.push(
-        <Option
-          key={index}
-          value={session.id}
-          label={`(${sDate}) to (${eDate})`}
-        >{`(${sDate}) to (${eDate})`}</Option>
-      );
-    }); */
+    //console.log('courseSessions',courseSessions) 
 
     for (let i = 0; i < courseSessions.length; i++) {
       const sDate = moment(courseSessions[i].startDate).format(

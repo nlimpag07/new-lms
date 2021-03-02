@@ -40,11 +40,7 @@ const CourseAssessmentsDuration = (props) => {
   function immediateOnChange(e) {
     //setisImmediateChecked(!e.target.checked);
     setisDurationBased(e.target.value);
-    setAssessBaseType(e.target.value);
-    /* setdefaultWidgetValues({
-      ...defaultWidgetValues,
-      assessmentduration: [{ basedType: e.target.value }],
-    }); */
+    setAssessBaseType(e.target.value);    
     //console.log(`checked = ${e.target.checked}`);
   }
   //console.log("Duration Chosen Rows",chosenRows[0]);

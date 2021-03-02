@@ -22,51 +22,7 @@ const EnrollmentsAddSelectLearners = ({
   const [targetKeys, setTargetKeys] = useState([]);
   const [mockData, setMockData] = useState([]);
 
-  useEffect(() => {
-    /* var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseSession/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //there are enrollees
-            setCourseSession(theRes);
-          } else {
-            //no enrollees
-            setCourseSession([]);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-
-        console.log("Error Response", data.message);
-
-        Modal.error({
-          title: "Error: Unable to Start Lesson",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config); */
+  useEffect(() => {   
 
     const tKeys = [];
     const mData = [];

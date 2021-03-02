@@ -886,29 +886,7 @@ const CourseOutlines = ({ course_id }) => {
         outlinemilestones: [],
       });
     }
-  }, [curOutlineId]);
-  /* useEffect(() => {
-    if (curOutlineId.length) {
-      let details = curOutlineId[0];
-      setTimeout(function () {
-        form.setFieldsValue({
-          outlinedetails: {
-            outlinetitle: details.title,
-            outlinedescription: details.description,
-            usergroup: details.userGroupId,
-            usergroupid: details.userGroupId,
-            visibility: details.visibility,
-          },
-        });
-      }, 0);
-    } else {
-      setTimeout(function () {
-        form.setFieldsValue({
-          outlinedetails: [],
-        });
-      }, 0);
-    }
-  }, [curOutlineId]); */
+  }, [curOutlineId]);  
   /* console.log(defaultWidgetValues)
   console.log(outline) */
   const formInitialValues = {

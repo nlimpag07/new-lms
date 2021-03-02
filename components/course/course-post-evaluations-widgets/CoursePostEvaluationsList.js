@@ -56,31 +56,13 @@ const CoursePostEvaluationsList = (props) => {
   if (evaluationList) {
     evaluationList.map((dataItem) => {
       //dataItem.
-      /* let theassessment = {
-        id: dataItem.id,
-        title: dataItem.title,
-        toDate: dataItem.toDate,
-        dueDate: dataItem.toDate ? dataItem.toDate : "Immediate",
-        courseAssessmentItem: dataItem.courseAssessmentItem.length,
-        assessmentType: dataItem.assessmentType.name,
-        assessmentTypeId: dataItem.assessmentTypeId,
-        userGroup: dataItem.userGroup ? dataItem.userGroup.name : 0,
-        userGroupId: dataItem.userGroupId,
-        passingGrade: dataItem.passingGrade,
-      }; */
-      /* (dataItem["dueDate"] = dataItem.toDate ? dataItem.toDate : "Immediate"),
-        (dataItem["courseAssessmentItemCount"] =
-          dataItem.courseAssessmentItem.length),
-        (dataItem["assessmentTypeName"] = dataItem.assessmentType.name),*/
       (dataItem["evaluationTypeName"] = dataItem.evaluationType
         ? dataItem.evaluationType.name
         : "--"),
         (dataItem["userGroupName"] = dataItem.userGroup
           ? dataItem.userGroup.name
           : "--"),
-        (dataItem["isRequiredName"] = dataItem.isRequired ==1
-          ? "Yes"
-          : "No"),
+        (dataItem["isRequiredName"] = dataItem.isRequired == 1 ? "Yes" : "No"),
         dataList.push(dataItem);
     });
     //console.log('Data List: ',dataList);
@@ -135,26 +117,10 @@ const CoursePostEvaluationsList = (props) => {
     //console.log("The RowClick: ", theData);
   };
 
-  /* const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  }; */
-
   const removeSelected = (item) => {
     //console.log(item.id);
     //setModal2Visible(true)
-    /* let newDataList = evaluationList;   
-    let index = newDataList.findIndex(
-      (p) => p === item || (item.id && p.id === item.id)
-    );
-    if (index >= 0) {
-      newDataList.splice(index, 1);
-    }    
-    setEvaluationList(newDataList); */
+
     var config = {
       method: "delete",
       url: apiBaseUrl + "/CourseEvaluation/" + item.id,
@@ -175,11 +141,7 @@ const CoursePostEvaluationsList = (props) => {
       } catch (error) {
         const { response } = error;
         //const { request, ...errorObject } = response; // take everything but 'request'
-        /* setassessmentActionModal({
-          visible: false,
-          modalTitle: "",
-          modalBodyContent: "",
-        }); */
+
         //console.log(response.data.message);
         Modal.error({
           title: "Unable to Delete",
@@ -204,15 +166,7 @@ const CoursePostEvaluationsList = (props) => {
           cancelText="No"
           onConfirm={() => removeSelected(list.dataItem)}
         >
-          <button
-            className="k-button k-grid-remove-command"
-            //onClick={() => removeSelected(list.dataItem)}
-            /* onClick={() => {
-            removeSelected(list.dataItem);
-             confirm("Confirm deleting: " + list.dataItem.title) &&
-              remove(list.dataItem);
-          }} */
-          >
+          <button className="k-button k-grid-remove-command">
             <FontAwesomeIcon icon={["fas", `trash-alt`]} size="lg" />
           </button>
         </Popconfirm>

@@ -104,13 +104,7 @@ const EnrollmentsAddSelectLearners = ({
             dataSource={filteredItems}
             size="small"
             pagination={{ defaultPageSize: 5 }}
-            style={{ pointerEvents: listDisabled ? "none" : null }}
-            /* onRow={({ key, disabled: itemDisabled }) => ({
-              onClick: () => {
-                if (itemDisabled || listDisabled) return;
-                onItemSelect(key, !listSelectedKeys.includes(key));
-              },
-            })} */
+            style={{ pointerEvents: listDisabled ? "none" : null }}            
           />
         );
       }}

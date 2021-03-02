@@ -99,18 +99,7 @@ const CourseOutlinePrerequisite = (props) => {
                                   value={field.value}
                                   readOnly
                                 />
-                              </Form.Item>
-                              {/* {fields.length >= 1 ? (
-                                <MinusCircleOutlined
-                                  className="dynamic-delete-button"
-                                  style={{ margin: "0 8px" }}
-                                  key={`del-${field.key}`}
-                                  onClick={() => {
-                                    remove(field.name);
-                                    onRemove(field.id);
-                                  }}
-                                />
-                              ) : null} */}
+                              </Form.Item>                              
                             </Form.Item>
                           </div>
                         );
@@ -160,18 +149,7 @@ const CourseOutlinePrerequisite = (props) => {
                                     value={field.value}
                                     readOnly
                                   />
-                                </Form.Item>
-                                {/* {chosenRows.length >= 1 ? (
-                                  <MinusCircleOutlined
-                                    className="dynamic-delete-button"
-                                    style={{ margin: "0 8px" }}
-                                    key={`del-${field.key}`}
-                                    onClick={() => {
-                                      remove(field.name);
-                                      onRemove(field.id);
-                                    }}
-                                  />
-                                ) : null} */}
+                                </Form.Item>                                
                               </Form.Item>
                             </div>
                           );
@@ -209,17 +187,7 @@ const modalFormBody = (outlineList, chosenRows) => {
   const data = []; 
   const [sourceData, setsourceData] = useState([]);
 
-  /* console.log('Outline List:',outlineList)
-  console.log('=======================')
-  console.log('Chosen List:',chosenRows)
-  outlineList.map((outline, index) => {
-    data.push({
-      key: index,
-      id: 0,
-      title: outline.title,
-      preRequisiteId:outline.id,
-    });
-  }); */
+  
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);

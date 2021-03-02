@@ -91,76 +91,11 @@ const ClassesAttendanceList = ({ sessionData }) => {
         }
       }
       fetchData(config);
-      /* const ddata = enrolleeList.length
-      ? enrolleeList.map((dataItem) => {
-          let newDataSet = {
-            selected: false,
-            learnerName: dataItem.learner.user.firstName,
-          };
-          return Object.assign(newDataSet, dataItem);         
-        })
-      : [];
-    console.log("Learners List", ddata); */
     }
     setLoading(false);
   }, [trigger]);
-  /* useEffect(() => {
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/CourseSession/" + course_id,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-      data: { courseId: course_id },
-    };
-    async function fetchData(config) {
-      try {
-        const response = await axios(config);
-        if (response) {
-          //setOutcomeList(response.data.result);
-          let theRes = response.data.result;
-          console.log("Session Response", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            //console.log(theRes)
-            setSessionSelect(theRes);
-            const ddata = theRes.length
-              ? theRes.map((dataItem) =>
-                  Object.assign({ selected: false }, dataItem)
-                )
-              : [];
-            setData(ddata);
-            setSpin(false);
-          } else {
-            setData([]);
-            setSpin(false);
-          }
-        }
-      } catch (error) {
-        const { response } = error;
-        console.log("Error Response", response);
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: response + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
-      }
-      //setLoading(false);
-    }
-    fetchData(config);
-  }, []); */
+  
   var lastSelectedIndex = 0;
-  /* const the_data = [];
-  const ddata = the_data.map((dataItem) =>
-    Object.assign({ selected: false }, dataItem)
-  );
-  const [Data, setData] = useState(ddata); */
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "asc" }],
   });
@@ -246,9 +181,7 @@ const ClassesAttendanceList = ({ sessionData }) => {
     );
     const statusOnchange = (e, c, s, d) => {
       //console.log("DataItem", d);
-      /*console.log("OnChange Status:", e.target.checked);
-      console.log("Old Status:", c);
-      console.log("statusSource:", s); */
+
       const newData = Data.map((item) => {
         if (item.id === d.id) {
           item[s] = e.target.checked;
@@ -291,54 +224,11 @@ const ClassesAttendanceList = ({ sessionData }) => {
         if (response) {
           let theRes = response.data;
           console.log("Attendance Response", response.data);
-          /* let ddata;
-          if (theRes) {
-            ddata = theRes.map((dataItem) => {
-              let newDataSet = {
-                selected: false,
-                courseName: dataItem.course.title,
-                sessionName: sessionTitle,
-                learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
-              };
-              return Object.assign(newDataSet, dataItem);
-            });
-          } else {
-            ddata = [];
-          } */
         }
       } catch (error) {
         const { response } = error;
         console.log("Error Response", response);
       }
-      /*async function fetchData(config) {
-        try {
-          const response = await axios(config);
-          if (response) {
-            let theRes = response.data;
-            //console.log("Session Response", response.data);
-            let ddata;
-            if (theRes) {
-              ddata = theRes.map((dataItem) => {
-                let newDataSet = {
-                  selected: false,
-                  courseName: dataItem.course.title,
-                  sessionName: sessionTitle,
-                  learnerName: `${dataItem.user.firstName} ${dataItem.user.lastName}`,
-                };
-                return Object.assign(newDataSet, dataItem);
-              });
-            } else {
-              ddata = [];
-            }
-            setData(ddata);
-          }
-        } catch (error) {
-          const { response } = error;
-          console.log("Error Response", response);
-          setData([]);
-        }
-      }
-      fetchData(config); */
     }
     return (
       <td>
@@ -403,12 +293,6 @@ const ClassesAttendanceList = ({ sessionData }) => {
           cell={(e) => changeStatusOnClick(e, "isExcused")}
           width="150px"
         />
-        {/* <Column
-                  sortable={false}
-                  cell={ActionRender}
-                  field="SupplierID"
-                  title="Action"
-                /> */}
       </Grid>
 
       <Modal
