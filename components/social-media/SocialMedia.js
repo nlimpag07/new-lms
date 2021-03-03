@@ -36,10 +36,6 @@ const list = {
 const SocialMedia = () => {
   const [curGridStyle, setCurGridStyle] = useState("grid");
 
-  /*const [grid,setGrid] = useState(gridList);
-   useEffect(() => {
-    setGrid(gridList);
-  }, []); */
   return (
     //GridType(gridList)
     <Col className="gutter-row widget-holder-col" xs={24} sm={24} md={8} lg={8}>

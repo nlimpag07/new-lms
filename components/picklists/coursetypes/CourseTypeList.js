@@ -195,9 +195,6 @@ const CourseTypeList = ({
 };
 //Deleting Status
 function deleteConfirm(e, data, setRunSpin) {
-  //console.log(e);
-  //console.log("PopConfirm", data);
-  //setSpin(true);
   var config = {
     method: "delete",
     url: apiBaseUrl + "/picklist/coursetype/" + data.id,
@@ -212,7 +209,6 @@ function deleteConfirm(e, data, setRunSpin) {
       if (response) {
         //setOutcomeList(response.data.result);
         let theRes = response.data.response;
-        //console.log("Response", response.data);
         // wait for response if the verification is true
         if (theRes) {
           Modal.success({
@@ -222,12 +218,7 @@ function deleteConfirm(e, data, setRunSpin) {
             width: 450,
             onOk: () => {
               visible: false;
-              setRunSpin(true);              
-              /* router.push(
-                "/administrator/picklists/status",
-                `/administrator/picklists/status`
-              ); */
-              //console.log("Should hide modal")
+              setRunSpin(true);
             },
           });
         } else {

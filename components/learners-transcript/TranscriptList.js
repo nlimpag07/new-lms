@@ -160,16 +160,7 @@ const TranscriptList = ({ listOfTranscripts }) => {
                       sort: e.sort,
                     });
                   }}
-                >
-                  {/* <Column
-                  field="selected"
-                  width="65px"
-                  headerSelectionValue={
-                    Data.findIndex(
-                      (dataItem) => dataItem.selected === false
-                    ) === -1
-                  }
-                /> */}
+                >                  
                   <Column field="num" width="65px" title="#" />
                   <Column field="courseTitle" title="Course" width="300px" />
                   <Column field="result" title="Result" />

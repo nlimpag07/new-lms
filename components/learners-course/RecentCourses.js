@@ -2,30 +2,13 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import {
-  Layout,
-  Row,
-  Col,
-  Button,
-  Modal,
-  Divider,
-  Card,
-  Avatar,
-  Empty,
-  Tooltip,
-} from "antd";
+import { Row, Col, Modal, Card, Empty, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCourseList } from "../../providers/CourseProvider";
 import Loader from "../theme-layout/loader/loader";
 import Cookies from "js-cookie";
 
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  EyeOutlined,
-  CloudUploadOutlined,
-  CloudDownloadOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 const { Meta } = Card;
 import { motion } from "framer-motion";
 
@@ -57,7 +40,6 @@ const linkUrl = Cookies.get("usertype");
 
 const RecentCourses = ({ courses }) => {
   const { courseAllList, setCourseAllList } = useCourseList();
-  //console.log('getCoursesFromLearner',courses)
   const router = useRouter();
   const [curGridStyle, setCurGridStyle] = useState("grid");
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
@@ -94,13 +76,13 @@ const RecentCourses = ({ courses }) => {
         </Col>
       </Row>
       <div className="common-holder">
-      <Row
-        className="RecentCourses-ListItems"
-        gutter={[16, 16]}
-        style={{ padding: "10px 0" }}
-      >
-        {GridType(courses, curGridStyle, setModal2Visible, router, loading)}
-      </Row>
+        <Row
+          className="RecentCourses-ListItems"
+          gutter={[16, 16]}
+          style={{ padding: "10px 0" }}
+        >
+          {GridType(courses, curGridStyle, setModal2Visible, router, loading)}
+        </Row>
       </div>
       <Modal
         title="Publish Properties"
@@ -124,13 +106,13 @@ const RecentCourses = ({ courses }) => {
         .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
-        }        
+        }
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
           text-transform: uppercase;
         }
-        .widget-holder-col .widget-header-row {         
+        .widget-holder-col .widget-header-row {
           padding: 5px 10px;
           color: #e69138;
         }

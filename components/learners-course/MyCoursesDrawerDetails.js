@@ -201,7 +201,6 @@ const MyCoursesDrawerDetails = ({
             if (response) {
               //setOutcomeList(response.data.result);
               let theRes = response.data.response;
-              //console.log("Response", response.data);
               // wait for response if the verification is true
               if (theRes) {
                 //true
@@ -271,10 +270,6 @@ const MyCoursesDrawerDetails = ({
       ? { height: `100%`, width: `100%`, placement: `right` }
       : { height: `60%`, placement: `bottom` };
 
-  /* const onClickCourseEvaluation = (e) => {
-    e.preventDefault();
-    setIsEvaluationActive(true);    
-  }; */
   return (
     <Drawer
       title="About the course" /* {`${courseDetails != "" ? courseDetails.title : ""}`} */
@@ -349,10 +344,7 @@ const MyCoursesDrawerDetails = ({
             </Row>
             <Row>
               <Col xs={24}>
-                <div className="course-desc">
-                  {/* <p>{`${
-                    courseDetails != "" ? courseDetails.description : ""
-                  }`}</p> */}
+                <div className="course-desc">                  
                   <p>{decodeURI(description)}</p>
                 </div>
               </Col>
@@ -466,21 +458,7 @@ const MyCoursesDrawerDetails = ({
           setIsEvaluationActive={setIsEvaluationActive}
         />
       )}
-      {/* <Modal
-        title="Course Evaluation"
-        centered
-        visible={isEvaluationActive}
-        onOk={() => setIsEvaluationActive(false)}
-        onCancel={() => setIsEvaluationActive(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width="95%"
-        className="courseEvaluationModal"
-      >
-        <div className="demoModalBody">
-          <h3>Course Evaluations</h3>
-        </div>
-      </Modal> */}
+     
       <style jsx global>{`
         .drawer-course-details .ant-drawer-title {
           font-size: 1.2rem;

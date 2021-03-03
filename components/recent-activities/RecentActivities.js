@@ -32,10 +32,7 @@ const list = {
 const RecentActivities = () => {
   const [curGridStyle, setCurGridStyle] = useState("list");
 
-  /*const [grid,setGrid] = useState(gridList);
-   useEffect(() => {
-    setGrid(gridList);
-  }, []); */
+  
   return (
     //GridType(gridList)
     <Col

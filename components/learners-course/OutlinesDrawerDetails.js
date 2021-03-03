@@ -506,22 +506,6 @@ const OutlinesDrawerDetails = ({
                 </div>
               </Col>
             </Row>
-            {/* <Row>
-              <Col xs={24} sm={12} md={12} lg={4} xl={4}>
-                <h2 style={{ marginTop: "10px" }}>Resources</h2>
-              </Col>
-              <Col xs={24} sm={12} md={12} lg={4} xl={4} style={{ textAlign: "end" }}>
-                <Button
-                  size="middle"
-                  style={{ marginTop: "10px" }}
-                >
-                  Download All
-                </Button>
-              </Col>
-            </Row> 
-            <Row>
-              <Col xs={24}>{ResourcesList}</Col>
-            </Row>*/}
           </Col>
           <Col xs={24} sm={24} md={24} lg={7}>
             <Row gutter={{ xs: 8, sm: 8, md: 8, lg: 32 }}>

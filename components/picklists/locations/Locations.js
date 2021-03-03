@@ -180,9 +180,7 @@ const Locations = ({ data }) => {
     let searchedData = allLocationsData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setLocationsData(searchedData)
-      : setLocationsData(allLocationsData); */
+    
     setLocationsData(searchedData);
   }
   useEffect(() => {
@@ -192,8 +190,7 @@ const Locations = ({ data }) => {
     }
   }, [searchLoading]);
 
-  return (
-    //GridType(gridList)
+  return (   
 
     <motion.div initial="hidden" animate="visible" variants={list}>
       <Row

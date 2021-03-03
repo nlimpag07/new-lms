@@ -5,18 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import {
-  Row,
-  Col,
   Modal,
   Select,
   Input,
-  Divider,
-  Spin,
-  Checkbox,
-  Avatar,
   Button,
   Popconfirm,
-  message,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
@@ -206,8 +199,6 @@ const CategoriesList = ({
 };
 //Deleting Status
 function deleteConfirm(e, data, setRunSpin) {
-  //console.log(e);
-  //console.log("PopConfirm", data);
   //setSpin(true);
   var config = {
     method: "delete",
@@ -233,12 +224,7 @@ function deleteConfirm(e, data, setRunSpin) {
             width: 450,
             onOk: () => {
               visible: false;
-              setRunSpin(true);
-              /* router.push(
-                "/administrator/picklists/status",
-                `/administrator/picklists/status`
-              ); */
-              //console.log("Should hide modal")
+              setRunSpin(true);              
             },
           });
         } else {

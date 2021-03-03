@@ -316,21 +316,7 @@ const MyCourses = ({ mycourses }) => {
               loading
             )}
           </Row>
-        </Col>
-        {/* <Modal
-        title="Publish Properties"
-        centered
-        visible={drawer2Visible}
-        onOk={() => setDrawer2Visible(false)}
-        onCancel={() => setDrawer2Visible(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width={`90vw`}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal> */}
+        </Col>        
         {courseDrawerDetails && (
           <MyCoursesDrawerDetails
             drawerVisible={drawer2Visible}

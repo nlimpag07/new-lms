@@ -181,9 +181,7 @@ const Categories = ({ data }) => {
     let searchedData = allDepartmentsData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setDepartmentData(searchedData)
-      : setDepartmentData(allDepartmentsData); */
+    
     setDepartmentData(searchedData);
   }
   useEffect(() => {

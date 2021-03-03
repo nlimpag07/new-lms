@@ -50,10 +50,7 @@ const StatusContent = ({ userType, sc }) => {
       return (
         <Col className="widget-holder-col" xs={24} sm={24} md={24} lg={24}>
           <div className="common-holder status-banner-holder">
-            <Row
-              gutter={[16]}
-              className="status-banner-container"
-            >
+            <Row gutter={[16]} className="status-banner-container">
               <Col xs={24} sm={12} md={12} lg={6}>
                 <div className="status-col assigned">
                   <span>Assigned Courses</span>

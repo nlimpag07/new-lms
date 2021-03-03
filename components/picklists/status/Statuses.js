@@ -182,9 +182,7 @@ const Statuses = ({ data }) => {
     let searchedData = allStatusData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-   /*  searchedData && searchedData.length
-      ? setCourseTypeData(searchedData)
-      : setCourseTypeData(allCourseTypeData); */
+   
       setStatusData(searchedData)
   }
   useEffect(() => {

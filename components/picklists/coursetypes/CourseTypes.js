@@ -182,9 +182,7 @@ const CourseTypes = ({ data }) => {
     let searchedData = allCourseTypeData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setCourseTypeData(searchedData)
-      : setCourseTypeData(allCourseTypeData); */
+    
     setCourseTypeData(searchedData);
   }
   useEffect(() => {

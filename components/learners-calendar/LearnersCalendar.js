@@ -104,6 +104,7 @@ const LearnersCalendar = ({ course_id }) => {
       //setLoading(false);
     }
     getCourseDetails(conf); */
+    setSpin(false)
   }, []);
 
   useEffect(() => {
@@ -401,7 +402,7 @@ const LearnersCalendar = ({ course_id }) => {
             md={24}
             lg={24}
           >
-            <h1>Sessions</h1>
+            <h1>Calendar</h1>
             {courseType != 2 ? (
               <Calendar
                 /*dateCellRender={dateCellRender}*/

@@ -146,65 +146,7 @@ const Outlines = (props) => {
         sm={24}
         md={24}
         lg={24}
-      >
-        {/* <Row className="widget-header-row" justify="start">
-          <Col xs={20}>
-            <h3 className="widget-title">Latest First</h3>
-          </Col>
-          <Col xs={4} className="widget-switchgrid-holder">
-            <span>{myOutlineCount} Results</span>{" "}
-            <button
-              className="switch-grid"
-              key="Switch"
-              onClick={() =>
-                setCurGridStyle(curGridStyle == "grid" ? "list" : "grid")
-              }
-            >
-              <FontAwesomeIcon
-                icon={[
-                  "fas",
-                  `th-${curGridStyle == "grid" ? "list" : "large"}`,
-                ]}
-                size="lg"
-              />
-            </button>
-          </Col>
-        </Row> */}
-        {/* <Row
-          className="widget-search-row"
-          justify="start"
-          gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-        >
-          <Col xs={8}>
-            <div className="choices-container category-holder">
-              <Select
-                showSearch
-                style={{ width: "100%" }}
-                placeholder="Select View"
-                optionFilterProp="children"
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                <Option value="Authored Courses">Authored Courses</Option>
-                <Option value="Categories">Categories</Option>
-              </Select>
-            </div>
-          </Col>
-          <Col xs={16} className="widget-switchgrid-holder">
-            <div className="choices-container searchbox-holder">
-              <Search
-                placeholder="Search Course"
-                onSearch={(value) => console.log(value)}
-              />
-            </div>
-          </Col>
-        </Row> */}
+      >        
         <Row
           className="LearnersCourses-ListItems"
           gutter={[16, 16]}
@@ -220,20 +162,7 @@ const Outlines = (props) => {
           )}
         </Row>
       </Col>
-      {/* <Modal
-        title="Publish Properties"
-        centered
-        visible={drawer2Visible}
-        onOk={() => setDrawer2Visible(false)}
-        onCancel={() => setDrawer2Visible(false)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width={`90vw`}
-      >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal> */}
+     
       {outlineDrawerDetails && (
         <OutlinesDrawerDetails
           drawerVisible={drawer2Visible}
@@ -540,20 +469,8 @@ const GridType = (
       .then(() => {
         setDrawer2Visible(true);
         setCourseDrawerDetails(outline);
-      });
-
-    /* let notTarget = document.querySelectorAll(".course-details");
-    let targetdiv = "selected-course-open";
-    notTarget.forEach((c) =>
-      c.classList[e.target.nextElementSibling == c ? "toggle" : "remove"](
-        targetdiv
-      )
-    ); */
-
-    /* let targetdiv = document.querySelector(".course-details");
-    let classes = targetdiv.classList;
-    classes.toggle("selected-course-open"); */
-    /*//setSelectedCourse("open");*/
+      });   
+    
   };
   const progressPercentage = (a, b) => {
     return a + b;

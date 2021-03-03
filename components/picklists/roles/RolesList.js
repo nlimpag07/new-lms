@@ -221,8 +221,7 @@ function deleteConfirm(e, data, setRunSpin) {
       if (response) {
         //setOutcomeList(response.data.result);
         let theRes = response.data.response;
-        //console.log("Response", response.data);
-        // wait for response if the verification is true
+        
         if (theRes) {
           Modal.success({
             title: "Deletion Success",
@@ -231,12 +230,7 @@ function deleteConfirm(e, data, setRunSpin) {
             width: 450,
             onOk: () => {
               visible: false;
-              setRunSpin(true);
-              /* router.push(
-                "/administrator/picklists/status",
-                `/administrator/picklists/status`
-              ); */
-              //console.log("Should hide modal")
+              setRunSpin(true);              
             },
           });
         } else {

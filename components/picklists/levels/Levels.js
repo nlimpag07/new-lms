@@ -181,9 +181,6 @@ const Levels = ({ data }) => {
     let searchedData = allLevelsData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setLevelsData(searchedData)
-      : setLevelsData(allLevelsData); */
     setLevelsData(searchedData);
   }
   useEffect(() => {

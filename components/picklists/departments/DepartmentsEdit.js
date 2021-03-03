@@ -6,20 +6,12 @@ import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import {
   Row,
-  Col,
-  Modal,
   Spin,
   Input,
-  InputNumber,
   Form,
   Select,
-  Radio,
   Button,
-  Switch,
-  Divider,
   message,
-  Popover,
-  Avatar,
 } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";

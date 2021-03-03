@@ -41,22 +41,22 @@ const LearnersCourseEvaluation = ({
         "Content-Type": "application/json",
       },
     };
-    async function fetchData(config) {
-      const response = await axios(config);
-      if (response) {
-        //setOutcomeList(response.data.result);
-        let theRes = response.data;
-        console.log("Response", response.data);
-        // wait for response if the verification is true
+    axios(config)
+      .then((res) => {
+        let theRes = res.data;
         if (theRes) {
           setAllquestions(theRes.result);
         } else {
           setAllquestions([]);
         }
-      }
-    }
-    fetchData(config);
-    //setSpinner(false);
+      })
+      .catch((err) => {
+        //console.log("err: ", err.response.data);
+        message.error(
+          `${err.response.data.statusCode} - ${err.response.data.message}`
+        );
+        setAllquestions([]);
+      });
   }, []);
   //Display the modal and the initial contents
   //optional: if v is true then data should be displayed,otherwise set setEvaluationData should be resetted

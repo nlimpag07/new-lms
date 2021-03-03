@@ -4,25 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import {
-  Row,
-  Col,
-  Modal,
-  Spin,
-  Input,
-  InputNumber,
-  Form,
-  Select,
-  Radio,
-  Button,
-  Switch,
-  Divider,
-  message,
-  Popover,
-  Avatar,
-  Space,
-  Checkbox,
-} from "antd";
+import { Row, Spin, Input, Form, Select, Button, message } from "antd";
 import {
   CaretDownOutlined,
   MinusCircleOutlined,
@@ -46,8 +28,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
   const [questionType, setquestionType] = useState(0);
-  useEffect(() => {    
-  }, []);
+  useEffect(() => {}, []);
 
   const onCancel = (form) => {
     form.resetFields();

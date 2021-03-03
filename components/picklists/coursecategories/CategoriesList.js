@@ -202,10 +202,7 @@ const CategoriesList = ({
   );
 };
 //Deleting Status
-function deleteConfirm(e, data, setRunSpin) {
-  //console.log(e);
-  //console.log("PopConfirm", data);
-  //setSpin(true);
+function deleteConfirm(e, data, setRunSpin) {  
   var config = {
     method: "delete",
     url: apiBaseUrl + "/picklist/category/" + data.id,
@@ -220,8 +217,7 @@ function deleteConfirm(e, data, setRunSpin) {
       if (response) {
         //setOutcomeList(response.data.result);
         let theRes = response.data.response;
-        //console.log("Response", response.data);
-        // wait for response if the verification is true
+        
         if (theRes) {
           Modal.success({
             title: "Deletion Success",
@@ -230,12 +226,7 @@ function deleteConfirm(e, data, setRunSpin) {
             width: 450,
             onOk: () => {
               visible: false;
-              setRunSpin(true);
-              /* router.push(
-                "/administrator/picklists/status",
-                `/administrator/picklists/status`
-              ); */
-              //console.log("Should hide modal")
+              setRunSpin(true);              
             },
           });
         } else {
@@ -279,10 +270,7 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
         cancelText="Not Now"
       >
         <Button
-          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}
-          /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}          
         />
       </Popconfirm>
     </td>

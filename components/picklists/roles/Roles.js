@@ -180,9 +180,7 @@ const Roles = ({ data }) => {
     let searchedData = allRolesData.filter((d) =>
       d.name.toLowerCase().includes(val.toLowerCase())
     );
-    /*  searchedData && searchedData.length
-      ? setRolesData(searchedData)
-      : setRolesData(allRolesData); */
+    
     setRolesData(searchedData);
   }
   useEffect(() => {
