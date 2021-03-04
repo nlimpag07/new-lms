@@ -56,8 +56,8 @@ const list = {
   },
 };
 
-const PreassessmentList = ({
-  PreassessmentData,
+const CoursePostEvaluationList = ({
+  CoursePostEvaluationData,
   page,
   setPage,
   setRunSpin,
@@ -71,14 +71,14 @@ const PreassessmentList = ({
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  //console.log(PreassessmentData);
+  //console.log(CoursePostEvaluationData);
   useEffect(() => {
     setLoading(false);
   }, []);
 
   var lastSelectedIndex = 0;
   const the_data =
-    PreassessmentData && PreassessmentData.length ? PreassessmentData : [];
+    CoursePostEvaluationData && CoursePostEvaluationData.length ? CoursePostEvaluationData : [];
   const ddata = the_data.map((dataItem) => {
     let catData =
       dataItem.preassessmentCategory.length &&
@@ -181,11 +181,11 @@ const PreassessmentList = ({
       </Grid>
 
       <style jsx global>{`
-        .PreassessmentList h1 {
+        .CoursePostEvaluationList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .PreassessmentList .k-grid-header {
+        .CoursePostEvaluationList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -222,7 +222,7 @@ const categoryRender = (props) => {
 function deleteConfirm(e, data, setRunSpin) {
   var config = {
     method: "delete",
-    url: apiBaseUrl + "/picklist/Preassessment/" + data.id,
+    url: apiBaseUrl + "/picklist/CoursePostEvaluation/" + data.id,
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -299,4 +299,4 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   );
 };
 
-export default PreassessmentList;
+export default CoursePostEvaluationList;

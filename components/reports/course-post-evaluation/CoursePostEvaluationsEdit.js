@@ -26,7 +26,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsEdit = ({
+const CoursePostEvaluationsEdit = ({
   dataProps,
   hideModal,
   setRunSpin,
@@ -71,7 +71,7 @@ const PreassessmentsEdit = ({
     if (!checker.length) {
       var config = {
         method: "put",
-        url: apiBaseUrl + "/picklist/Preassessment/" + id,
+        url: apiBaseUrl + "/picklist/CoursePostEvaluation/" + id,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -117,14 +117,14 @@ const PreassessmentsEdit = ({
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="EditPicklistPreassessments"
+        name="EditPicklistCoursePostEvaluations"
         initialValues={{
           title: title,
           categoryId: defaultCatOptionsId,
         }}
       >
         <Form.Item
-          label="Preassessment Question"
+          label="CoursePostEvaluation Question"
           name="title"
           style={{
             marginBottom: "1rem",
@@ -132,11 +132,11 @@ const PreassessmentsEdit = ({
           rules={[
             {
               required: true,
-              message: "Please input Preassessment Name!",
+              message: "Please input CoursePostEvaluation Name!",
             },
           ]}
         >
-          <Input placeholder="Preassessment Name" />
+          <Input placeholder="CoursePostEvaluation Name" />
         </Form.Item>
         <Form.Item
           name="categoryId"
@@ -207,7 +207,7 @@ const PreassessmentsEdit = ({
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #EditPicklistPreassessments {
+        #EditPicklistCoursePostEvaluations {
           position: relative;
           width: 100%;
         }
@@ -227,4 +227,4 @@ const PreassessmentsEdit = ({
   );
 };
 
-export default PreassessmentsEdit;
+export default CoursePostEvaluationsEdit;

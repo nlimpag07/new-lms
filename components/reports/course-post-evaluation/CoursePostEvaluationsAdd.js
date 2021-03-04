@@ -22,7 +22,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
+const CoursePostEvaluationsAdd = ({ hideModal, setRunSpin, categories }) => {
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -60,7 +60,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
     if (!checker.length) {
       var config = {
         method: "post",
-        url: apiBaseUrl + "/picklist/Preassessment",
+        url: apiBaseUrl + "/picklist/CoursePostEvaluation",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
         form={form}
         onFinish={onFinish}
         layout="vertical"
-        name="AddPicklistPreassessment"
+        name="AddPicklistCoursePostEvaluation"
         initialValues={
           {
             /*
@@ -113,7 +113,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
         }
       >
         <Form.Item
-          label="Preassessment Question"
+          label="CoursePostEvaluation Question"
           name="title"
           style={{
             marginBottom: "1rem",
@@ -121,11 +121,11 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
           rules={[
             {
               required: true,
-              message: "Please input Preassessment Name!",
+              message: "Please input CoursePostEvaluation Name!",
             },
           ]}
         >
-          <Input placeholder="Preassessment Name" />
+          <Input placeholder="CoursePostEvaluation Name" />
         </Form.Item>
         <Form.Item
           name="categoryId"
@@ -195,7 +195,7 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #AddPicklistPreassessment {
+        #AddPicklistCoursePostEvaluation {
           position: relative;
           width: 100%;
         }
@@ -215,4 +215,4 @@ const PreassessmentsAdd = ({ hideModal, setRunSpin, categories }) => {
   );
 };
 
-export default PreassessmentsAdd;
+export default CoursePostEvaluationsAdd;

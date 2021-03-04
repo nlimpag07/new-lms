@@ -245,7 +245,6 @@ function deleteConfirm(e, data, setRunSpin) {
             onOk: () => {
               visible: false;
               setRunSpin(true);
-              
             },
           });
         } else {
@@ -277,24 +276,21 @@ function deleteConfirm(e, data, setRunSpin) {
 const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   return (
     <td>
-      {/* <Button
+      <Button
         icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
         onClick={() => showModal("edit", props.dataItem)}
-      />{" "} */}
-      <Popconfirm
+      />{" "}
+      {/* <Popconfirm
         title="Delete this Status?"
         onConfirm={(e) => deleteConfirm(e, props.dataItem, setRunSpin)}
-        /*onCancel={deleteCancel} */
+        
         okText="Confirm"
         cancelText="Not Now"
       >
         <Button
-          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}
-          /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}          
         />
-      </Popconfirm>
+      </Popconfirm> */}
     </td>
   );
 };

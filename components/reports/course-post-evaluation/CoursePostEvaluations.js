@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
-import PreassessmentList from "./CoursePostEvaluationsList";
-import PreassessmentsAdd from "./CoursePostEvaluationsAdd";
-import PreassessmentsEdit from "./CoursePostEvaluationsEdit";
+import CoursePostEvaluationList from "./CoursePostEvaluationsList";
+import CoursePostEvaluationsAdd from "./CoursePostEvaluationsAdd";
+import CoursePostEvaluationsEdit from "./CoursePostEvaluationsEdit";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -58,24 +58,24 @@ const menulists = [
   },
 ];
 
-const Preassessments = ({ data }) => {
+const CoursePostEvaluations = ({ data }) => {
   console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  var [PreassessmentsModal, setPreassessmentsModal] = useState({
+  var [CoursePostEvaluationsModal, setCoursePostEvaluationsModal] = useState({
     visible: false,
     modalOperation: "",
     dataProps: null,
     width: "auto",
   });
-  const [PreassessmentDetails, setPreassessmentDetails] = useState("");
+  const [CoursePostEvaluationDetails, setCoursePostEvaluationDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [runSpin, setRunSpin] = useState(false);
-  const [PreassessmentSelect, setPreassessmentSelect] = useState("");
+  const [CoursePostEvaluationSelect, setCoursePostEvaluationSelect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState("");
-  const [allPreassessmentData, setAllPreassessmentData] = useState([]);
-  const [PreassessmentData, setPreassessmentData] = useState([]);
+  const [allCoursePostEvaluationData, setAllCoursePostEvaluationData] = useState([]);
+  const [CoursePostEvaluationData, setCoursePostEvaluationData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
     pageSize: 0,
@@ -119,8 +119,8 @@ const Preassessments = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
-              setAllPreassessmentData(result);
-              setPreassessmentData(result);
+              setAllCoursePostEvaluationData(result);
+              setCoursePostEvaluationData(result);
               setSpin(false);
             } else {
             }
@@ -179,20 +179,20 @@ const Preassessments = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
-    setAllPreassessmentData(result);
-    setPreassessmentData(result);
+    setAllCoursePostEvaluationData(result);
+    setCoursePostEvaluationData(result);
     setSpin(false);
   }, []);
 
   const showModal = (modalOperation, props) => {
-    setPreassessmentsModal({
+    setCoursePostEvaluationsModal({
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
     });
   };
   const hideModal = (modalOperation) => {
-    setPreassessmentsModal({
+    setCoursePostEvaluationsModal({
       visible: false,
       modalOperation: modalOperation,
     });
@@ -202,11 +202,11 @@ const Preassessments = ({ data }) => {
     console.log("search:", val);
     setSpin(true);
     setSearchLoading(true);
-    let searchedData = allPreassessmentData.filter((d) =>
+    let searchedData = allCoursePostEvaluationData.filter((d) =>
       d.title.toLowerCase().includes(val.toLowerCase())
     );
 
-    setPreassessmentData(searchedData);
+    setCoursePostEvaluationData(searchedData);
   }
   useEffect(() => {
     if (searchLoading) {
@@ -226,7 +226,7 @@ const Preassessments = ({ data }) => {
       >
         <div className="common-holder">
           <Col
-            className="gutter-row widget-holder-col Preassessments"
+            className="gutter-row widget-holder-col CoursePostEvaluations"
             xs={24}
             sm={24}
             md={24}
@@ -236,7 +236,7 @@ const Preassessments = ({ data }) => {
             <Row justify="start">
               <Col xs={24} xs={24} sm={12} md={8} lg={8}>
                 <Search
-                  placeholder="Search Preassessment"
+                  placeholder="Search CoursePostEvaluation"
                   enterButton="Search"
                   size="large"
                   loading={searchLoading}
@@ -244,7 +244,7 @@ const Preassessments = ({ data }) => {
                 />
               </Col>
             </Row>
-            <Row className="PicklistPreassessments">
+            <Row className="PicklistCoursePostEvaluations">
               <Col xs={24}>
                 {spin ? (
                   <div className="spinHolder">
@@ -257,8 +257,8 @@ const Preassessments = ({ data }) => {
                   </div>
                 ) : (
                   <Col xs={24}>
-                    <PreassessmentList
-                      PreassessmentData={PreassessmentData}
+                    <CoursePostEvaluationList
+                      CoursePostEvaluationData={CoursePostEvaluationData}
                       page={page}
                       setPage={setPage}
                       setRunSpin={setRunSpin}
@@ -274,34 +274,34 @@ const Preassessments = ({ data }) => {
         </div>
       </Row>
       <Modal
-        title={`Preassessments - ${PreassessmentsModal.modalOperation}`}
+        title={`CoursePostEvaluations - ${CoursePostEvaluationsModal.modalOperation}`}
         centered
-        visible={PreassessmentsModal.visible}
-        onOk={() => hideModal(PreassessmentsModal.modalOperation)}
-        onCancel={() => hideModal(PreassessmentsModal.modalOperation)}
+        visible={CoursePostEvaluationsModal.visible}
+        onOk={() => hideModal(CoursePostEvaluationsModal.modalOperation)}
+        onCancel={() => hideModal(CoursePostEvaluationsModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={PreassessmentsModal.width}
+        width={CoursePostEvaluationsModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistPreassessmentsModal"
+        className="PicklistCoursePostEvaluationsModal"
       >
-        {PreassessmentsModal.modalOperation == "edit" ? (
-          <PreassessmentsEdit
-            dataProps={PreassessmentsModal.dataProps}
+        {CoursePostEvaluationsModal.modalOperation == "edit" ? (
+          <CoursePostEvaluationsEdit
+            dataProps={CoursePostEvaluationsModal.dataProps}
             categories={categories}
             hideModal={hideModal}
             setRunSpin={setRunSpin}
           />
-        ) : PreassessmentsModal.modalOperation == "add" ? (
-          <PreassessmentsAdd
+        ) : CoursePostEvaluationsModal.modalOperation == "add" ? (
+          <CoursePostEvaluationsAdd
             hideModal={hideModal}
             setRunSpin={setRunSpin}
             categories={categories}
           />
-        ) : PreassessmentsModal.modalOperation == "approve" ? (
+        ) : CoursePostEvaluationsModal.modalOperation == "approve" ? (
           "Hello Approve"
-        ) : PreassessmentsModal.modalOperation == "delete" ? (
+        ) : CoursePostEvaluationsModal.modalOperation == "delete" ? (
           "HELLO Delete"
         ) : (
           "Default"
@@ -314,14 +314,14 @@ const Preassessments = ({ data }) => {
         toggleModal={() => showModal("add")}
       /> */}
       <style jsx global>{`
-        .PicklistPreassessments {
+        .PicklistCoursePostEvaluations {
           margin-top: 1rem;
         }
-        .Preassessments h1 {
+        .CoursePostEvaluations h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .Preassessments .k-grid-header {
+        .CoursePostEvaluations .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -338,7 +338,7 @@ const Preassessments = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistPreassessmentsModal .ant-modal-footer {
+        .PicklistCoursePostEvaluationsModal .ant-modal-footer {
           display: none;
           opacity: 0;
         }
@@ -347,4 +347,4 @@ const Preassessments = ({ data }) => {
   );
 };
 
-export default Preassessments;
+export default CoursePostEvaluations;
