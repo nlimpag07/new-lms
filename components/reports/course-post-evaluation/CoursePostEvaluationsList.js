@@ -233,8 +233,7 @@ function deleteConfirm(e, data, setRunSpin) {
       const response = await axios(config);
       if (response) {
         //setOutcomeList(response.data.result);
-        let theRes = response.data.response;
-        //console.log("Response", response.data);
+        let theRes = response.data.response;       
         // wait for response if the verification is true
         if (theRes) {
           Modal.success({
