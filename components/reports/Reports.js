@@ -85,26 +85,26 @@ const Reports = ({ userlist }) => {
               >
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/reports"
-                    as={`/administrator/reports`}
+                    href="/administrator/reports/preassessment"
+                    as={`/administrator/reports/preassessment`}
                   >
                     <a>
                       <FontAwesomeIcon icon={["fas", "cube"]} size="3x" />{" "}
-                      Department
+                      Preassessment Reports
                     </a>
                   </Link>
                 </Col>
                 <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
-                    href="/administrator/reports"
-                    as={`/administrator/reports`}
+                    href="/administrator/reports/coursepostevaluation"
+                    as={`/administrator/reports/coursepostevaluation`}
                   >
                     <a>
                       <FontAwesomeIcon
                         icon={["fas", "map-marker-alt"]}
                         size="3x"
                       />{" "}
-                      Locations
+                      Post Evaluation Reports
                     </a>
                   </Link>
                 </Col>
