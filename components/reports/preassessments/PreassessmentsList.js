@@ -208,7 +208,7 @@ const PreassessmentList = ({
   );
 };
 const categoryRender = (props) => {
-  console.log("props", props.dataItem);
+  //console.log("props", props.dataItem);
   let theCat =
     props.dataItem && props.dataItem.category ? props.dataItem.category : [];
   let catListRender = theCat.length

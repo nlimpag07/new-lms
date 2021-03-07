@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Cookies from "js-cookie";
 import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
-import CoursePostEvaluationList from "./CoursePostEvaluationsList";
+import PreassessmentList from "./CoursePostEvaluationsList";
 import CoursePostEvaluationsAdd from "./CoursePostEvaluationsAdd";
-import CoursePostEvaluationsEdit from "./CoursePostEvaluationsEdit";
+import CoursePostEvaluationsDetails from "./CoursePostEvaluationsDetails";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -62,20 +62,20 @@ const CoursePostEvaluations = ({ data }) => {
   console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
-  var [CoursePostEvaluationsModal, setCoursePostEvaluationsModal] = useState({
+  var [coursePostEvaluationsModal, setCoursePostEvaluationsModal] = useState({
     visible: false,
     modalOperation: "",
     dataProps: null,
-    width: "auto",
+    width: "700px",
   });
-  const [CoursePostEvaluationDetails, setCoursePostEvaluationDetails] = useState("");
+  const [PreassessmentDetails, setPreassessmentDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [runSpin, setRunSpin] = useState(false);
-  const [CoursePostEvaluationSelect, setCoursePostEvaluationSelect] = useState("");
+  const [CoursePostEvaluationselect, setCoursePostEvaluationselect] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState("");
-  const [allCoursePostEvaluationData, setAllCoursePostEvaluationData] = useState([]);
-  const [CoursePostEvaluationData, setCoursePostEvaluationData] = useState([]);
+  const [allpostEvaluationData, setAllpostEvaluationData] = useState([]);
+  const [postEvaluationData, setpostEvaluationData] = useState([]);
   const [page, setPage] = useState({
     currentPage: 0,
     pageSize: 0,
@@ -119,8 +119,8 @@ const CoursePostEvaluations = ({ data }) => {
                 totalRecords: totalRecords,
                 orderBy: orderBy,
               });
-              setAllCoursePostEvaluationData(result);
-              setCoursePostEvaluationData(result);
+              setAllpostEvaluationData(result);
+              setpostEvaluationData(result);
               setSpin(false);
             } else {
             }
@@ -179,13 +179,14 @@ const CoursePostEvaluations = ({ data }) => {
       totalRecords: totalRecords,
       orderBy: orderBy,
     });
-    setAllCoursePostEvaluationData(result);
-    setCoursePostEvaluationData(result);
+    setAllpostEvaluationData(result);
+    setpostEvaluationData(result);
     setSpin(false);
   }, []);
 
   const showModal = (modalOperation, props) => {
     setCoursePostEvaluationsModal({
+      ...coursePostEvaluationsModal,
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
@@ -202,11 +203,11 @@ const CoursePostEvaluations = ({ data }) => {
     console.log("search:", val);
     setSpin(true);
     setSearchLoading(true);
-    let searchedData = allCoursePostEvaluationData.filter((d) =>
+    let searchedData = allpostEvaluationData.filter((d) =>
       d.title.toLowerCase().includes(val.toLowerCase())
     );
 
-    setCoursePostEvaluationData(searchedData);
+    setpostEvaluationData(searchedData);
   }
   useEffect(() => {
     if (searchLoading) {
@@ -214,7 +215,6 @@ const CoursePostEvaluations = ({ data }) => {
       setSearchLoading(false);
     }
   }, [searchLoading]);
-
   return (
     //GridType(gridList)
 
@@ -232,11 +232,11 @@ const CoursePostEvaluations = ({ data }) => {
             md={24}
             lg={24}
           >
-            <h1>Reports: Post Evaluations</h1>
+            <h1>Reports: CoursePostEvaluations</h1>
             <Row justify="start">
               <Col xs={24} xs={24} sm={12} md={8} lg={8}>
                 <Search
-                  placeholder="Search CoursePostEvaluation"
+                  placeholder="Search Learner"
                   enterButton="Search"
                   size="large"
                   loading={searchLoading}
@@ -257,8 +257,8 @@ const CoursePostEvaluations = ({ data }) => {
                   </div>
                 ) : (
                   <Col xs={24}>
-                    <CoursePostEvaluationList
-                      CoursePostEvaluationData={CoursePostEvaluationData}
+                    <PreassessmentList
+                      postEvaluationData={postEvaluationData}
                       page={page}
                       setPage={setPage}
                       setRunSpin={setRunSpin}
@@ -274,34 +274,34 @@ const CoursePostEvaluations = ({ data }) => {
         </div>
       </Row>
       <Modal
-        title={`CoursePostEvaluations - ${CoursePostEvaluationsModal.modalOperation}`}
+        title={`Post Evaluation ${coursePostEvaluationsModal.modalOperation}`}
         centered
-        visible={CoursePostEvaluationsModal.visible}
-        onOk={() => hideModal(CoursePostEvaluationsModal.modalOperation)}
-        onCancel={() => hideModal(CoursePostEvaluationsModal.modalOperation)}
+        visible={coursePostEvaluationsModal.visible}
+        onOk={() => hideModal(coursePostEvaluationsModal.modalOperation)}
+        onCancel={() => hideModal(coursePostEvaluationsModal.modalOperation)}
         maskClosable={false}
         destroyOnClose={true}
-        width={CoursePostEvaluationsModal.width}
+        width={coursePostEvaluationsModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistCoursePostEvaluationsModal"
+        className="ReportscoursePostEvaluationsModal"
       >
-        {CoursePostEvaluationsModal.modalOperation == "edit" ? (
-          <CoursePostEvaluationsEdit
-            dataProps={CoursePostEvaluationsModal.dataProps}
+        {coursePostEvaluationsModal.modalOperation == "details" ? (
+          <CoursePostEvaluationsDetails
+            dataProps={coursePostEvaluationsModal.dataProps}
             categories={categories}
             hideModal={hideModal}
             setRunSpin={setRunSpin}
           />
-        ) : CoursePostEvaluationsModal.modalOperation == "add" ? (
+        ) : coursePostEvaluationsModal.modalOperation == "add" ? (
           <CoursePostEvaluationsAdd
             hideModal={hideModal}
             setRunSpin={setRunSpin}
             categories={categories}
           />
-        ) : CoursePostEvaluationsModal.modalOperation == "approve" ? (
+        ) : coursePostEvaluationsModal.modalOperation == "approve" ? (
           "Hello Approve"
-        ) : CoursePostEvaluationsModal.modalOperation == "delete" ? (
+        ) : coursePostEvaluationsModal.modalOperation == "delete" ? (
           "HELLO Delete"
         ) : (
           "Default"
@@ -338,9 +338,12 @@ const CoursePostEvaluations = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistCoursePostEvaluationsModal .ant-modal-footer {
+        .ReportscoursePostEvaluationsModal .ant-modal-footer {
           display: none;
           opacity: 0;
+        }
+        .ReportscoursePostEvaluationsModal .k-grid th {
+          padding: 5px 24px;
         }
       `}</style>
     </motion.div>

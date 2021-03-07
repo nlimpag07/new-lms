@@ -56,8 +56,8 @@ const list = {
   },
 };
 
-const CoursePostEvaluationList = ({
-  CoursePostEvaluationData,
+const CoursePostEvaluationsList = ({
+  postEvaluationData,
   page,
   setPage,
   setRunSpin,
@@ -71,14 +71,14 @@ const CoursePostEvaluationList = ({
   const [loading, setLoading] = useState(true);
   const [trigger, setTrigger] = useState(true);
   const [pagination, setPagination] = useState({ skip: 0, take: 10 });
-  //console.log(CoursePostEvaluationData);
+  //console.log(postEvaluationData);
   useEffect(() => {
     setLoading(false);
   }, []);
 
   var lastSelectedIndex = 0;
   const the_data =
-    CoursePostEvaluationData && CoursePostEvaluationData.length ? CoursePostEvaluationData : [];
+    postEvaluationData && postEvaluationData.length ? postEvaluationData : [];
   const ddata = the_data.map((dataItem) => {
     let catData =
       dataItem.preassessmentCategory.length &&
@@ -168,24 +168,25 @@ const CoursePostEvaluationList = ({
         pageable={true}
         onPageChange={pageChange}
       >
-        <Column field="title" title="Name" />
-        <Column field="category" title="Category" cell={categoryRender} />
+        <Column field="title" title="Learner" />
+        <Column field="title" title="Course" />
+        <Column field="category" title="Evaluation Date" cell={categoryRender} />
         <Column
           sortable={false}
           cell={(props) =>
             ActionRender(props, showModal, hideModal, setRunSpin)
           }
           field="SupplierID"
-          title="Action"
+          title="View"
         />
       </Grid>
 
       <style jsx global>{`
-        .CoursePostEvaluationList h1 {
+        .CoursePostEvaluationsList h1 {
           font-size: 2rem;
           font-weight: 700;
         }
-        .CoursePostEvaluationList .k-grid-header {
+        .CoursePostEvaluationsList .k-grid-header {
           background-color: rgba(0, 0, 0, 0.05);
         }
         .searchResultSeparator.ant-divider-horizontal.ant-divider-with-text {
@@ -208,7 +209,7 @@ const CoursePostEvaluationList = ({
   );
 };
 const categoryRender = (props) => {
-  console.log("props", props.dataItem);
+  //console.log("props", props.dataItem);
   let theCat =
     props.dataItem && props.dataItem.category ? props.dataItem.category : [];
   let catListRender = theCat.length
@@ -222,7 +223,7 @@ const categoryRender = (props) => {
 function deleteConfirm(e, data, setRunSpin) {
   var config = {
     method: "delete",
-    url: apiBaseUrl + "/picklist/CoursePostEvaluation/" + data.id,
+    url: apiBaseUrl + "/picklist/Preassessment/" + data.id,
     headers: {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
@@ -233,7 +234,8 @@ function deleteConfirm(e, data, setRunSpin) {
       const response = await axios(config);
       if (response) {
         //setOutcomeList(response.data.result);
-        let theRes = response.data.response;       
+        let theRes = response.data.response;
+        //console.log("Response", response.data);
         // wait for response if the verification is true
         if (theRes) {
           Modal.success({
@@ -244,7 +246,6 @@ function deleteConfirm(e, data, setRunSpin) {
             onOk: () => {
               visible: false;
               setRunSpin(true);
-              
             },
           });
         } else {
@@ -276,26 +277,23 @@ function deleteConfirm(e, data, setRunSpin) {
 const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   return (
     <td>
-      {/* <Button
-        icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
-        onClick={() => showModal("edit", props.dataItem)}
-      />{" "} */}
-      <Popconfirm
+      <Button
+        icon={<FontAwesomeIcon icon={["fas", `search`]} size="lg" />}
+        onClick={() => showModal("details", props.dataItem)}
+      />{" "}
+      {/* <Popconfirm
         title="Delete this Status?"
         onConfirm={(e) => deleteConfirm(e, props.dataItem, setRunSpin)}
-        /*onCancel={deleteCancel} */
+        
         okText="Confirm"
         cancelText="Not Now"
       >
         <Button
-          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}
-          /* onClick={() => {
-          edit(this.props.dataItem);
-        }} */
+          icon={<FontAwesomeIcon icon={["far", `trash-alt`]} size="lg" />}          
         />
-      </Popconfirm>
+      </Popconfirm> */}
     </td>
   );
 };
 
-export default CoursePostEvaluationList;
+export default CoursePostEvaluationsList;

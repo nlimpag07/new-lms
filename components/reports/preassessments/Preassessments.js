@@ -215,7 +215,6 @@ const Preassessments = ({ data }) => {
       setSearchLoading(false);
     }
   }, [searchLoading]);
-  console.log("PreassessmentsModal", PreassessmentsModal);
   return (
     //GridType(gridList)
 
