@@ -108,7 +108,7 @@ const Reports = ({ userlist }) => {
                     </a>
                   </Link>
                 </Col>
-                <Col xs={24} sm={12} md={6} lg={6}>
+                {/* <Col xs={24} sm={12} md={6} lg={6}>
                   <Link
                     href="/administrator/reports"
                     as={`/administrator/reports`}
@@ -132,7 +132,7 @@ const Reports = ({ userlist }) => {
                       Status
                     </a>
                   </Link>
-                </Col>
+                </Col> */}
               </Row>
             </Panel>
           </Collapse>

@@ -71,7 +71,9 @@ const CoursePostEvaluations = ({ data }) => {
   const [PreassessmentDetails, setPreassessmentDetails] = useState("");
   const [spin, setSpin] = useState(true);
   const [runSpin, setRunSpin] = useState(false);
-  const [CoursePostEvaluationselect, setCoursePostEvaluationselect] = useState("");
+  const [CoursePostEvaluationselect, setCoursePostEvaluationselect] = useState(
+    ""
+  );
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchResults, setSearchResults] = useState("");
   const [allpostEvaluationData, setAllpostEvaluationData] = useState([]);
@@ -190,6 +192,7 @@ const CoursePostEvaluations = ({ data }) => {
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
+      width: "700px",
     });
   };
   const hideModal = (modalOperation) => {
