@@ -4,19 +4,13 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import {
-  Row,
-  Spin,
-  Input,
-  Form,
-  Select,
-  Button,
-  message,
-} from "antd";
+import { Row, Spin, Input, Form, Select, Button, message, Tag } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import moment from "moment";
 import { CompactPicker, AlphaPicker, CirclePicker } from "react-color";
+import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { orderBy } from "@progress/kendo-data-query";
 /**TextArea declaration */
 const { TextArea } = Input;
 const { Option } = Select;
@@ -26,7 +20,7 @@ const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
-const PreassessmentsEdit = ({
+const PreassessmentsDetails = ({
   dataProps,
   hideModal,
   setRunSpin,
@@ -34,67 +28,81 @@ const PreassessmentsEdit = ({
 }) => {
   console.log("dataProps", dataProps);
   const { title, id } = dataProps;
+  const dProps = [dataProps];
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
+  const [pagination, setPagination] = useState({ skip: 0, take: 10 });
 
   useEffect(() => {}, []);
 
-  const onCancel = (form) => {
-    form.resetFields();
-    setSpinning(false);
-    hideModal("edit");
+  var lastSelectedIndex = 0;
+  const the_data = dProps && dProps.length ? dProps : [];
+  const ddata = the_data.map((dataItem) => {
+    let catData =
+      dataItem.preassessmentCategory.length &&
+      dataItem.preassessmentCategory.map((pcat) => {
+        return {
+          categoryId: pcat.categoryId,
+          categoryName: pcat.category.name,
+        };
+      });
+    //console.log("catData", catData);
+    return Object.assign({ selected: false, category: catData }, dataItem);
+  });
+  console.log("ddata", ddata);
+  const [Data, setData] = useState(ddata);
+  const [theSort, setTheSort] = useState({
+    sort: [{ field: "id", dir: "desc" }],
+  });
+  const selectionChange = (event) => {
+    const theData = Data.map((item) => {
+      if (item.id === event.dataItem.id) {
+        item.selected = !event.dataItem.selected;
+      }
+      return item;
+    });
+    setData(theData);
   };
-  const onFinish = (values) => {
-    setSpinning(true);
-    setHasError("");
-    var data = {};
-    var checker = [];
+  const rowClick = (event) => {
+    let last = lastSelectedIndex;
+    const theData = [...Data];
 
-    if (!!values.title) {
-      data.title = values.title;
-    } else {
-      data.title = title;
-    }
-    if (!!values.categoryId) {
-      data.preassessmentCategory = [
-        {
-          categoryId: values.categoryId,
-        },
-      ];
-    } else {
-      setHasError("* Please Select Category");
-      checker.push("Error");
-    }
-    data = JSON.stringify(data);
-    if (!checker.length) {
-      var config = {
-        method: "put",
-        url: apiBaseUrl + "/picklist/Preassessment/" + id,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-        data: data,
-      };
+    const current = theData.findIndex(
+      (dataItem) => dataItem === event.dataItem
+    );
 
-      axios(config)
-        .then((res) => {
-          message.success(res.data.message);
-          setSpinning(false);
-          setRunSpin(true);
-          hideModal("edit");
-        })
-        .catch((err) => {
-          console.log("err: ", err.response);
-          message.error(err.response.data.message);
-          setSpinning(false);
-          setRunSpin(true);
-          hideModal("edit");
-        });
+    if (!event.nativeEvent.shiftKey) {
+      lastSelectedIndex = last = current;
     }
+
+    if (!event.nativeEvent.ctrlKey) {
+      theData.forEach((item) => (item.selected = false));
+    }
+    const select = !event.dataItem.selected;
+    for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
+      theData[i].selected = select;
+    }
+    setData(theData);
   };
+
+  const headerSelectionChange = (event) => {
+    const checked = event.syntheticEvent.target.checked;
+    const theData = Data.map((item) => {
+      item.selected = checked;
+      return item;
+    });
+    setData(theData);
+  };
+
+  const pageChange = (event) => {
+    setPagination({
+      skip: event.page.skip,
+      take: event.page.take,
+    });
+  };
+
   var defaultCatOptionsId;
   if (dataProps) {
     let precat = dataProps.category;
@@ -113,11 +121,41 @@ const PreassessmentsEdit = ({
     });
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
-      <Form
+      <Grid
+        data={orderBy(
+          Data.slice(pagination.skip, pagination.take + pagination.skip),
+          theSort.sort
+        )}
+        /* style={{ height: "550px" }} */
+        selectedField="selected"
+        onSelectionChange={selectionChange}
+        /* onHeaderSelectionChange={headerSelectionChange} */
+        onRowClick={rowClick}
+        sortable
+        sort={theSort.sort}
+        onSortChange={(e) => {
+          setTheSort({
+            sort: e.sort,
+          });
+        }}
+        skip={pagination.skip}
+        take={pagination.take}
+        total={Data.length}
+        pageable={true}
+        onPageChange={pageChange}
+      >
+        <Column field="title" title="Preassessment Questions" />
+        <Column
+          field="category"
+          title="Answers"
+          cell={categoryRender}
+        />        
+      </Grid>
+      {/* <Form
         form={form}
         onFinish={onFinish}
         layout="horizontal"
-        name="EditPicklistPreassessments"
+        name="detailsPicklistPreassessments"
         initialValues={{
           title: title,
           categoryId: defaultCatOptionsId,
@@ -149,13 +187,12 @@ const PreassessmentsEdit = ({
           ]}
         >
           <Select
-                mode="multiple"
-                placeholder="Please select Session"
-                optionLabelProp="label"
-              >
-                {catOptionList}
-              </Select>
-         
+            mode="multiple"
+            placeholder="Please select Session"
+            optionLabelProp="label"
+          >
+            {catOptionList}
+          </Select>
         </Form.Item>
         {hasError ? (
           <p
@@ -201,13 +238,13 @@ const PreassessmentsEdit = ({
             ></Spin>
           </div>
         )}
-      </Form>
+      </Form> */}
 
       <style jsx global>{`
         .colorAvatar:hover {
           cursor: pointer;
         }
-        #EditPicklistPreassessments {
+        #detailsPicklistPreassessments {
           position: relative;
           width: 100%;
         }
@@ -226,5 +263,16 @@ const PreassessmentsEdit = ({
     </Row>
   );
 };
+const categoryRender = (props) => {
+  console.log("props", props.dataItem);
+  let theCat =
+    props.dataItem && props.dataItem.category ? props.dataItem.category : [];
+  let catListRender = theCat.length
+    ? theCat.map((cat, index) => {
+        return <Tag key={index}>{cat.categoryName}</Tag>;
+      })
+    : [];
+  return <td>{catListRender}</td>;
+};
 
-export default PreassessmentsEdit;
+export default PreassessmentsDetails;

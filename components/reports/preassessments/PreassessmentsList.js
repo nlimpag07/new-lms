@@ -168,15 +168,15 @@ const PreassessmentList = ({
         pageable={true}
         onPageChange={pageChange}
       >
-        <Column field="title" title="Name" />
-        <Column field="category" title="Category" cell={categoryRender} />
+        <Column field="title" title="Learner" />
+        <Column field="category" title="Preassessment Date" cell={categoryRender} />
         <Column
           sortable={false}
           cell={(props) =>
             ActionRender(props, showModal, hideModal, setRunSpin)
           }
           field="SupplierID"
-          title="Action"
+          title="View"
         />
       </Grid>
 
@@ -277,8 +277,8 @@ const ActionRender = (props, showModal, hideModal, setRunSpin) => {
   return (
     <td>
       <Button
-        icon={<FontAwesomeIcon icon={["fas", `pencil-alt`]} size="lg" />}
-        onClick={() => showModal("edit", props.dataItem)}
+        icon={<FontAwesomeIcon icon={["fas", `search`]} size="lg" />}
+        onClick={() => showModal("details", props.dataItem)}
       />{" "}
       {/* <Popconfirm
         title="Delete this Status?"

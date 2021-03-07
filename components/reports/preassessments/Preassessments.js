@@ -12,7 +12,7 @@ import moment from "moment";
 import SaveUI from "../../theme-layout/course-circular-ui/save-circle-ui";
 import PreassessmentList from "./PreassessmentsList";
 import PreassessmentsAdd from "./PreassessmentsAdd";
-import PreassessmentsEdit from "./PreassessmentsEdit";
+import PreassessmentsDetails from "./PreassessmentsDetails";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -66,7 +66,7 @@ const Preassessments = ({ data }) => {
     visible: false,
     modalOperation: "",
     dataProps: null,
-    width: "auto",
+    width: "700px",
   });
   const [PreassessmentDetails, setPreassessmentDetails] = useState("");
   const [spin, setSpin] = useState(true);
@@ -131,7 +131,7 @@ const Preassessments = ({ data }) => {
         }
       }
       fetchData(config);
-      setRunSpin(false);      
+      setRunSpin(false);
     }
   }, [runSpin]);
 
@@ -186,6 +186,7 @@ const Preassessments = ({ data }) => {
 
   const showModal = (modalOperation, props) => {
     setPreassessmentsModal({
+      ...PreassessmentsModal,
       visible: true,
       modalOperation: modalOperation,
       dataProps: props,
@@ -198,7 +199,6 @@ const Preassessments = ({ data }) => {
     });
   };
 
-  
   function onSearch(val) {
     console.log("search:", val);
     setSpin(true);
@@ -206,7 +206,7 @@ const Preassessments = ({ data }) => {
     let searchedData = allPreassessmentData.filter((d) =>
       d.title.toLowerCase().includes(val.toLowerCase())
     );
-   
+
     setPreassessmentData(searchedData);
   }
   useEffect(() => {
@@ -215,7 +215,7 @@ const Preassessments = ({ data }) => {
       setSearchLoading(false);
     }
   }, [searchLoading]);
-
+  console.log("PreassessmentsModal", PreassessmentsModal);
   return (
     //GridType(gridList)
 
@@ -275,7 +275,7 @@ const Preassessments = ({ data }) => {
         </div>
       </Row>
       <Modal
-        title={`Preassessments - ${PreassessmentsModal.modalOperation}`}
+        title={`Preassessment ${PreassessmentsModal.modalOperation}`}
         centered
         visible={PreassessmentsModal.visible}
         onOk={() => hideModal(PreassessmentsModal.modalOperation)}
@@ -285,10 +285,10 @@ const Preassessments = ({ data }) => {
         width={PreassessmentsModal.width}
         cancelButtonProps={{ style: { display: "none" } }}
         okButtonProps={{ style: { display: "none" } }}
-        className="PicklistPreassessmentsModal"
+        className="ReportsPreassessmentsModal"
       >
-        {PreassessmentsModal.modalOperation == "edit" ? (
-          <PreassessmentsEdit
+        {PreassessmentsModal.modalOperation == "details" ? (
+          <PreassessmentsDetails
             dataProps={PreassessmentsModal.dataProps}
             categories={categories}
             hideModal={hideModal}
@@ -339,9 +339,12 @@ const Preassessments = ({ data }) => {
           background-color: #ffffff;
           width: 100%;
         }
-        .PicklistPreassessmentsModal .ant-modal-footer {
+        .ReportsPreassessmentsModal .ant-modal-footer {
           display: none;
           opacity: 0;
+        }
+        .ReportsPreassessmentsModal .k-grid th {
+          padding: 5px 24px;
         }
       `}</style>
     </motion.div>
