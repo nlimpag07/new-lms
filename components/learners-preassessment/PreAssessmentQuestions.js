@@ -58,7 +58,7 @@ const PreAssessmentQuestions = ({
       checker.push("Error");
     }
 
-    data = JSON.stringify(data);
+    data = JSON.stringify([data]);
     if (!checker.length) {
       var config = {
         method: "post",
