@@ -82,6 +82,7 @@ const PreAssessmentQuestions = ({
               data: nextQData,
             });
             setSpinning(false);
+            form.resetFields();
           } else {
             setAssessmentData({
               started: 2,
@@ -99,7 +100,7 @@ const PreAssessmentQuestions = ({
         });
     }
   };
-  
+
   const onChangeOptionList = (e) => {
     /* console.log("checked", e.target.value); */
   };

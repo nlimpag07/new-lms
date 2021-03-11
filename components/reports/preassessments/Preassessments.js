@@ -59,7 +59,7 @@ const menulists = [
 ];
 
 const Preassessments = ({ data }) => {
-  console.log("data", data);
+  //console.log("data", data);
   const router = useRouter();
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   var [PreassessmentsModal, setPreassessmentsModal] = useState({
@@ -90,7 +90,7 @@ const Preassessments = ({ data }) => {
       setSpin(true);
       var config = {
         method: "get",
-        url: apiBaseUrl + "/picklist/preassessment",
+        url: apiBaseUrl + "/learner/preassessmentReports",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ const Preassessments = ({ data }) => {
           const response = await axios(config);
           if (response) {
             let theRes = response.data;
-            console.log("Session Response", response.data);
+            console.log("Session Response1", response.data);
             if (theRes) {
               const {
                 currentPage,
@@ -138,7 +138,7 @@ const Preassessments = ({ data }) => {
   useEffect(() => {
     var config = {
       method: "get",
-      url: apiBaseUrl + "/Picklist/category",
+      url: apiBaseUrl + "/learner/preassessmentReports",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -164,23 +164,15 @@ const Preassessments = ({ data }) => {
     }
     fetchData(config);
 
-    const {
-      currentPage,
-      pageSize,
-      totalPages,
-      totalRecords,
-      orderBy,
-      result,
-    } = data;
     setPage({
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      totalRecords: totalRecords,
-      orderBy: orderBy,
+      currentPage: 1,
+      pageSize: 1,
+      totalPages: 1,
+      orderBy: "DESC",
+      totalRecords: data.length,
     });
-    setAllPreassessmentData(result);
-    setPreassessmentData(result);
+    setAllPreassessmentData(data);
+    setPreassessmentData(data);
     setSpin(false);
   }, []);
 
@@ -194,6 +186,7 @@ const Preassessments = ({ data }) => {
   };
   const hideModal = (modalOperation) => {
     setPreassessmentsModal({
+      ...PreassessmentsModal,
       visible: false,
       modalOperation: modalOperation,
     });
@@ -288,6 +281,7 @@ const Preassessments = ({ data }) => {
       >
         {PreassessmentsModal.modalOperation == "details" ? (
           <PreassessmentsDetails
+            PreassessmentData={PreassessmentData}
             dataProps={PreassessmentsModal.dataProps}
             categories={categories}
             hideModal={hideModal}

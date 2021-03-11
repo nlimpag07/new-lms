@@ -77,21 +77,35 @@ const PreassessmentList = ({
   }, []);
 
   var lastSelectedIndex = 0;
-  const the_data =
+  let the_data =
     PreassessmentData && PreassessmentData.length ? PreassessmentData : [];
-  const ddata = the_data.map((dataItem) => {
-    let catData =
-      dataItem.preassessmentCategory.length &&
-      dataItem.preassessmentCategory.map((pcat) => {
-        return {
-          categoryId: pcat.categoryId,
-          categoryName: pcat.category.name,
-        };
-      });
-    //console.log("catData", catData);
-    return Object.assign({ selected: false, category: catData }, dataItem);
+  let filtered = the_data.filter(
+    (dat, index, arr) =>
+      arr.findIndex(
+        (t) => t.userId == dat.userId && t.userFullName == dat.userFullName
+      ) == index
+  );
+  /* let keys = ['userId', 'userFullName'];
+    let filtered = the_data.filter(
+        (s => o => 
+            (k => !s.has(k) && s.add(k))
+            (keys.map(k => o[k]).join('|'))
+        )
+        (new Set)
+    ); */
+  //console.log("filtered", filtered);
+  the_data = filtered.map((dataItem) => {
+    return {
+      id: dataItem.id,
+      userId: dataItem.userId,
+      createdAt: dataItem.createdAt,
+      userFullName: dataItem.userFullName,
+    };
   });
-  console.log("ddata", ddata);
+  const ddata = the_data.map((dataItem) => {
+    return Object.assign({ selected: false }, dataItem);
+  });
+  //console.log("ddata", ddata);
   const [Data, setData] = useState(ddata);
   const [theSort, setTheSort] = useState({
     sort: [{ field: "id", dir: "desc" }],
@@ -168,8 +182,12 @@ const PreassessmentList = ({
         pageable={true}
         onPageChange={pageChange}
       >
-        <Column field="title" title="Learner" />
-        <Column field="category" title="Preassessment Date" cell={categoryRender} />
+        <Column field="userFullName" title="Learner" />
+        <Column
+          field="createdAt"
+          title="Preassessment Date"
+          cell={dateRender}
+        />
         <Column
           sortable={false}
           cell={(props) =>
@@ -205,6 +223,16 @@ const PreassessmentList = ({
         }
       `}</style>
     </>
+  );
+};
+const dateRender = (props) => {
+  //console.log("props", props);
+  let theDate = moment(props.dataItem.createdAt).format("YYYY-MM-DD h:mm a");
+
+  return (
+    <td>
+      <Tag key={props.dataIndex}>{theDate}</Tag>
+    </td>
   );
 };
 const categoryRender = (props) => {

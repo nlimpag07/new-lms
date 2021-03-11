@@ -4,7 +4,17 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
-import { Row, Spin, Input, Form, Select, Button, message, Tag } from "antd";
+import {
+  Row,
+  Col,
+  Spin,
+  Input,
+  Form,
+  Select,
+  Button,
+  message,
+  Tag,
+} from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import moment from "moment";
@@ -21,14 +31,15 @@ const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
 
 const PreassessmentsDetails = ({
+  PreassessmentData,
   dataProps,
   hideModal,
   setRunSpin,
   categories,
 }) => {
   console.log("dataProps", dataProps);
-  const { title, id } = dataProps;
-  const dProps = [dataProps];
+  const { userFullName, id, createdAt, userId } = dataProps;
+
   const router = useRouter();
   const [form] = Form.useForm();
   const [hasError, setHasError] = useState("");
@@ -38,120 +49,44 @@ const PreassessmentsDetails = ({
   useEffect(() => {}, []);
 
   var lastSelectedIndex = 0;
-  const the_data = dProps && dProps.length ? dProps : [];
-  const ddata = the_data.map((dataItem) => {
-    let catData =
-      dataItem.preassessmentCategory.length &&
-      dataItem.preassessmentCategory.map((pcat) => {
-        return {
-          categoryId: pcat.categoryId,
-          categoryName: pcat.category.name,
-        };
-      });
-    //console.log("catData", catData);
-    return Object.assign({ selected: false, category: catData }, dataItem);
-  });
-  console.log("ddata", ddata);
-  const [Data, setData] = useState(ddata);
-  const [theSort, setTheSort] = useState({
-    sort: [{ field: "id", dir: "desc" }],
-  });
-  const selectionChange = (event) => {
-    const theData = Data.map((item) => {
-      if (item.id === event.dataItem.id) {
-        item.selected = !event.dataItem.selected;
-      }
-      return item;
-    });
-    setData(theData);
-  };
-  const rowClick = (event) => {
-    let last = lastSelectedIndex;
-    const theData = [...Data];
+  const the_data =
+    PreassessmentData && PreassessmentData.length ? PreassessmentData : [];
+  const ddata = the_data.filter((dataItem) => dataItem.userId === userId);
+  //console.log("ddata", ddata);
+  //const [Data, setData] = useState(ddata);
 
-    const current = theData.findIndex(
-      (dataItem) => dataItem === event.dataItem
-    );
-
-    if (!event.nativeEvent.shiftKey) {
-      lastSelectedIndex = last = current;
-    }
-
-    if (!event.nativeEvent.ctrlKey) {
-      theData.forEach((item) => (item.selected = false));
-    }
-    const select = !event.dataItem.selected;
-    for (let i = Math.min(last, current); i <= Math.max(last, current); i++) {
-      theData[i].selected = select;
-    }
-    setData(theData);
-  };
-
-  const headerSelectionChange = (event) => {
-    const checked = event.syntheticEvent.target.checked;
-    const theData = Data.map((item) => {
-      item.selected = checked;
-      return item;
-    });
-    setData(theData);
-  };
-
-  const pageChange = (event) => {
-    setPagination({
-      skip: event.page.skip,
-      take: event.page.take,
-    });
-  };
-
-  var defaultCatOptionsId;
-  if (dataProps) {
-    let precat = dataProps.category;
-    defaultCatOptionsId = precat.map((cat) => cat.categoryId);
-  }
-  const catOptionList =
-    categories.length &&
-    categories.map((option, index) => {
-      let catNames = `${option.name}`;
-      let optValue = option.id;
+  const QuestionsAnswers =
+    ddata.length &&
+    ddata.map((data, index) => {
+      //console.log("data", data);
+      let splitRes = data.result.split("/");
+      const q = splitRes[0];
+      const a = splitRes[1];
+      let catList = data.category.length
+        ? data.category.map((cat, index) => {
+            return <Tag key={index}>{cat.name}</Tag>;
+          })
+        : [];
       return (
-        <Option key={index} label={catNames} value={optValue}>
-          {catNames}
-        </Option>
+        <div className="q_container" key={`qh-${index}`}>
+          <div className="q_holder">{q}</div>
+          <div className="a_holder">{a}</div>
+          <div className="c_holder">{catList}</div>
+        </div>
       );
     });
+
   return (
     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ margin: "0" }}>
-      <Grid
-        data={orderBy(
-          Data.slice(pagination.skip, pagination.take + pagination.skip),
-          theSort.sort
-        )}
-        /* style={{ height: "550px" }} */
-        selectedField="selected"
-        onSelectionChange={selectionChange}
-        /* onHeaderSelectionChange={headerSelectionChange} */
-        onRowClick={rowClick}
-        sortable
-        sort={theSort.sort}
-        onSortChange={(e) => {
-          setTheSort({
-            sort: e.sort,
-          });
-        }}
-        skip={pagination.skip}
-        take={pagination.take}
-        total={Data.length}
-        pageable={true}
-        onPageChange={pageChange}
-      >
-        <Column field="title" title="Preassessment Questions" />
-        <Column
-          field="category"
-          title="Answers"
-          cell={categoryRender}
-        />        
-      </Grid>      
-
+      <Col xs={24} sm={24} md={12}>
+        Student Name: {userFullName}
+      </Col>
+      <Col xs={24} sm={24} md={12}>
+        Date Taken: {moment(createdAt).format("YYYY-MM-DD h:mm a")}
+      </Col>
+      <Col xs={24} sm={24} md={24} style={{ marginTop: "2rem" }}>
+        {QuestionsAnswers}
+      </Col>
       <style jsx global>{`
         .colorAvatar:hover {
           cursor: pointer;
@@ -170,6 +105,14 @@ const PreassessmentsDetails = ({
           left: 0;
           background-color: #ffffff;
           padding: 5% 0;
+        }
+        .q_container {
+          margin-bottom: 1rem;
+        }
+        .q_holder,
+        .a_holder,
+        .c_holder {
+          padding: 0.2rem 0;
         }
       `}</style>
     </Row>
