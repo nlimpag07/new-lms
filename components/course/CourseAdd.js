@@ -546,7 +546,6 @@ const CourseAdd = () => {
             name="basicForm"
             hideRequiredMark={true}
             onFinish={onFinish}
-            validateMessages={validateMessages}
           >
             <Row
               className="widget-container course-management"
@@ -574,12 +573,7 @@ const CourseAdd = () => {
                   <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
                     <Form.Item
                       name="title"
-                      label="Course Title"
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
+                      label="Course Title"                      
                     >
                       <Input placeholder="Course title" allowClear />
                     </Form.Item>
