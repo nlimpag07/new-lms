@@ -65,6 +65,8 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
+const CancelToken = axios.CancelToken;
+let cancel;
 
 const menulists = [
   {
@@ -110,6 +112,9 @@ const CourseList = (props) => {
   }, []);
 
   useEffect(() => {
+    if (cancel !== undefined) {
+      cancel();
+    }
     var config = {
       method: "get",
       url: apiBaseUrl + "/Picklist/category",
@@ -117,6 +122,9 @@ const CourseList = (props) => {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
+      cancelToken: new CancelToken(function executor(c) {
+        cancel = c;
+      }),
     };
     async function fetchData(config) {
       try {
@@ -132,6 +140,9 @@ const CourseList = (props) => {
           }
         }
       } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("Request Cancelled by User");
+        }
         console.log("Error Response", error);
         let errContent;
         error.response && error.response.data
@@ -501,7 +512,6 @@ const CourseList = (props) => {
             top: 50%;
           }
 
-          
           .searchbox-holder .ant-input,
           .searchbox-holder .ant-input-search-icon {
             font-size: 1rem;
@@ -580,7 +590,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   </a>
                 </Link>
               }
-              actions={[               
+              actions={[
                 <Tooltip title="Edit">
                   <div
                     className="class-icon-holder"

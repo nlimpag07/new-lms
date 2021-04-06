@@ -55,6 +55,8 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 //const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
+const CancelToken = axios.CancelToken;
+let cancel;
 
 const AuthoredCourses = ({ authoredCoursesList }) => {
   const token = Cookies.get("token");
@@ -69,6 +71,9 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
   const [myAuthoredCourses, setMyAuthoredCourses] = useState("");
   //console.log(authoredCoursesList)
   useEffect(() => {
+    if (cancel !== undefined) {
+      cancel();
+    }
     var data = JSON.stringify({});
     var config = {
       method: "get",
@@ -78,32 +83,37 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
         "Content-Type": "application/json",
       },
       data: data,
+      cancelToken: new CancelToken(function executor(c) {
+        cancel = c;
+      }),
     };
     async function fetchData(config) {
-      const response = await axios(config);
-      if (response.data) {
-        console.log(response.data)        
-        setMyAuthoredCourses(
-          response.data.courses
-        );
-      } else {        
+      try {
+        const response = await axios(config);
+        if (response.data) {
+          console.log(response.data);
+          setMyAuthoredCourses(response.data.courses);
+        } else {
           setMyAuthoredCourses(
             allCourses.result.filter((course) => course.authorId == userId)
-          ); 
+          );
+        }
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          console.log("Request Cancelled by User");
+        }
+        console.error(error);
+        setMyAuthoredCourses(
+          allCourses.result.filter((course) => course.authorId == userId)
+        );
       }
+
       setLoading(false);
     }
     fetchData(config);
   }, []);
   return (
-    <Col
-      className="widget-holder-col"
-      xs={24}
-      sm={24}
-      md={24}
-      lg={16}
-    >
-      
+    <Col className="widget-holder-col" xs={24} sm={24} md={24} lg={16}>
       <Row className="widget-header-row" justify="start">
         <Col xs={22} sm={23}>
           <h3 className="widget-title">Authored Courses</h3>
@@ -124,19 +134,19 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
         </Col>
       </Row>
       <div className="common-holder">
-      <Row
-        className="AuthoredCourses-ListItems"
-        gutter={[16, 16]}
-        style={{ padding: "10px 0" }}
-      >
-        {GridType(
-          myAuthoredCourses,
-          curGridStyle,
-          setModal2Visible,
-          router,
-          loading
-        )}
-      </Row>
+        <Row
+          className="AuthoredCourses-ListItems"
+          gutter={[16, 16]}
+          style={{ padding: "10px 0" }}
+        >
+          {GridType(
+            myAuthoredCourses,
+            curGridStyle,
+            setModal2Visible,
+            router,
+            loading
+          )}
+        </Row>
       </div>
       <Modal
         title="Publish Properties"
@@ -160,14 +170,13 @@ const AuthoredCourses = ({ authoredCoursesList }) => {
         .ant-card-actions > li:hover {
           background-color: #f0f0f0;
           margin: 0;
-        }        
+        }
         .widget-holder-col .widget-title {
           color: #e69138;
           margin-bottom: 0;
           text-transform: uppercase;
         }
-        .widget-holder-col .widget-header-row {        
-          
+        .widget-holder-col .widget-header-row {
           color: #e69138;
         }
         .widget-holder-col .widget-header-row .widget-switchgrid-holder {
@@ -256,7 +265,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
   const descTrimmerDecoder = (desc) => {
     let d = decodeURI(desc);
     let trimmedDesc = d.substr(0, 250);
-    return trimmedDesc+'...';
+    return trimmedDesc + "...";
   };
 
   return courses.length ? (
@@ -288,7 +297,7 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
                   </a>
                 </Link>
               }
-              actions={[                
+              actions={[
                 <Tooltip title="Edit">
                   <div
                     className="class-icon-holder"
@@ -342,10 +351,10 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
       ))}
     </>
   ) : (
-    <div style={{margin:"0 auto"}}>
-    <Loader loading={loading}>
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-    </Loader>
+    <div style={{ margin: "0 auto" }}>
+      <Loader loading={loading}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </Loader>
     </div>
   );
 };
