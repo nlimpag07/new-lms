@@ -12,6 +12,7 @@ import {
   Upload,
   Table,
   Alert,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -217,7 +218,12 @@ const CourseOutlineMediaFiles = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+      <Tooltip
+        placement="right"
+        title="Add/Manage Media Files"
+        arrowPointAtCenter
+        destroyTooltipOnHide
+      >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -233,7 +239,7 @@ const CourseOutlineMediaFiles = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
 
       <style jsx global>{``}</style>
     </>

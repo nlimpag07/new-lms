@@ -10,6 +10,7 @@ import {
   Form,
   Collapse,
   Table,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -128,26 +129,33 @@ const CourseWidgetType = (props) => {
                                 />
                               </Form.Item>
                               {fields.length >= 1 ? (
-                                <SettingFilled
-                                  className="dynamic-delete-button"
-                                  style={{ margin: "0 8px" }}
-                                  key={`del-${field.key}`}
-                                  onClick={() => {
-                                    /* remove(field.name);
+                                <Tooltip
+                                  placement="right"
+                                  title="Manage Type"
+                                  arrowPointAtCenter
+                                  destroyTooltipOnHide
+                                >
+                                  <SettingFilled
+                                    className="dynamic-delete-button"
+                                    style={{ margin: "0 8px" }}
+                                    key={`del-${field.key}`}
+                                    onClick={() => {
+                                      /* remove(field.name);
                                     onRemove(field.id); */
-                                    showModal(
-                                      widgetFieldLabels.catname,
-                                      widgetFieldLabels.catValueLabel,
-                                      () =>
-                                        modalFormBody(
-                                          allCourseType,
-                                          thisPicklist,
-                                          isOkButtonDisabled,
-                                          setIsOkButtonDisabled
-                                        )
-                                    );
-                                  }}
-                                />
+                                      showModal(
+                                        widgetFieldLabels.catname,
+                                        widgetFieldLabels.catValueLabel,
+                                        () =>
+                                          modalFormBody(
+                                            allCourseType,
+                                            thisPicklist,
+                                            isOkButtonDisabled,
+                                            setIsOkButtonDisabled
+                                          )
+                                      );
+                                    }}
+                                  />
+                                </Tooltip>
                               ) : null}
                             </Form.Item>
                           </div>
@@ -200,6 +208,12 @@ const CourseWidgetType = (props) => {
                                   />
                                 </Form.Item>
                                 {chosenRows.length >= 1 ? (
+                                  <Tooltip
+                                  placement="right"
+                                  title="Manage Type"
+                                  arrowPointAtCenter
+                                  destroyTooltipOnHide
+                                >
                                   <SettingFilled
                                     className="dynamic-delete-button"
                                     style={{ margin: "0 8px" }}
@@ -220,6 +234,7 @@ const CourseWidgetType = (props) => {
                                       );
                                     }}
                                   />
+                                  </Tooltip>
                                 ) : null}
                               </Form.Item>
                             </div>
@@ -235,25 +250,39 @@ const CourseWidgetType = (props) => {
         }}
       </Form.Item>
       {chosenRows.length < 1 ? (
-        <span>
+        <Tooltip
+        placement="right"
+        title="Add Type"
+        arrowPointAtCenter
+        destroyTooltipOnHide
+      >
           <PlusOutlined
             onClick={() =>
               showModal(
                 widgetFieldLabels.catname,
                 widgetFieldLabels.catValueLabel,
-                () => modalFormBody(allCourseType, chosenRows,isOkButtonDisabled,
-                  setIsOkButtonDisabled,)
+                () =>
+                  modalFormBody(
+                    allCourseType,
+                    chosenRows,
+                    isOkButtonDisabled,
+                    setIsOkButtonDisabled
+                  )
               )
             }
           />
-        </span>
+        </Tooltip>
       ) : null}
       <style jsx global>{``}</style>
     </>
   );
 };
-const modalFormBody = (allCourseType, chosenRows,isOkButtonDisabled,
-  setIsOkButtonDisabled,) => {
+const modalFormBody = (
+  allCourseType,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
   console.log("AllCourseType", allCourseType);
   console.log("chosen", chosenRows);
   const [sourceData, setsourceData] = useState([]);
@@ -297,10 +326,10 @@ const modalFormBody = (allCourseType, chosenRows,isOkButtonDisabled,
     let rowData = [];
     rowData.push({ ...selected, isticked: true });
     setSelectedRows(rowData);
-     //enable or disable the submit button
-     if (chosenRows.length || selected) {
-      setIsOkButtonDisabled(false)
-    }else{
+    //enable or disable the submit button
+    if (chosenRows.length || selected) {
+      setIsOkButtonDisabled(false);
+    } else {
       setIsOkButtonDisabled(true);
     }
     //console.log("selected", rowData);

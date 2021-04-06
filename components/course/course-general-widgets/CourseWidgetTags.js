@@ -10,6 +10,7 @@ import {
   Form,
   Collapse,
   Table,
+  Tooltip
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -208,7 +209,12 @@ const CourseWidgetTags = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+      <Tooltip
+                                    placement="right"
+                                    title="Add/Manage Tags"
+                                    arrowPointAtCenter
+                                    destroyTooltipOnHide
+                                  >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -224,7 +230,7 @@ const CourseWidgetTags = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
 
       <style jsx global>{``}</style>
     </>

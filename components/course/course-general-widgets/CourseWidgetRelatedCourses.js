@@ -11,6 +11,7 @@ import {
   Collapse,
   Table,
   Switch,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -181,7 +182,12 @@ const CourseWidgetRelatedCourses = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+      <Tooltip
+        placement="right"
+        title="Add/Manage Related Course"
+        arrowPointAtCenter
+        destroyTooltipOnHide
+      >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -197,7 +203,7 @@ const CourseWidgetRelatedCourses = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
 
       <style jsx global>{``}</style>
     </>
@@ -387,13 +393,13 @@ const modalFormBody = (
     let rowData = selectedRows.map((entry, index) => {
       entry.isticked = true;
       return entry;
-    });   
+    });
     //update the selectedRows to re-render
     setSelectedRows(rowData);
     //enable or disable the submit button
     if (chosenRows.length || selectedRowKeys.length) {
-      setIsOkButtonDisabled(false)
-    }else{
+      setIsOkButtonDisabled(false);
+    } else {
       setIsOkButtonDisabled(true);
     }
     //setSelectedRows(selectedRows);

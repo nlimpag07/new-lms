@@ -10,6 +10,7 @@ import {
   Form,
   Collapse,
   Table,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -211,7 +212,13 @@ const CourseWidgetCategory = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+
+      <Tooltip
+        placement="right"
+        title="Add/Manage Categories"
+        arrowPointAtCenter
+        destroyTooltipOnHide
+      >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -227,7 +234,7 @@ const CourseWidgetCategory = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
 
       <style jsx global>{``}</style>
     </>
@@ -274,8 +281,8 @@ const modalFormBody = (
     setSelectedRows(rowData);
     //enable or disable the submit button
     if (chosenRows.length || selectedRowKeys.length) {
-      setIsOkButtonDisabled(false)
-    }else{
+      setIsOkButtonDisabled(false);
+    } else {
       setIsOkButtonDisabled(true);
     }
     //setSelectedRows(selectedRows);

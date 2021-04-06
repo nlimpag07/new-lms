@@ -15,6 +15,7 @@ import {
   Checkbox,
   Button,
   Space,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -207,7 +208,12 @@ const CourseAssessmentsItems = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+      <Tooltip
+                                    placement="right"
+                                    title="Add Item"
+                                    arrowPointAtCenter
+                                    destroyTooltipOnHide
+                                  >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -217,7 +223,7 @@ const CourseAssessmentsItems = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
       <style jsx global>{``}</style>
     </>
   );

@@ -12,6 +12,7 @@ import {
   Radio,
   Select,
   Checkbox,
+  Tooltip,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -110,6 +111,12 @@ const CoursePostEvaluationsValues = (props) => {
                                 />
                               </Form.Item>
                               {fields.length >= 1 ? (
+                                <Tooltip
+                                placement="right"
+                                title="Delete"
+                                arrowPointAtCenter
+                                destroyTooltipOnHide
+                              >
                                 <MinusCircleOutlined
                                   className="dynamic-delete-button"
                                   style={{ margin: "0 8px" }}
@@ -119,6 +126,7 @@ const CoursePostEvaluationsValues = (props) => {
                                     onRemove(field.optionname);
                                   }}
                                 />
+                                </Tooltip>
                               ) : null}
                             </Form.Item>
                           </div>
@@ -170,15 +178,22 @@ const CoursePostEvaluationsValues = (props) => {
                                   />
                                 </Form.Item>
                                 {chosenRows.length >= 1 ? (
-                                  <CloseOutlined
-                                    className="dynamic-delete-button"
-                                    style={{ margin: "0 8px" }}
-                                    key={`del-${field.key}`}
-                                    onClick={() => {
-                                      remove(field.name);
-                                      onRemove(field.optionname);
-                                    }}
-                                  />
+                                  <Tooltip
+                                    placement="right"
+                                    title="Delete"
+                                    arrowPointAtCenter
+                                    destroyTooltipOnHide
+                                  >
+                                    <CloseOutlined
+                                      className="dynamic-delete-button"
+                                      style={{ margin: "0 8px" }}
+                                      key={`del-${field.key}`}
+                                      onClick={() => {
+                                        remove(field.name);
+                                        onRemove(field.optionname);
+                                      }}
+                                    />
+                                  </Tooltip>
                                 ) : null}
                               </Form.Item>
                             </div>
@@ -193,7 +208,12 @@ const CoursePostEvaluationsValues = (props) => {
           }
         }}
       </Form.Item>
-      <span>
+      <Tooltip
+        placement="right"
+        title="Add Value"
+        arrowPointAtCenter
+        destroyTooltipOnHide
+      >
         <PlusOutlined
           onClick={() =>
             showModal(
@@ -203,7 +223,7 @@ const CoursePostEvaluationsValues = (props) => {
             )
           }
         />
-      </span>
+      </Tooltip>
       <style jsx global>{``}</style>
     </>
   );
