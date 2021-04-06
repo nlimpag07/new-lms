@@ -549,7 +549,6 @@ const CourseAdd = () => {
           >
             <Row
               className="widget-container course-management"
-              /* gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} */
               gutter={[16, 0]}
               style={{ margin: "0" }}
             >
@@ -583,7 +582,6 @@ const CourseAdd = () => {
                         rows={10}
                         placeholder="Course Description"
                         allowClear
-                        /* onChange={onChange} */
                       />
                     </Form.Item>
                   </Col>
