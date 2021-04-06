@@ -29,19 +29,23 @@ import {
   UnorderedListOutlined,
 } from "@ant-design/icons";
 const { Meta } = Card;
-
+const CancelToken = axios.CancelToken;
+let cancel;
 const Course = (props) => {
   const { courselist } = props;
   //console.log(courselist)
-  const {courseAllList, setCourseAllList } = useCourseList();
+  const { courseAllList, setCourseAllList } = useCourseList();
   //const [allCourses, setAllCourses] = useState(courselist);
   const router = useRouter();
   var urlPath = router.asPath;
   var urlquery = router.query.course;
   useEffect(() => {
+    if (cancel !== undefined) {
+      cancel();
+    }
     setCourseAllList(courselist);
   }, []);
-  
+
   return (
     <MainThemeLayout>
       <Layout className="main-content-holder courses-class" id="courses-class">
@@ -59,6 +63,8 @@ const Course = (props) => {
 };
 
 Course.getInitialProps = async (ctx) => {
+  const CancelToken = axios.CancelToken;
+  let cancel;
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -73,17 +79,26 @@ Course.getInitialProps = async (ctx) => {
     token = userData.token;
   }
 
-    var config = {
-      method: "get",
-      url: apiBaseUrl + "/courses",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    };
-
+  var config = {
+    method: "get",
+    url: apiBaseUrl + "/courses",
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+    cancelToken: new CancelToken(function executor(c) {
+      cancel = c;
+    }),
+  };
+  try {
     const result = await axios(config);
     res = result.data;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.log("Request Cancelled");
+    }
+    console.log("Error Response", error);
+  }
   return { courselist: res };
 };
 

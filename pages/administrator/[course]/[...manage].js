@@ -61,13 +61,17 @@ const { Meta } = Card;
 /* const apiBaseUrl = process.env.apiBaseUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype"); */
-
+const CancelToken = axios.CancelToken;
+let cancel;
 const CourseManagement = (props) => {
   const { courselist } = props;
   const { courseAllList, setCourseAllList } = useCourseList();
 
   //console.log("Manage InitialProps", courselist);
   useEffect(() => {
+    if (cancel !== undefined) {
+      cancel();
+    }
     setCourseAllList(courselist);
   }, []);
   const router = useRouter();
@@ -125,40 +129,71 @@ const CourseManagement = (props) => {
       return <Error statusCode={404} />;
     }
     thePage[0] == "view" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseView course_id={thePage[1]} /></CourseDetailsProvider>); // url /view/courseId - viewing the course General
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseView course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
     thePage[0] == "edit" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseEdit course_id={thePage[1]} /></CourseDetailsProvider>); // url /edit/couseId - Editing Course General
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseEdit course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // url /edit/couseId - Editing Course General
   } else if (
     manageQueryLength == 3 &&
     isSubPanelsIncluded &&
     /* thePage[0] == "view" || */ thePage[0] == "edit"
-  ) {   
+  ) {
     thePage[0] == "edit" &&
       thePage[2] == "course-outline" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseOutlines course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseOutlines course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "learning-outcomes" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseOutcomes course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseOutcomes course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "assessments" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseAssessments course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course 
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseAssessments course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "instructors" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseInstructors course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course 
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseInstructors course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "competencies" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CourseCompetencies course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course 
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CourseCompetencies course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
     thePage[0] == "edit" &&
       thePage[2] == "evaluations" &&
-      (theContent = <CourseDetailsProvider course_id={thePage[1]} ><CoursePostEvaluations course_id={thePage[1]} /></CourseDetailsProvider>); // Editing the course 
+      (theContent = (
+        <CourseDetailsProvider course_id={thePage[1]}>
+          <CoursePostEvaluations course_id={thePage[1]} />
+        </CourseDetailsProvider>
+      )); // Editing the course
   } else {
     return <Error statusCode={404} />;
   }
 
   //console.log(router.query.manage.length);
   //
-  
 
   return (
     <MainThemeLayout>
@@ -177,6 +212,8 @@ const CourseManagement = (props) => {
   );
 };
 CourseManagement.getInitialProps = async (ctx) => {
+  const CancelToken = axios.CancelToken;
+  let cancel;
   var apiBaseUrl = process.env.apiBaseUrl;
   var token = null;
   var userData;
@@ -198,12 +235,19 @@ CourseManagement.getInitialProps = async (ctx) => {
       Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
+    cancelToken: new CancelToken(function executor(c) {
+      cancel = c;
+    }),
   };
-
-  const result = await axios(config);
-  res = result.data;
-  const data = res;
-  //console.log(data);
+  try {
+    const result = await axios(config);
+    res = result.data;
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      console.log("Request Cancelled");
+    }
+    console.log("Error Response", error);
+  }
   return { courselist: res };
 };
 export default withAuth(CourseManagement);

@@ -162,6 +162,9 @@ const CourseView = ({ course_id }) => {
   ];
 
   useEffect(() => {
+    if (cancel !== undefined) {
+      cancel();
+    }
     setCourseId(course_id);
     let allCourse = JSON.parse(localStorage.getItem("courseAllList"));
     setCourse(
@@ -175,6 +178,9 @@ const CourseView = ({ course_id }) => {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
+      cancelToken: new CancelToken(function executor(c) {
+        cancel = c;
+      }),
     };
     axios
       .all([
@@ -208,6 +214,9 @@ const CourseView = ({ course_id }) => {
       )
       .catch((errors) => {
         // react on errors.
+        if (axios.isCancel(error)) {
+          console.log("Request Cancelled");
+        }
         console.error(errors);
       });
 
