@@ -203,7 +203,7 @@ const EnrollmentsAdd = ({
       }
     }
     //Standard Entry, Static atm
-    data.userGroupId = 3;
+    //data.userGroupId = 3;
 
     if (!!values.isNotify) {
       values.isNotify ? (data.isNotify = 1) : (data.isNotify = 0);
@@ -221,7 +221,7 @@ const EnrollmentsAdd = ({
         l_session.push({
           sessionId: session,
           //date is not sure if necessary for now
-          dateScheduled: null,
+          //dateScheduled: null,
         });
       });
       data.learnerSession = l_session;

@@ -70,7 +70,7 @@ const EnrollmentsView = ({
         }
       } catch (error) {
         const { response } = error;
-        const { request, data } = response; // take everything but 'request'
+        const { data } = response; // take everything but 'request'
 
         console.log("Error Response", data.message);
 
@@ -114,31 +114,40 @@ const EnrollmentsView = ({
   //processing all the sessions of the course
   const listSessions = [];
   if (courseSessions.length) {
-    //console.log('courseSessions',courseSessions) 
-
-    for (let i = 0; i < courseSessions.length; i++) {
-      const sDate = moment(courseSessions[i].startDate).format(
-        "DD-MMM-YYYY h:mm a"
-      );
-      const eDate = moment(courseSessions[i].endDate).format(
-        "DD-MMM-YYYY h:mm a"
-      );
+    //console.log("courseSessions", courseSessions);
+    let filtered = courseSessions.filter(
+      (dat, index, arr) =>
+        arr.findIndex(
+          (t) => t.sessionId == dat.sessionId && t.courseId == dat.courseId
+        ) == index
+    );
+    //console.log("Filtered", filtered);
+    for (let i = 0; i < filtered.length; i++) {
+      const sTitle = filtered[i].title;
+      const sDate = moment(filtered[i].startDate).format("DD-MMM-YYYY h:mm a");
+      const eDate = moment(filtered[i].endDate).format("DD-MMM-YYYY h:mm a");
       listSessions.push(
         <Option
           key={i}
-          value={courseSessions[i].id}
-          label={`(${sDate}) to (${eDate})`}
-        >{`(${sDate}) to (${eDate})`}</Option>
+          value={filtered[i].id}
+          label={`${sTitle} : (${sDate}) to (${eDate})`}
+        >{`${sTitle} : (${sDate}) to (${eDate})`}</Option>
       );
     }
   }
-  console.log(listSessions)
+  //console.log(listSessions);
   //processing the assigned session(s) for the specific learner and set it to initial values via defaultLearnerSessions
   var defaultLearnerSessions;
   if (dataProps) {
     let lSession = dataProps.learnerSession;
-    defaultLearnerSessions = lSession.map((session) => session.sessionId);
-    //console.log(defaultLearnerSessions);
+    let filteredLearnerSessions = lSession.filter(
+      (dat, index, arr) =>
+        arr.findIndex(
+          (t) => t.sessionId == dat.sessionId && t.courseId == dat.courseId
+        ) == index
+    );
+    defaultLearnerSessions = filteredLearnerSessions.map((session) => session.sessionId);
+    console.log("Default LearnerSession",defaultLearnerSessions);
   }
   const onCancel = (form) => {
     form.resetFields();
