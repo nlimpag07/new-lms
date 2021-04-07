@@ -61,50 +61,28 @@ const LearnersCalendar = ({ course_id }) => {
   useEffect(() => {
     /* var conf = {
       method: "get",
-      url: apiBaseUrl + "/Courses/" + course_id,
+      url: apiBaseUrl + "/Learner/MyCalendar",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
-      data: { id: course_id },
     };
     async function getCourseDetails(conf) {
       try {
         const response = await axios(conf);
         if (response) {
           let theRes = response.data;
-          //console.log("Course", response.data);
-          // wait for response if the verification is true
-          if (theRes) {
-            theRes.courseInstructor && theRes.courseInstructor.length
-              ? setInstructorsList(theRes.courseInstructor)
-              : setInstructorsList([]);
-            theRes.courseType && theRes.courseType.length
-              ? setCourseType(theRes.courseType[0].courseTypeId)
-              : setCourseType(0);
-          } else {
-            setInstructorsList([]);
-            setCourseType(0);
-          }
+          console.log("MyCalendar", response.data);          
         }
       } catch (error) {
+        console.log("error", error);
         const { response } = error;
-        const { request, data } = response; // take everything but 'request'
-        Modal.error({
-          title: "Error: Unable to Retrieve data",
-          content: data.message + " Please contact Technical Support",
-          centered: true,
-          width: 450,
-          onOk: () => {
-            //setdrawerVisible(false);
-            visible: false;
-          },
-        });
+        const { data } = response; // take everything but 'request'        
       }
       //setLoading(false);
     }
     getCourseDetails(conf); */
-    setSpin(false)
+    setSpin(false);
   }, []);
 
   useEffect(() => {
@@ -383,127 +361,132 @@ const LearnersCalendar = ({ course_id }) => {
   }
   return (
     //GridType(gridList)
-    <Row className="widget-container">
-      {spin ? (
-        <div className="spinHolder">
-          <Spin
-            size="small"
-            tip="Retrieving data..."
-            spinning={spin}
-            delay={100}
-          ></Spin>
-        </div>
-      ) : (
-        <motion.div initial="hidden" animate="visible" variants={list}>
-          <Col
-            className="gutter-row widget-holder-col LearnersCalendar"
-            xs={24}
-            sm={24}
-            md={24}
-            lg={24}
-          >
-            <h1>Calendar</h1>
-            {courseType != 2 ? (
-              <Calendar
-                /*dateCellRender={dateCellRender}*/
-                dateFullCellRender={dateFullCellRender}
-                monthCellRender={monthCellRender}
-                /* onSelect={(date) => onOpenModal(date, calSessionModal)} */
-                mode="month"
-              />
-            ) : (
-              <div>You cannot set Sessions on Self-Paced type courses.</div>
-            )}
-          </Col>
-        </motion.div>
-      )}
-      <Modal
-        title={`${calSessionModal.title}`}
-        centered
-        visible={calSessionModal.visible}
-        onOk={() => onCloseModal(calSessionModal.modalOperation)}
-        onCancel={() => onCloseModal(calSessionModal.modalOperation)}
-        maskClosable={false}
-        destroyOnClose={true}
-        width={calSessionModal.width}
-        cancelButtonProps={{ style: { display: "none" } }}
-        okButtonProps={{ style: { display: "none" } }}
-        className="csModal"
-      >
-        {calSessionModal.modalOperation == "view" ? (
-          <CalendarView
-            course_id={course_id}
-            spin={spin}
-            setSpin={setSpin}
-            setCalSessionModal={setCalSessionModal}
-            calSessionModal={calSessionModal}
-            instructorsList={instructorsList}
-            selectedRecord={selectedRecord}
-            setSelectedRecord={setSelectedRecord}
-          />
-        ) : calSessionModal.modalOperation == "add" ? (
-          <CalendarAdd
-            course_id={course_id}
-            spin={spin}
-            setSpin={setSpin}
-            setCalSessionModal={setCalSessionModal}
-            calSessionModal={calSessionModal}
-            instructorsList={instructorsList}
-          />
-        ) : calSessionModal.modalOperation == "approve" ? (
-          "HELLO Approve"
-        ) : calSessionModal.modalOperation == "delete" ? (
-          "HELLO Delete"
+    <div className="common-holder">
+      <Row className="widget-container">
+        {spin ? (
+          <div className="spinHolder">
+            <Spin
+              size="small"
+              tip="Retrieving data..."
+              spinning={spin}
+              delay={100}
+            ></Spin>
+          </div>
         ) : (
-          <CalendarOperationOptions
-            course_id={course_id}
-            spin={spin}
-            setSpin={setSpin}
-            setCalSessionModal={setCalSessionModal}
-            calSessionModal={calSessionModal}
-            dateSessionList={dateSessionList}
-            setDateSessionList={setDateSessionList}
-            setSelectedRecord={setSelectedRecord}
-          />
+          <motion.div initial="hidden" animate="visible" variants={list}>
+            <Col
+              className="gutter-row widget-holder-col LearnersCalendar"
+              xs={24}
+              sm={24}
+              md={24}
+              lg={24}
+            >
+              <h1>Calendar</h1>
+              {courseType != 2 ? (
+                <Calendar
+                  /*dateCellRender={dateCellRender}*/
+                  dateFullCellRender={dateFullCellRender}
+                  monthCellRender={monthCellRender}
+                  /* onSelect={(date) => onOpenModal(date, calSessionModal)} */
+                  mode="month"
+                />
+              ) : (
+                <div>You cannot set Sessions on Self-Paced type courses.</div>
+              )}
+            </Col>
+          </motion.div>
         )}
-      </Modal>
-      <style jsx global>{`
-        .LearnersCalendar h1 {
-          font-size: 2rem;
-          font-weight: 700;
-        }
-        .csModal .ant-modal-footer {
-          display: none;
-        }
-        .spinHolder {
-          text-align: center;
-          z-index: 100;
-          position: relative;
-          top: 0;
-          bottom: 0;
-          right: 0;
-          left: 0;
-          background-color: #ffffff;
-          padding: 34vh 0;
-          width: 100%;
-        }
-        ul.events {
-          list-style: none;
-          padding: 0;
-        }
-        .LearnersCalendar .ant-picker-calendar-date-value h2 {
-          font-size: 2rem;
-          margin: 0.5rem 0;
-        }
-        .LearnersCalendar
-          .ant-picker-calendar-full
-          .ant-picker-panel
-          .ant-picker-calendar-date {
-          border: 1px solid #f0f0f0;
-          margin: 0 !important;
-        }
-      `}</style>
-    </Row>
+        <Modal
+          title={`${calSessionModal.title}`}
+          centered
+          visible={calSessionModal.visible}
+          onOk={() => onCloseModal(calSessionModal.modalOperation)}
+          onCancel={() => onCloseModal(calSessionModal.modalOperation)}
+          maskClosable={false}
+          destroyOnClose={true}
+          width={calSessionModal.width}
+          cancelButtonProps={{ style: { display: "none" } }}
+          okButtonProps={{ style: { display: "none" } }}
+          className="csModal"
+        >
+          {calSessionModal.modalOperation == "view" ? (
+            <CalendarView
+              course_id={course_id}
+              spin={spin}
+              setSpin={setSpin}
+              setCalSessionModal={setCalSessionModal}
+              calSessionModal={calSessionModal}
+              instructorsList={instructorsList}
+              selectedRecord={selectedRecord}
+              setSelectedRecord={setSelectedRecord}
+            />
+          ) : calSessionModal.modalOperation == "add" ? (
+            <CalendarAdd
+              course_id={course_id}
+              spin={spin}
+              setSpin={setSpin}
+              setCalSessionModal={setCalSessionModal}
+              calSessionModal={calSessionModal}
+              instructorsList={instructorsList}
+            />
+          ) : calSessionModal.modalOperation == "approve" ? (
+            "HELLO Approve"
+          ) : calSessionModal.modalOperation == "delete" ? (
+            "HELLO Delete"
+          ) : (
+            <CalendarOperationOptions
+              course_id={course_id}
+              spin={spin}
+              setSpin={setSpin}
+              setCalSessionModal={setCalSessionModal}
+              calSessionModal={calSessionModal}
+              dateSessionList={dateSessionList}
+              setDateSessionList={setDateSessionList}
+              setSelectedRecord={setSelectedRecord}
+            />
+          )}
+        </Modal>
+        <style jsx global>{`
+          .LearnersCalendar h1 {
+            font-size: 2rem;
+            font-weight: 700;
+          }
+          .csModal .ant-modal-footer {
+            display: none;
+          }
+          .spinHolder {
+            text-align: center;
+            z-index: 100;
+            position: relative;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: #ffffff;
+            padding: 34vh 0;
+            width: 100%;
+          }
+          ul.events {
+            list-style: none;
+            padding: 0;
+          }
+          .LearnersCalendar .ant-picker-calendar-date-value h2 {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+          }
+          .LearnersCalendar
+            .ant-picker-calendar-full
+            .ant-picker-panel
+            .ant-picker-calendar-date {
+            border: 1px solid #f0f0f0;
+            margin: 0 !important;
+          }
+          .LearnersCalendar .ant-picker-calendar-mode-switch {
+            display: none !important;
+          }
+        `}</style>
+      </Row>
+    </div>
   );
 };
 
