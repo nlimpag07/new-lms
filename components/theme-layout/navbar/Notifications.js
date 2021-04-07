@@ -9,10 +9,11 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
-const CancelToken = axios.CancelToken;
-let cancel;
 
 const Notifications = () => {
+  const CancelToken = axios.CancelToken;
+  let cancel;
+  const key = 'notif';
   const [notifCount, setNotifCount] = useState(0);
   const [notiList, setNotiList] = useState("");
 
@@ -66,7 +67,6 @@ const Notifications = () => {
 
   const openNotification = (e) => {
     e.preventDefault();
-
     const desc = (
       <div className="">
         <Divider style={{ marginTop: "0", marginBottom: "0" }} />
@@ -101,6 +101,7 @@ const Notifications = () => {
       </div>
     );
     const args = {
+      key,
       message: <h4>Notifications ({notifCount})</h4>,
       description: desc,
       duration: 0,

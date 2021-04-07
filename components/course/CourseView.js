@@ -90,6 +90,8 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const token = Cookies.get("token");
 
 const CourseView = ({ course_id }) => {
+  const CancelToken = axios.CancelToken;
+  let cancel;
   var [courseId, setCourseId] = useState(course_id);
 
   const { courseAllList } = useCourseList();
