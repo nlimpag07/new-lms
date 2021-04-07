@@ -401,6 +401,9 @@ const ClassesSessions = ({ course_id }) => {
           border: 1px solid #f0f0f0;
           margin: 0 !important;
         }
+        .ClassesSessions .ant-picker-calendar-mode-switch {
+          display: none !important;
+        }
       `}</style>
     </Row>
   );
