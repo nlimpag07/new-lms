@@ -43,6 +43,7 @@ import {
   CloudUploadOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
+import { upperCase, upperFirst } from "lodash";
 
 const apidirectoryUrl = process.env.directoryUrl;
 const homeUrl = process.env.homeUrl;
@@ -63,8 +64,52 @@ const Profile = ({ u, query }) => {
   const [coursePage, setCoursePage] = useState("");
   const [myCourses, setMyCourses] = useState([]);
   const theKey = router.query.q ? router.query.q : "çourses";
+  const [user, setUser] = useState("");
+
   //console.log(theKey);
   useEffect(() => {
+    if (u.id) {
+      var pconfig = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: { id: u.positionId },
+      };
+      var dconfig = {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        data: { id: u.departmentId },
+      };
+
+      axios
+        .all([
+          axios.get(apiBaseUrl + "/Picklist/position/" + u.positionId, pconfig),
+          axios.get(
+            apiBaseUrl + "/Picklist/department/" + u.departmentId,
+            dconfig
+          ),
+        ])
+        .then(
+          axios.spread((position, department) => {
+            console.log(position);
+            let up = u;
+            u = {
+              ...up,
+              position: position.data.name,
+              department: department.data.name,
+              userGroup: upperFirst(linkUrl),
+            };
+            setUser(u);
+          })
+        )
+
+        .catch((error) => {
+          console.log("error Response: ", error);
+        });
+    }
     var config = {
       headers: {
         Authorization: "Bearer " + token,
@@ -75,10 +120,7 @@ const Profile = ({ u, query }) => {
       try {
         const response = await axios.all([
           axios.get(apiBaseUrl + "/Learner/MyCourse", config),
-          /* axios.get(apiBaseUrl + "/courseoutcome/" + course_id, config),
-          axios.get(apiBaseUrl + "/coursecompetencies", config),*/
         ]);
-        /* console.log("response", response); */
         let courses = response[0];
         setCoursePage(courses.data.currentPage);
         setMyCourses(courses.data.result);
@@ -104,6 +146,7 @@ const Profile = ({ u, query }) => {
       setSpin(false);
     }
   }, [myCourses]); */
+  console.log("User", user);
 
   return (
     <MainThemeLayout>
@@ -130,36 +173,41 @@ const Profile = ({ u, query }) => {
               <div className="userDetails-Holder">
                 <Row style={{ margin: "1rem 0" }}>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Name:</span> {`${u.firstName} ${u.lastName}`}
+                    <span>Name:</span> {`${user.firstName} ${user.lastName}`}
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
                     <span>Registration Date:</span>{" "}
-                    {`${u.firstName} ${u.lastName}`}
+                    {`${user.firstName} ${user.lastName}`}
                   </Col>
                 </Row>
                 <Row style={{ margin: "1rem 0" }}>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Email:</span> {`${u.email}`}
+                    <span>Email:</span> {`${user.email}`}
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Birth Date (mm-dd-yyyy):</span>{" "}
-                    {`${moment(u.birthday).format("MM-DD-YYYY")}`}
-                  </Col>
-                </Row>
-                <Row style={{ margin: "1rem 0" }}>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Department:</span> {`${u.department}`}
-                  </Col>
-                  <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Position:</span> {`${u.position}`}
+                    <span>Birth Date:</span>{" "}
+                    {`${
+                      user.birthday
+                        ? moment(u.birthday).format("DD-MMM-YYYY")
+                        : "Not Provided"
+                    }`}
                   </Col>
                 </Row>
                 <Row style={{ margin: "1rem 0" }}>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>User Group:</span> {`${u.userGroup}`}
+                    <span>Department:</span> {`${user.department}`}
                   </Col>
                   <Col xs={24} sm={24} md={12} lg={12}>
-                    <span>Last Access:</span> {`${u.lastAccess}`}
+                    <span>Position:</span> {`${user.position}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>User Group:</span> {`${user.userGroup}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Last Access:</span>{" "}
+                    {`${moment().format("DD-MMM-YYYY")}`}
                   </Col>
                 </Row>
               </div>

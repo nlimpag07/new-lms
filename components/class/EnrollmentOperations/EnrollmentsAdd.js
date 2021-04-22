@@ -160,6 +160,7 @@ const EnrollmentsAdd = ({
   const sessionOptions = [];
   if (courseSessions.length) {
     for (let i = 0; i < courseSessions.length; i++) {
+      const sTitle = courseSessions[i].title;
       const sDate = moment(courseSessions[i].startDate).format(
         "DD-MMM-YYYY h:mm a"
       );
@@ -171,7 +172,7 @@ const EnrollmentsAdd = ({
         <Option
           key={i}
           value={courseSessions[i].id}
-        >{`(${sDate}) - (${eDate})`}</Option>
+        >{`${sTitle} : (${sDate}) - (${eDate})`}</Option>
       );
     }
   }

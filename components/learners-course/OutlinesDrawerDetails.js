@@ -184,6 +184,7 @@ const OutlinesDrawerDetails = ({
 
   //console.log(interactiveVideo);
   const ResourcesList = courseOutlineMedia.map((outlinemedia, index) => {
+    console.log("Outline Media", outlinemedia);
     var resoureIcon = "";
     switch (outlinemedia.fileType) {
       case "PDF":
@@ -207,10 +208,10 @@ const OutlinesDrawerDetails = ({
     return (
       <div key={index} style={{ marginTop: "5px" }}>
         <Link
-          href={`${outlinemedia.resourceFile}`}
-          as={`${outlinemedia.resourceFile}`}
+          href={`${apidirectoryUrl}/Media/courseOutlineMedia/${outlinemedia.resourceFile}`}
+          as={`${apidirectoryUrl}/Media/courseOutlineMedia/${outlinemedia.resourceFile}`}
         >
-          <a>
+          <a target="_blank">
             {resoureIcon} {outlinemedia.fileName}
           </a>
         </Link>

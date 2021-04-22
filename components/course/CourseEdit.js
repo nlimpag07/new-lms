@@ -177,7 +177,7 @@ const ModalForm = ({
   );
 };
 
-const CourseEdit = ({ course_id }) => {
+const CourseEdit = ({ course_id, theCourse }) => {
   const router = useRouter();
   const { courseAllList, setCourseAllList } = useCourseList();
   const { courseDetails, setCourseDetails } = useCourseDetails();
@@ -220,11 +220,11 @@ const CourseEdit = ({ course_id }) => {
     modalFormName: "",
     modalBodyContent: "",
   });
-
   useEffect(() => {
-    let theCourse = courseAllList.result.filter(
+    /* let theCourse = courseAllList.result.filter(
       (getCourse) => getCourse.id == course_id
-    );
+    ); */
+
     theCourse.length && setCourse(theCourse[0]);
   }, [course_id]);
 
@@ -302,7 +302,6 @@ const CourseEdit = ({ course_id }) => {
         ...defaultWidgetValues,
         relatedcourses: [...value],
       });
-      
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -344,7 +343,6 @@ const CourseEdit = ({ course_id }) => {
           featuredimage: values.name,
         });
       }
-      
     }
     if (name === "picklistfeaturedvideo") {
       var value = values.name ? values : "";
@@ -449,7 +447,7 @@ const CourseEdit = ({ course_id }) => {
           tobedeleted.push(delLevel);
         }
       });
-      
+
       tobedeleted.map((level, index) => {
         data.append(`deleteCourseLevel[${index}][id]`, level.id);
         data.append(`deleteCourseLevel[${index}][levelId]`, level.levelId);
@@ -606,12 +604,12 @@ const CourseEdit = ({ course_id }) => {
       );
       //console.log("SubmittedRelatedCourse: ", processPickListRelatedCourses);
       processPickListRelatedCourses.map((related, index) => {
-        data.append(`relatedCourse[${index}][id]`, related.id);
+        data.append(`CourseRelated[${index}][id]`, related.id);
         data.append(
-          `relatedCourse[${index}][relatedCourseId]`,
+          `CourseRelated[${index}][relatedCourseId]`,
           related.courseRelatedId
         );
-        data.append(`relatedCourse[${index}][isPrerequisite]`, related.isreq);
+        data.append(`CourseRelated[${index}][isPrerequisite]`, related.isreq);
       });
 
       //Array for deletion
@@ -886,7 +884,9 @@ const CourseEdit = ({ course_id }) => {
   let {
     id,
     featureImage,
+    featureImageFilename,
     featureVideo,
+    featureVideoFilename,
     courseLanguage,
     courseCategory,
     title,
@@ -993,14 +993,14 @@ const CourseEdit = ({ course_id }) => {
         return list;
       });
     }
-    if (featureImage) {
-      image = featureImage;
+    if (featureImage && featureImageFilename) {
+      image = featureImageFilename;
     }
-    if (featureVideo) {
-      video = featureVideo;
+    if (featureVideo && featureVideoFilename) {
+      video = featureVideoFilename;
     }
     if (durationTime && durationType) {
-      video = featureVideo;
+      video = featureVideoFilename;
     }
     if (durationTime && durationType) {
       durationtime = { durationTime: durationTime, durationType: durationType };

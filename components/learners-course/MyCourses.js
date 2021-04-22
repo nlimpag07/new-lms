@@ -316,7 +316,7 @@ const MyCourses = ({ mycourses }) => {
               loading
             )}
           </Row>
-        </Col>        
+        </Col>
         {courseDrawerDetails && (
           <MyCoursesDrawerDetails
             drawerVisible={drawer2Visible}
@@ -573,6 +573,22 @@ const GridType = (
             : 0;
         var currentPercent = Math.round((newNumber * 100) / baseNumber);
         //console.log(currentPercent);
+        //course status identifier
+        if (mycourse.startDate && mycourse.statusId == 8) {
+          mycourse.cbStatus = "In Progress";
+          mycourse.cbbStatus = "In Progress";
+        } else if (
+          mycourse.startDate &&
+          mycourse.endDate &&
+          mycourse.statusId == 9
+        ) {
+          mycourse.cbStatus = "Completed";
+          mycourse.cbbStatus = "Completed";
+        } else {
+          mycourse.cbStatus = "Not Started";
+          mycourse.cbbStatus = "Start";
+        }
+
         return (
           <Col
             key={mycourse.course.id}
@@ -593,13 +609,7 @@ const GridType = (
                 className={
                   mycourse.startDate ? "published-course" : "unpublished-course"
                 }
-                extra={
-                  mycourse.startDate
-                    ? "In Progress"
-                    : mycourse.endDate
-                    ? "Completed"
-                    : "Not Started"
-                }
+                extra={mycourse.cbStatus}
                 hoverable
                 style={{ width: "auto" }}
                 cover={
@@ -610,11 +620,7 @@ const GridType = (
                 }
                 actions={[
                   <h4>
-                    {mycourse.startDate
-                      ? "Continue"
-                      : mycourse.endDate
-                      ? "Completed"
-                      : "Start The Course"}{" "}
+                    {mycourse.cbStatus}{" "}
                     <PlayCircleFilled key="action" title="Continue" />
                   </h4>,
                 ]}
@@ -646,9 +652,11 @@ const GridType = (
       })}
     </>
   ) : (
-    <Loader loading={loading}>
-      <Empty />
-    </Loader>
+    <div style={{ margin: "0 auto" }}>
+      <Loader loading={loading}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </Loader>
+    </div>
   );
 };
 

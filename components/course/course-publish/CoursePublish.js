@@ -33,7 +33,6 @@ const CoursePublish = ({ isPublished, title, course_id, setLoading }) => {
   const [pubmodal2Visible, setPubModal2Visible] = useState(false);
   const [hasError, setHasError] = useState("");
   const [spinning, setSpinning] = useState(false);
-
   useEffect(() => {}, []);
 
   const onCloseModal = () => {
@@ -80,9 +79,13 @@ const CoursePublish = ({ isPublished, title, course_id, setLoading }) => {
     data = JSON.stringify(data);
     //console.log(data);
     if (!checker.length) {
+      const publishUrl =
+        linkUrl == "instructor"
+          ? `/Courses/${course_id}/requestpublish`
+          : "/Courses/publish";
       var config = {
         method: "post",
-        url: apiBaseUrl + "/Courses/publish",
+        url: apiBaseUrl + publishUrl,
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -120,21 +123,13 @@ const CoursePublish = ({ isPublished, title, course_id, setLoading }) => {
           Current Status: {isPublished == 1 ? "Published" : "Unpublished"}
         </Col>
         <Col xs={24} sm={6} md={4} lg={8}>
-          {isPublished == 1 ? (
+          {isPublished != 1 && (
             <Button
+              type="primary"
               shape="round"
               className="viewStatusReq-button"
               onClick={() => setPubModal2Visible(true)}
               danger
-            >
-              Unpublish
-            </Button>
-          ) : (
-            <Button
-              type="primary"
-              shape="round"
-              onClick={() => setPubModal2Visible(true)}
-              className="viewStatusReq-button"
             >
               Publish
             </Button>

@@ -452,7 +452,7 @@ const CoursePostEvaluations = ({ course_id }) => {
           ? (data.userGroupId = values.evaluationdetails.userGroup)
           : errorList.push("Missing Evaluation User Group");
       } else {
-        errorList.push("Missing assessment Details");
+        errorList.push("Missing Evaluation Details");
       }
 
       if (!!values.evaluationvalues) {
@@ -474,7 +474,7 @@ const CoursePostEvaluations = ({ course_id }) => {
           /* data.minValue = values.evaluationdetails.minValue?values.evaluationdetails.minValue:0;*/
         }
       } else {
-        errorList.push("Missing assessment Duration");
+        errorList.push("Missing Evaluation Values");
       }
 
       data = JSON.stringify(data);

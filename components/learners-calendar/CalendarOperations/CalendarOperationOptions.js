@@ -46,14 +46,16 @@ const CalendarOperationOptions = ({
   setDateSessionList,
   setSelectedRecord,
 }) => {
+  console.log("dateSessionList", dateSessionList);
   /*const [grid,setGrid] = useState(gridList);*/
   useEffect(() => {}, []);
 
   const onAddEditView = (action, rec) => {
     let sessModalArr = calSessionModal;
+    let actionDetails = action == "view" ? "Details" : action;
     setCalSessionModal({
       ...sessModalArr,
-      title: "Session - " + action,
+      title: "Session - " + actionDetails,
       modalOperation: action,
       width: "35%",
     });
@@ -108,27 +110,16 @@ const CalendarOperationOptions = ({
 
   const columns = [
     {
-      title: "Running Date",
-      dataIndex: "startDate",
-      key: "startDate",
+      title: "Scheduled Date & Time",
+      dataIndex: "dateSchedule",
+      key: "dateSchedule",
       render: (date, record) => {
-        //console.log("record", record);
+        console.log("record", record);
         return (
           <>
             <Tag color={`geekblue`} key={record.id}>
               {moment(date).format("YYYY-MM-DD HH:mm")}
             </Tag>
-            {" => "}
-            <Tag color={`volcano`} key={`nth${record.id}`}>
-              {moment(record.endDate).format("YYYY-MM-DD HH:mm")}
-            </Tag>
-            {/* <Tag color={`geekblue`} key={record.index}>
-              {date.format("YYYY-MM-DD HH:mm")}
-            </Tag>
-            {" => "}
-            <Tag color={`volcano`} key={record.index + 1}>
-              {date.format("YYYY-MM-DD HH:mm")}
-            </Tag> */}
           </>
         );
       },
@@ -138,9 +129,18 @@ const CalendarOperationOptions = ({
       title: "Session Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => <a>{text}</a>,
+      render: (text, record) => record.session.title,
     },
-
+    {
+      title: "Instructor",
+      dataIndex: "session",
+      key: "isActivetype",
+      render: (text, record) => {
+        console.log("text", text);
+        const instructorName = `${text.courseInstructor.user.firstName} ${text.courseInstructor.user.lastName}`;
+        return <span key={record.id}>{instructorName}</span>;
+      },
+    },
     {
       title: "Status",
       dataIndex: "isActivetype",
@@ -155,7 +155,7 @@ const CalendarOperationOptions = ({
         ) : (
           <>
             <Tag color={`volcano`} key={record.id}>
-              Inactive
+              Finished
             </Tag>
           </>
         );
@@ -172,19 +172,8 @@ const CalendarOperationOptions = ({
             type="link"
             onClick={() => onAddEditView("view", record)}
           >
-            View
+            View Details
           </Button>
-          {/* <Button type="link" onClick={() => onAddEditView("delete")}>Delete</Button> */}
-          <Popconfirm
-            title="Are you sure to delete this?"
-            onConfirm={() => confirmDelete(record)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button key={`view-${record.id}`} type="link">
-              Delete
-            </Button>
-          </Popconfirm>
         </>
       ),
     },
@@ -224,7 +213,7 @@ const CalendarOperationOptions = ({
               />
             </Col>
           </Row>
-          <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
+          {/* <Row gutter={{ xs: 32, sm: 32, md: 32, lg: 32 }}>
             <Col xs={24} sm={12} md={12} lg={12}>
               <Button
                 type="primary"
@@ -236,7 +225,7 @@ const CalendarOperationOptions = ({
                 Add Session
               </Button>
             </Col>
-          </Row>
+          </Row> */}
         </Col>
       )}
       <style jsx global>{`

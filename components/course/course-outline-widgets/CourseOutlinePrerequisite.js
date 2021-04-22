@@ -37,11 +37,13 @@ const CourseOutlinePrerequisite = (props) => {
     defaultWidgetValues,
     setdefaultWidgetValues,
     outlineList,
+    isOkButtonDisabled,
+    setIsOkButtonDisabled,
   } = props;
   //console.log('List: ',outlineList);
   //const [outlineList, setoutlineList] = useState();
   var chosenRows = defaultWidgetValues.outlineprerequisite;
-  
+
   const onRemove = (id) => {
     let newValues = chosenRows.filter((value) => value.id !== id);
     setdefaultWidgetValues({
@@ -54,7 +56,7 @@ const CourseOutlinePrerequisite = (props) => {
     <>
       <Form.Item
         label={widgetFieldLabels.catname}
-        noStyle        
+        noStyle
         shouldUpdate={shouldUpdate}
       >
         {({ getFieldValue }) => {
@@ -99,7 +101,7 @@ const CourseOutlinePrerequisite = (props) => {
                                   value={field.value}
                                   readOnly
                                 />
-                              </Form.Item>                              
+                              </Form.Item>
                             </Form.Item>
                           </div>
                         );
@@ -149,7 +151,7 @@ const CourseOutlinePrerequisite = (props) => {
                                     value={field.value}
                                     readOnly
                                   />
-                                </Form.Item>                                
+                                </Form.Item>
                               </Form.Item>
                             </div>
                           );
@@ -170,7 +172,13 @@ const CourseOutlinePrerequisite = (props) => {
               showModal(
                 widgetFieldLabels.catname,
                 widgetFieldLabels.catValueLabel,
-                () => modalFormBody(outlineList, chosenRows)
+                () =>
+                  modalFormBody(
+                    outlineList,
+                    chosenRows,
+                    isOkButtonDisabled,
+                    setIsOkButtonDisabled
+                  )
               )
             }
           />
@@ -183,11 +191,14 @@ const CourseOutlinePrerequisite = (props) => {
     </>
   );
 };
-const modalFormBody = (outlineList, chosenRows) => {
-  const data = []; 
+const modalFormBody = (
+  outlineList,
+  chosenRows,
+  isOkButtonDisabled,
+  setIsOkButtonDisabled
+) => {
+  const data = [];
   const [sourceData, setsourceData] = useState([]);
-
-  
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -209,6 +220,11 @@ const modalFormBody = (outlineList, chosenRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRows(selectedRows);
     //console.log(selectedRows);
+    if (chosenRows.length || selectedRowKeys.length) {
+      setIsOkButtonDisabled(false)
+    }else{
+      setIsOkButtonDisabled(true);
+    }
   };
   const rowSelection = {
     selectedRowKeys,
@@ -216,7 +232,6 @@ const modalFormBody = (outlineList, chosenRows) => {
     onChange: onSelectChange,
   };
   useEffect(() => {
-    
     if (chosenRows.length) {
       let defaultKeys = [];
       let defaultRows = [];
@@ -258,7 +273,6 @@ const modalFormBody = (outlineList, chosenRows) => {
       });
       setsourceData(theSource);
     }
-    
   }, []);
   return (
     <Form.List name="outlineprerequisite">
@@ -294,7 +308,10 @@ const modalFormBody = (outlineList, chosenRows) => {
                     key={`outline_prereq-${field.key}`}
                     hidden
                   >
-                    <Input placeholder="Outline preRequisiteId" value={field.preRequisiteId} />
+                    <Input
+                      placeholder="Outline preRequisiteId"
+                      value={field.preRequisiteId}
+                    />
                   </Form.Item>
                 </div>
               ) : (

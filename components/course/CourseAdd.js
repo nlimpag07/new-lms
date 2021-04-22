@@ -282,7 +282,6 @@ const CourseAdd = () => {
         ...defaultWidgetValues,
         relatedcourses: [...value],
       });
-      
     }
     if (name === "picklistduration") {
       basicForm.setFieldsValue({
@@ -399,11 +398,11 @@ const CourseAdd = () => {
     !!values.picklistrelatedcourses
       ? values.picklistrelatedcourses.map((relatedcourse, index) => {
           data.append(
-            `relatedCourse[${index}][relatedCourseId]`,
+            `CourseRelated[${index}][relatedCourseId]`,
             relatedcourse.courseRelatedId
           );
           data.append(
-            `relatedCourse[${index}][isPrerequisite]`,
+            `CourseRelated[${index}][isPrerequisite]`,
             relatedcourse.isreq
           );
         })
@@ -436,7 +435,6 @@ const CourseAdd = () => {
         //console.log(image.fileList[0].originFileObj);
         data.append(`featureVideo`, video.fileList[0].originFileObj);
       });
-    
 
     //data = JSON.stringify(data);
     if (errorList.length) {
@@ -570,10 +568,7 @@ const CourseAdd = () => {
                   style={{ padding: "10px 0" }}
                 >
                   <Col className="gutter-row" xs={24} sm={24} md={24} lg={24}>
-                    <Form.Item
-                      name="title"
-                      label="Course Title"                      
-                    >
+                    <Form.Item name="title" label="Course Title">
                       <Input placeholder="Course title" allowClear />
                     </Form.Item>
 
@@ -849,6 +844,5 @@ const CourseAdd = () => {
     </motion.div>
   );
 };
-
 
 export default CourseAdd;

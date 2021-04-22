@@ -545,7 +545,8 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
     let trimmedDesc = d.substr(0, 250);
     return trimmedDesc + "...";
   };
-  return courses ? (
+  console.log("courses", courses);
+  return courses.length ? (
     <>
       {courses.map((course) => (
         <Col
@@ -654,9 +655,9 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
       ))}
     </>
   ) : (
-    <div style={{ minHeight: "50vh" }}>
+    <div style={{ margin: "0 auto", minHeight: "1vh" }}>
       <Loader loading={loading}>
-        <Empty />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </Loader>
     </div>
   );

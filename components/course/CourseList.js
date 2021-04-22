@@ -65,8 +65,6 @@ const apiBaseUrl = process.env.apiBaseUrl;
 const apidirectoryUrl = process.env.directoryUrl;
 const token = Cookies.get("token");
 const linkUrl = Cookies.get("usertype");
-const CancelToken = axios.CancelToken;
-let cancel;
 
 const menulists = [
   {
@@ -86,6 +84,9 @@ const menulists = [
 ];
 
 const CourseList = (props) => {
+  const CancelToken = axios.CancelToken;
+let cancel;
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   //console.log("Props", props);
@@ -644,9 +645,11 @@ const GridType = (courses, gridType, setModal2Visible, router, loading) => {
       ))}
     </>
   ) : (
-    <Loader loading={loading}>
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-    </Loader>
+    <div style={{ margin: "0 auto" }}>
+      <Loader loading={loading}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </Loader>
+    </div>
   );
 };
 

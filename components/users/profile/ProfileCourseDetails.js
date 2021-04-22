@@ -15,7 +15,7 @@ const ProfileCourseDetails = ({
 }) => {
   const router = useRouter();
   const [userFullName, setUserFullName] = useState("");
-  console.log("courseDetails", courseDetails);
+  //console.log("courseDetails", courseDetails);
 
   useEffect(() => {
     let userData = JSON.parse(localStorage.getItem("userDetails"));
@@ -40,9 +40,7 @@ const ProfileCourseDetails = ({
           return <Tag key={index}>{instructorFullName}</Tag>;
         })
       : null;
-    courseCode = courseDetails.course
-      ? courseDetails.course.code
-      : null;
+    courseCode = courseDetails.course ? courseDetails.course.code : null;
     rating = courseDetails.result ? courseDetails.result : null;
     courseOutlines = courseDetails.course.courseOutline.length
       ? courseDetails.course.courseOutline.map((outline, index) => {
@@ -71,28 +69,38 @@ const ProfileCourseDetails = ({
         })
       : [];
   }
-  console.log(courseOutlines);
+  //console.log(courseOutlines);
 
   const columns = [
     {
       title: "Step",
       dataIndex: "number",
-      key:"number",
+      key: "number",
     },
     {
       title: "Lesson",
       dataIndex: "title",
-      key:"title"
+      key: "title",
     },
     {
       title: "Result",
       dataIndex: "status",
-      key:"status",
+      key: "status",
       render: (stat, record) =>
         stat == "Passed" ? (
-          <Tag key={record.id} style={{ borderColor: "#85D871", color: "#85D871" }}>{stat}</Tag>
+          <Tag
+            key={record.id}
+            style={{ borderColor: "#85D871", color: "#85D871" }}
+          >
+            {stat}
+          </Tag>
         ) : stat == "Failed" ? (
-          <Tag key={record.id} style={{ borderColor: "#E65050", color: "#E65050" }}>{stat}</Tag>
+          <Tag
+            key={record.id}
+            style={{ borderColor: "#E65050", color: "#E65050" }}
+          >
+            {stat}
+          </Tag>
         ) : (
           "-"
         ),
@@ -100,12 +108,12 @@ const ProfileCourseDetails = ({
     {
       title: "Final Score",
       dataIndex: "score",
-      key:"score",
+      key: "score",
     },
     {
       title: "Hours Taken",
       dataIndex: "hoursTaken",
-      key:"hoursTaken",
+      key: "hoursTaken",
     },
   ];
 
@@ -154,22 +162,23 @@ const ProfileCourseDetails = ({
           >
             <div className="divSeparator">
               Final Grade:{" "}
-              <span className="finalScoreBig">
-                {courseDetails.finalScore}
-              </span>
+              <span className="finalScoreBig">{courseDetails.finalScore}</span>
             </div>
             <div className="divSeparator">
               Date of Completion:{" "}
-              <span className="finalScoreBig">
-                {courseDetails.finalScore}
-              </span>
+              <span className="finalScoreBig">{courseDetails.finalScore}</span>
             </div>
           </Col>
         </Row>
         <Divider dashed style={{ borderColor: "#999999", margin: "5px 0" }} />
         <Row gutter={{ xs: 8, sm: 16, md: 32, lg: 32 }}>
           <Col xs={24} sm={24} md={24} lg={24}>
-            <Table columns={columns} dataSource={courseOutlines} size="small" rowKey="number" />
+            <Table
+              columns={columns}
+              dataSource={courseOutlines}
+              size="small"
+              rowKey="number"
+            />
           </Col>
         </Row>
       </Modal>

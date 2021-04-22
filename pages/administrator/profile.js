@@ -173,104 +173,105 @@ const Profile = ({ u, query }) => {
           </Col>
         </Row> */}
         <div className="common-holder">
-        <Row style={{ marginBottom: "1rem" }}>
-          <Col xs={24} sm={24} md={24} lg={6}>
-            <div className="userThumbnail">
-              <img
-                alt="img"
-                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-              />
-            </div>
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={18} className="userDetails">
-            <div className="userDetails-Holder">
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Name:</span> {`${user.firstName} ${user.lastName}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Registration Date:</span>{" "}
-                  {`${user.firstName} ${user.lastName}`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Email:</span> {`${user.email}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Birth Date:</span>{" "}
-                  {`${
-                    user.birthday
-                      ? moment(u.birthday).format("DD-MMM-YYYY")
-                      : null
-                  }`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Department:</span> {`${user.department}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Position:</span> {`${user.position}`}
-                </Col>
-              </Row>
-              <Row style={{ margin: "1rem 0" }}>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>User Group:</span> {`${user.userGroup}`}
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12}>
-                  <span>Last Access:</span> {`${ moment().format("DD-MMM-YYYY")}`}
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
+          <Row style={{ marginBottom: "1rem" }}>
+            <Col xs={24} sm={24} md={24} lg={6}>
+              <div className="userThumbnail">
+                <img
+                  alt="img"
+                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                />
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={18} className="userDetails">
+              <div className="userDetails-Holder">
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Name:</span> {`${user.firstName} ${user.lastName}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Registration Date:</span>{" "}
+                    {`${user.firstName} ${user.lastName}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Email:</span> {`${user.email}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Birth Date:</span>{" "}
+                    {`${
+                      user.birthday
+                        ? moment(u.birthday).format("DD-MMM-YYYY")
+                        : "Not Provided"
+                    }`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Department:</span> {`${user.department}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Position:</span> {`${user.position}`}
+                  </Col>
+                </Row>
+                <Row style={{ margin: "1rem 0" }}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>User Group:</span> {`${user.userGroup}`}
+                  </Col>
+                  <Col xs={24} sm={24} md={12} lg={12}>
+                    <span>Last Access:</span>{" "}
+                    {`${moment().format("DD-MMM-YYYY")}`}
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
         </div>
         {u.isLearner != 1 ? null : (
           <div className="common-holder">
-          <Row>
-            <Tabs
-              defaultActiveKey={theLabel}
-              onChange={onChangeTab}
-              className="profileTabs"
-            >
-              <TabPane tab="Courses" key="courses">
-                {spin ? (
-                  <div className="spinHolder">
-                    <Spin
-                      size="small"
-                      tip="Retrieving data..."
-                      spinning={spin}
-                      delay={100}
-                    ></Spin>
-                  </div>
-                ) : (
-                  <ProfileCourseList
-                    myCourses={myCourses}
-                    coursePage={coursePage}
-                  />
-                )}
-              </TabPane>
-              <TabPane tab="Assessments" key="assessments">
-                <h1>Assessments</h1>
-                {/* <CourseAssessmentsList
+            <Row>
+              <Tabs
+                defaultActiveKey={theLabel}
+                onChange={onChangeTab}
+                className="profileTabs"
+              >
+                <TabPane tab="Courses" key="courses">
+                  {spin ? (
+                    <div className="spinHolder">
+                      <Spin
+                        size="small"
+                        tip="Retrieving data..."
+                        spinning={spin}
+                        delay={100}
+                      ></Spin>
+                    </div>
+                  ) : (
+                    <ProfileCourseList
+                      myCourses={myCourses}
+                      coursePage={coursePage}
+                    />
+                  )}
+                </TabPane>
+                <TabPane tab="Assessments" key="assessments">
+                  <h1>Assessments</h1>
+                  {/* <CourseAssessmentsList
               cDetails={cDetails}
               course_id={courseId}
               learnerId={learnerId}
               listOfOutlines={outlines}
             /> */}
-              </TabPane>
-              <TabPane tab="Competencies" key="competencies">
-                <h1>Competencies</h1>
-              </TabPane>
-              <TabPane tab="Appraisals" key="Appraisals">
-                <h1>Appraisals</h1>
-              </TabPane>
-              <TabPane tab="Attendance" key="attendance">
-                <h1>Attendance</h1>
-              </TabPane>
-            </Tabs>
-          </Row>
+                </TabPane>
+                <TabPane tab="Competencies" key="competencies">
+                  <h1>Competencies</h1>
+                </TabPane>
+                <TabPane tab="Appraisals" key="Appraisals">
+                  <h1>Appraisals</h1>
+                </TabPane>
+                <TabPane tab="Attendance" key="attendance">
+                  <h1>Attendance</h1>
+                </TabPane>
+              </Tabs>
+            </Row>
           </div>
         )}
       </Layout>

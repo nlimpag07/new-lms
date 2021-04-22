@@ -128,17 +128,22 @@ const CourseManagement = (props) => {
     } else {
       return <Error statusCode={404} />;
     }
+
+    let theCourse = courselist.result
+      ? courselist.result.filter((course) => course.id == thePage[1])
+      : null;
     thePage[0] == "view" &&
       (theContent = (
         <CourseDetailsProvider course_id={thePage[1]}>
-          <CourseView course_id={thePage[1]} />
+          <CourseView course_id={thePage[1]} theCourse={theCourse} />
         </CourseDetailsProvider>
       )); // url /view/courseId - viewing the course General
     //console.log(thePage[1]);
     thePage[0] == "edit" &&
       (theContent = (
         <CourseDetailsProvider course_id={thePage[1]}>
-          <CourseEdit course_id={thePage[1]} />
+          <CourseEdit course_id={thePage[1]} theCourse={theCourse} />
+
         </CourseDetailsProvider>
       )); // url /edit/couseId - Editing Course General
   } else if (

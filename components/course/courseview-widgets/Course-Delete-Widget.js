@@ -78,8 +78,32 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
   const onFinish = (values) => {
     setSpinning(true);
     setHasError("");
-    openMessage(`Error: Deleting Course is prohibited.`, false)
-  /*   var data = {};
+    /* openMessage(`Error: Deleting Course is prohibited.`, false); */
+    console.log(courseInfo);
+    var config = {
+      method: "delete",
+      url: apiBaseUrl + "/Courses/" + courseInfo.course_id,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios(config)
+      .then((res) => {
+        console.log(res);
+        openMessage(res.data.message, res.data.response);
+      })
+      .catch((error) => {
+        console.log("error Response: ", error);
+        error.response && error.response.data
+          ? openMessage(error.response.data.message, false)
+          : openMessage(`Error:${error}`, false);
+      })
+      .then(() => {
+        setLoading(true);
+      });
+    /*   var data = {};
     var errorList = [];
     console.log("Received values of form: ", values);
     let id = courseInfo && courseInfo.course_id ? courseInfo.course_id : null;
@@ -122,11 +146,12 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
     message.loading({ content: "Processing...", key });
     setTimeout(() => {
       if (resp) {
-        message.success({ content: msg, key, duration: 2 });
+        message.success({ content: msg, key, duration: 5 });
         setSpinning(false);
         hideModal(operation);
+        router.push(`/${linkUrl}/[course]`, `/${linkUrl}/course`);
       } else {
-        message.error({ content: msg, key, duration: 2 });
+        message.error({ content: msg, key, duration: 5 });
         setSpinning(false);
       }
     }, 500);
@@ -150,7 +175,7 @@ const CourseClone = ({ operation, hideModal, courseInfo, setLoading }) => {
       >
         <Form.Item label="Course to Delete" name="baseCourse">
           <Input placeholder="Course Name" disabled />
-        </Form.Item>        
+        </Form.Item>
 
         <Divider style={{ border: "none" }} />
         <Form.Item

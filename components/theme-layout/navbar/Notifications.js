@@ -13,11 +13,12 @@ const linkUrl = Cookies.get("usertype");
 const Notifications = () => {
   const CancelToken = axios.CancelToken;
   let cancel;
-  const key = 'notif';
+  const key = "notif";
   const [notifCount, setNotifCount] = useState(0);
   const [notiList, setNotiList] = useState("");
 
   useEffect(() => {
+    notification.close(key);
     if (cancel !== undefined) {
       cancel();
     }

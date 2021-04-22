@@ -1013,6 +1013,8 @@ const CourseOutlines = ({ course_id }) => {
                               defaultWidgetValues={defaultWidgetValues}
                               setdefaultWidgetValues={setdefaultWidgetValues}
                               outlineList={outlineList}
+                              isOkButtonDisabled={isOkButtonDisabled}
+                              setIsOkButtonDisabled={setIsOkButtonDisabled}
                             />
                           </div>
                         </Panel>

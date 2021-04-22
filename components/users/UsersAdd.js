@@ -91,15 +91,15 @@ const UsersAdd = ({ hideModal, setSpin }) => {
     !!values.firstName
       ? (data.firstName = values.firstName)
       : errorList.push("Missing First Name");
-    !!values.middleInitial
+    /* !!values.middleInitial
       ? (data.middleInitial = values.middleInitial)
-      : errorList.push("Missing Middle Initial");
+      : errorList.push("Missing Middle Initial"); */
     !!values.lastName
       ? (data.lastName = values.lastName)
       : errorList.push("Missing Last Name");
     !!values.gender
       ? (data.gender = values.gender)
-      : errorList.push("Missing Gender");
+      : (data.gender = 1);
     !!values.birthday
       ? (data.birthday = values.birthday.format("YYYY-MM-DD"))
       : errorList.push("Missing Birthdate");
@@ -116,7 +116,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
 
     !!values.positionId
       ? (data.positionId = values.positionId)
-      : errorList.push("Missing Position");
+      : (data.positionId = 1);
     if (!!values.userRole) {
       switch (values.userRole) {
         case "1":
@@ -321,11 +321,13 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         layout="horizontal"
         name="usersAdd"
         style={{ width: "100%" }}
-        initialValues={{
-          /* courseTitle: "hey",
+        initialValues={
+          {
+            /* courseTitle: "hey",
           isAutoEnroll: false,
           isNotify: false, */
-        }}
+          }
+        }
         className="addUsers"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 12 }}
@@ -337,11 +339,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         >
           <Input placeholder="Input First Name" />
         </Form.Item>
-        <Form.Item
-          label="Middle Name"
-          name="middleInitial"
-          rules={[{ required: true, message: "Middle Name is required" }]}
-        >
+        <Form.Item label="Middle Name" name="middleInitial">
           <Input placeholder="Input Middle Name" />
         </Form.Item>
         <Form.Item
@@ -354,7 +352,6 @@ const UsersAdd = ({ hideModal, setSpin }) => {
         <Form.Item label="Other Details" style={{ marginBottom: "0" }} required>
           <Form.Item
             name="gender"
-            rules={[{ required: true, message: "Gender is required" }]}
             style={{ display: "inline-block", width: "calc(30%)" }}
           >
             <Select placeholder="Gender">
@@ -448,11 +445,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
             <Button icon={<UploadOutlined />}>Upload XLS File Only</Button>
           </Upload>
         </Form.Item> */}
-        <Form.Item
-          name="positionId"
-          label="Position"
-          rules={[{ required: true, message: "Gender is required" }]}
-        >
+        <Form.Item name="positionId" label="Position">
           <Select
             showSearch
             value={positionData.value}
@@ -475,7 +468,7 @@ const UsersAdd = ({ hideModal, setSpin }) => {
           <Select placeholder="User Role">
             <Option value="3">Administrator</Option>
             <Option value="2">Instructor</Option>
-            <Option value="1">learner</Option>
+            <Option value="1">Learner</Option>
           </Select>
         </Form.Item>
         <Divider style={{ border: "none" }} />

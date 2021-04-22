@@ -60,8 +60,6 @@ const LearnersCalendar = ({ course_id }) => {
   const [selectedRecord, setSelectedRecord] = useState("");
   useEffect(() => {
     /* var conf = {
-      method: "get",
-      url: apiBaseUrl + "/Learner/MyCalendar",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -69,40 +67,40 @@ const LearnersCalendar = ({ course_id }) => {
     };
     async function getCourseDetails(conf) {
       try {
-        const response = await axios(conf);
-        if (response) {
-          let theRes = response.data;
-          console.log("MyCalendar", response.data);          
-        }
+        const response = await axios.all([
+          axios.get(apiBaseUrl + "/Attendance/learner", conf),
+        ]);
+        let learnerAttendance = response[0].data;
+        //console.log("AllSessions", allSessions);
+        //console.log("MyCalendar", allLearnerSessions);
+        console.log("Attendance", learnerAttendance);
       } catch (error) {
         console.log("error", error);
         const { response } = error;
-        const { data } = response; // take everything but 'request'        
+        const { data } = response; // take everything but 'request'
       }
-      //setLoading(false);
     }
     getCourseDetails(conf); */
     setSpin(false);
   }, []);
 
   useEffect(() => {
-    /* if (spin) {
+    if (spin) {
       var config = {
         method: "get",
-        url: apiBaseUrl + "/CourseSession/" + course_id,
+        url: apiBaseUrl + "/Attendance/learner",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
-        data: { courseId: course_id },
       };
       async function fetchData(config) {
         try {
           const response = await axios(config);
           if (response) {
             //setOutcomeList(response.data.result);
-            let theRes = response.data.result;
-            console.log("Session Response", response.data);
+            let theRes = response.data;
+            //console.log("Session Response", response.data);
             // wait for response if the verification is true
             if (theRes) {
               //console.log(theRes)
@@ -125,12 +123,9 @@ const LearnersCalendar = ({ course_id }) => {
             }
           }
         } catch (error) {
-          const { response } = error;
-          const { request, data } = response; // take everything but 'request'
+          console.log("Error Response", error);
 
-          console.log("Error Response", data.message);
-
-          Modal.error({
+          /* Modal.error({
             title: "Error: Unable to Retrieve data",
             content: data.message + " Please contact Technical Support",
             centered: true,
@@ -139,12 +134,12 @@ const LearnersCalendar = ({ course_id }) => {
               //setdrawerVisible(false);
               visible: false;
             },
-          });
+          }); */
         }
         //setLoading(false);
       }
       fetchData(config);
-    } */
+    }
   }, [spin]);
 
   function getListData(value) {
@@ -153,25 +148,14 @@ const LearnersCalendar = ({ course_id }) => {
     let datalist;
     if (sessionList && sessionList.length) {
       datalist = sessionList.filter((session, index) => {
-        //sd - startDate from api
-        //ed - endDate from api
-        let sd = moment(session.startDate).format("YYYY-MM-DD");
-        let ed = moment(session.endDate).format("YYYY-MM-DD");
-        /* if (cellDate == sd) {
-          let isActivetype;
-          moment(ed).isBefore(nowDate)
-            ? (isActivetype = "error")
-            : (isActivetype = "success");
-          session["isActivetype"] = isActivetype;
-
-          return session;
-        } */
+        //sd - scheduled Date from api
+        let sd = moment(session.dateSchedule).format("YYYY-MM-DD");
+        
         if (
-          moment(cellDate).isSameOrAfter(sd) &&
-          moment(cellDate).isSameOrBefore(ed)
+          moment(cellDate).isSame(sd)
         ) {
           let isActivetype;
-          moment(ed).isBefore(nowDate)
+          moment(sd).isBefore(nowDate)
             ? (isActivetype = "error")
             : (isActivetype = "success");
           session["isActivetype"] = isActivetype;
@@ -181,102 +165,7 @@ const LearnersCalendar = ({ course_id }) => {
         //console.log(sd);
       });
     }
-    return datalist || [];
-    /* let listData;
-    switch (value.date()) {
-      case 8:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event.",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is usual event.",
-          },
-        ];
-        break;
-      case 10:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event.",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is usual event.",
-          },
-          {
-            id: 3,
-            dateTime: value,
-            title: "This is a title3",
-            type: "error",
-            content: "This is error event.",
-          },
-        ];
-        break;
-      case 15:
-        listData = [
-          {
-            id: 1,
-            dateTime: value,
-            title: "This is a title1",
-            type: "warning",
-            content: "This is warning event",
-          },
-          {
-            id: 2,
-            dateTime: value,
-            title: "This is a title2",
-            type: "success",
-            content: "This is very long usual event。。....",
-          },
-          {
-            id: 3,
-            dateTime: value,
-            title: "This is a title3",
-            type: "error",
-            content: "This is error event 1.",
-          },
-          {
-            id: 4,
-            dateTime: value,
-            title: "This is a title4",
-            type: "error",
-            content: "This is error event 2.",
-          },
-          {
-            id: 5,
-            dateTime: value,
-            title: "This is a title5",
-            type: "error",
-            content: "This is error event 3.",
-          },
-          {
-            id: 6,
-            dateTime: value,
-            title: "This is a title6",
-            type: "error",
-            content: "This is error event 4.",
-          },
-        ];
-        break;
-      default:
-    }
-    console.log('listData',listData)
-    return listData || []; */
+    return datalist || [];    
   }
 
   function dateCellRender(value) {
@@ -315,7 +204,7 @@ const LearnersCalendar = ({ course_id }) => {
     let sessModalArr = calSessionModal;
     setCalSessionModal({
       ...sessModalArr,
-      title: "Sessions List",
+      title: "Today's Scheduled",
       date: moment(date).format("YYYY-MM-DD HH:mm"),
       visible: true,
       width: "70%",
@@ -336,7 +225,7 @@ const LearnersCalendar = ({ course_id }) => {
     setDateSessionList("");
     setSelectedRecord("");
   };
-  //console.log(calSessionModal);
+
   function dateFullCellRender(value) {
     const listData = getListData(value);
     return (
@@ -351,7 +240,7 @@ const LearnersCalendar = ({ course_id }) => {
           <ul className="events">
             {listData.map((item) => (
               <li key={item.id}>
-                <Badge status={item.isActivetype} text={item.title} />
+                <Badge status={item.isActivetype} text={item.session.title} />
               </li>
             ))}
           </ul>

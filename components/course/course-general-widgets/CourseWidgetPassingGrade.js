@@ -23,7 +23,7 @@ const CourseWidgetPassingGrade = (props) => {
         <Form.Item
           name="passingGrade"
         >
-          <InputNumber placeholder="Passing Grade" style={{ width: "100%" }} min={1} />
+          <InputNumber placeholder="Passing Grade" style={{ width: "100%" }} min={1} max={100} />
           {/* <Select placeholder="Passing Grade" size="medium">
               <Option value="75">75</Option>
               <Option value="80">80</Option>

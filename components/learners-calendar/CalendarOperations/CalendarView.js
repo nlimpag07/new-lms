@@ -64,8 +64,7 @@ const CalendarView = ({
         </Option>
       );
     });
-  useEffect(() => {    
-  }, []);
+  useEffect(() => {}, []);
 
   //console.log("selectInstructor", selectInstructor);
   const onCancel = (form) => {
@@ -200,23 +199,20 @@ const CalendarView = ({
     return groupWord;
   }
   const placeHolders = {
-    sessionType: selectedRecord
-      ? sessionTypeSwitch(selectedRecord.sessionTypeId)
-      : "Session Type",
-    startDate: selectedRecord
-      ? moment(selectedRecord.startDate).format("YYYY-MM-DD HH:mm")
-      : "Select Date",
-    sessionLocation: selectedRecord
-      ? selectedRecord.sessionLocation
-      : "Please Indicate Location",
-    userGroup: selectedRecord
-      ? userGroupSwitch(selectedRecord.userGroupId)
-      : "Please select User Group",
-    capacity: selectedRecord ? selectedRecord.capacity : "",
-    endDate: selectedRecord
-      ? moment(selectedRecord.endDate).format("YYYY-MM-DD HH:mm")
-      : "Select Date",
-    duration: selectedRecord ? selectedRecord.duration : "Duration",
+    sessionTitle: selectedRecord ? selectedRecord.session.title : "",
+    sessionSchedule: selectedRecord
+      ? moment(selectedRecord.dateSchedule).format("LLL")
+      : "",
+    sessionDuration: selectedRecord
+      ? `${selectedRecord.session.duration} Min`
+      : "Duration",
+    course: selectedRecord ? selectedRecord.course.title : "",
+    sessionInstructor: selectedRecord
+      ? `${selectedRecord.session.courseInstructor.user.firstName} ${selectedRecord.session.courseInstructor.user.lastName}`
+      : "",
+    sessionDescription: selectedRecord
+      ? selectedRecord.session.description
+      : "",
   };
   //End of Used only for PlaceHolders
 
@@ -234,11 +230,12 @@ const CalendarView = ({
         style={{ width: "100%" }}
         initialValues={{
           id: selectedRecord ? selectedRecord.id : "",
-          sessionInstructorId: selectedRecord
-            ? selectedRecord.courseInstructorId
-            : "",
-          sessionTitle: selectedRecord ? selectedRecord.title : "",
-          description: selectedRecord ? selectedRecord.description : "",
+          sessionTitle: placeHolders.sessionTitle,
+          sessionSchedule: placeHolders.sessionSchedule,
+          sessionDuration: placeHolders.sessionDuration,
+          course: placeHolders.course,
+          sessionInstructor: placeHolders.sessionInstructor,
+          sessionDescription: placeHolders.sessionDescription,
           /* sessionType: selectedRecord ? selectedRecord.sessionTypeId : "",
           startDate: selectedRecord
             ? moment(selectedRecord.startDate, "YYYY-MM-DD HH:mm")
@@ -260,7 +257,7 @@ const CalendarView = ({
         <Form.Item
           style={{
             display: "none",
-            width: "calc(50%)",
+            width: "calc(100%)",
             margin: "0 8px 0 0",
           }}
           name="id"
@@ -274,159 +271,56 @@ const CalendarView = ({
               width: "calc(50%)",
               margin: "0 8px 0 0",
             }}
-            name="sessionType"
-            label="Type"
+            name="sessionTitle"
+            label="Session"
           >
-            <Select
-              placeholder={placeHolders.sessionType}
-              optionLabelProp="label"
-            >
-              <Option label="Webinar" value={1}>
-                Webinar
-              </Option>
-              <Option label="Classroom" value={2}>
-                Classroom
-              </Option>
-            </Select>
+            <Input disabled />
           </Form.Item>
           <Form.Item
-            name="sessionLocation"
-            label="Location"
+            name="sessionSchedule"
+            label="Schedule"
+            style={{ display: "inline-block", width: "calc(25% - 8px)" }}
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item
+            name="sessionDuration"
+            label="Duration"
+            style={{ display: "inline-block", width: "calc(25% - 8px)" }}
+          >
+            <Input disabled />
+          </Form.Item>
+        </Form.Item>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Form.Item
+            style={{
+              display: "inline-block",
+              width: "calc(50%)",
+              margin: "0 8px 0 0",
+            }}
+            name="course"
+            label="Course Topic"
+          >
+            <Input disabled />
+          </Form.Item>
+          <Form.Item
+            name="sessionInstructor"
+            label="Instructor"
             style={{ display: "inline-block", width: "calc(50% - 8px)" }}
           >
-            <Input placeholder={placeHolders.sessionLocation} />
+            <Input disabled />
           </Form.Item>
         </Form.Item>
-        <Form.Item style={{ marginBottom: 0 }}>
-          <Form.Item
-            style={{
-              display: "inline-block",
-              width: "calc(70%)",
-              margin: "0 8px 0 0",
-            }}
-            name="userGroup"
-            label="User Group"
-          >
-            <Select
-              placeholder={placeHolders.userGroup}
-              optionLabelProp="label"
-            >
-              <Option label="Administrator" value={1}>
-                Administrator
-              </Option>
-              <Option label="Human Resources" value={2}>
-                Human Resources
-              </Option>
-              <Option label="Manager" value={3}>
-                Manager
-              </Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="capacity"
-            label="Capacity"
-            style={{ display: "inline-block", width: "calc(30% - 8px)" }}
-          >
-            <InputNumber
-              min={1}
-              placeholder={placeHolders.capacity}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-        </Form.Item>
-        <Form.Item style={{ marginBottom: 0 }}>
-          <Form.Item
-            style={{
-              display: "inline-block",
-              width: "calc(40%)",
-              margin: "0 8px 0 0",
-            }}
-            name="startDate"
-            label="Start Date"
-          >
-            <DatePicker
-              style={{ width: "100%" }}
-              showTime={{
-                format: "HH:mm",
-              }}
-              placeholder={placeHolders.startDate}
-            />
-          </Form.Item>
-          <Form.Item
-            name="endDate"
-            label="End Date"
-            style={{
-              display: "inline-block",
-              width: "calc(40% - 8px)",
-              margin: "0 8px 0 0",
-            }}
-          >
-            <DatePicker
-              style={{ width: "100%" }}
-              showTime={{
-                format: "HH:mm",
-              }}
-              placeholder={placeHolders.endDate}
-            />
-          </Form.Item>
-          <Form.Item
-            name="duration"
-            label="Duration"
-            style={{ display: "inline-block", width: "calc(20% - 8px)" }}
-          >
-            <InputNumber
-              min={1}
-              placeholder={placeHolders.duration}
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-        </Form.Item>
+
         <Form.Item
-          style={{
-            display: "inline-block",
-            width: "calc(100%)",
-          }}
-          name="sessionInstructorId"
-          label="Instructor"
-        >
-          <Select placeholder="Please select Instructor">
-            {selectInstructorOptions}
-          </Select>
-        </Form.Item>
-        <Form.Item
-          style={{
-            display: "inline-block",
-            width: "calc(100%)",
-          }}
-          name="sessionTitle"
-          label="Session Title"
-          rules={[
-            {
-              required: true,
-              message: "Please Add Session Title!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Please Add Session Title"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="description"
+          name="sessionDescription"
           label="Session Description"
           style={{
             display: "inline-block",
             width: "calc(100%)",
           }}
-          rules={[
-            {
-              required: true,
-              message: "Please Add Session Description!",
-            },
-          ]}
         >
-          <TextArea rows={3} placeholder="Session Description" />
+          <TextArea disabled />
         </Form.Item>
         {hasError ? (
           <p
@@ -457,10 +351,10 @@ const CalendarView = ({
           }}
           style={{ textAlign: "center", marginBottom: 0 }}
         >
-          <Button type="primary" htmlType="submit">
+          {/* <Button type="primary" htmlType="submit">
             Submit
           </Button>{" "}
-          <Button onClick={() => onCancel(form)}>Cancel</Button>
+          <Button onClick={() => onCancel(form)}>Cancel</Button> */}
         </Form.Item>
       </Form>
       {spinning && (
@@ -497,6 +391,14 @@ const CalendarView = ({
         .sessionViewFormHolder .ant-select-selection-placeholder {
           opacity: 1 !important;
           color: #666666 !important;
+        }
+        .sessionViewFormHolder .ant-input[disabled] {
+          color: rgb(0 0 0);
+          background-color: #f5f5f500;
+          cursor: default;
+          opacity: 1;
+          border-color: #d9d9d900;
+          font-weight: bold;
         }
       `}</style>
     </Row>

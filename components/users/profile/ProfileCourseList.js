@@ -21,6 +21,7 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
   var courseList = myCourses;
   const router = useRouter();
   console.log("myCourses", myCourses);
+  console.log("Page", coursePage);
   var [modal2Visible, setModal2Visible] = useState((modal2Visible = false));
   const [courseDetails, setCourseDetails] = useState("");
   const [Data, setData] = useState([]);
@@ -37,7 +38,7 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
                 key: index,
                 id: cl.id,
                 title: c.title,
-                course:c,
+                course: c,
                 instructor: c.courseInstructor,
                 startDate: moment(cl.startDate).format("YYYY-MM-DD h:mm a"),
                 endDate: cl.endDate
@@ -183,7 +184,7 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
         modal2Visible={modal2Visible}
         setModal2Visible={setModal2Visible}
         courseDetails={courseDetails}
-      />      
+      />
 
       {/* <CourseCircularUi /> */}
       <style jsx global>{`
@@ -192,15 +193,15 @@ const ProfileCourseList = ({ myCourses, coursePage }) => {
           font-weight: 700;
         }
         .ProfileCourseList .k-grid-header {
-          background-color: #4E4E4E;
-          color:#E9EBEE;
-          
+          background-color: #4e4e4e;
+          color: #e9ebee;
         }
-        .ProfileCourseList .k-grid-header th{
-          font-weight:400;
+        .ProfileCourseList .k-grid-header th {
+          font-weight: 400;
         }
-        .ProfileCourseList .k-grid-header .k-sorted, .ProfileCourseList .k-grid-header .k-link:hover{
-          color:#D3D3D5;
+        .ProfileCourseList .k-grid-header .k-sorted,
+        .ProfileCourseList .k-grid-header .k-link:hover {
+          color: #d3d3d5;
         }
       `}</style>
     </Row>
@@ -237,7 +238,7 @@ const ResultRender = (props) => {
 };
 const ActionRender = (props, setModal2Visible, setCourseDetails) => {
   const setDetails = (props) => {
-    console.log("Props",props.dataItem)
+    console.log("Props", props.dataItem);
     setCourseDetails(props.dataItem);
     setModal2Visible(true);
   };
@@ -250,7 +251,9 @@ const ActionRender = (props, setModal2Visible, setCourseDetails) => {
           edit(this.props.dataItem);
         }} */
       >
-        <FileTextTwoTone style={{fontSize:"1.3rem", verticalAlign:"middle"}} />
+        <FileTextTwoTone
+          style={{ fontSize: "1.3rem", verticalAlign: "middle" }}
+        />
       </button>
     </td>
   );
