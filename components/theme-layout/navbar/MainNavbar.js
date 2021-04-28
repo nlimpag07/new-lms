@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,13 +25,17 @@ import {
 } from "@ant-design/icons";
 import Notifications from "./Notifications";
 import { callbackify } from "util";
-
+const apiBaseUrl = process.env.apiBaseUrl;
+const apidirectoryUrl = process.env.directoryUrl;
+const token = Cookies.get("token");
+const linkUrl = Cookies.get("usertype");
 //import UserRoleSwitcher from "../../user/UserRoleSwitcher";
 const { Option } = Select;
 
 const MainNavbar = ({ userRole }) => {
   const router = useRouter();
   const thePath = router.asPath;
+  const [languages, setLanguages] = useState([]);
   var currentPage;
   var cPage = thePath.split("/");
   cPage = cPage[cPage.length - 1];
@@ -79,11 +85,46 @@ const MainNavbar = ({ userRole }) => {
   function handleChange(value) {
     console.log(`selected ${value}`);
   }
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: apiBaseUrl + "/Picklist/language?page=1&pageSize=10",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    };
+    async function fetchData(config) {
+      try {
+        const response = await axios(config);
+        if (response) {
+          let theRes = response.data.result;
+          console.log("theRes", theRes);
 
+          if (theRes) {
+            setLanguages(theRes);
+          } else {
+            setLanguages([]);
+          }
+        }
+      } catch (error) {
+        console.log("Error Response", error);
+        setLanguages([]);
+      }
+      //setLoading(false);
+    }
+    fetchData(config);
+  }, []);
   return (
     <Layout>
       <Row className="header-nav-top" justify="space-between">
-        <Col xs={0} sm={0} md={0} lg={16} className="nav-top-left" /* flex="1 1" */>
+        <Col
+          xs={0}
+          sm={0}
+          md={0}
+          lg={16}
+          className="nav-top-left" /* flex="1 1" */
+        >
           <span className="navLocationContainer">
             AMS JAFZA Warehouse / JAFZA Dubai, UAE (AMSWS)
           </span>
@@ -96,10 +137,10 @@ const MainNavbar = ({ userRole }) => {
           className="nav-top-right" /* flex="0 1 25%" */
         >
           <Row justify="end">
-            <Col xs ={8} lg={6}>
+            <Col xs={8} lg={6}>
               <Notifications />
             </Col>
-            <Col xs ={8} lg={6}>
+            <Col xs={8} lg={6}>
               {isAuthenticated ? (
                 <Dropdown overlay={profileMenu(userRole)} trigger={["click"]}>
                   <a
@@ -126,8 +167,14 @@ const MainNavbar = ({ userRole }) => {
               )}
             </Col>
             <Col xs={8} lg={6}>
-              <Link href="/lang" passHref>
-                <a>
+              <Dropdown
+                overlay={profileMenu("lang", languages)}
+                trigger={["click"]}
+              >
+                <a
+                  className="ant-dropdown-link"
+                  onClick={(e) => e.preventDefault()}
+                >
                   <Avatar
                     icon={
                       <FontAwesomeIcon icon={["fas", "globe-asia"]} size="1x" />
@@ -139,7 +186,7 @@ const MainNavbar = ({ userRole }) => {
                   />
                   {/* <FontAwesomeIcon icon={["fas", "globe-asia"]} size="lg" />  En*/}
                 </a>
-              </Link>
+              </Dropdown>
             </Col>
           </Row>
           {/* <ul>
@@ -198,7 +245,14 @@ const MainNavbar = ({ userRole }) => {
         </Col>
       </Row>
       <Row className="header-nav-bot" justify="space-center">
-        <Col xs={24} sm={24} md={14} md={18} className="nav-bot-left" flex="1 1 200px">
+        <Col
+          xs={24}
+          sm={24}
+          md={14}
+          md={18}
+          className="nav-bot-left"
+          flex="1 1 200px"
+        >
           <Row justify="start" align="bottom" style={{ height: "100%" }}>
             <div className="pageHeaderHolder">
               <div className="pageHeaderTitle">
@@ -208,7 +262,14 @@ const MainNavbar = ({ userRole }) => {
             </div>
           </Row>
         </Col>
-        <Col xs={0} sm={0} md={6} md={6} className="nav-bot-right" flex="0 1 25%">
+        <Col
+          xs={0}
+          sm={0}
+          md={6}
+          md={6}
+          className="nav-bot-right"
+          flex="0 1 25%"
+        >
           <Row className="right-shape">
             <div style={{ width: "100%" }}>
               GROUP{" "}
@@ -278,7 +339,7 @@ const MainNavbar = ({ userRole }) => {
   );
 };
 
-const profileMenu = (userRole) => {
+const profileMenu = (userRole, languages) => {
   var menuItems;
   switch (userRole) {
     case "administrator":
@@ -337,6 +398,24 @@ const profileMenu = (userRole) => {
           </Menu.Item>
         </Menu>
       );
+      break;
+    case "lang":
+      let listlanguages = languages.length ? languages : null;
+      let theMenuItems =
+        listlanguages &&
+        listlanguages.map((lang, index) => {
+          return (
+            <Menu.Item key={index}>
+              <Link href={`/${lang.id}`} as={`/${lang.id}`}>
+                <a>
+                  <ProfileFilled /> {lang.name}
+                </a>
+              </Link>
+            </Menu.Item>
+          );
+        });
+      menuItems = <Menu>{theMenuItems}</Menu>;
+
       break;
     default:
       menuItems = (
