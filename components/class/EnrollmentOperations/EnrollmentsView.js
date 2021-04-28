@@ -146,8 +146,10 @@ const EnrollmentsView = ({
           (t) => t.sessionId == dat.sessionId && t.courseId == dat.courseId
         ) == index
     );
-    defaultLearnerSessions = filteredLearnerSessions.map((session) => session.sessionId);
-    console.log("Default LearnerSession",defaultLearnerSessions);
+    defaultLearnerSessions = filteredLearnerSessions.map(
+      (session) => session.sessionId
+    );
+    console.log("Default LearnerSession", defaultLearnerSessions);
   }
   const onCancel = (form) => {
     form.resetFields();
